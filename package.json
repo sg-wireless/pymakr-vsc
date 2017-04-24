@@ -1,0 +1,48 @@
+{
+  "name": "test",
+  "displayName": "test",
+  "description": "",
+  "version": "0.0.1",
+  "publisher": "pycom",
+  "engines": {
+    "vscode": "^1.11.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:extension.toggleREPL"
+  ],
+  "main": "./extension",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.toggleREPL",
+        "title": "Pymakr Terminal"
+      }
+    ]
+  },
+  "scripts": {
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test",
+    "babel-version": "babel src/view.js --out-file src/view-nieuw.js",
+    
+    "install": "node install.js"
+  
+  },
+  "dependencies":{
+    "telnet-client": "^0.13.0",
+    "xterm": "^2.3.2",
+    "element-resize-detector":"1.1.11"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.32",
+    "@types/node": "^6.0.40",
+    "babel-cli": "^6.24.1",
+    "eslint": "^3.6.0",
+    "mocha": "^2.3.3",
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0",
+    "electron-rebuild": "^1.5.7"
+  }
+}
