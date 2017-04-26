@@ -37,7 +37,6 @@ function activate(context) {
             // outputChannel.append('Visual Studio Code is awesome!');
             terminalActive = true;
         }
-        vscode.window.showInformationMessage('Toggle REPL terminal!');
     });
 
     context.subscriptions.push(disposable);

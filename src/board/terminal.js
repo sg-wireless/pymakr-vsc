@@ -43,7 +43,6 @@ export default class Term {
     }
 
     writeln(mssg){
-      vscode.window.showInformationMessage(mssg);
       this.xterm.writeln(mssg)
       this.lastWrite += mssg
       if(this.lastWrite.length > 20){
@@ -52,7 +51,6 @@ export default class Term {
     }
 
     write(mssg){
-      vscode.window.showInformationMessage(mssg);
       this.xterm.write(mssg)
       this.lastWrite += mssg
       if(this.lastWrite.length > 20){

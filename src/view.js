@@ -1,4 +1,3 @@
-'use babel';
 
 import { Pane } from 'atom';
 import '../node_modules/xterm/dist/addons/fit/fit.js';
