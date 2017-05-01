@@ -1,8 +1,8 @@
 'use babel';
 import Config from '../config.js'
 
-LOG_LEVEL = Config.constants().logging_level
-LEVELS = ['silly','verbose','info','warning','error','critical']
+var LOG_LEVEL = Config.constants().logging_level
+var LEVELS = ['silly','verbose','info','warning','error','critical']
 
 
 // Import this class and create a new logger object in the constructor, providing

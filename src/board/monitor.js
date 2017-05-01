@@ -1,9 +1,8 @@
 'use babel';
-import { PackageManager } from 'atom';
-fs = require('fs');
+var fs = require('fs');
 import Logger from './logger.js'
 
-EventEmitter = require('events');
+var EventEmitter = require('events');
 const ee = new EventEmitter();
 
 export default class Monitor {
@@ -13,7 +12,7 @@ export default class Monitor {
     this.pyboard = pyboard
     this.disconnecting = false
     this.callbacks = null
-    lib_folder = atom.packages.resolvePackagePath('Pymakr') + "/lib/"
+    // lib_folder = atom.packages.resolvePackagePath('Pymakr') + "/lib/"
 
     data = fs.readFileSync(lib_folder + 'board/python/monitor.py','utf8')
     connection_type_params = this.getScriptParams()
@@ -43,8 +42,8 @@ export default class Monitor {
     if(this.pyboard.isSerial){
       return "connection_type = 'u'\nTIMEOUT = 5000\n"
     }else{
-      var pass = atom.config.get('Pymakr.password')
-      var user = atom.config.get('Pymakr.username')
+      var pass = this.pyboard.params.password
+      var user = this.pyboard.params.username
       return "connection_type = 's'\ntelnet_login = ('"+pass+"', '"+user+"')\nTIMEOUT = 5000\n"
     }
   }

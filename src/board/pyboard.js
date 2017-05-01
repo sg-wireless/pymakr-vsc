@@ -1,7 +1,7 @@
 'use babel';
 
 import Config from '../config.js'
-// import Pyserial from '../connections/pyserial';
+import Pyserial from '../connections/pyserial';
 import Pytelnet from '../connections/pytelnet';
 import Pysocket from '../connections/pysocket';
 import Authorize from './authorize';
@@ -9,17 +9,17 @@ import Monitor from './monitor';
 import Logger from './logger.js'
 var timer = require('timers')
 
-CTRL_A = '\x01' // raw repl
-CTRL_B = '\x02' // exit raw repl
-CTRL_C = '\x03' // ctrl-c
-CTRL_D = '\x04' // reset (ctrl-d)
+var CTRL_A = '\x01' // raw repl
+var CTRL_B = '\x02' // exit raw repl
+var CTRL_C = '\x03' // ctrl-c
+var CTRL_D = '\x04' // reset (ctrl-d)
 
 //statuses
-DISCONNECTED=0
-CONNECTED=1
-FRIENDLY_REPL=2
-RAW_REPL=3
-RUNNING_FILE=4
+var DISCONNECTED=0
+var CONNECTED=1
+var FRIENDLY_REPL=2
+var RAW_REPL=3
+var RUNNING_FILE=4
 
 export default class Pyboard {
 

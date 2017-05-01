@@ -1,6 +1,6 @@
 
-import { Pane } from 'atom';
-import '../node_modules/xterm/dist/addons/fit/fit.js';
+// import '../node_modules/xterm/dist/addons/fit/fit.js';
+var vscode = require('vscode');
 import Pyboard from './board/pyboard';
 import Sync from './board/sync';
 import Term from './board/terminal';
@@ -15,86 +15,87 @@ export default class PymakrView {
     this.running_file = false
     this.synchronizing = false
 
-    // main element
-    this.element = document.createElement('div');
-    this.element.classList.add('pymakr');
+    // // main element
+    // this.element = document.createElement('div');
+    // this.element.classList.add('pymakr');
 
-    // top bar with buttons
-    var topbar = document.createElement('div');
-    topbar.classList.add('pycom-top-bar');
-    this.title = topbar.appendChild(document.createElement('div'));
-    this.title.classList.add('title');
-    this.title.innerHTML = 'Pycom Console (not connected)';
+    // // top bar with buttons
+    // var topbar = document.createElement('div');
+    // topbar.classList.add('pycom-top-bar');
+    // this.title = topbar.appendChild(document.createElement('div'));
+    // this.title.classList.add('title');
+    // this.title.innerHTML = 'Pycom Console (not connected)';
 
-    var buttons = topbar.appendChild(document.createElement('div'));
-    buttons.classList.add('buttons')
-    this.button_close = buttons.appendChild(document.createElement('button'));
-    this.button_close.innerHTML = 'Close';
-    this.button_settings = buttons.appendChild(document.createElement('button'));
-    this.button_settings.innerHTML = 'Settings';
-    this.button_run = buttons.appendChild(document.createElement('button'));
-    this.button_run.innerHTML = 'Run';
-    this.button_run.classList.add('hidden');
-    this.button_sync = buttons.appendChild(document.createElement('button'));
-    this.button_sync.innerHTML = 'Sync';
-    this.button_sync.classList.add('hidden');
-    this.button_connect = buttons.appendChild(document.createElement('button'));
-    this.button_connect.innerHTML = 'Connect';
-    this.button_more = buttons.appendChild(document.createElement('button'));
-    this.button_more.innerHTML = 'more';
+    // var buttons = topbar.appendChild(document.createElement('div'));
+    // buttons.classList.add('buttons')
+    // this.button_close = buttons.appendChild(document.createElement('button'));
+    // this.button_close.innerHTML = 'Close';
+    // this.button_settings = buttons.appendChild(document.createElement('button'));
+    // this.button_settings.innerHTML = 'Settings';
+    // this.button_run = buttons.appendChild(document.createElement('button'));
+    // this.button_run.innerHTML = 'Run';
+    // this.button_run.classList.add('hidden');
+    // this.button_sync = buttons.appendChild(document.createElement('button'));
+    // this.button_sync.innerHTML = 'Sync';
+    // this.button_sync.classList.add('hidden');
+    // this.button_connect = buttons.appendChild(document.createElement('button'));
+    // this.button_connect.innerHTML = 'Connect';
+    // this.button_more = buttons.appendChild(document.createElement('button'));
+    // this.button_more.innerHTML = 'more';
 
-    this.element.appendChild(topbar);
+    // this.element.appendChild(topbar);
 
-    // All button actions
-    this.button_close.onclick = function(){
-      _this.toggleVisibility()
-    }
-    this.button_connect.onclick = function(){
-      _this.connect()
-    }
-    this.button_run.onclick = function(){
-      if(!_this.synchronizing){
-        _this.run()
-      }
-    }
-    this.button_sync.onclick = function(){
-      if(!_this.synchronizing){
-        _this.sync()
-      }
-    }
-    topbar.onclick = function(){
-      if(!_this.visible){
-        // TODO: the line doesn't work yet. Clicking 'button_close' also toggles, creating unwanted behaviour
-        // _this.toggleVisibility()
-      }
-    }
+    // // All button actions
+    // this.button_close.onclick = function(){
+    //   _this.toggleVisibility()
+    // }
+    // this.button_connect.onclick = function(){
+    //   _this.connect()
+    // }
+    // this.button_run.onclick = function(){
+    //   if(!_this.synchronizing){
+    //     _this.run()
+    //   }
+    // }
+    // this.button_sync.onclick = function(){
+    //   if(!_this.synchronizing){
+    //     _this.sync()
+    //   }
+    // }
+    // topbar.onclick = function(){
+    //   if(!_this.visible){
+    //     // TODO: the line doesn't work yet. Clicking 'button_close' also toggles, creating unwanted behaviour
+    //     // _this.toggleVisibility()
+    //   }
+    // }
 
-    this.button_settings.onclick = function(){
-      atom.workspace.open("atom://config/packages/Pymakr")
-    }
+    // this.button_settings.onclick = function(){
+    //   atom.workspace.open("atom://config/packages/Pymakr")
+    // }
 
-    // terminal UI elements
-    this.terminal_el = document.createElement('div');
-    this.terminal_el.id = "terminal"
-    this.element.appendChild(this.terminal_el);
+    // // terminal UI elements
+    this.terminal_el = null
+    // this.terminal_el = document.createElement('div');
+    // this.terminal_el.id = "terminal"
+    // this.element.appendChild(this.terminal_el);
 
-    var erd = ElementResize();
-    erd.listenTo(this.terminal_el,function(element){
-      if(_this.visible){
-          _this.setPanelHeight()
-      }
+    // var erd = ElementResize();
+    // erd.listenTo(this.terminal_el,function(element){
+    //   if(_this.visible){
+    //       _this.setPanelHeight()
+    //   }
 
-    })
+    // })
 
-    // 'click to connect' feature on complete terminal element
-    this.terminal_el.onclick = function(){
-      if(!_this.pyboard.connected && !_this.pyboard.connecting) {
-        _this.connect()
-      }
-    }
+    // // 'click to connect' feature on complete terminal element
+    // this.terminal_el.onclick = function(){
+    //   if(!_this.pyboard.connected && !_this.pyboard.connecting) {
+    //     _this.connect()
+    //   }
+    // }
 
     // terminal logic
-    term = new Term(this.terminal_el,this.pyboard)
+    var term = new Term(this.terminal_el,this.pyboard)
     this.terminal = term
     term.setOnMessageListener(function(input){
       _this.userInput(input)
@@ -104,20 +105,20 @@ export default class PymakrView {
     // Auto-reconnect after change of settings
     var first_trigger = true
     this.observeTimeout = null
-    atom.config.observe('pymakr.host',function(){
+    // atom.config.observe('pymakr.host',function(){
 
-      // use timeout to not attempt connecting after each keystroke
-      clearTimeout(this.observeTimeout)
-      this.observeTimeout = setTimeout(function(){
+    //   // use timeout to not attempt connecting after each keystroke
+    //   clearTimeout(this.observeTimeout)
+    //   this.observeTimeout = setTimeout(function(){
 
-        // callback triggers when loading, so filder out first trigger
-        if(first_trigger){
-          first_trigger = false
-        }else{
-            _this.connect()
-        }
-      },2000)
-    })
+    //     // callback triggers when loading, so filder out first trigger
+    //     if(first_trigger){
+    //       first_trigger = false
+    //     }else{
+    //         _this.connect()
+    //     }
+    //   },2000)
+    // })
 
     // connect on start
     this.connect()
@@ -144,38 +145,38 @@ export default class PymakrView {
   // refresh button display based on current status
   setButtonState(){
     if (!this.visible) {
-      this.button_sync.classList.add('hidden')
-      this.button_run.classList.add('hidden')
-      this.button_connect.classList.add('hidden')
-      this.button_settings.classList.add('hidden')
+      // this.button_sync.classList.add('hidden')
+      // this.button_run.classList.add('hidden')
+      // this.button_connect.classList.add('hidden')
+      // this.button_settings.classList.add('hidden')
       this.setTitle('not connected')
     }else if(this.pyboard.connected) {
       if(this.running_file){
-        this.button_run.innerHTML = 'Cancel'
-        this.button_run.classList.add('cancel')
-        this.button_sync.classList = ['']
-        this.button_sync.classList.add('hidden')
+        // this.button_run.innerHTML = 'Cancel'
+        // this.button_run.classList.add('cancel')
+        // this.button_sync.classList = ['']
+        // this.button_sync.classList.add('hidden')
       }else{
-        this.button_run.innerHTML = 'Run'
-        this.button_run.classList = ['']
-        this.button_sync.classList = ['']
+        // this.button_run.innerHTML = 'Run'
+        // this.button_run.classList = ['']
+        // this.button_sync.classList = ['']
       }
-      this.button_connect.innerHTML = 'Reconnect'
-      this.button_settings.classList = ['']
+      // this.button_connect.innerHTML = 'Reconnect'
+      // this.button_settings.classList = ['']
       this.setTitle('connected')
 
     }else{
-      this.button_connect.classList = ['']
-      this.button_connect.innerHTML = 'Connect'
-      this.button_run.classList.add('hidden')
-      this.button_sync.classList.add('hidden')
-      this.button_settings.classList = ['']
+      // this.button_connect.classList = ['']
+      // this.button_connect.innerHTML = 'Connect'
+      // this.button_run.classList.add('hidden')
+      // this.button_sync.classList.add('hidden')
+      // this.button_settings.classList = ['']
       this.setTitle('not connected')
     }
   }
 
   setTitle(status){
-    this.title.innerHTML = 'Pycom Console ('+status+')'
+    // this.title.innerHTML = 'Pycom Console ('+status+')'
   }
 
   connect(){
@@ -201,6 +202,9 @@ export default class PymakrView {
         }else{
           // TODO: make this line appear in the terminal before the first messages from the board arrive (>>> in most cases)
           // _this.terminal.writeln("Connected via "+_this.pyboard.connection.type+"\r\n")
+          vscode.window.showInputBox({prompt: 'Type your command'})
+              .then(val => _this.userInput(val + "\r\n"));
+
         }
         _this.setButtonState()
       }
@@ -327,23 +331,24 @@ export default class PymakrView {
   }
 
   getCurrentFile(cb,onerror){
-    editor = atom.workspace.getActivePaneItem()
-    if(editor && editor.buffer){
-        file = editor.buffer.file
-        if(file){
-          filename = file.path.split('/').pop(-1)
-          filetype = filename.split('.').pop(-1)
-          if(filetype == 'py'){
-              cb(file)
-          }else{
-              onerror("Can't run "+filetype+" files, please run only python files")
-          }
-        }else{
-          onerror("No file open to run")
-        }
-    }else{
-      onerror("No file open to run")
-    }
+
+    // editor = atom.workspace.getActivePaneItem()
+    // if(editor && editor.buffer){
+    //     file = editor.buffer.file
+    //     if(file){
+    //       filename = file.path.split('/').pop(-1)
+    //       filetype = filename.split('.').pop(-1)
+    //       if(filetype == 'py'){
+    //           cb(file)
+    //       }else{
+    //           onerror("Can't run "+filetype+" files, please run only python files")
+    //       }
+    //     }else{
+    //       onerror("No file open to run")
+    //     }
+    // }else{
+    //   onerror("No file open to run")
+    // }
   }
 
   // UI Stuff
@@ -359,15 +364,15 @@ export default class PymakrView {
 
   setPanelHeight(height){
     if(!height){
-      height = (this.terminal_el.offsetHeight + 25)
+      // height = (this.terminal_el.offsetHeight + 25)
     }
-    this.element.style.height = height + "px"
+    // this.element.style.height = height + "px"
 
   }
 
   hidePanel(){
     this.setPanelHeight(25) // 25px displays only the top bar
-    this.button_close.innerHTML = 'Open'
+    // this.button_close.innerHTML = 'Open'
     this.visible = false
     this.disconnect()
   }
@@ -375,7 +380,7 @@ export default class PymakrView {
   showPanel(){
     this.terminal.clear()
     this.setPanelHeight() // no param wil make it auto calculate based on xterm height
-    this.button_close.innerHTML = 'Close'
+    // this.button_close.innerHTML = 'Close'
     this.visible = true
     this.setButtonState()
     this.connect()

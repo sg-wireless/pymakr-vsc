@@ -14,16 +14,18 @@ export default class Term {
       this.onMessage = function(){}
       this.lastWrite = ""
       var _this = this
-      this.xterm = new Terminal({
-        cursorBlink: true,
-        rows:11,
-        cols:120
-      });
+      // this.xterm = new Terminal({
+      //   cursorBlink: true,
+      //   rows:11,
+      //   cols:120
+      // });
 
-      this.xterm.on('key',function(key,ev){
-        _this.termKeyPress(_this,key,ev)
-      })
-      this.xterm.open(element);
+      // this.xterm.on('key',function(key,ev){
+      //   _this.termKeyPress(_this,key,ev)
+      // })
+      // this.xterm.open(element);
+      this.outputChannel = vscode.window.createOutputChannel('PyMakr Terminal');
+      this.outputChannel.show();
     }
 
     setOnMessageListener(cb){
@@ -31,7 +33,7 @@ export default class Term {
     }
 
     termKeyPress(_this,key,ev){
-      var term = this.xterm
+      // var term = this.xterm
       if (this.pyboard.connected) {
         if(ev.keyCode == 67) { // ctrl-c
           this.copy()
@@ -43,7 +45,8 @@ export default class Term {
     }
 
     writeln(mssg){
-      this.xterm.writeln(mssg)
+      // this.xterm.writeln(mssg)
+      this.outputChannel.append(mssg);
       this.lastWrite += mssg
       if(this.lastWrite.length > 20){
         this.lastWrite = this.lastWrite.substring(1)
@@ -51,7 +54,8 @@ export default class Term {
     }
 
     write(mssg){
-      this.xterm.write(mssg)
+      // this.xterm.write(mssg)
+      this.outputChannel.append(mssg);
       this.lastWrite += mssg
       if(this.lastWrite.length > 20){
         this.lastWrite = this.lastWrite.substring(1)
@@ -72,7 +76,8 @@ export default class Term {
     }
 
     clear(){
-      this.xterm.clear()
+      // this.xterm.clear()
+      this.outputChannel.clear()
       this.lastWrite = ""
     }
 
