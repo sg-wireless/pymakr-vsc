@@ -43,7 +43,7 @@ export default class Pyboard {
 
   refreshConfig(){
     this.params = {
-      host: "10.0.0.206",
+      host: "10.0.0.107",
       port: 23,
       username: "micro",
       password:"python",

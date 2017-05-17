@@ -4,8 +4,8 @@ var vscode = require('vscode');
 var view = require('./lib/view').default;
 var pyboard = require('./lib/board/pyboard').default;
 
-var terminalActive = false
-var window = vscode.window.createTerminal({name: "Pycom Console"} )
+var terminalActive = true
+var window = null
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -13,9 +13,8 @@ function activate(context) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
+    window = vscode.window.createTerminal({name: "Pycom Console"} )
     console.log('Congratulations, your extension "test" is now active!');
-    console.log(typeof pyboard)
-    console.log(pyboard.default)
     var pb = new pyboard(15000)
     var v = new view("",pb)
     v.addPanel()

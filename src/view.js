@@ -353,13 +353,13 @@ export default class PymakrView {
 
   // UI Stuff
   addPanel(){
-    atom.workspace.addBottomPanel(
-      {
-        item: this.getElement(),
-        visible: true,
-        priority: 100
-      }
-    )
+    // atom.workspace.addBottomPanel(
+    //   {
+    //     item: this.getElement(),
+    //     visible: true,
+    //     priority: 100
+    //   }
+    // )
   }
 
   setPanelHeight(height){
@@ -367,7 +367,6 @@ export default class PymakrView {
       // height = (this.terminal_el.offsetHeight + 25)
     }
     // this.element.style.height = height + "px"
-
   }
 
   hidePanel(){
