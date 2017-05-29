@@ -182,7 +182,10 @@ export default class PymakrView {
     // }
 
     // // terminal logic
-    var term = new Term(this.terminal_el,this.pyboard)
+    var onTermConnect = function(){
+      _this.connect()
+    }
+    var term = new Term(onTermConnect,this.pyboard)
     // term.initResize(_this.element,_this.resizer)
     this.terminal = term
     term.setOnMessageListener(function(input){
@@ -196,7 +199,7 @@ export default class PymakrView {
     })
 
     // connect on start
-    this.connect()
+    
 
     // hide panel if it was hidden after last shutdown of atom
     if(serializedState && 'visible' in serializedState) {

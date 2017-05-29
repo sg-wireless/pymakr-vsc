@@ -5,14 +5,16 @@ import Logger from './logger.js'
 import Config from '../config.js'
 import ApiWrapper from '../api-wrapper.js';
 
+var Socket = require('net').Socket;
+
 export default class Term {
 
-    constructor(element,pyboard) {
+    constructor(cb,pyboard) {
+      this.port = "1337"
+      this.host = "127.0.0.1"
       this.term_buffer = ""
       this.shellprompt = '>>> ';
-      this.element = element
       this.pyboard = pyboard
-      this.element = element
       this.logger = new Logger('Term')
       this.api = new ApiWrapper()
       this.onMessage = function(){}
@@ -32,6 +34,8 @@ export default class Term {
         _this.termKeyPress(key,ev)
       })
 
+      this.connect(cb)
+
       // // for copy-paste with cmd key
       // this.element.addEventListener("keydown",function(e) {
       //   if ((e.keyCode == 67 || e.keyCode == 86) && e.metaKey) {
@@ -46,6 +50,29 @@ export default class Term {
       // this.terminal.show(true)
 
       // this.xterm.open(element,true);
+    }
+
+    connect(cb){
+      var _this = this
+      this.stream = new Socket();
+      this.stream.connect(this.port,this.host);
+      this.stream.on('connect',cb);
+      this.stream.on('timeout', function () {
+          console.log("Timed out")
+      });
+      this.stream.on('error', function (error) {
+        console.log(error)
+      });
+      this.stream.on('close', function (had_error) {
+        console.log("closed")
+          console.log(had_error)
+      });
+      this.stream.on('end', function () {
+          console.log("Ended")
+      });
+      this.stream.on('data', function (data) {
+        _this.userInput(data)
+      });
     }
 
     initResize(el,resizer){
@@ -116,8 +143,8 @@ export default class Term {
       // this.xterm.writeln(mssg)
       // this.outputChannel.append(mssg);
       // this.terminal.sendText(mssg)
-      console.log(mssg+"\r\n")
-
+    
+      this.stream.write(mssg+"\r\n")
       this.lastWrite += mssg
       if(this.lastWrite.length > 20){
         this.lastWrite = this.lastWrite.substring(1)
@@ -128,7 +155,8 @@ export default class Term {
       // this.xterm.write(mssg)
       // this.outputChannel.append(mssg);
       // this.terminal.sendText(mssg)
-      console.log(mssg)
+      
+      this.stream.write(mssg)
 
       this.lastWrite += mssg
       if(this.lastWrite.length > 20){
