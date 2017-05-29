@@ -2,18 +2,14 @@
 
 var fs = require('fs');
 
-var COMPORT_MANUFACTURERS = ['Pycom Ltd.','FTDI']
-
-var SerialPort = require("serialport");
-
-// var SerialPort = null
+var SerialPort = null
 // try {
-//   SerialPort = require("serialport");
+// SerialPort = require("serialport");
 // } catch (e) {
 //   // include the precompiled version of serialport
 //   var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
 //   if(process.platform in precompiles) { // always returns win32 on windows, even on 64bit
-//     SerialPort = require("./serialport-" + precompiles[process.platform] + "/lib/serialport");
+//     SerialPort = require("../../precompiles/serialport-" + precompiles[process.platform] + "/lib/serialport");
 //   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
 //     throw e;
 //   }
@@ -32,7 +28,11 @@ export default class PySerial {
     });
   }
 
-
+  list(cb){
+    this.stream.list(function(ports){
+      // TODO: implement returning list of comport names
+    })
+  }
 
   connect(onconnect,onerror,ontimeout){
 
@@ -41,31 +41,28 @@ export default class PySerial {
 
     // open errors will be emitted as an error event
     this.stream.on('error', function(err) {
+
       if(!error_thrown){
         error_thrown = true
         onerror(new Error(err))
       }
-    })
 
+    })
     var timeout = null
     this.stream.open(function(){
       _this.send('\r\n',function(){
           clearTimeout(timeout)
           onconnect()
       })
-
       timeout = setTimeout(function(){
         ontimeout(new Error("Timeout while connecting"))
-        _this.disconnect(function(){
-
-        })
+        _this.disconnect()
       },_this.params.timeout)
     })
   }
 
-  disconnect(cb){
+  disconnect(){
     this.stream.close()
-    cb()
   }
 
   registerListener(cb){
@@ -114,28 +111,8 @@ export default class PySerial {
     }
   }
 
-  static list(cb){
-    SerialPort.list(function(err,ports){
-      var portnames = []
-      var other_portnames = []
-      for(var i=0;i<ports.length;i++){
-        var manu = ports[i].manufacturer
-        if(COMPORT_MANUFACTURERS.indexOf(manu) > -1){
-          if(COMPORT_MANUFACTURERS[0] == manu){
-            portnames.unshift(ports[i].comName) // push to top of array
-          }else{
-            portnames.push(ports[i].comName)
-          }
-        }else{
-          other_portnames.push(ports[i].comName)
-        }
-      }
-      cb(portnames.concat(other_portnames))
-    })
-  }
-
   sendPing(){
-    // not implemented
+
   }
 
   flush(cb){

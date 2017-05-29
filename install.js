@@ -12,7 +12,7 @@ if (process.platform != 'win32') {
         if(error){
           console.log(error)
         }else{
-          exec('$(npm bin)/electron-rebuild -f -w serialport -v 1.3.13',
+          exec('$(npm bin)/electron-rebuild -f -w serialport -v 1.6.8',
           function(error,stout,stderr){
             if(error){
               console.log(error)

@@ -49,12 +49,12 @@ export default class PySocket {
     });
   }
 
-  disconnect(cb){
+  disconnect(){
     if(this.stream){
       this.stream.destroy();
       this.stream = null;
     }
-    cb()
+
   }
 
   registerListener(cb){

@@ -1,5 +1,3 @@
-// From: https://www.npmjs.com/package/telnetit
-
 var Telnet = require('./util-telnet');
 var fs = require('fs');
 var path = require('path');
@@ -18,7 +16,6 @@ function TelnetClient(name){
 	var connectCallback = null;	// the message to call if err or if connect succ.
 	var _this = this;			// this
 	var reportErrorHandler = null; //report error to conn manager
-	var reportEndHandler = null; //report end to conn manager
 	var reportTimeoutHandler = null // reports timeout to conn manager
 	var reportAYTHandler = null // reports timeout to conn manager
 	var cloneobj=function(obj){
@@ -50,13 +47,6 @@ function TelnetClient(name){
 				}
 			}
 		}
-	}
-
-	/**
-	* set handler for end of connection
-	**/
-	this.setReportEndHandler = function(fnFromConnManage){
-		reportEndHandler = fnFromConnManage;
 	}
 
 	/**
@@ -130,7 +120,7 @@ function TelnetClient(name){
 	* on connection close.
 	**/
 	c.on('close', function (had_error) {
-		format.log(name, 'close');
+		//format.log(name, 'close');
 		_this.close();
 	});
 
@@ -139,7 +129,6 @@ function TelnetClient(name){
 	**/
 	c.on('end', function () {
 		format.log(name, 'end');
-		if(reportEndHandler){reportEndHandler(_this,error);}
 	});
 
 	/**

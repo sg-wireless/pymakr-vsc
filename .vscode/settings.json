@@ -1,3 +1,5 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    "terminal.integrated.shell.osx": "/Users/Ralph/github/test/test/terminalExec.js"
 }
+

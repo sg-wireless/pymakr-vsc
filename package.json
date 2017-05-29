@@ -13,12 +13,24 @@
   "activationEvents": [
     "*"
   ],
-  "main": "./extension",
+  "main": "./pymakr",
   "contributes": {
     "commands": [
       {
-        "command": "extension.toggleREPL",
-        "title": "Pymakr Terminal"
+        "command": "pymakr.connect",
+        "title": "Pymakr > connect"
+      },
+      {
+        "command": "pymakr.command",
+        "title": "Pymakr > input command"
+      },
+      {
+        "command": "pymakr.toggleREPL",
+        "title": "Pymakr > Toggle terminal"
+      },
+      {
+        "command": "pymakr.run",
+        "title": "Pymakr > Run current file"
       }
     ]
   },
@@ -26,17 +38,16 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test",
     "babel-watch": "babel src --out-dir lib",
-    
     "install": "node install.js"
-  
   },
-  "dependencies":{
+  "dependencies": {
+    "element-resize-detector": "1.1.11",
+    "serialport": "^4.0.7",
     "telnet-client": "^0.13.0",
-    "xterm": "^2.3.2",
-    "element-resize-detector":"1.1.11"
+    "xterm": "^2.3.2"
   },
   "devDependencies": {
-    "babel-preset-es2015":"6.24.1",
+    "babel-preset-es2015": "6.24.1",
     "@types/mocha": "^2.2.32",
     "@types/node": "^6.0.40",
     "babel-cli": "^6.24.1",

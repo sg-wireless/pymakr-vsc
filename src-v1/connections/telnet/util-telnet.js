@@ -45,6 +45,7 @@ var Telnet = function () {
 }
 util.inherits(Telnet, EventEmitter);
 Telnet.prototype.connect = function (opts) {
+
     this._host = opts.host || 'localhost';
     this._port = opts.port || 23;
     this._log = opts.log || false;
@@ -56,8 +57,8 @@ Telnet.prototype.connect = function (opts) {
     this._authenticated = false;
     this._sock = (opts.sock ? opts.sock : new Socket());
     var _self = this;
+    this._sock.connect(this._port, this._host);
     this._sock.setTimeout(this._timeout)
-    
     this._sock.on('connect', function () {
         _self.emit('connect');
     });
@@ -76,7 +77,6 @@ Telnet.prototype.connect = function (opts) {
     this._sock.on('close', function (had_error) {
         _self.emit('close', had_error);
     });
-    this._sock.connect(this._port, this._host);
 }
 Telnet.prototype.processBuffer = function (buffer) {
     var _self = this;

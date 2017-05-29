@@ -23,7 +23,7 @@ var RUNNING_FILE=4
 
 export default class Pyboard {
 
-  constructor(settings){
+  constructor(timeout){
     this.connected = false
     this.connecting = false
     this.receive_buffer = ""
@@ -34,8 +34,7 @@ export default class Pyboard {
     this.pingTimer = null
     this.isSerial = false
     this.type = null
-    this.settings = settings
-    this.timeout = settings.timeout
+    this.timeout = timeout
     this.authorize = new Authorize(this)
     this.logger = new Logger('Pyboard')
     this.config = Config.constants()
@@ -43,15 +42,14 @@ export default class Pyboard {
   }
 
   refreshConfig(){
-    this.settings.refresh()
     this.params = {
-      host: this.settings.address,
+      host: "10.0.0.107",
       port: 23,
-      username: this.settings.username,
-      password:this.settings.password,
+      username: "micro",
+      password:"python",
       enpassword:"",
-      timeout: this.settings.timeout,
-      ctrl_c_on_connect: this.settings.ctrl_c_on_connect
+      timeout: this.timeout,
+      ctrl_c_on_connect: false
     }
   }
 
@@ -90,18 +88,6 @@ export default class Pyboard {
   enter_friendly_repl(callback){
     var _this = this
     _this.send_wait_for_blocking(CTRL_B,'Type "help()" for more information.\r\n>>>',function(err){
-      if(!err){
-        _this.setStatus(FRIENDLY_REPL)
-      }
-      if(callback){
-        callback(err)
-      }
-    })
-  }
-
-  enter_friendly_repl_wait(callback){
-    var _this = this
-    _this.send_wait_for(CTRL_B,'Type "help()" for more information.\r\n>>>',function(err){
       if(!err){
         _this.setStatus(FRIENDLY_REPL)
       }
@@ -248,13 +234,9 @@ export default class Pyboard {
     }
   }
 
-  _disconnected(cb){
+  _disconnected(){
     if(this.connection){
-      this.connection.disconnect(function(){
-        if(cb){
-          cb()
-        }
-      })
+      this.connection.disconnect()
     }
     this.connecting = false
     this.connected = false
@@ -269,7 +251,6 @@ export default class Pyboard {
     }
 
     if(this.waiting_for != null){
-      this.logger.silly("Waiting for "+this.waiting_for)
       this.receive_buffer += mssg
       if(this.receive_buffer.indexOf("Invalid credentials, try again.") > -1){
         this._disconnected()
@@ -280,7 +261,6 @@ export default class Pyboard {
         })
       }
       if(this.waiting_for_type == 'length'){
-        this.logger.silly("Waiting for "+this.waiting_for+", got "+this.receive_buffer.length+" so far")
         if(this.receive_buffer.length >= this.waiting_for){
           this.stopWaitingFor(this.receive_buffer)
         }
@@ -307,13 +287,14 @@ export default class Pyboard {
     }
   }
 
-  disconnect(cb){
-    this.disconnect_silent(cb)
+
+  disconnect(){
+    this.disconnect_silent()
     this.setStatus(DISCONNECTED)
   }
 
-  disconnect_silent(cb){
-    this._disconnected(cb)
+  disconnect_silent(){
+    this._disconnected()
   }
 
   run(filecontents,cb){
@@ -326,7 +307,7 @@ export default class Pyboard {
         setTimeout(function(){
           _this.exec_raw(filecontents+"\r\n",function(){
             _this.wait_for(">",function(){
-                _this.enter_friendly_repl_wait(cb)
+                _this.enter_friendly_repl(cb)
             })
           })
         },run_delay)
@@ -417,9 +398,9 @@ export default class Pyboard {
     if(timeout){
       this.waiting_for_timer = setTimeout(function(){
         if (_this.waiting_for_cb) {
-          _this.waiting_for_cb(new Error("timeout"),_this.receive_buffer)
+          _this.waiting_for_cb(new Error("timeout"))
           _this.waiting_for_cb = null
-          _this.wait_for_block = false
+          this.wait_for_block = false
           _this.waiting_for = null
         }
       },timeout)
@@ -465,5 +446,6 @@ export default class Pyboard {
     }
     return ""
   }
+
 
 }

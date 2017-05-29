@@ -17,19 +17,12 @@ class ReadTimeout(Exception):
 class SerialPortConnection(object):
     def __init__(self):
         import machine
-        self.disconnectWLAN()
         self.original_term = os.dupterm()
         os.dupterm(None) # disconnect the current serial port connection
         self.serial = machine.UART(0, 115200)
         self.poll = select.poll()
         self.poll.register(self.serial, select.POLLIN)
         self.write = self.serial.write
-
-    def disconnectWLAN(self):
-        # disconnedt wlan because it spams debug messages that disturb the monitor protocol
-        from network import WLAN
-        wlan = WLAN(mode=WLAN.STA)
-        wlan.disconnect()
 
     def destroy(self):
         os.dupterm(self.original_term)
@@ -81,17 +74,12 @@ class InbandCommunication(object):
         self.carry_over = b''
         self.callback = callback
 
-    def read(self, size, getESC=True):
+    def read(self, size):
         data = self.stream.read(size)
         if self.carry_over != b'': # check if a previous call generated a surplus
             data = self.carry_over + data
             self.carry_over = b''
         esc_pos = data.find(b'\x1b') # see if there is any ESC in the bytestream
-
-        # ignore only esc's in middle of a package, not at the start
-        if getESC == False and esc_pos > 0:
-            esc_pos = -1
-
         while esc_pos != -1:
             max_idx = len(data) - 1
             if esc_pos != max_idx:
@@ -127,10 +115,10 @@ class InbandCommunication(object):
                 break
         return data
 
-    def read_exactly(self, size, getESC=True):
+    def read_exactly(self, size):
         data = b''
         while 1:
-            data += self.read(size,getESC)
+            data += self.read(size)
             if len(data) == size:
                 return data
 
@@ -171,7 +159,7 @@ class Monitor(object):
         return struct.unpack('>H', two_chars)[0]
 
     def read_int32(self):
-        v = self.stream.read_exactly(4,False)
+        v = self.stream.read_exactly(4)
         return struct.unpack('>L', v)[0]
 
     def write_int16(self, value):
@@ -199,11 +187,8 @@ class Monitor(object):
         machine.reset()
 
     def exit_monitor(self):
-        from network import WLAN
-        wlan = WLAN(mode=WLAN.STA_AP)
         self.running = False
         self.connection.destroy()
-
 
     @staticmethod
     def encode_str_len32(contents):
@@ -218,7 +203,6 @@ class Monitor(object):
         name = self.stream.read_exactly(self.read_int16())
 
         dest = open(name, "w")
-
         data_len = self.read_int32()
 
         while data_len != 0:

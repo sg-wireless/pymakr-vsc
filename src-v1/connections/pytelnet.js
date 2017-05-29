@@ -1,7 +1,6 @@
 'use babel';
 
 import TelnetClient from './telnet/telnetcli.js';
-import Logger from '../board/logger.js';
 
 var AYT = '\xff\xf6'
 
@@ -11,7 +10,6 @@ export default class PyTelnet {
     this.type = "telnet"
     this.stream = new TelnetClient('pycomboard');
     this.connected = false
-    this.logger = new Logger('PyTelnet')
     this.listening = false
     this.username_sent = false
     this.password_sent = false
@@ -19,6 +17,7 @@ export default class PyTelnet {
     this.pingTimer = null
     this.receive_buffer = ""
     this.ayt_pending = false
+
   }
 
   sendPing(){
@@ -32,7 +31,6 @@ export default class PyTelnet {
   }
 
   connect(onconnect,onerror,ontimeout){
-    this.logger.verbose("Connecting to telnet on "+this.params.host)
     this.onconnect = onconnect
     this.onerror = onerror
     this.ontimeout = ontimeout
@@ -40,7 +38,6 @@ export default class PyTelnet {
     this.password_sent = false
     var _this = this
     this.stream.connect(this.params,function(err){
-      _this.logger.silly("Connected callback ("+err+")")
       onconnect(new Error(err))
     });
     this.stream.setReportErrorHandler(function(telnet,error){
@@ -54,7 +51,6 @@ export default class PyTelnet {
 
     var timeout_triggered = false
     this.stream.setReportTimeoutHandler(function(telnet,error){
-      _this.logger.silly("Telnet timeout")
       if(ontimeout){
         if(!timeout_triggered){
           timeout_triggered = true
@@ -69,11 +65,8 @@ export default class PyTelnet {
     })
   }
 
-  disconnect(cb){
+  disconnect(){
     this.stream.close()
-    // give the connection time to close.
-    // there is no proper callback for this in the telnet lib.
-    setTimeout(cb,200)
   }
 
   registerListener(cb){

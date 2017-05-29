@@ -4,20 +4,19 @@ var crypto = require('crypto');
 import Monitor from './monitor.js'
 import Config from '../config.js'
 import Logger from './logger.js'
-import ApiWrapper from '../api-wrapper.js';
 
 export default class Sync {
   constructor(pyboard) {
     this.logger = new Logger('Sync')
-    this.api = new ApiWrapper()
     this.pyboard = pyboard
     this.total_file_size = 0
     this.total_number_of_files = 0
     this.number_of_changed_files = 0
     this.config = Config.constants()
-    this.allowed_file_types = this.api.config().get('Pymakr.sync_file_types')
+    this.lib_folder = atom.packages.resolvePackagePath('pymakr')
+    this.allowed_file_types = atom.config.get('Pymakr.sync_file_types')
     this.project_path = null
-    var project_paths = this.api.getProjectPaths()
+    var project_paths = atom.project.getPaths()
     if(project_paths.length > 0){
       this.project_path = project_paths[0]
     }
@@ -37,6 +36,7 @@ export default class Sync {
       setTimeout(function(){
         _this.progress_cb(text)
       },0)
+
     }
   }
 
@@ -47,17 +47,11 @@ export default class Sync {
     this.number_of_changed_files = 0
     this.progress_cb = progress_cb
     this.progress_file_count = 0
-    dir = dir.replace(/^\/|\/$/g, '') // remove first and last slash
+
     this.py_folder = this.project_path + "/"+dir+"/"
-    var files = null
-    var file_hashes = null
-    try {
-        files = this._getFiles(this.py_folder)
-        file_hashes = this._getFilesHashed(files)
-    } catch(e){
-      cb(new Error(e))
-      return
-    }
+    var files = this._getFiles(this.py_folder)
+
+    var file_hashes = this._getFilesHashed(files)
 
     if(this.total_file_size > this.config.max_sync_size){
       err = "Total size of "+this.total_number_of_files.toString()+" files too big ("+parseInt(this.total_file_size/1000).toString()+"kb). Reduce the total filesize to < 350kb or select the correct sync folder in the settings"
@@ -70,21 +64,22 @@ export default class Sync {
       if(err){
         cb(err)
         _this.exit(function(){
-          // do nothing, callback with error has already been called
+          // do nothiing, callback with error has already been called
         })
 
       }else{
-        _this.progress("Reading file status")
         _this.logger.info('Reading pymakr file')
         _this.monitor.readFile('project.pymakr',function(err,content){
+          if(err){
+            cb(err)
+            return
+          }
           var jsonContent = []
           try{
             jsonContent = JSON.parse(content)
 
           } catch(SyntaxError){
-             // No valid JSON file, writing all files
-             _this.progress("Failed to read project status, synchronizing all files")
-
+             //No valid JSON file, writing all files
           }
           var changes = _this._getChangedFiles(file_hashes,jsonContent)
 
@@ -99,9 +94,10 @@ export default class Sync {
           }
 
           if(deletes.length == 0 && changed_files.length == 0 && changed_folders.length == 0){
-            _this.progress("No files to synchronize")
-            _this.exit(cb)
-            return
+            _this.progress("No files to sync")
+            _this.exit(function(){
+              cb()
+            })
           }else{
             _this.logger.info('Removing files')
             _this.removeFilesRecursive(deletes,function(){
@@ -233,16 +229,14 @@ export default class Sync {
 
     for(var i=0;i<files.length;i++){
       var filename = path + files[i]
-      if(filename.length > 0 && filename.substring(0,1) != "." && files[i].substring(0,1) != "." && files[i].length > 0){
+      if(filename.length > 0 && filename.substring(0,1) != "."){
         var file_path = this.py_folder + filename
         var stats = fs.lstatSync(file_path)
         if(stats.isDirectory()){
+          var hash = crypto.createHash('sha256').update(filename).digest('hex')
+          file_hashes.push([filename,"d",hash])
           var files_from_folder = this._getFiles(file_path)
-          if(files_from_folder.length > 0){
-            var hash = crypto.createHash('sha256').update(filename).digest('hex')
-            file_hashes.push([filename,"d",hash])
-            file_hashes = file_hashes.concat(this._getFilesHashed(files_from_folder,filename+"/"))
-          }
+          file_hashes = file_hashes.concat(this._getFilesHashed(files_from_folder,filename+"/"))
         }else if(allowed_file_types.indexOf(filename.split('.').pop()) > -1){
           this.total_file_size += stats.size
           this.total_number_of_files += 1
