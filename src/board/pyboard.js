@@ -140,10 +140,14 @@ export default class Pyboard {
   }
 
   enter_raw_repl_no_reset(callback){
+    console.log("Entering raw repl")
     var _this = this
     this.stop_running_programs(function(){
+      console.log("Stopped running programs")
       _this.flush(function(){
+        console.log("Flushed")
         _this.send_wait_for_blocking(CTRL_A,'raw REPL; CTRL-B to exit\r\n>',function(err){
+          console.log("Found after blocking wait")
           if(!err){
             _this.setStatus(RAW_REPL)
           }
@@ -344,7 +348,7 @@ export default class Pyboard {
 
   send_cmd(cmd,cb){
     var mssg = '\x1b' + cmd
-    data = new Buffer(mssg,"binary")
+    var data = new Buffer(mssg,"binary")
     this.connection.send_raw(data,cb)
   }
 

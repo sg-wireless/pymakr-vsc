@@ -9,20 +9,26 @@ const ee = new EventEmitter();
 export default class Monitor {
 
   constructor(pyboard,cb){
+    console.log("Creating monitor")
     this.logger = new Logger('Monitor')
     this.pyboard = pyboard
     this.disconnecting = false
     this.callbacks = null
+    console.log("Creating api wrapper")
     this.api = new ApiWrapper()
-    lib_folder = this.api.getPackageSrcPath()
-
-    data = fs.readFileSync(lib_folder + 'board/python/monitor.py','utf8')
-    connection_type_params = this.getScriptParams()
+    console.log("Creating package src path")
+    var lib_folder = this.api.getPackageSrcPath()
+    console.log(lib_folder)
+    var data = fs.readFileSync(lib_folder + 'board/python/monitor.py','utf8')
+    console.log(data)
+    var connection_type_params = this.getScriptParams()
     data = connection_type_params + data
 
     var _this = this
 
+    console.log("entering raw repl")
     this.pyboard.enter_raw_repl_no_reset(function(err){
+      console.log("entered raw repl")
       if(err){
         cb(err)
         return
@@ -41,11 +47,12 @@ export default class Monitor {
   }
 
   getScriptParams(){
+    console.log("Get script params")
     if(this.pyboard.isSerial){
       return "connection_type = 'u'\nTIMEOUT = 5000\n"
     }else{
-      var pass = this.api.config().get('Pymakr.password')
-      var user = this.api.config().get('Pymakr.username')
+      var pass = this.api.config().get('password')
+      var user = this.api.config().get('username')
       return "connection_type = 's'\ntelnet_login = ('"+pass+"', '"+user+"')\nTIMEOUT = 5000\n"
     }
   }

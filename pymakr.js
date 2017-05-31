@@ -11,12 +11,13 @@ function activate(context) {
     var terminalActive = true
 
     var sw = new SettingsWrapper()
+    var pb,v
 
     setTimeout(function(){
-        var pb = new pyboard(sw)
-        var v = new view("",pb)
+        pb = new pyboard(sw)
+        v = new view("",pb,sw)
         v.addPanel()
-    },500)
+    },740)
     
 
     var disposable = vscode.commands.registerCommand('pymakr.connect', function () {

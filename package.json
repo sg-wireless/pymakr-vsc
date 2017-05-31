@@ -29,6 +29,10 @@
         "title": "Pymakr > Toggle terminal"
       },
       {
+        "command": "pymakr.sync",
+        "title": "Pymakr > Synchronize project"
+      },
+      {
         "command": "pymakr.run",
         "title": "Pymakr > Run current file"
       }

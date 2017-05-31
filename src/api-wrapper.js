@@ -36,6 +36,8 @@ export default class ApiWrapper {
   }
 
   getPackageSrcPath(){
+    console.log("Returning src path")
+    return "/Users/Ralph/github/test/test/src/"
     // return atom.packages.resolvePackagePath('Pymakr') + "/lib/"
   }
 
@@ -49,20 +51,22 @@ export default class ApiWrapper {
   }
 
   getProjectPaths(){
-    console.log(workspace.textDocuments)
-    return workspace.textDocuments
+    // console.log(workspace.textDocuments)
+    // return workspace.textDocuments
     // var project_paths = atom.project.getPaths()
     // if(project_paths.length > 0){
     //   return project_paths[0]
     // }
-    // return null 
+    return ["/Users/Ralph/Projects/PymakrAtomTest/"] 
   }
 
   getProjectPath(){
     var project_paths = this.getProjectPaths()
     if(project_paths.length > 0){
+      console.log(project_paths[0])
       return project_paths[0]
     }
+    return null
     
   }
 

@@ -5,9 +5,11 @@ import Monitor from './monitor.js'
 import Config from '../config.js'
 import Logger from './logger.js'
 import ApiWrapper from '../api-wrapper.js';
+var fs = require('fs');
 
 export default class Sync {
   constructor(pyboard) {
+    console.log("Creating sync obj")
     this.logger = new Logger('Sync')
     this.api = new ApiWrapper()
     this.pyboard = pyboard
@@ -15,12 +17,9 @@ export default class Sync {
     this.total_number_of_files = 0
     this.number_of_changed_files = 0
     this.config = Config.constants()
-    this.allowed_file_types = this.api.config().get('Pymakr.sync_file_types')
-    this.project_path = null
-    var project_paths = this.api.getProjectPaths()
-    if(project_paths.length > 0){
-      this.project_path = project_paths[0]
-    }
+    this.allowed_file_types = this.api.config().get('sync_file_types')
+    this.project_path = this.api.getProjectPath()
+    console.log("created sync obj")
   }
 
   exists(dir){
@@ -41,6 +40,7 @@ export default class Sync {
   }
 
   start(dir,cb,progress_cb){
+    console.log("sync.start")
     var _this = this
     this.total_file_size = 0
     this.total_number_of_files = 0
@@ -50,23 +50,28 @@ export default class Sync {
     dir = dir.replace(/^\/|\/$/g, '') // remove first and last slash
     this.py_folder = this.project_path + "/"+dir+"/"
     var files = null
-    var file_hashes = null
+    
+    var file_hash_list = null
     try {
         files = this._getFiles(this.py_folder)
-        file_hashes = this._getFilesHashed(files)
+        file_hash_list = this._getFilesHashed(files)
     } catch(e){
       cb(new Error(e))
       return
     }
 
-    if(this.total_file_size > this.config.max_sync_size){
-      err = "Total size of "+this.total_number_of_files.toString()+" files too big ("+parseInt(this.total_file_size/1000).toString()+"kb). Reduce the total filesize to < 350kb or select the correct sync folder in the settings"
+    console.log(file_hash_list)
 
+    if(this.total_file_size > this.config.max_sync_size){
+      console.log("max size exceeded")
+      err = "Total size of "+this.total_number_of_files.toString()+" files too big ("+parseInt(this.total_file_size/1000).toString()+"kb). Reduce the total filesize to < 350kb or select the correct sync folder in the settings"
       cb(new Error(err))
       return
     }
 
+
     this.init(function(err){
+      console.log("Initialised")
       if(err){
         cb(err)
         _this.exit(function(){
@@ -86,7 +91,7 @@ export default class Sync {
              _this.progress("Failed to read project status, synchronizing all files")
 
           }
-          var changes = _this._getChangedFiles(file_hashes,jsonContent)
+          var changes = _this._getChangedFiles(file_hash_list,jsonContent)
 
           var deletes = changes["delete"]
           var changed_files = changes["files"]
@@ -120,7 +125,7 @@ export default class Sync {
                   }
                   setTimeout(function(){
                     _this.logger.info('Writing project file')
-                    _this.monitor.writeFile('project.pymakr',JSON.stringify(file_hashes),function(err){
+                    _this.monitor.writeFile('project.pymakr',JSON.stringify(file_hash_list),function(err){
                       if(err){
                         _this.throwError(cb,err)
                         return
@@ -225,7 +230,7 @@ export default class Sync {
     if(!path){
       path = ""
     }
-    file_hashes = []
+    var file_hashes = []
     var allowed_file_types = this.allowed_file_types.split(',')
     for(var i = 0; i < allowed_file_types.length; i++) {
       allowed_file_types[i] = allowed_file_types[i].trim();
@@ -292,7 +297,7 @@ export default class Sync {
   }
 
   exit(cb){
-    _this = this
+    var _this = this
     this.monitor.exit(cb)
   }
 }
