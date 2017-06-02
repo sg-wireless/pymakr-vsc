@@ -20,6 +20,7 @@ export default class Term {
       this.onMessage = function(){}
       this.term_rows = Config.constants().term_rows
       this.lastWrite = ""
+      this.connection_attempt = 1
 
       //dragging
       this.startY = null
@@ -35,40 +36,56 @@ export default class Term {
       })
 
       this.connect(cb)
+    }
 
-      // // for copy-paste with cmd key
-      // this.element.addEventListener("keydown",function(e) {
-      //   if ((e.keyCode == 67 || e.keyCode == 86) && e.metaKey) {
-      //     _this.termKeyPress("",e)
-      //   }
-      // })
-
-      // this.outputChannel = vscode.window.createOutputChannel('PyMakr Terminal');
-      // this.outputChannel.show();
-
-      // this.terminal = vscode.window.createTerminal("Pymakr","node ./terminalExec.js",["blaat"])
-      // this.terminal.show(true)
-
-      // this.xterm.open(element,true);
+    connectReattempt(cb){
+      var _this = this
+      this.connection_attempt +=1
+      setTimeout(function(){
+        _this.connect(cb)
+      },200)
+      
     }
 
     connect(cb){
+      
+      console.log("Connection atempt "+this.connection_attempt)
+      if(this.connection_attempt > 8) {
+        cb(new Error("Unable to start the terminal. Restart VSC or file an issue on our github"))
+        return
+      }
       var _this = this
+      var stopped = false
       this.stream = new Socket();
       this.stream.connect(this.port,this.host);
       this.stream.on('connect',cb);
       this.stream.on('timeout', function () {
-          console.log("Timed out")
+        if(!stopped){
+          stopped = true
+          _this.connectReattempt(cb)
+        }
       });
       this.stream.on('error', function (error) {
         console.log(error)
+        if(!stopped){
+          stopped = true
+          _this.connectReattempt(cb)
+        }
       });
       this.stream.on('close', function (had_error) {
         console.log("closed")
-          console.log(had_error)
+        console.log(had_error)
+        if(!stopped){
+          stopped = true
+          _this.connectReattempt(cb)
+        }
       });
       this.stream.on('end', function () {
           console.log("Ended")
+          if(!stopped){
+          stopped = true
+          _this.connectReattempt(cb)
+        }
       });
       this.stream.on('data', function (data) {
         _this.userInput(data)
@@ -92,8 +109,6 @@ export default class Term {
         if(lineHeight == 0){
           lineHeight = startTermHeight / startRows
         }
-        // document.documentElement.addEventListener('mousemove',onMouseMove,false)
-        // document.documentElement.addEventListener('mouseup',stopDrag,false)
 
       }
       function onMouseMove(e){
@@ -140,10 +155,6 @@ export default class Term {
     }
 
     writeln(mssg){
-      // this.xterm.writeln(mssg)
-      // this.outputChannel.append(mssg);
-      // this.terminal.sendText(mssg)
-    
       this.stream.write(mssg+"\r\n")
       this.lastWrite += mssg
       if(this.lastWrite.length > 20){
@@ -152,10 +163,6 @@ export default class Term {
     }
 
     write(mssg){
-      // this.xterm.write(mssg)
-      // this.outputChannel.append(mssg);
-      // this.terminal.sendText(mssg)
-      
       this.stream.write(mssg)
 
       this.lastWrite += mssg

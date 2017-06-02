@@ -2,7 +2,8 @@
 const EventEmitter = require('events');
 var fs = require('fs');
 var vscode = require('vscode');
-import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace} from 'vscode';
+var ncp = require('copy-paste')
+import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace, extension} from 'vscode';
 
 export default class ApiWrapper {
   constructor() {
@@ -24,11 +25,18 @@ export default class ApiWrapper {
   }
 
   openSettings(){
+    var settings = workspace.getConfiguration()
+    var values = settings.get('configurations')
+    console.log(settings)
+    console.log(values)
+
     // atom.workspace.open("atom://config/packages/Pymakr")
   }
 
   writeToCipboard(text){
-    // atom.clipboard.write(text)
+    ncp.copy(text,function(){
+      // completed
+    })
   }
 
   addBottomPanel(options){
@@ -36,6 +44,7 @@ export default class ApiWrapper {
   }
 
   getPackageSrcPath(){
+    // console.log(vscode.extension.getExtension("test.test"))
     console.log("Returning src path")
     return "/Users/Ralph/github/test/test/src/"
     // return atom.packages.resolvePackagePath('Pymakr') + "/lib/"
@@ -43,7 +52,7 @@ export default class ApiWrapper {
 
   clipboard(){
     // return atom.clipboard.read()
-    return ""
+    return ncp.paste()
   }
 
   writeClipboard(text){
@@ -51,23 +60,17 @@ export default class ApiWrapper {
   }
 
   getProjectPaths(){
-    // console.log(workspace.textDocuments)
-    // return workspace.textDocuments
-    // var project_paths = atom.project.getPaths()
-    // if(project_paths.length > 0){
-    //   return project_paths[0]
-    // }
-    return ["/Users/Ralph/Projects/PymakrAtomTest/"] 
+    // console.log(extension.getExtension("test.test"))
+    var folder = workspace.rootPath
+    if(path != "") []
+    return [folder] 
   }
 
   getProjectPath(){
-    var project_paths = this.getProjectPaths()
-    if(project_paths.length > 0){
-      console.log(project_paths[0])
-      return project_paths[0]
-    }
+    // console.log(extension.getExtension("test.test"))
+    var path =  workspace.rootPath
+    if(path != "") return path
     return null
-    
   }
 
   getCurrentFile(cb,onerror){

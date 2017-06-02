@@ -2,14 +2,14 @@
 const EventEmitter = require('events');
 import ApiWrapper from './api-wrapper.js';
 var fs = require('fs');
+var vscode = require('vscode');
 
 export default class SettingsWrapper extends EventEmitter {
   constructor() {
     super()
-    this.project_path = null
     this.project_config = {}
     this.api = new ApiWrapper()
-    var project_path = this.api.getProjectPath()
+    this.project_path = this.api.getProjectPath()
     this.config_file = this.project_path+"/pymakr.conf"
     this.json_valid = true
 
@@ -84,30 +84,52 @@ export default class SettingsWrapper extends EventEmitter {
 
   getDefaultProjectConfig(){
     return {
-        "address": this.api.config.get('address'),
-        "username": this.api.config.get('username'),
-        "password": this.api.config.get('password'),
-        "sync_folder": this.api.config.get('sync_folder')
+        "address": this.api.config().get('address'),
+        "username": this.api.config().get('username'),
+        "password": this.api.config().get('password'),
+        "sync_folder": this.api.config().get('sync_folder')
     }
+  }
+
+  openGeneralSettings(){
+    this.api.openSettings()
   }
 
   openProjectSettings(cb){
     var _this = this
+    console.log("Opening project settings")
     if(this.project_path){
+      console.log(this.project_path)
       var config_file = this.config_file
+      console.log(config_file)
       fs.open(config_file,'r',function(err,contents){
+          console.log("Opened config file")
           if(err){
+            console.log("Doesn't exist yet... crating new")
             var json_string = _this.newProjectSettingsJson()
+            console.log("Got the json content")
             fs.writeFile(config_file, json_string, function(err) {
               if(err){
+                console.log("Failed to create file")
                 cb(new Error(err))
                 return
               }
               _this.watchConfigFile()
-              atom.workspace.open(config_file)
+              console.log("Opening file in workspace")
+              var uri = vscode.Uri.file(config_file)
+              console.log(uri)
+              vscode.workspace.openTextDocument(uri).then(function(textDoc){
+                console.log("Opened")
+              })  
             })
           }else{
-            atom.workspace.open(config_file)
+            console.log("Opening file in workspace")
+            var uri = vscode.Uri.file(config_file)
+            console.log(uri)
+            vscode.workspace.openTextDocument(uri).then(function(textDoc){
+              vscode.window.showTextDocument(textDoc)
+              
+            })
           }
           cb()
       })

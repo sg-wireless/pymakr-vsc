@@ -229,6 +229,22 @@ export default class PymakrView {
     }
   }
 
+  openProjectSettings(){
+    this.settings.openProjectSettings(function(err){
+        if(err){
+          console.log(err)
+          _this.terminal.writeln(err.message)
+          if(_this.pyboard.connected){
+            _this.terminal.writePrompt()
+          }
+        }
+      })
+  }
+
+  openGlobalSettings(){
+    this.api.openSettings()
+  }
+
   // refresh button display based on current status
   setButtonState(){
     if (!this.visible) {
@@ -443,7 +459,6 @@ export default class PymakrView {
 
     console.log("Starting sync")
     _this.syncObj.start(sync_folder,oncomplete,onprogress)
-
 
   }
 

@@ -26,7 +26,7 @@
       },
       {
         "command": "pymakr.toggleREPL",
-        "title": "Pymakr > Toggle terminal"
+        "title": "Pymakr > Toggle pymakr terminal"
       },
       {
         "command": "pymakr.sync",
@@ -35,6 +35,14 @@
       {
         "command": "pymakr.run",
         "title": "Pymakr > Run current file"
+      },
+      {
+        "command": "pymakr.projectSettings",
+        "title": "Pymakr > Project Settings"
+      },
+      {
+        "command": "pymakr.globalSettings",
+        "title": "Pymakr > Global Settings"
       }
     ]
   },
@@ -45,6 +53,7 @@
     "install": "node install.js"
   },
   "dependencies": {
+    "copy-paste": "^1.3.0",
     "element-resize-detector": "1.1.11",
     "serialport": "^4.0.7",
     "telnet-client": "^0.13.0",

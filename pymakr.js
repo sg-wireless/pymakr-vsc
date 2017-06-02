@@ -8,63 +8,86 @@ function activate(context) {
     var terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: "/Users/Ralph/github/test/test/terminalExec.js"} )
     terminal.show()
 
+
     var terminalActive = true
 
     var sw = new SettingsWrapper()
     var pb,v
 
-    setTimeout(function(){
-        pb = new pyboard(sw)
-        v = new view("",pb,sw)
-        v.addPanel()
-    },740)
+    pb = new pyboard(sw)
+    v = new view("",pb,sw)
+    v.addPanel()
     
 
     var disposable = vscode.commands.registerCommand('pymakr.connect', function () {
         v.connect()
     })
+    context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.command', function () {
         vscode.window.showInputBox({prompt: 'Type your command'})
             .then(function(val){
-                    if(val){
-                        pb.send_user_input(val+"\r\n",function(err){
-                            if(err && err.message == 'timeout'){
-                                _this.disconnect()
-                            }
-                        })
-                        vscode.commands.executeCommand("pycom.command")
-                    }
+                if(val){
+                    pb.send_user_input(val+"\r\n",function(err){
+                        if(err && err.message == 'timeout'){
+                            _this.disconnect()
+                        }
+                    })
+                    vscode.commands.executeCommand("pycom.command")
                 }
-            );
+            }
+        );
     })
-
+    context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.run', function () {
         console.log("Running")
         v.run()
     })
+    context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.sync', function () {
         console.log("Syncing")
         v.sync()
     })
+    context.subscriptions.push(disposable);
+
+    var disposable = vscode.commands.registerCommand('pymakr.globalSettings', function () {
+        console.log("Settings")
+        v.openGlobalSettings()
+    })
+    context.subscriptions.push(disposable);
+
+
+    var disposable = vscode.commands.registerCommand('pymakr.projectSettings', function () {
+        console.log("Settings")
+        v.openProjectSettings()
+    })
+    context.subscriptions.push(disposable);
+
 
     var disposable = vscode.commands.registerCommand('pymakr.toggleREPL', function () {
         // The code you place here will be executed every time your command is executed
 
         // Display a message box to the user
         if (terminalActive){
-            // window.hide()
-            v.hidePanel()
             terminalActive = false
+            terminal.hide()
+            v.disconnect()
         }else{
-            v.showPanel()
-            // outputChannel.append('Visual Studio Code is awesome!');
             terminalActive = true;
+            terminal.show()
+            v.connect()
+            
         }
     });
     context.subscriptions.push(disposable);
+
+    // var disposable = vscode.window.onDidClose(function(){
+    //     terminalActive = false
+    //     v.disconnect()
+    // })
+    // context.subscriptions.push(disposable);
 }
 
 
