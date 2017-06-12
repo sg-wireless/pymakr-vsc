@@ -3,6 +3,7 @@ const EventEmitter = require('events');
 var fs = require('fs');
 var vscode = require('vscode');
 var ncp = require('copy-paste')
+import Utils from './utils.js';
 import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace, extension} from 'vscode';
 
 export default class ApiWrapper {
@@ -26,9 +27,21 @@ export default class ApiWrapper {
 
   openSettings(){
     var settings = workspace.getConfiguration()
-    var values = settings.get('configurations')
+    if(!settings.has("pymakr")){
+      console.log("Updating settings")
+      console.log(settings.update("pymakr",{},true))
+    }else{
+      console.log("has settings:")
+      console.log(settings.get("pymakr"))
+    }
+    console.log("settings:")
     console.log(settings)
+    console.log('values:')
     console.log(values)
+
+    var config_file = Utils.getConfigPath("pymakr.json");
+    console.log('utils config file:')
+    console.log(config_file)
 
     // atom.workspace.open("atom://config/packages/Pymakr")
   }

@@ -3,10 +3,13 @@ const EventEmitter = require('events');
 import ApiWrapper from './api-wrapper.js';
 var fs = require('fs');
 var vscode = require('vscode');
+import Utils from './utils.js';
+import {workspace} from 'vscode';
 
 export default class SettingsWrapper extends EventEmitter {
   constructor() {
     super()
+    this.global_config = {}
     this.project_config = {}
     this.api = new ApiWrapper()
     this.project_path = this.api.getProjectPath()
@@ -14,48 +17,48 @@ export default class SettingsWrapper extends EventEmitter {
     this.json_valid = true
 
     this.refresh()
-    this.refreshProjectConfig()
+    // this.refreshConfig()
     this.watchConfigFile()
+    this.watchConfigFile(Utils.getConfigPath("pymakr.json"))
   }
 
-  watchConfigFile(){
+  watchConfigFile(file){
+    if(!file) file = this.config_file
     var _this = this
     fs.open(this.config_file,'r',function(err,content){
       if(!err){
+        console.log("Watching config file")
         fs.watch(_this.config_file,null,function(err){
-          _this.refreshProjectConfig()
+          _this.refresh()
         })
+      }else{
+        console.log(err)
       }
     })
   }
 
   refresh(){
-    this.address = this.api.config().get('address')
-    this.username = this.api.config().get('username')
-    this.password = this.api.config().get('password')
-    this.sync_folder = this.api.config().get('sync_folder')
-    this.sync_file_types = this.api.config().get('sync_file_types')
-    this.ctrl_c_on_connect = this.api.config().get('ctrl_c_on_connect')
+    console.log("Refreshing config...")
+    this.global_config = this.refreshConfig(Utils.getConfigPath("pymakr.json"))
     this.timeout = 15000
-    this.setProjectConfig()
+    this.project_config = this.refreshConfig(this.project_file)
   }
 
-  refreshProjectConfig(){
+  refreshConfig(file){
     var _this = this
-    this.project_config = {}
     var contents = null
     try{
-      contents = fs.readFileSync(this.config_file,{encoding: 'utf-8'})
+      contents = fs.readFileSync(file,{encoding: 'utf-8'})
     }catch(Error){
       // file not found
       return null
     }
-
+    var conf = {}
     if(contents){
       try{
-        var conf = JSON.parse(contents)
-        _this.project_config = conf
+        conf = JSON.parse(contents)
       }catch(SyntaxError){
+        console.log("Syntax error in "+file)
         if(_this.json_valid){
           _this.json_valid = false
           _this.emit('format_error')
@@ -63,36 +66,92 @@ export default class SettingsWrapper extends EventEmitter {
           _this.json_valid = true
         }
       }
-      _this.setProjectConfig()
+      _this.setConfig(conf)
+      return conf
     }
   }
 
-  setProjectConfig(){
-    if('address' in this.project_config){
-      this.address = this.project_config.address
+  setConfig(file){
+    console.log("Setting config:")
+    console.log(file)
+    if('address' in file){
+      this.address = file.address
     }
-    if('username' in this.project_config){
-      this.username = this.project_config.username
+    if('username' in file){
+      this.username = file.username
     }
-    if('password' in this.project_config){
-      this.password = this.project_config.password
+    if('password' in file){
+      this.password = file.password
     }
-    if('sync_folder' in this.project_config){
-      this.sync_folder = this.project_config.sync_folder
+    if('sync_folder' in file){
+      this.sync_folder = file.sync_folder
     }
+    if('sync_file_types' in file){
+      this.sync_file_types = file.sync_file_types
+    }
+    if('ctrl_c_on_connect' in file){
+      this.ctrl_c_on_connect = file.ctrl_c_on_connect
+    }
+    // this.global_config = this.refreshConfig(this.project_file)  
   }
 
-  getDefaultProjectConfig(){
-    return {
+  getDefaultConfig(global){
+    var config = {
         "address": this.api.config().get('address'),
         "username": this.api.config().get('username'),
         "password": this.api.config().get('password'),
         "sync_folder": this.api.config().get('sync_folder')
     }
+    if(global){
+      config.sync_file_types = this.api.config().get('sync_file_types')
+      config.ctrl_c_on_connect = this.api.config().get('ctrl_c_on_connect')
+    }
+    return config
   }
 
-  openGeneralSettings(){
-    this.api.openSettings()
+  openGlobalSettings(cb){
+    var _this = this
+    console.log("Opening general settings")
+    var config_file = Utils.getConfigPath("pymakr.json")
+    console.log(config_file)
+    if(config_file){
+      fs.open(config_file,'r',function(err,contents){
+          console.log("Opened config file")
+          if(err){
+            console.log("Doesn't exist yet... creating new")
+            var json_string = _this.newSettingsJson(true) // first param to 'true' gets global settings
+            console.log("Got the json content")
+            fs.writeFile(config_file, json_string, function(err) {
+              if(err){
+                console.log("Failed to create file")
+                cb(new Error(err))
+                return
+              }
+              _this.watchConfigFile(config_file)
+              console.log("Opening file in workspace")
+              var uri = vscode.Uri.file(config_file)
+              console.log(uri)
+              vscode.workspace.openTextDocument(uri).then(function(textDoc){
+                vscode.window.showTextDocument(textDoc)
+                console.log("Opened")
+                cb()
+              })  
+            })
+          }else{
+            console.log("Opening file in workspace")
+            var uri = vscode.Uri.file(config_file)
+            console.log(uri)
+            vscode.workspace.openTextDocument(uri).then(function(textDoc){
+              vscode.window.showTextDocument(textDoc)
+              console.log("Opened")
+              cb()
+              
+            })
+          }
+      })
+    }else{
+      cb(new Error("No project open"))
+    }
   }
 
   openProjectSettings(cb){
@@ -106,7 +165,7 @@ export default class SettingsWrapper extends EventEmitter {
           console.log("Opened config file")
           if(err){
             console.log("Doesn't exist yet... crating new")
-            var json_string = _this.newProjectSettingsJson()
+            var json_string = _this.newSettingsJson()
             console.log("Got the json content")
             fs.writeFile(config_file, json_string, function(err) {
               if(err){
@@ -138,8 +197,8 @@ export default class SettingsWrapper extends EventEmitter {
     }
   }
 
-  newProjectSettingsJson(){
-    var settings = this.getDefaultProjectConfig()
+  newSettingsJson(global){
+    var settings = this.getDefaultConfig(global)
     var json_string = JSON.stringify(settings,null,4)
     return json_string
   }

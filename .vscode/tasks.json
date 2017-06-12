@@ -4,11 +4,12 @@
     "isShellCommand": true,
     "tasks": [
         {
-            "args": ["src", "--out-dir", "lib"],
+            "args": ["src", "--out-dir", "lib","-w"],
             "taskName": "watch",
             "suppressTaskName": true,
             "isBuildCommand": true,
-            "isBackground": true
+            "isWatching": true
         }
+        
     ]
 }

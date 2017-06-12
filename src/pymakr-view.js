@@ -242,7 +242,9 @@ export default class PymakrView {
   }
 
   openGlobalSettings(){
-    this.api.openSettings()
+    this.settings.openGlobalSettings(function(){
+      console.log("Callback done")
+    })
   }
 
   // refresh button display based on current status
