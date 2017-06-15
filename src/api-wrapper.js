@@ -14,7 +14,8 @@ export default class ApiWrapper {
       "password":"python",
       "sync_folder":"",
       "sync_file_types":"py,txt,log,json,xml",
-      "ctrl_c_on_connect":false
+      "ctrl_c_on_connect":false,
+      "open_on_start":true,
     }
     var _this = this
   }
@@ -59,7 +60,8 @@ export default class ApiWrapper {
   getPackageSrcPath(){
     // console.log(vscode.extension.getExtension("test.test"))
     console.log("Returning src path")
-    return "/Users/Ralph/github/test/test/src/"
+    console.log(__dirname)
+    return "/Users/Ralph/github/test/test/"
     // return atom.packages.resolvePackagePath('Pymakr') + "/lib/"
   }
 

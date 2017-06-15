@@ -7,6 +7,13 @@
   "engines": {
     "vscode": "^1.11.0"
   },
+   "keywords": [
+    "pycom",
+    "wipy",
+    "lopy",
+    "fipy",
+    "iot"
+  ],
   "categories": [
     "Other"
   ],
@@ -18,15 +25,11 @@
     "commands": [
       {
         "command": "pymakr.connect",
-        "title": "Pymakr > connect"
+        "title": "Pymakr > Connect"
       },
       {
-        "command": "pymakr.command",
-        "title": "Pymakr > input command"
-      },
-      {
-        "command": "pymakr.toggleREPL",
-        "title": "Pymakr > Toggle pymakr terminal"
+        "command": "pymakr.disconnect",
+        "title": "Pymakr > Disconnect"
       },
       {
         "command": "pymakr.sync",
@@ -43,8 +46,82 @@
       {
         "command": "pymakr.globalSettings",
         "title": "Pymakr > Global Settings"
+      },
+      {
+        "command": "pymakr.extra.getVersion",
+        "title": "Pymakr > Extra's > Get board version"
+      },
+      {
+        "command": "pymakr.extra.getWifiMac",
+        "title": "Pymakr > Extra's > Get WiFi AP SSID"
+      },
+      {
+        "command": "pymakr.extra.getSerial",
+        "title": "Pymakr > Extra's > List Serial Ports"
+      },
+      {
+        "command": "pymakr.help",
+        "title": "Pymakr > Help"
       }
-    ]
+    ],
+    "keybindings": [
+      {
+        "command": "pymakr.connect",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c"
+      },
+      {
+        "command": "pymakr.sync",
+        "key": "ctrl+shift+s",
+        "mac": "cmd+shift+s"
+      },
+      {
+        "command": "pymakr.run",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r"
+      },
+      {
+        "command": "pymakr.globalSettings",
+        "key": "ctrl+shift+g",
+        "mac": "cmd+shift+g"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "pymakr.sync",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.run",
+          "group": "pymakr"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "pymakr.connect",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.run",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.sync",
+          "group": "pymakr"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "pymakr.run",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.sync",
+          "group": "pymakr"
+        }
+      ]
+    }
   },
   "scripts": {
     "postinstall": "node ./node_modules/vscode/bin/install",

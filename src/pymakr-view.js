@@ -21,173 +21,16 @@ export default class PymakrView {
     this.settings = settings
     this.api = new ApiWrapper()
 
-    // // main element
-    // this.element = document.createElement('div');
-    // this.element.classList.add('pymakr');
-    // this.element.classList.add('open');
-
-    // this.resizer = document.createElement('div');
-    // this.resizer.classList.add('resizer');
-    // this.element.appendChild(this.resizer)
-
-    // // top bar with buttons
-    // var topbar = document.createElement('div');
-    // topbar.classList.add('pycom-top-bar');
-    // this.title = topbar.appendChild(document.createElement('div'));
-    // this.title.classList.add('title');
-    // this.title.innerHTML = 'Pycom Console (not connected)';
-
-    // var buttons = topbar.appendChild(document.createElement('div'));
-    // buttons.classList.add('buttons')
-    // this.button_close = buttons.appendChild(document.createElement('button'));
-    // this.button_close.innerHTML = '<span class="fa fa-chevron-down"></span> Close';
-    // this.button_settings = buttons.appendChild(document.createElement('button'));
-    // this.button_settings.innerHTML = '<span class="fa fa-cog"></span> Settings';
-    // this.button_settings_sub = this.button_settings.appendChild(document.createElement('div'))
-    // this.button_settings_sub.classList.add('subnav');
-    // this.option_project_settings = this.button_settings_sub.appendChild(document.createElement('div'))
-    // this.option_project_settings.innerHTML = 'Project settings';
-    // this.option_global_settings = this.button_settings_sub.appendChild(document.createElement('div'))
-    // this.option_global_settings.innerHTML = 'Global settings';
-
-    // this.button_run = buttons.appendChild(document.createElement('button'));
-    // this.button_run.innerHTML = 'Run';
-    // this.button_run.classList.add('hidden');
-    // this.button_sync = buttons.appendChild(document.createElement('button'));
-    // this.button_sync.innerHTML = '<span class="fa fa-upload"></span> Sync';
-    // this.button_sync.classList.add('hidden');
-    // this.button_connect = buttons.appendChild(document.createElement('button'));
-    // this.button_connect.innerHTML = '<span class="fa fa-exchange"></span> Connect';
-    // this.button_more = buttons.appendChild(document.createElement('button'));
-    // this.button_more.innerHTML = '<span class="fa down fa-chevron-down"></span><span class="fa up fa-chevron-up"></span> More';
-
-    // this.button_more_sub = this.button_more.appendChild(document.createElement('div'))
-    // this.button_more_sub.classList.add('subnav');
-    // this.option_get_version = this.button_more_sub.appendChild(document.createElement('div'))
-    // this.option_get_version.innerHTML = 'Get firmware version';
-    // this.option_get_serial = this.button_more_sub.appendChild(document.createElement('div'))
-    // this.option_get_serial.innerHTML = 'Get serial ports';
-
-
-    // this.element.appendChild(topbar);
-
-    // // All button actions
-    // // var closed_using_button = false
-    // this.button_close.onclick = function(){
-    //   if(_this.visible){
-    //     setTimeout(function(){
-    //       _this.hidePanel()
-    //       // closed_using_button = true
-    //     },50)
-    //   }
-    // }
-    // this.button_connect.onclick = function(){
-    //   _this.connect()
-    // }
-    // this.button_run.onclick = function(){
-    //   if(!_this.synchronizing){
-    //     _this.run()
-    //   }
-    // }
-    // this.button_sync.onclick = function(){
-    //   if(!_this.synchronizing){
-    //     _this.sync()
-    //   }
-    // }
-    // this.button_more.onblur = function(){
-    //   _this.button_more.classList.remove("open")
-    // }
-    // this.button_settings.onblur = function(){
-    //   setTimeout(function(){
-    //     _this.button_settings.classList.remove("open")
-    //   },50)
-    // }
-
-    // this.button_more.onclick = function(){
-    //   if(_this.button_more.classList.contains("open")){
-    //     _this.button_more.classList.remove("open")
-    //   }else{
-    //     _this.button_more.classList.add("open")
-    //   }
-    // }
-    // this.button_settings.onclick = function(){
-    //   if(_this.button_settings.classList.contains("open")){
-    //     _this.button_settings.classList.remove("open")
-    //   }else{
-    //     _this.button_settings.classList.add("open")
-    //   }
-    // }
-
-    // this.option_global_settings.onclick = function(){
-    //   _this.api.openSettings()
-
-
-    // }
-
-    // this.option_project_settings.onclick = function(){
-    //   _this.settings.openProjectSettings(function(err){
-    //     if(err){
-    //       console.log(err)
-    //     }
-    //   })
-    // }
-
-    // this.option_get_version.onclick = function(){
-    //   _this.pyboard.send("import os; os.uname().release\r\n")
-
-    // }
-    // this.option_get_serial.onclick = function(){
-    //   _this.terminal.enter()
-
-    //   Pyserial.list(function(list){
-    //     _this.terminal.writeln("Found "+list.length+" serialport"+(list.length == 1 ? "" : "s"))
-    //     for(var i=0;i<list.length;i++){
-    //       var text = list[i]
-    //       if(i==0){
-    //         _this.api.writeToCipboard(text)
-    //         text += " (copied to clipboard)"
-    //       }
-    //       _this.terminal.writeln(text)
-    //     }
-    //     if(_this.pyboard.connected){
-    //       _this.terminal.writePrompt()
-    //     }
-    //   })
-    // }
-
-    // topbar.onclick = function(){
-    //   if(!_this.visible){
-    //     // TODO: the line doesn't work yet. Clicking 'button_close' also toggles, creating unwanted behaviour
-    //     _this.showPanel()
-    //   }
-    // }
-
-    // // terminal UI elements
-    // this.terminal_el = document.createElement('div');
-    // this.terminal_el.id = "terminal"
-    // this.element.appendChild(this.terminal_el);
-
-    // var erd = ElementResize();
-    // erd.listenTo(this.terminal_el,function(element){
-    //   if(_this.visible){
-    //       _this.setPanelHeight()
-    //   }
-    // })
-
-    // // 'click to connect' feature on complete terminal element
-    // this.terminal_el.onclick = function(){
-    //   if(!_this.pyboard.connected && !_this.pyboard.connecting) {
-    //     _this.connect()
-    //   }
-    // }
-
-    // // terminal logic
+    // terminal logic
     var onTermConnect = function(){
-      _this.connect()
+      if(_this.settings.open_on_start){
+        console.log("Connecting")
+        _this.connect()
+      }
     }
-    var term = new Term(onTermConnect,this.pyboard)
-    // term.initResize(_this.element,_this.resizer)
-    this.terminal = term
+    this.terminal = new Term(onTermConnect,this.pyboard)
+
+    var term = this.terminal
     term.setOnMessageListener(function(input){
       _this.userInput(input)
     })
@@ -198,9 +41,6 @@ export default class PymakrView {
       }
     })
 
-    // connect on start
-    
-
     // hide panel if it was hidden after last shutdown of atom
     if(serializedState && 'visible' in serializedState) {
       if(!serializedState.visible){
@@ -208,12 +48,12 @@ export default class PymakrView {
       }
     }
 
-    // this.settings.on('format_error',function(){
-    //   _this.terminal.writeln("JSON format error in pymakr.conf file")
-    //   if(_this.pyboard.connected){
-    //     _this.terminal.writePrompt()
-    //   }
-    // })
+    this.settings.on('format_error',function(){
+      _this.terminal.writeln("JSON format error in pymakr.conf file")
+      if(_this.pyboard.connected){
+        _this.terminal.writePrompt()
+      }
+    })
   }
 
   // called when user typed a command in the terminal
@@ -227,6 +67,78 @@ export default class PymakrView {
         }
       })
     }
+  }
+
+  writeHelpText(){
+    var lines = []
+    console.log("Creating lines")
+    lines.push("Pymakr VSC Plugin Help. Commands to use (cmd/ctrl + p):")
+    lines.push("- Connect           : Opens terminal and connects to the board")
+    lines.push("- Disconnect        : Disconnects from the board")
+    lines.push("- Global settings   : Opens the installation-wide settings file")
+    lines.push("- Project Settings  : Opens project specific settings that overwrite global settings")
+    lines.push("- Run               : Runs currently open file to the board")
+    lines.push("- Sync              : Synchronizes the complete project to the board, using the sync folder settings")
+    lines.push("- List serial ports : Lists all available serial ports and copies the first one to the clipboard")
+    lines.push("- Get board version : Displays firmware version of the connected board")
+    lines.push("- Get WiFi SSID     : Gets the SSID of the boards wifi accesspoint")
+    lines.push("")
+
+    lines.push("Settings (name : default : description):")
+    lines.push("address           : 192.168.4.1         : IP address or comport for your device")
+    lines.push("username          : micro               : Boards username, only for telnet")
+    lines.push("password          : python              : Boards password, only for telnet")
+    lines.push("sync_folder       : <empty>             : Folder to synchronize. Empty to sync projects main folder")
+    lines.push("sync_file_types   : py,txt,log,json,xml : Type of files to be synchronized")
+    lines.push("ctrl_c_on_connect : false               : If true, executes a ctrl-c on connect to stop running programs")
+    lines.push("open_on_start     : true                : Weather to open the terminal and connect to the board when starting vsc")
+    lines.push("Any of these can be used inside the Project Settings file and will overwrite global settings when the project is open")
+    
+    console.log("Writing enter")
+    this.terminal.enter()
+    for(var i=0;i<lines.length;i++){
+      console.log("Writing "+lines[i])
+      this.terminal.writeln(lines[i])
+    }
+
+    console.log("Done")
+    if(this.pyboard.connected){
+      console.log("Write prompt")
+      this.terminal.writePrompt()
+    }
+  }
+
+  getSerial(){
+    var _this = this
+    this.terminal.enter()
+
+    Pyserial.list(function(list){
+      _this.terminal.writeln("Found "+list.length+" serialport"+(list.length == 1 ? "" : "s"))
+      for(var i=0;i<list.length;i++){
+        var text = list[i]
+        if(i==0){
+          _this.api.writeToCipboard(text)
+          text += " (copied to clipboard)"
+        }
+        _this.terminal.writeln(text)
+      }
+      if(_this.pyboard.connected){
+        _this.terminal.writePrompt()
+      }
+    })
+  }
+
+  getVersion(){
+    this.pyboard.send("import os; os.uname().release\r\n")
+  }
+  
+  getWifiMac(){
+    var command = "from network import WLAN; from binascii import hexlify; from os import uname; wlan = WLAN(); mac = hexlify(wlan.mac()).decode('ascii'); device = uname().sysname;print('WiFi AP SSID: %(device)s-wlan-%(mac)s' % {'device': device, 'mac': mac[len(mac)-4:len(mac)]})"
+      _this.pyboard.send_wait_for_blocking(command+'\n\r',command,function(err){
+        if(err){
+          _this.logger.error("Failed to send command: "+command)
+        }
+      },1000)
   }
 
   openProjectSettings(){
@@ -314,12 +226,12 @@ export default class PymakrView {
           if(message == ""){
             message = err.message ? err.message : "Unknown error"
           }
-          _this.terminal.writeln("> Failed to connect ("+message+"). Click here to try again.")
+          _this.terminal.writeln("> Failed to connect ("+message+").")
           _this.setButtonState()
         }
 
         var ontimeout = function(err){
-          _this.terminal.writeln("> Connection timed out. Click here to try again.")
+          _this.terminal.writeln("> Connection timed out. ")
           _this.setButtonState()
         }
 
@@ -346,7 +258,7 @@ export default class PymakrView {
     if(this.pyboard.isConnecting()){
         this.terminal.writeln("Canceled")
     }else{
-      this.terminal.writeln("Disconnected. Click here to reconnect.")
+      this.terminal.writeln("Disconnected.")
     }
     this.pyboard.disconnect(cb)
     this.term_buffer = ""

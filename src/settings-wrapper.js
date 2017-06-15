@@ -15,6 +15,13 @@ export default class SettingsWrapper extends EventEmitter {
     this.project_path = this.api.getProjectPath()
     this.config_file = this.project_path+"/pymakr.conf"
     this.json_valid = true
+    this.address = this.api.config().get('address')
+    this.username = this.api.config().get('username')
+    this.password = this.api.config().get('password')
+    this.sync_file_types = this.api.config().get('sync_file_typesaddress')
+    this.sync_folder = this.api.config().get('sync_folder')
+    this.ctrl_c_on_connect = this.api.config().get('ctrl_c_on_connect')
+    this.open_on_start = this.api.config().get('open_on_start')
 
     this.refresh()
     // this.refreshConfig()
@@ -92,6 +99,10 @@ export default class SettingsWrapper extends EventEmitter {
     if('ctrl_c_on_connect' in file){
       this.ctrl_c_on_connect = file.ctrl_c_on_connect
     }
+    if('open_on_start' in file){
+      this.open_on_start = file.open_on_start
+    }
+    
     // this.global_config = this.refreshConfig(this.project_file)  
   }
 
@@ -100,7 +111,8 @@ export default class SettingsWrapper extends EventEmitter {
         "address": this.api.config().get('address'),
         "username": this.api.config().get('username'),
         "password": this.api.config().get('password'),
-        "sync_folder": this.api.config().get('sync_folder')
+        "sync_folder": this.api.config().get('sync_folder'),
+        "open_on_start": this.api.config().get('open_on_start')
     }
     if(global){
       config.sync_file_types = this.api.config().get('sync_file_types')

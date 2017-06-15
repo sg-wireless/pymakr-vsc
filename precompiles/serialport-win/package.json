@@ -69,13 +69,7 @@
     "node-pre-gyp"
   ],
   "dependencies": {
-    "bindings": "1.2.1",
-    "commander": "^2.9.0",
-    "debug": "^2.3.2",
-    "lie": "^3.1.0",
-    "nan": "^2.4.0",
-    "node-pre-gyp": "^0.6.32",
-    "object.assign": "^4.0.3"
+    "bindings": "1.2.1"
   },
   "description": "Node.js package to access serial ports. Welcome your robotic javascript overlords. Better yet, program them!",
   "devDependencies": {
