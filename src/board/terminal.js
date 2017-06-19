@@ -164,7 +164,6 @@ export default class Term {
 
     write(mssg){
       this.stream.write(mssg)
-
       this.lastWrite += mssg
       if(this.lastWrite.length > 20){
         this.lastWrite = this.lastWrite.substring(1)

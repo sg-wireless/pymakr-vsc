@@ -21,7 +21,6 @@ function activate(context) {
     createTerminal()
 
     vscode.window.onDidCloseTerminal(function(){
-        console.log("Closed")
         v.disconnect()
         createTerminal()
     })
@@ -34,6 +33,11 @@ function activate(context) {
     var disposable = vscode.commands.registerCommand('pymakr.help', function () {
         terminal.show()
         v.writeHelpText()
+    })
+    context.subscriptions.push(disposable);
+
+    var disposable = vscode.commands.registerCommand('pymakr.listCommands', function () {
+        v.showQuickPick()
     })
     context.subscriptions.push(disposable);
 
