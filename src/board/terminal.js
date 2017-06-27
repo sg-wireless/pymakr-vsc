@@ -9,7 +9,7 @@ var Socket = require('net').Socket;
 
 export default class Term {
 
-    constructor(cb,pyboard) {
+    constructor(cb,pyboard,settings) {
       this.port = "1337"
       this.host = "127.0.0.1"
       this.term_buffer = ""
@@ -20,7 +20,10 @@ export default class Term {
       this.onMessage = function(){}
       this.term_rows = Config.constants().term_rows
       this.lastWrite = ""
+      this.sw = settings
       this.connection_attempt = 1
+      this.active = true
+      this.terminal = null
 
       //dragging
       this.startY = null
@@ -35,7 +38,19 @@ export default class Term {
         _this.termKeyPress(key,ev)
       })
 
+      this.create()
+
       this.connect(cb)
+    }
+
+    show(){
+      this.active = true
+      this.terminal.show()
+    }
+
+    hide(){
+      this.active = false
+      this.terminal.hide()
     }
 
     connectReattempt(cb){
@@ -45,6 +60,13 @@ export default class Term {
         _this.connect(cb)
       },200)
       
+    }
+
+    create(){
+       this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: this.api.getPackageSrcPath() + "terminalExec.js"} )
+        if(this.sw.open_on_start){
+            this.show()
+        }
     }
 
     connect(cb){

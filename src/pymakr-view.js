@@ -35,7 +35,7 @@ export default class PymakrView {
         _this.connect()
       }
     }
-    this.terminal = new Term(onTermConnect,this.pyboard)
+    this.terminal = new Term(onTermConnect,this.pyboard,settings)
 
     var term = this.terminal
     term.setOnMessageListener(function(input){
@@ -61,6 +61,14 @@ export default class PymakrView {
         _this.terminal.writePrompt()
       }
     })
+  }
+
+  showTerminal(){
+    this.terminal.show()
+  }
+
+  hideTerminal(){
+    this.terminal.show()
   }
 
   createStatusItem(name,command,tooltip){
