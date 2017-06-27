@@ -2,6 +2,7 @@ var vscode = require('vscode');
 var view = require('./lib/pymakr-view').default;
 var pyboard = require('./lib/board/pyboard').default;
 var SettingsWrapper = require('./lib/settings-wrapper').default;
+var ApiWrapper = require('./lib/api-wrapper').default;
 
 function activate(context) {
     
@@ -9,11 +10,13 @@ function activate(context) {
     var pb,v
     var terminalActive = true
     var terminal = null
+
+    var api = new ApiWrapper()
     
     console.log(__dirname)
 
     function createTerminal(){
-        terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: "/Users/Ralph/github/test/test/terminalExec.js"} )
+        terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: api.getPackageSrcPath() + "terminalExec.js"} )
         if(sw.open_on_start){
             terminal.show()
         }

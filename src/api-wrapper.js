@@ -59,9 +59,10 @@ export default class ApiWrapper {
 
   getPackageSrcPath(){
     // console.log(vscode.extension.getExtension("test.test"))
-    console.log("Returning src path")
-    console.log(__dirname)
-    return "/Users/Ralph/github/test/test/"
+    // console.log("Returning src path")
+    var dir = __dirname.replace('/lib','/')
+    return dir
+    
     // return atom.packages.resolvePackagePath('Pymakr') + "/lib/"
   }
 

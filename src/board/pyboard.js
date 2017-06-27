@@ -330,7 +330,7 @@ export default class Pyboard {
         setTimeout(function(){
           _this.exec_raw(filecontents+"\r\n",function(){
             _this.wait_for(">",function(){
-                _this.enter_friendly_repl_wait(cb)
+              _this.enter_friendly_repl_wait(cb)
             })
           })
         },run_delay)

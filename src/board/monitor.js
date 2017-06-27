@@ -18,6 +18,7 @@ export default class Monitor {
     this.api = new ApiWrapper()
     console.log("Creating package src path")
     var lib_folder = this.api.getPackageSrcPath()
+    console.log("Lib folder:")
     console.log(lib_folder)
     var data = fs.readFileSync(lib_folder + '/python/monitor.py','utf8')
     console.log(data)
