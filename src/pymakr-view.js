@@ -190,9 +190,14 @@ export default class PymakrView {
   }
 
   getVersion(){
-    this.pyboard.send("import os; os.uname().release\r\n")
+    var command = "import os; os.uname().release\r\n"
+    _this.pyboard.send_wait_for_blocking(command,command,function(err){
+      if(err){
+        _this.logger.error("Failed to send command: "+command)
+      }
+    })
   }
-  
+
   getWifiMac(){
     var _this = this
     var command = "from network import WLAN; from binascii import hexlify; from os import uname; wlan = WLAN(); mac = hexlify(wlan.mac()).decode('ascii'); device = uname().sysname;print('WiFi AP SSID: %(device)s-wlan-%(mac)s' % {'device': device, 'mac': mac[len(mac)-4:len(mac)]})"
@@ -202,8 +207,8 @@ export default class PymakrView {
         }
       },1000)
   }
-
   openProjectSettings(){
+    var _this = this
     this.settings.openProjectSettings(function(err){
         if(err){
           console.log(err)
@@ -216,7 +221,7 @@ export default class PymakrView {
   }
 
   openGlobalSettings(){
-    this.settings.openGlobalSettings(function(){
+    this.api.openSettings(function(){
       console.log("Callback done")
     })
   }
@@ -373,7 +378,7 @@ export default class PymakrView {
     var folder_name = sync_folder == "" ? "main folder" : sync_folder
 
     console.log("Sync object "+folder_name)
-    this.syncObj = new Sync(this.pyboard)
+    this.syncObj = new Sync(this.pyboard,this.settings)
     console.log("Created done")
     
     var _this = this
@@ -443,38 +448,44 @@ export default class PymakrView {
 
   }
 
+  getCurrentFile(cb,onerror){
+    this.api.getOpenFile(function(file){
+      filename = "untitled file"
+      if(file){
+        filename = file.path.split('/').pop(-1)
+        filetype = filename.split('.').pop(-1)
+        if(filetype != 'py'){
+          onerror("Can't run "+filetype+" files, please run only python files")
+          return
+        }
+      }else if(buffer.cachedText && buffer.cachedText.length > 0){
+        file = {cachedContents: buffer.cachedText}
+      }else{
+        onerror("No file open to run")
+        return
+      }
+      cb(file,filename)
+    },onerror)
+  }
+
   // UI Stuff
   addPanel(){
-    this.api.addBottomPanel(
-      {
-        item: this.getElement(),
-        visible: true,
-        priority: 100
-      }
-    )
+    // not implemented
   }
 
   setPanelHeight(height){
-    if(!height){
-      height = (this.terminal_el.offsetHeight + 25)
-    }
-    this.element.style.height = height + "px"
-
+    // not implemented
   }
 
   hidePanel(){
-    this.setPanelHeight(25) // 25px displays only the top bar
-    this.button_close.innerHTML = '<span class="fa fa-chevron-up"></span> Open'
-    this.element.classList.remove("open")
+    v.hideTerminal()
     this.visible = false
     this.disconnect()
   }
 
   showPanel(){
     this.terminal.clear()
-    this.setPanelHeight() // no param wil make it auto calculate based on xterm height
-    this.button_close.innerHTML = '<span class="fa fa-chevron-down"></span> Close'
-    this.element.classList.add("open")
+    v.showTerminal()
     this.visible = true
     this.setButtonState()
     this.connect()
@@ -486,7 +497,7 @@ export default class PymakrView {
 
   // Returns an object that can be retrieved when package is activated
   serialize() {
-    return {visible: this.visible}
+    // not implemented
   }
 
   // Tear down any state and detach

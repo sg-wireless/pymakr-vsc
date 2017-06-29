@@ -140,14 +140,10 @@ export default class Pyboard {
   }
 
   enter_raw_repl_no_reset(callback){
-    console.log("Entering raw repl")
     var _this = this
     this.stop_running_programs(function(){
-      console.log("Stopped running programs")
       _this.flush(function(){
-        console.log("Flushed")
         _this.send_wait_for_blocking(CTRL_A,'raw REPL; CTRL-B to exit\r\n>',function(err){
-          console.log("Found after blocking wait")
           if(!err){
             _this.setStatus(RAW_REPL)
           }
@@ -246,10 +242,7 @@ export default class Pyboard {
     }else{
       cb()
     }
-
-    if(_this.connection.type == 'telnet'){
-      _this.startPings(5)
-    }
+    _this.startPings(5)
   }
 
   _disconnected(cb){
@@ -330,7 +323,7 @@ export default class Pyboard {
         setTimeout(function(){
           _this.exec_raw(filecontents+"\r\n",function(){
             _this.wait_for(">",function(){
-              _this.enter_friendly_repl_wait(cb)
+                _this.enter_friendly_repl_wait(cb)
             })
           })
         },run_delay)

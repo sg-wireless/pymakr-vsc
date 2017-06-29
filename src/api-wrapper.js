@@ -5,46 +5,61 @@ var vscode = require('vscode');
 var ncp = require('copy-paste')
 import Utils from './utils.js';
 import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace, extension} from 'vscode';
+import Config from './config.js';
 
 export default class ApiWrapper {
   constructor() {
-    this.configDefaults = {
-      "address":"/dev/cu.usbserial-DQ0058DW",
-      "username":"micro",
-      "password":"python",
-      "sync_folder":"",
-      "sync_file_types":"py,txt,log,json,xml",
-      "ctrl_c_on_connect":false,
-      "open_on_start":true,
-    }
-    var _this = this
+    this.config = Config.settings()
   }
 
-  config(){
-    // return atom.config
-    var _this = this
-    return {get: function(key){ return _this.configDefaults[key] }}
+  config(key){
+    return this.config[key].default
   }
 
-  openSettings(){
-    var settings = workspace.getConfiguration()
-    if(!settings.has("pymakr")){
-      console.log("Updating settings")
-      console.log(settings.update("pymakr",{},true))
-    }else{
-      console.log("has settings:")
-      console.log(settings.get("pymakr"))
-    }
-    console.log("settings:")
-    console.log(settings)
-    console.log('values:')
-    console.log(values)
-
-    var config_file = Utils.getConfigPath("pymakr.json");
-    console.log('utils config file:')
+  openSettings(cb){
+    
+    var _this = this
+    console.log("Opening general settings")
+    var config_file = Utils.getConfigPath("pymakr.json")
     console.log(config_file)
-
-    // atom.workspace.open("atom://config/packages/Pymakr")
+    if(config_file){
+      fs.open(config_file,'r',function(err,contents){
+          console.log("Opened config file")
+          if(err){
+            console.log("Doesn't exist yet... creating new")
+            var json_string = _this.newSettingsJson(true) // first param to 'true' gets global settings
+            console.log("Got the json content")
+            fs.writeFile(config_file, json_string, function(err) {
+              if(err){
+                console.log("Failed to create file")
+                cb(new Error(err))
+                return
+              }
+              _this.watchConfigFile(config_file)
+              console.log("Opening file in workspace")
+              var uri = vscode.Uri.file(config_file)
+              console.log(uri)
+              vscode.workspace.openTextDocument(uri).then(function(textDoc){
+                vscode.window.showTextDocument(textDoc)
+                console.log("Opened")
+                cb()
+              })  
+            })
+          }else{
+            console.log("Opening file in workspace")
+            var uri = vscode.Uri.file(config_file)
+            console.log(uri)
+            vscode.workspace.openTextDocument(uri).then(function(textDoc){
+              vscode.window.showTextDocument(textDoc)
+              console.log("Opened")
+              cb()
+              
+            })
+          }
+      })
+    }else{
+      cb(new Error("No config file found"))
+    }
   }
 
   writeToCipboard(text){
@@ -54,16 +69,17 @@ export default class ApiWrapper {
   }
 
   addBottomPanel(options){
-    // atom.workspace.addBottomPanel(options)
+    // not implemented
+  }
+
+  getPackagePath(){
+    var dir = __dirname.replace('/lib','/')
+    return dir
   }
 
   getPackageSrcPath(){
-    // console.log(vscode.extension.getExtension("test.test"))
-    // console.log("Returning src path")
-    var dir = __dirname.replace('/lib','/')
+    var dir = __dirname.replace('/lib','/src/')
     return dir
-    
-    // return atom.packages.resolvePackagePath('Pymakr') + "/lib/"
   }
 
   clipboard(){

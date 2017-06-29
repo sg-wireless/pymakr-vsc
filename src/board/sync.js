@@ -4,22 +4,19 @@ var crypto = require('crypto');
 import Monitor from './monitor.js'
 import Config from '../config.js'
 import Logger from './logger.js'
-import ApiWrapper from '../api-wrapper.js';
 var fs = require('fs');
 
 export default class Sync {
-  constructor(pyboard) {
-    console.log("Creating sync obj")
+  constructor(pyboard,settings) {
     this.logger = new Logger('Sync')
-    this.api = new ApiWrapper()
+    this.settings = settings
     this.pyboard = pyboard
     this.total_file_size = 0
     this.total_number_of_files = 0
     this.number_of_changed_files = 0
     this.config = Config.constants()
-    this.allowed_file_types = this.api.config().get('sync_file_types')
+    this.allowed_file_types = this.settings.sync_file_types
     this.project_path = this.api.getProjectPath()
-    console.log("created sync obj")
   }
 
   exists(dir){
@@ -40,7 +37,6 @@ export default class Sync {
   }
 
   start(dir,cb,progress_cb){
-    console.log("sync.start")
     var _this = this
     this.total_file_size = 0
     this.total_number_of_files = 0
@@ -50,28 +46,23 @@ export default class Sync {
     dir = dir.replace(/^\/|\/$/g, '') // remove first and last slash
     this.py_folder = this.project_path + "/"+dir+"/"
     var files = null
-    
-    var file_hash_list = null
+    var file_hashes = null
     try {
         files = this._getFiles(this.py_folder)
-        file_hash_list = this._getFilesHashed(files)
+        file_hashes = this._getFilesHashed(files)
     } catch(e){
       cb(new Error(e))
       return
     }
 
-    console.log(file_hash_list)
-
     if(this.total_file_size > this.config.max_sync_size){
-      console.log("max size exceeded")
       err = "Total size of "+this.total_number_of_files.toString()+" files too big ("+parseInt(this.total_file_size/1000).toString()+"kb). Reduce the total filesize to < 350kb or select the correct sync folder in the settings"
+
       cb(new Error(err))
       return
     }
 
-
     this.init(function(err){
-      console.log("Initialised")
       if(err){
         cb(err)
         _this.exit(function(){
@@ -91,7 +82,7 @@ export default class Sync {
              _this.progress("Failed to read project status, synchronizing all files")
 
           }
-          var changes = _this._getChangedFiles(file_hash_list,jsonContent)
+          var changes = _this._getChangedFiles(file_hashes,jsonContent)
 
           var deletes = changes["delete"]
           var changed_files = changes["files"]
@@ -125,7 +116,7 @@ export default class Sync {
                   }
                   setTimeout(function(){
                     _this.logger.info('Writing project file')
-                    _this.monitor.writeFile('project.pymakr',JSON.stringify(file_hash_list),function(err){
+                    _this.monitor.writeFile('project.pymakr',JSON.stringify(file_hashes),function(err){
                       if(err){
                         _this.throwError(cb,err)
                         return

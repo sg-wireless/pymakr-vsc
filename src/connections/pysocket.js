@@ -88,7 +88,7 @@ export default class PySocket {
   }
 
   sendPing(){
-
+    return true
   }
 
   flush(cb){

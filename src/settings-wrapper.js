@@ -15,13 +15,13 @@ export default class SettingsWrapper extends EventEmitter {
     this.project_path = this.api.getProjectPath()
     this.config_file = this.project_path+"/pymakr.conf"
     this.json_valid = true
-    this.address = this.api.config().get('address')
-    this.username = this.api.config().get('username')
-    this.password = this.api.config().get('password')
-    this.sync_file_types = this.api.config().get('sync_file_typesaddress')
-    this.sync_folder = this.api.config().get('sync_folder')
-    this.ctrl_c_on_connect = this.api.config().get('ctrl_c_on_connect')
-    this.open_on_start = this.api.config().get('open_on_start')
+    this.address = this.api.config('address')
+    this.username = this.api.config('username')
+    this.password = this.api.config('password')
+    this.sync_file_types = this.api.config('sync_file_typesaddress')
+    this.sync_folder = this.api.config('sync_folder')
+    this.ctrl_c_on_connect = this.api.config('ctrl_c_on_connect')
+    this.open_on_start = this.api.config('open_on_start')
 
     this.refresh()
     // this.refreshConfig()
@@ -108,62 +108,17 @@ export default class SettingsWrapper extends EventEmitter {
 
   getDefaultConfig(global){
     var config = {
-        "address": this.api.config().get('address'),
-        "username": this.api.config().get('username'),
-        "password": this.api.config().get('password'),
-        "sync_folder": this.api.config().get('sync_folder'),
-        "open_on_start": this.api.config().get('open_on_start')
+        "address": this.api.config('address'),
+        "username": this.api.config('username'),
+        "password": this.api.config('password'),
+        "sync_folder": this.api.config('sync_folder'),
+        "open_on_start": this.api.config('open_on_start')
     }
     if(global){
-      config.sync_file_types = this.api.config().get('sync_file_types')
-      config.ctrl_c_on_connect = this.api.config().get('ctrl_c_on_connect')
+      config.sync_file_types = this.api.config('sync_file_types')
+      config.ctrl_c_on_connect = this.api.config('ctrl_c_on_connect')
     }
     return config
-  }
-
-  openGlobalSettings(cb){
-    var _this = this
-    console.log("Opening general settings")
-    var config_file = Utils.getConfigPath("pymakr.json")
-    console.log(config_file)
-    if(config_file){
-      fs.open(config_file,'r',function(err,contents){
-          console.log("Opened config file")
-          if(err){
-            console.log("Doesn't exist yet... creating new")
-            var json_string = _this.newSettingsJson(true) // first param to 'true' gets global settings
-            console.log("Got the json content")
-            fs.writeFile(config_file, json_string, function(err) {
-              if(err){
-                console.log("Failed to create file")
-                cb(new Error(err))
-                return
-              }
-              _this.watchConfigFile(config_file)
-              console.log("Opening file in workspace")
-              var uri = vscode.Uri.file(config_file)
-              console.log(uri)
-              vscode.workspace.openTextDocument(uri).then(function(textDoc){
-                vscode.window.showTextDocument(textDoc)
-                console.log("Opened")
-                cb()
-              })  
-            })
-          }else{
-            console.log("Opening file in workspace")
-            var uri = vscode.Uri.file(config_file)
-            console.log(uri)
-            vscode.workspace.openTextDocument(uri).then(function(textDoc){
-              vscode.window.showTextDocument(textDoc)
-              console.log("Opened")
-              cb()
-              
-            })
-          }
-      })
-    }else{
-      cb(new Error("No project open"))
-    }
   }
 
   openProjectSettings(cb){

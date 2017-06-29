@@ -2,34 +2,43 @@
 
 var fs = require('fs');
 
-var COMPORT_MANUFACTURERS = ['Pycom Ltd.','FTDI']
+var COMPORT_MANUFACTURERS = ['Pycom Ltd.','FTDI','Pycom']
 
-var SerialPort = require("serialport");
+var SerialPort = null
+try {
+  SerialPort = require("serialport");
+} catch (e) {
+  // include the precompiled version of serialport
+  var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
+  if(process.platform in precompiles) { // always returns win32 on windows, even on 64bit
 
-// var SerialPort = null
-// try {
-//   SerialPort = require("serialport");
-// } catch (e) {
-//   // include the precompiled version of serialport
-//   var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
-//   if(process.platform in precompiles) { // always returns win32 on windows, even on 64bit
-//     SerialPort = require("./serialport-" + precompiles[process.platform] + "/lib/serialport");
-//   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
-//     throw e;
-//   }
-// }
+    var plf = precompiles[process.platform]
+    if(plf == 'win' && process.arch == 'ia32'){
+      plf = 'win32'
+    }
+    console.log(plf)
+    SerialPort = require("../../precompiles/serialport-" + plf + "/lib/serialport");
+  }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
+    throw e;
+  }
+}
 
 export default class PySerial {
 
   constructor(params){
     this.type = "serial"
     this.params = params
+    this.ayt_pending = false
     this.stream = new SerialPort(this.params.host, {
       baudRate: 115200,
       autoOpen: false
     },function(err){
       // not implemented
     });
+
+    var dtr_support = ['darwin']
+
+    this.dtr_supported = dtr_support.indexOf(process.platform) > -1
   }
 
 
@@ -136,6 +145,10 @@ export default class PySerial {
 
   sendPing(){
     // not implemented
+    if(this.dtr_supported){
+      this.stream.set({dtr: true})
+    }
+    return true
   }
 
   flush(cb){
