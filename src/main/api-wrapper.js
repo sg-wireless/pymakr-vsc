@@ -22,7 +22,9 @@ export default class ApiWrapper {
   }
 
   openSettings(cb){
-    
+    if(!cb){
+      cb = function(){}
+    }
     var _this = this
     console.log("Opening general settings")
     var config_file = Utils.getConfigPath("pymakr.json")

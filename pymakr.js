@@ -34,16 +34,14 @@ function activate(context) {
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.run', function () {
-        console.log("Running")
         terminal.show()
         pymakr.run()
     })
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.sync', function () {
-        console.log("Syncing")
         terminal.show()
-        v.sync()
+        pymakr.sync()
     })
     context.subscriptions.push(disposable);
 

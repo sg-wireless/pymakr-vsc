@@ -256,7 +256,6 @@ export default class Sync {
         _this.progress("Writing file "+filename,true)
         _this.monitor.writeFile(filename,contents,function(err){
           if(err){
-
             cb(err)
             return
           }

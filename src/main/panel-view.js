@@ -58,7 +58,7 @@ export default class PanelView extends EventEmitter {
     items.push({ label: "Pymakr > Global Setting", description: "", cmd: "global_settings" });
     items.push({ label: "Pymakr > Extra > Get board version", description: "", cmd: "get_version" });
     items.push({ label: "Pymakr > Extra > Get WiFi AP SSID", description: "", cmd: "get_wifi" });
-    items.push({ label: "Pymakr > Extra > List Serial Ports", description: "", cmd: "list_commands" });
+    items.push({ label: "Pymakr > Extra > List Serial Ports", description: "", cmd: "get_serial" });
     items.push({ label: "Pymakr > Help", description: "", cmd: "help" });
 
     var options = {
@@ -69,7 +69,7 @@ export default class PanelView extends EventEmitter {
         if (typeof selection === "undefined") {
             return;
         }
-        commands.executeCommand(selection.cmd)
+        // commands.executeCommand(selection.cmd)
         console.log(selection.cmd)
         _this.emit(selection.cmd)
         

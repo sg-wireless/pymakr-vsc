@@ -85,7 +85,9 @@ export default class Pymakr {
     })
 
     this.view.on('user_input',function(input){
-      var _this = this
+      if(!_this.pyboard.connected && !_this.pyboard.connecting) {
+          _this.connect()
+      }
       // this.terminal.write('\r\n')
       this.pyboard.send_user_input(input,function(err){
         if(err && err.message == 'timeout'){
@@ -128,7 +130,7 @@ export default class Pymakr {
 
   openGlobalSettings(){
     this.settings.openGlobalSettings(function(){
-      console.log("Callback done")
+        // nothing
     })
   }
 
@@ -183,7 +185,6 @@ export default class Pymakr {
 
   connect(){
     var _this = this
-    console.log(this.pyboard)
 
     // stop config observer from triggering again
     clearTimeout(this.observeTimeout)
@@ -198,7 +199,6 @@ export default class Pymakr {
 
   continueConnect(){
     var _this = this
-    console.log(this.pyboard)
     this.pyboard.refreshConfig()
     var address = this.pyboard.params.host
     if(address == "" || address == null){
@@ -286,7 +286,6 @@ export default class Pymakr {
     this.terminal.write(this.config.help_text)
 
     if(this.pyboard.connected){
-      console.log("Write prompt")
       this.terminal.writePrompt()
     }
   }
@@ -310,11 +309,6 @@ export default class Pymakr {
 
   toggleVisibility(){
     this.view.toggleVisibility()
-  }
-
-  // Returns an object that can be retrieved when package is activated
-  serialize() {
-    return {visible: this.view.visible}
   }
 
   // Tear down any state and detach
