@@ -6,7 +6,7 @@ import Pytelnet from '../connections/pytelnet';
 import Pysocket from '../connections/pysocket';
 import Authorize from './authorize';
 import Monitor from './monitor';
-import Logger from './logger.js'
+import Logger from '../helpers/logger.js'
 var timer = require('timers')
 
 var CTRL_A = '\x01' // raw repl

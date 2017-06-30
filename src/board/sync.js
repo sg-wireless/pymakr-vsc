@@ -3,20 +3,38 @@
 var crypto = require('crypto');
 import Monitor from './monitor.js'
 import Config from '../config.js'
-import Logger from './logger.js'
+import Logger from '../helpers/logger.js'
+import ApiWrapper from '../main/api-wrapper.js';
 var fs = require('fs');
 
 export default class Sync {
-  constructor(pyboard,settings) {
+  constructor(pyboard,settings,terminal) {
     this.logger = new Logger('Sync')
+    this.api = new ApiWrapper()
     this.settings = settings
     this.pyboard = pyboard
+    this.terminal = terminal
     this.total_file_size = 0
     this.total_number_of_files = 0
     this.number_of_changed_files = 0
     this.config = Config.constants()
     this.allowed_file_types = this.settings.sync_file_types
     this.project_path = this.api.getProjectPath()
+
+  }
+
+  isReady(){
+
+    // check if there is a project open
+    if(!this.project_path){
+      return new error("No project open")
+    }
+    // check if project exists
+    if(!this.exists(this.settings.sync_folder)){
+        return new error("Unable to find folder '"+folder_name+"'. Please add the correct folder in your settings")
+    }
+
+    return true
   }
 
   exists(dir){
@@ -36,14 +54,50 @@ export default class Sync {
     }
   }
 
-  start(dir,cb,progress_cb){
+  start(oncomplete){
     var _this = this
     this.total_file_size = 0
     this.total_number_of_files = 0
     this.number_of_changed_files = 0
-    this.progress_cb = progress_cb
     this.progress_file_count = 0
-    dir = dir.replace(/^\/|\/$/g, '') // remove first and last slash
+
+    var sync_folder = this.settings.sync_folder
+    var folder_name = sync_folder == "" ? "main folder" : sync_folder
+
+    this.terminal.enter()
+
+    var ready = this.isReady()
+    if(ready instanceof Error){
+      this.terminal.write(ready.error+"\r\n")
+      return
+    }
+
+    // start sync
+    this.terminal.write("Syncing project ("+folder_name+")...\r\n")
+
+
+    // called after sync is completed
+    var cb = function(err){
+      if(err){
+        _this.terminal.writeln("Synchronizing failed: "+err.message+". Please reboot your device manually.")
+        _this.synchronizing = false
+        oncomplete()
+      }else{
+        _this.terminal.writeln("Synchronizing done, resetting board...")
+
+        oncomplete()
+      }
+    }
+
+    // called every time the sync starts writing a new file or folder
+    var progress_cb = function(text){
+      _this.terminal.writeln(text)
+    }
+
+
+    this.progress_cb = progress_cb
+
+    var dir = this.settings.sync_folder.replace(/^\/|\/$/g, '') // remove first and last slash
     this.py_folder = this.project_path + "/"+dir+"/"
     var files = null
     var file_hashes = null
@@ -96,7 +150,7 @@ export default class Sync {
 
           if(deletes.length == 0 && changed_files.length == 0 && changed_folders.length == 0){
             _this.progress("No files to synchronize")
-            _this.exit(cb)
+            _this.complete(cb)
             return
           }else{
             _this.logger.info('Removing files')
@@ -123,7 +177,7 @@ export default class Sync {
                       }
                       _this.logger.info('Exiting...')
                       _this.exit(function(){
-                        cb()
+                        _this.complete(cb)
                       })
                     })
                   },300)
@@ -138,7 +192,15 @@ export default class Sync {
 
 
   throwError(cb,err){
-    cb(new Error("Write failed"))
+    var _this = this
+    var mssg = err ? err : new Error("Write failed")
+    cb(mssg)
+
+    if(_this.pyboard.type != 'serial'){
+      _this.connect()
+    }
+    _this.pyboard.stopWaitingForSilent()
+
     var _this = this
     this.exit(function(){
       _this.pyboard.enter_friendly_repl_non_blocking(function(){
@@ -147,7 +209,15 @@ export default class Sync {
     })
   }
 
+  complete(cb){
+    var _this = this
+    this.exit(function(){
+      cb()
+    })
+  }
+
   removeFilesRecursive(files,cb,depth){
+    var _this = this
     if(!depth){ depth = 0 }
     if(files.length == 0 || depth > 60){
       cb()
@@ -155,7 +225,6 @@ export default class Sync {
       var file = files[0]
       var filename = file[0]
       var type = file[1]
-      var _this = this
       if(type == "d"){
         _this.progress("Removing "+filename)
         _this.monitor.removeDir(filename,function(){

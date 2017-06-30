@@ -1,9 +1,9 @@
 'use babel';
 var vscode = require('vscode');
 let Terminal = require('xterm')
-import Logger from './logger.js'
+import Logger from '../helpers/logger.js'
 import Config from '../config.js'
-import ApiWrapper from '../api-wrapper.js';
+import ApiWrapper from '../main/api-wrapper.js';
 
 var Socket = require('net').Socket;
 
@@ -31,6 +31,10 @@ export default class Term {
       this.create()
 
       this.connect(cb)
+
+      vscode.window.onDidCloseTerminal(function(){
+        _this.create()
+      })
     }
 
     show(){
@@ -54,9 +58,9 @@ export default class Term {
 
     create(){
        this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: this.api.getPackagePath() + "terminalExec.js"} )
-        if(this.sw.open_on_start){
+        // if(this.sw.open_on_start){
             this.show()
-        }
+        // }
     }
 
     connect(cb){

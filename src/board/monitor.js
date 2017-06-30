@@ -1,7 +1,7 @@
 'use babel';
 var fs = require('fs');
-import Logger from './logger.js'
-import ApiWrapper from '../api-wrapper.js';
+import Logger from '../helpers/logger.js'
+import ApiWrapper from '../main/api-wrapper.js';
 
 var EventEmitter = require('events');
 const ee = new EventEmitter();

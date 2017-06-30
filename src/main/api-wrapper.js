@@ -5,15 +5,20 @@ var vscode = require('vscode');
 var ncp = require('copy-paste')
 import Utils from './utils.js';
 import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace, extension} from 'vscode';
-import Config from './config.js';
+import Config from '../config.js';
 
 export default class ApiWrapper {
   constructor() {
-    this.config = Config.settings()
+    this.default_config = Config.settings()
   }
 
   config(key){
-    return this.config[key].default
+    if(this.default_config[key]){
+      return this.default_config[key].default
+    }else{
+      null
+    }
+    
   }
 
   openSettings(cb){
@@ -73,12 +78,12 @@ export default class ApiWrapper {
   }
 
   getPackagePath(){
-    var dir = __dirname.replace('/lib','/')
+    var dir = __dirname.replace('/lib/main','/')
     return dir
   }
 
   getPackageSrcPath(){
-    var dir = __dirname.replace('/lib','/src/')
+    var dir = __dirname.replace('/lib/main','/src/')
     return dir
   }
 
@@ -105,10 +110,14 @@ export default class ApiWrapper {
     return null
   }
 
-  getCurrentFile(cb,onerror){
+  getOpenFile(cb,onerror){
     var editor = window.activeTextEditor;
+    console.log("got editor")
     var doc = editor.document;
     var name = doc.fileName
+    console.log(name)
+    console.log(doc)
+    console.log(doc.getText())
     cb(doc.getText(),name)
   }
 }

@@ -12,6 +12,7 @@ export default class SettingsWrapper extends EventEmitter {
     this.global_config = {}
     this.project_config = {}
     this.api = new ApiWrapper()
+    console.log(this.api)
     this.project_path = this.api.getProjectPath()
     this.config_file = this.project_path+"/pymakr.conf"
     this.json_valid = true

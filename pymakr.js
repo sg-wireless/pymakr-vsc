@@ -1,28 +1,24 @@
 var vscode = require('vscode');
-var view = require('./lib/pymakr-view').default;
-var pyboard = require('./lib/board/pyboard').default;
-var SettingsWrapper = require('./lib/settings-wrapper').default;
-var ApiWrapper = require('./lib/api-wrapper').default;
+var PanelView = require('./lib/main/panel-view').default;
+var Pymakr = require('./lib/pymakr').default;
+var Pyboard = require('./lib/board/pyboard').default;
+var SettingsWrapper = require('./lib/main/settings-wrapper').default;
+var ApiWrapper = require('./lib/main/api-wrapper').default;
 
-var pb,v,sw
+var pb,v,sw,pymakr
 
 function activate(context) {
     
     sw = new SettingsWrapper()
-    
-    pb = new pyboard(sw)
+    pb = new Pyboard(sw)
+    v = new PanelView(pb,sw)
+    pymakr = new Pymakr({},pb,v,sw)
 
-    v = new view("",pb,sw)
     var terminal = v.terminal
-
-    vscode.window.onDidCloseTerminal(function(){
-        v.disconnect()
-        terminal.create()
-    })
 
     var disposable = vscode.commands.registerCommand('pymakr.help', function () {
         terminal.show()
-        v.writeHelpText()
+        pymakr.writeHelpText()
     })
     context.subscriptions.push(disposable);
 
@@ -32,21 +28,21 @@ function activate(context) {
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.connect', function () {
-        v.showTerminal()
-        v.connect()
+        terminal.show()
+        pymakr.connect()
     })
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.run', function () {
         console.log("Running")
-        v.showTerminal()
-        v.run()
+        terminal.show()
+        pymakr.run()
     })
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.sync', function () {
         console.log("Syncing")
-        v.showTerminal()
+        terminal.show()
         v.sync()
     })
     context.subscriptions.push(disposable);
@@ -59,34 +55,34 @@ function activate(context) {
 
     var disposable = vscode.commands.registerCommand('pymakr.projectSettings', function () {
         console.log("Settings")
-        v.openProjectSettings()
+        pymakr.openProjectSettings()
     })
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.disconnect', function () {
-        v.disconnect()
+        pymakr.disconnect()
     });
     context.subscriptions.push(disposable);
 
     // not used. open/close terminal command is already available. 
     // Terminal opens automatically when doing a connect, run or sync action.
     var disposable = vscode.commands.registerCommand('pymakr.toggleREPL', function () {
-        v.toggleVisibility()
+        pymakr.toggleVisibility()
     });
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.extra.getVersion', function () {
-        v.getVersion()
+        pymakr.getVersion()
     });
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.extra.getWifiMac', function () {
-        v.getWifiMac()
+        pymakr.getWifiMac()
     });
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.extra.getSerial', function () {
-        v.getSerial()
+        pymakr.getSerial()
     });
     context.subscriptions.push(disposable);
 }
