@@ -1,3 +1,10 @@
+# Pre-release installation
+
+- Download the code or clone the repo
+- Open the folder in vsc
+- Press F1 and execute 'Tasks: Run build task'
+- Press F5 to run the plugin (opens a new vsc window)
+
 #  Pymakr VSC Package
 
 Pymakr enables you to communicate to your Pycom board using the build in command line REPL. Run a single file to your board, sync your entire project or directly type and execute commands.
@@ -77,7 +84,7 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+
 
 ## Release Notes
 
