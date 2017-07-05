@@ -25,16 +25,16 @@ export default class PanelView extends EventEmitter {
     this.api = new ApiWrapper()
     this.logger = new Logger('PanelView')
 
-    this.statusItemStatus = this.createStatusItem("","pymakr.toggleREPL","Toggle terminal") // name is set using setTitle function
-    this.statusItemRun = this.createStatusItem("$(triangle-right) Run","pymakr.run","Run current file")
-    this.statusItemSync = this.createStatusItem("$(triangle-down) Sync","pymakr.sync","Synchronize project")
-    this.statusItemOther = this.createStatusItem("$(list-unordered) All commands","pymakr.listCommands","List all available pymakr commands")
+    this.statusItems = {}
+    this.statusItems['status'] = this.createStatusItem("","pymakr.toggleREPL","Toggle terminal") // name is set using setTitle function
+    this.statusItems['run'] = this.createStatusItem("$(triangle-right) Run","pymakr.run","Run current file")
+    this.statusItems['sync'] = this.createStatusItem("$(triangle-down) Sync","pymakr.sync","Synchronize project")
+    this.statusItems['other'] = this.createStatusItem("$(list-unordered) All commands","pymakr.listCommands","List all available pymakr commands")
     this.setTitle("not connected")
 
     // terminal logic
     var onTermConnect = function(){
       if(_this.settings.open_on_start){
-        console.log("Connecting")
         _this.emit('connect')
       }
     }
@@ -44,7 +44,6 @@ export default class PanelView extends EventEmitter {
     this.terminal.setOnMessageListener(function(input){
       _this.emit('user_input',input)
     })
-
   }
 
   showQuickPick(){
@@ -69,8 +68,6 @@ export default class PanelView extends EventEmitter {
         if (typeof selection === "undefined") {
             return;
         }
-        // commands.executeCommand(selection.cmd)
-        console.log(selection.cmd)
         _this.emit(selection.cmd)
         
     });
@@ -95,11 +92,14 @@ export default class PanelView extends EventEmitter {
     if (!this.visible) {
       this.setTitle('not connected')
     }else if(this.pyboard.connected) {
-      if(runner_busy){
-        // nothing
+      if(runner_busy == undefined){
+        // do nothing
+      }else if(runner_busy){
+        this.setButton('run','primitive-square','Stop')
       }else{
-        // nothing
+        this.setButton('run','triangle-right','Run')
       }
+
       this.setTitle('connected')
 
     }else{
@@ -107,13 +107,16 @@ export default class PanelView extends EventEmitter {
     }
   }
 
+  setButton(name,icon,text){
+      this.statusItems[name].text = "$("+icon+") "+text
+  }
+
   setTitle(status){
     var icon = "x"
     if(status == "connected"){
       icon = "check"
     }
-    this.statusItemStatus.text = "$("+icon+") Pycom Console"
-    // this.title.innerHTML = 'Pycom Console ('+status+')'
+    this.setButton('status',icon,'Pycom Console')
   }
 
 
@@ -129,7 +132,6 @@ export default class PanelView extends EventEmitter {
   hidePanel(){
     this.terminal.hide()
     this.visible = false
-    this.disconnect()
   }
 
   showPanel(){
@@ -137,11 +139,6 @@ export default class PanelView extends EventEmitter {
     this.terminal.show()
     this.visible = true
     this.setButtonState()
-    this.connect()
-  }
-
-  toggleVisibility(){
-    this.visible ? this.hidePanel() : this.showPanel();
   }
 
   // Returns an object that can be retrieved when package is activated

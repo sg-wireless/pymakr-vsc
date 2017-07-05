@@ -1,10 +1,12 @@
 'use babel';
 const EventEmitter = require('events');
 import ApiWrapper from './api-wrapper.js';
+import Logger from '../helpers/logger.js'
 var fs = require('fs');
 var vscode = require('vscode');
 import Utils from './utils.js';
 import {workspace} from 'vscode';
+
 
 export default class SettingsWrapper extends EventEmitter {
   constructor() {
@@ -12,7 +14,7 @@ export default class SettingsWrapper extends EventEmitter {
     this.global_config = {}
     this.project_config = {}
     this.api = new ApiWrapper()
-    console.log(this.api)
+    this.logger = new Logger('SettingsWraper')
     this.project_path = this.api.getProjectPath()
     this.config_file = this.project_path+"/pymakr.conf"
     this.json_valid = true
@@ -33,10 +35,12 @@ export default class SettingsWrapper extends EventEmitter {
   watchConfigFile(file){
     if(!file) file = this.config_file
     var _this = this
-    fs.open(this.config_file,'r',function(err,content){
+    this.logger.silly("Watching config file "+file)
+    fs.open(file,'r',function(err,content){
+      _this.logger.silly("Opened... ")
       if(!err){
-        console.log("Watching config file")
-        fs.watch(_this.config_file,null,function(err){
+        fs.watch(file,null,function(err){
+          _this.logger.silly(file+" changed, refreshing")
           _this.refresh()
         })
       }else{
@@ -46,13 +50,13 @@ export default class SettingsWrapper extends EventEmitter {
   }
 
   refresh(){
-    console.log("Refreshing config...")
     this.global_config = this.refreshConfig(Utils.getConfigPath("pymakr.json"))
     this.timeout = 15000
-    this.project_config = this.refreshConfig(this.project_file)
+    this.project_config = this.refreshConfig(this.config_file)
   }
 
   refreshConfig(file){
+    this.logger.verbose("Refreshing config for "+file)
     var _this = this
     var contents = null
     try{
@@ -66,7 +70,7 @@ export default class SettingsWrapper extends EventEmitter {
       try{
         conf = JSON.parse(contents)
       }catch(SyntaxError){
-        console.log("Syntax error in "+file)
+        _this.logger.warning("Syntax error in "+file)
         if(_this.json_valid){
           _this.json_valid = false
           _this.emit('format_error')
@@ -79,9 +83,7 @@ export default class SettingsWrapper extends EventEmitter {
     }
   }
 
-  setConfig(file){
-    console.log("Setting config:")
-    console.log(file)
+  setConfig(file){ 
     if('address' in file){
       this.address = file.address
     }
@@ -103,8 +105,6 @@ export default class SettingsWrapper extends EventEmitter {
     if('open_on_start' in file){
       this.open_on_start = file.open_on_start
     }
-    
-    // this.global_config = this.refreshConfig(this.project_file)  
   }
 
   getDefaultConfig(global){
@@ -124,41 +124,31 @@ export default class SettingsWrapper extends EventEmitter {
 
   openProjectSettings(cb){
     var _this = this
-    console.log("Opening project settings")
     if(this.project_path){
-      console.log(this.project_path)
       var config_file = this.config_file
-      console.log(config_file)
       fs.open(config_file,'r',function(err,contents){
-          console.log("Opened config file")
           if(err){
-            console.log("Doesn't exist yet... crating new")
             var json_string = _this.newSettingsJson()
-            console.log("Got the json content")
             fs.writeFile(config_file, json_string, function(err) {
               if(err){
-                console.log("Failed to create file")
                 cb(new Error(err))
                 return
               }
               _this.watchConfigFile()
-              console.log("Opening file in workspace")
               var uri = vscode.Uri.file(config_file)
-              console.log(uri)
               vscode.workspace.openTextDocument(uri).then(function(textDoc){
-                console.log("Opened")
+                vscode.window.showTextDocument(textDoc)
+                cb()
               })  
             })
           }else{
-            console.log("Opening file in workspace")
             var uri = vscode.Uri.file(config_file)
-            console.log(uri)
             vscode.workspace.openTextDocument(uri).then(function(textDoc){
               vscode.window.showTextDocument(textDoc)
-              
+              cb()
             })
           }
-          cb()
+          
       })
     }else{
       cb(new Error("No project open"))

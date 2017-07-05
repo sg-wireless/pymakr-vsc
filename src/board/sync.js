@@ -27,16 +27,15 @@ export default class Sync {
 
     // check if there is a project open
     if(!this.project_path){
-      return new error("No project open")
+      return new Error("No project open")
     }
     // check if project exists
     if(!this.exists(this.settings.sync_folder)){
-        return new error("Unable to find folder '"+folder_name+"'. Please add the correct folder in your settings")
+        return new Error("Unable to find folder '"+this.settings.sync_folder+"'. Please add the correct folder in your settings")
     }
 
     return true
   }
-
   exists(dir){
     return fs.existsSync(this.project_path + "/" + dir)
   }
@@ -68,7 +67,11 @@ export default class Sync {
 
     var ready = this.isReady()
     if(ready instanceof Error){
-      this.terminal.write(ready.error+"\r\n")
+      this.terminal.write(ready.message+"\r\n")
+      if(this.pyboard.connected){
+        this.terminal.writePrompt()
+      }
+      oncomplete(ready)
       return
     }
 
@@ -98,7 +101,11 @@ export default class Sync {
     this.progress_cb = progress_cb
 
     var dir = this.settings.sync_folder.replace(/^\/|\/$/g, '') // remove first and last slash
-    this.py_folder = this.project_path + "/"+dir+"/"
+    this.py_folder = this.project_path + "/"
+    if(dir){
+      this.py_folder += dir+"/"
+    }
+    
     var files = null
     var file_hashes = null
     try {
@@ -294,7 +301,7 @@ export default class Sync {
     for(var i = 0; i < allowed_file_types.length; i++) {
       allowed_file_types[i] = allowed_file_types[i].trim();
     }
-
+    
     for(var i=0;i<files.length;i++){
       var filename = path + files[i]
       if(filename.length > 0 && filename.substring(0,1) != "." && files[i].substring(0,1) != "." && files[i].length > 0){

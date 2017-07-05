@@ -18,7 +18,6 @@ export default class ApiWrapper {
     }else{
       null
     }
-    
   }
 
   openSettings(cb){
@@ -26,41 +25,28 @@ export default class ApiWrapper {
       cb = function(){}
     }
     var _this = this
-    console.log("Opening general settings")
     var config_file = Utils.getConfigPath("pymakr.json")
-    console.log(config_file)
     if(config_file){
       fs.open(config_file,'r',function(err,contents){
-          console.log("Opened config file")
           if(err){
-            console.log("Doesn't exist yet... creating new")
             var json_string = _this.newSettingsJson(true) // first param to 'true' gets global settings
-            console.log("Got the json content")
             fs.writeFile(config_file, json_string, function(err) {
               if(err){
-                console.log("Failed to create file")
                 cb(new Error(err))
                 return
               }
               _this.watchConfigFile(config_file)
-              console.log("Opening file in workspace")
               var uri = vscode.Uri.file(config_file)
-              console.log(uri)
               vscode.workspace.openTextDocument(uri).then(function(textDoc){
                 vscode.window.showTextDocument(textDoc)
-                console.log("Opened")
                 cb()
               })  
             })
           }else{
-            console.log("Opening file in workspace")
             var uri = vscode.Uri.file(config_file)
-            console.log(uri)
             vscode.workspace.openTextDocument(uri).then(function(textDoc){
               vscode.window.showTextDocument(textDoc)
-              console.log("Opened")
               cb()
-              
             })
           }
       })
@@ -90,36 +76,29 @@ export default class ApiWrapper {
   }
 
   clipboard(){
-    // return atom.clipboard.read()
-    return ncp.paste()
+    // no implmenetation needed, terminal supports it by default
   }
 
   writeClipboard(text){
-    // atom.clipboard.write(text)
+    // no implmenetation needed, terminal supports it by default
   }
 
   getProjectPaths(){
-    // console.log(extension.getExtension("test.test"))
     var folder = workspace.rootPath
     if(path != "") []
     return [folder] 
   }
 
   getProjectPath(){
-    // console.log(extension.getExtension("test.test"))
     var path =  workspace.rootPath
     if(path != "") return path
     return null
   }
 
   getOpenFile(cb,onerror){
-    var editor = window.activeTextEditor;
-    console.log("got editor")
-    var doc = editor.document;
+    var editor = window.activeTextEditor
+    var doc = editor.document
     var name = doc.fileName
-    console.log(name)
-    console.log(doc)
-    console.log(doc.getText())
     cb(doc.getText(),name)
   }
 }

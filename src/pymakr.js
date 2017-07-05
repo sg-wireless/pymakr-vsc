@@ -218,12 +218,12 @@ export default class Pymakr {
         if(message == ""){
           message = err.message ? err.message : "Unknown error"
         }
-        _this.terminal.writeln("> Failed to connect ("+message+"). Click here to try again.")
+        _this.terminal.writeln("> Failed to connect ("+message+"). Press any key to try again.")
         _this.setButtonState()
       }
 
       var ontimeout = function(err){
-        _this.terminal.writeln("> Connection timed out. Click here to try again.")
+        _this.terminal.writeln("> Connection timed out. Press any key to try again.")
         _this.setButtonState()
       }
 
@@ -241,7 +241,7 @@ export default class Pymakr {
     if(this.pyboard.isConnecting()){
         this.terminal.writeln("Canceled")
     }else{
-      this.terminal.writeln("Disconnected. Click here to reconnect.")
+      this.terminal.writeln("Disconnected. Press any key to reconnect.")
     }
     this.pyboard.disconnect(function(){
       if(cb) cb()
@@ -259,6 +259,7 @@ export default class Pymakr {
           _this.setButtonState()
         })
     }
+    this.setButtonState()
   }
 
   sync(){
@@ -308,7 +309,7 @@ export default class Pymakr {
   }
 
   toggleVisibility(){
-    this.view.toggleVisibility()
+    this.view.visible ? this.hidePanel() : this.showPanel();
   }
 
   // Tear down any state and detach
