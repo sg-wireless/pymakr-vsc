@@ -32,6 +32,7 @@ export default class Pyboard {
     this.waiting_for_timeout = 8000
     this.status = DISCONNECTED
     this.pingTimer = null
+    this.ping_count = 0
     this.isSerial = false
     this.type = null
     this.settings = settings
@@ -40,6 +41,8 @@ export default class Pyboard {
     this.logger = new Logger('Pyboard')
     this.config = Config.constants()
     this.refreshConfig()
+
+
   }
 
   refreshConfig(){
@@ -62,7 +65,15 @@ export default class Pyboard {
   startPings(interval){
     var _this = this
     this.pingTimer = setInterval(function(){
-      if(!_this.connection.sendPing()){
+      var ping_result = _this.connection.sendPing()
+      if(!ping_result){
+        _this.ping_count+=1
+      }else{
+        _this.ping_count = 0
+      }
+
+      if(_this.ping_count > 2){
+        _this.ping_count = 0
         clearInterval(_this.pingTimer)
         _this.ontimeout(new Error("Connection lost"))
         _this.disconnect()
