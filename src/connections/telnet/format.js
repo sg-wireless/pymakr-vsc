@@ -1,3 +1,4 @@
+'use babel';
 
 exports.error=function(name,err){
 	// console.error(name,' | ',err.toString()); // to use for debugging

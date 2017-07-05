@@ -1,3 +1,5 @@
+'use babel';
+
 var Socket = require('net').Socket;
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');

@@ -1,3 +1,5 @@
+'use babel';
+
 // From: https://www.npmjs.com/package/telnetit
 
 var Telnet = require('./util-telnet');
