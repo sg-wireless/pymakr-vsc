@@ -44,10 +44,10 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/Ralph/.atom/.node-gyp/.electron-gyp/.node-gyp/iojs-1.3.13/include/node \
-	-I/Users/Ralph/.atom/.node-gyp/.electron-gyp/.node-gyp/iojs-1.3.13/src \
-	-I/Users/Ralph/.atom/.node-gyp/.electron-gyp/.node-gyp/iojs-1.3.13/deps/uv/include \
-	-I/Users/Ralph/.atom/.node-gyp/.electron-gyp/.node-gyp/iojs-1.3.13/deps/v8/include \
+	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/include/node \
+	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/src \
+	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/deps/uv/include \
+	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/deps/v8/include \
 	-I$(srcdir)/../nan
 
 DEFS_Release := \
@@ -90,10 +90,10 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/Ralph/.atom/.node-gyp/.electron-gyp/.node-gyp/iojs-1.3.13/include/node \
-	-I/Users/Ralph/.atom/.node-gyp/.electron-gyp/.node-gyp/iojs-1.3.13/src \
-	-I/Users/Ralph/.atom/.node-gyp/.electron-gyp/.node-gyp/iojs-1.3.13/deps/uv/include \
-	-I/Users/Ralph/.atom/.node-gyp/.electron-gyp/.node-gyp/iojs-1.3.13/deps/v8/include \
+	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/include/node \
+	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/src \
+	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/deps/uv/include \
+	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/deps/v8/include \
 	-I$(srcdir)/../nan
 
 OBJS := \

@@ -10,13 +10,12 @@
         "spec": ">=4.0.7 <5.0.0",
         "type": "range"
       },
-      "C:\\Users\\devel\\Downloads\\pymakr"
+      "C:\\Users\\devel\\Projects\\pymakr-atom"
     ]
   ],
   "_from": "serialport@>=4.0.7 <5.0.0",
   "_id": "serialport@4.0.7",
   "_inCache": true,
-  "_installable": true,
   "_location": "/serialport",
   "_nodeVersion": "0.12.7",
   "_npmOperationalInternal": {
@@ -29,7 +28,7 @@
   },
   "_npmVersion": "2.15.6",
   "_phantomChildren": {
-    "commander": "2.9.0"
+    "commander": "2.10.0"
   },
   "_requested": {
     "raw": "serialport@^4.0.7",
@@ -41,13 +40,14 @@
     "type": "range"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/serialport/-/serialport-4.0.7.tgz",
   "_shasum": "421c618a8a612bd40cfa461b4a46154daf2229a5",
   "_shrinkwrap": null,
   "_spec": "serialport@^4.0.7",
-  "_where": "C:\\Users\\devel\\Downloads\\pymakr",
+  "_where": "C:\\Users\\devel\\Projects\\pymakr-atom",
   "author": {
     "name": "Chris Williams",
     "email": "voodootikigod@gmail.com",
@@ -69,7 +69,13 @@
     "node-pre-gyp"
   ],
   "dependencies": {
-    "bindings": "1.2.1"
+    "bindings": "1.2.1",
+    "commander": "^2.9.0",
+    "debug": "^2.3.2",
+    "lie": "^3.1.0",
+    "nan": "^2.4.0",
+    "node-pre-gyp": "^0.6.32",
+    "object.assign": "^4.0.3"
   },
   "description": "Node.js package to access serial ports. Welcome your robotic javascript overlords. Better yet, program them!",
   "devDependencies": {
