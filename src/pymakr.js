@@ -20,7 +20,7 @@ export default class Pymakr {
     this.pyboard = pyboard
     this.synchronizing = false
     this.settings = settings
-    this.api = new ApiWrapper()
+    this.api = new ApiWrapper(settings)
     this.logger = new Logger('PymakrView')
     this.config = Config.constants()
     this.view = view

@@ -8,8 +8,9 @@ import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, Stat
 import Config from '../config.js';
 
 export default class ApiWrapper {
-  constructor() {
+  constructor(settings) {
     this.default_config = Config.settings()
+    this.settings = settings
   }
 
   config(key){
@@ -29,13 +30,13 @@ export default class ApiWrapper {
     if(config_file){
       fs.open(config_file,'r',function(err,contents){
           if(err){
-            var json_string = _this.newSettingsJson(true) // first param to 'true' gets global settings
+            var json_string = _this.settings.newSettingsJson(true) // first param to 'true' gets global settings
             fs.writeFile(config_file, json_string, function(err) {
               if(err){
                 cb(new Error(err))
                 return
               }
-              _this.watchConfigFile(config_file)
+              _this.settings.watchConfigFile(config_file)
               var uri = vscode.Uri.file(config_file)
               vscode.workspace.openTextDocument(uri).then(function(textDoc){
                 vscode.window.showTextDocument(textDoc)
