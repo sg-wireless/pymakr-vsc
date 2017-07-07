@@ -10,7 +10,7 @@ var Socket = require('net').Socket;
 export default class Term {
 
     constructor(cb,pyboard,settings) {
-      this.port = "1337"
+      this.port = parseInt(Math.random()*1000 + 1337)
       this.host = "127.0.0.1"
       this.term_buffer = ""
       this.shellprompt = '>>> ';
@@ -24,6 +24,7 @@ export default class Term {
       this.connection_attempt = 1
       this.active = true
       this.terminal = null
+      this.create_failed = false
 
       //dragging
       this.startY = null
@@ -33,7 +34,9 @@ export default class Term {
       this.connect(cb)
 
       vscode.window.onDidCloseTerminal(function(){
-        _this.create()
+        if(!_this.create_failed){
+          // _this.create()
+        }
       })
     }
 
@@ -57,15 +60,24 @@ export default class Term {
     }
 
     create(){
-       this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: this.api.getPackagePath() + "terminalExec.js"} )
+      console.log(this.port)
+      this.create_failed = false
+      try{
+        var shellpath = this.api.getPackagePath() + "terminalExec.js"
+        console.log(shellpath)
+        this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: shellpath, shellArgs: [this.port]} )
         // if(this.sw.open_on_start){
             this.show()
         // }
+      }catch(e){
+        this.create_failed = true
+      }
     }
 
     connect(cb){
       
       console.log("Connection atempt "+this.connection_attempt)
+      console.log("Connecting on "+this.port)
       if(this.connection_attempt > 8) {
         cb(new Error("Unable to start the terminal. Restart VSC or file an issue on our github"))
         return
@@ -82,6 +94,7 @@ export default class Term {
         }
       });
       this.stream.on('error', function (error) {
+        console.log('Error:')
         console.log(error)
         if(!stopped){
           stopped = true

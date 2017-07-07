@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+var port = process.argv.length >=3 ? process.argv[2] : 1137
+var ip = '127.0.0.1'
+
 var net = require('net')
 var clients = []
 var stdin = process.openStdin();
@@ -20,7 +23,7 @@ var server = net.createServer(function(socket){
       clients.splice(clients.indexOf(socket), 1);
     });
 
-}).listen(1337, '127.0.0.1');
+}).listen(port, ip);
 
 stdin.addListener("data", function(text) {
   userInput(text)

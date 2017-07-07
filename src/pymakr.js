@@ -208,7 +208,7 @@ export default class Pymakr {
 
       var onconnect = function(err){
         if(err){
-          _this.terminal.writeln("Connection error: "+err)
+          _this.terminal.writeln("Connection error: "+err.message+". Press any key to try again.")
         }
         _this.setButtonState()
       }
