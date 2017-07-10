@@ -197,7 +197,6 @@ export default class Pymakr {
       this.terminal.writeln("Connecting on "+address+"...");
 
       var onconnect = function(err){
-        console.log("Connected callback")
         if(err){
           _this.terminal.writeln("Connection error: "+err.message+". Press any key to try again.")
         }

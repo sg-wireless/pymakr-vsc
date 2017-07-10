@@ -87,7 +87,8 @@ export default class PySocket {
     this.send_raw(data,cb)
   }
 
-  sendPing(){
+  sendPing(cb){
+    if(cb) cb(null)
     return true
   }
 

@@ -65,19 +65,20 @@ export default class Pyboard {
   startPings(interval){
     var _this = this
     this.pingTimer = setInterval(function(){
-      var ping_result = _this.connection.sendPing()
-      if(!ping_result){
-        _this.ping_count+=1
-      }else{
-        _this.ping_count = 0
-      }
+      _this.connection.sendPing(function(err){
+        if(err){
+          _this.ping_count+=1
+        }else{
+          _this.ping_count = 0
+        }
 
-      if(_this.ping_count > 2){
-        _this.ping_count = 0
-        clearInterval(_this.pingTimer)
-        _this.ontimeout(new Error("Connection lost"))
-        _this.disconnect()
-      }
+        if(_this.ping_count > 1){ // timeout after 2 pings
+          _this.ping_count = 0
+          clearInterval(_this.pingTimer)
+          _this.ontimeout(new Error("Connection lost"))
+          _this.disconnect()
+        }
+      })
     },interval*1000)
   }
 

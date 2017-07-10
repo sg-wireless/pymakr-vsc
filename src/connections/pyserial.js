@@ -1,5 +1,6 @@
 'use babel';
 
+import Logger from '../helpers/logger.js'
 var fs = require('fs');
 
 var COMPORT_MANUFACTURERS = ['Pycom Ltd.','FTDI','Pycom']
@@ -28,6 +29,7 @@ export default class PySerial {
     this.type = "serial"
     this.params = params
     this.ayt_pending = false
+    this.logger = new Logger('PySerial')
     this.stream = new SerialPort(this.params.host, {
       baudRate: 115200,
       autoOpen: false
@@ -57,18 +59,26 @@ export default class PySerial {
 
     var timeout = null
     this.stream.open(function(){
-      _this.send('\r\n',function(){
+      _this.sendPing(function(err){
+        if(!err){
           clearTimeout(timeout)
-          onconnect()
+          _this.send('\r\n',function(){
+            onconnect()
+          })
+        }
       })
+    })
 
-      timeout = setTimeout(function(){
+    timeout = setTimeout(function(){
+      if(!error_thrown){
+        error_thrown = true
         ontimeout(new Error("Timeout while connecting"))
         _this.disconnect(function(){
 
         })
-      },_this.params.timeout)
-    })
+      }
+    },_this.params.timeout)
+  
   }
 
   disconnect(cb){
@@ -142,10 +152,16 @@ export default class PySerial {
     })
   }
 
-  sendPing(){
+  sendPing(cb){
+    var _this = this
     // not implemented
     if(this.dtr_supported){
-      this.stream.set({dtr: true})
+      this.stream.set({dtr: true},function(err){
+        if(cb){
+          cb(err)
+          _this.logger.info
+        } 
+      })
     }
     return true
   }

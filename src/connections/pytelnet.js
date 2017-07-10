@@ -20,13 +20,15 @@ export default class PyTelnet {
 
   }
 
-  sendPing(){
+  sendPing(cb){
     if(this.ayt_pending){
       this.ayt_pending = false
+      cb(new Error("Ping failed"))
       return false
     }
     this.ayt_pending = true
     this.send(AYT)
+    cb(null)
     return true
   }
 
