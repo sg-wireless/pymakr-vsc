@@ -34,9 +34,7 @@ export default class PanelView extends EventEmitter {
 
     // terminal logic
     var onTermConnect = function(){
-      if(_this.settings.open_on_start){
-        _this.emit('connect')
-      }
+      _this.emit('connect')
     }
 
     // create terminal

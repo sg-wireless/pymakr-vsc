@@ -36,6 +36,7 @@ export default class Pymakr {
     })
 
     this.view.on('connect',function(){
+      _this.logger.info("Connected trigger from view")
       _this.connect()
     })
     this.view.on('close',function(){
@@ -101,17 +102,6 @@ export default class Pymakr {
         _this.terminal.enter()
       }
     })
-
-    // hide panel if it was hidden after last shutdown of atom
-    if(serializedState && 'visible' in serializedState) {
-      if(!serializedState.visible){
-        this.hidePanel()
-      }else{
-        this.connect()
-      }
-    }else{
-      this.connect()
-    }
   }
 
 
@@ -207,6 +197,7 @@ export default class Pymakr {
       this.terminal.writeln("Connecting on "+address+"...");
 
       var onconnect = function(err){
+        console.log("Connected callback")
         if(err){
           _this.terminal.writeln("Connection error: "+err.message+". Press any key to try again.")
         }

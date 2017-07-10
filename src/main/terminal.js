@@ -25,6 +25,8 @@ export default class Term {
       this.active = true
       this.terminal = null
       this.create_failed = false
+      this.stream = new Socket();
+      this.connected = false
 
       //dragging
       this.startY = null
@@ -53,6 +55,7 @@ export default class Term {
     connectReattempt(cb){
       var _this = this
       this.connection_attempt +=1
+      this.connected = false
       setTimeout(function(){
         _this.connect(cb)
       },200)
@@ -60,11 +63,9 @@ export default class Term {
     }
 
     create(){
-      console.log(this.port)
       this.create_failed = false
       try{
         var shellpath = this.api.getPackagePath() + "terminalExec.js"
-        console.log(shellpath)
         this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: shellpath, shellArgs: [this.port]} )
         // if(this.sw.open_on_start){
             this.show()
@@ -76,17 +77,20 @@ export default class Term {
 
     connect(cb){
       
-      console.log("Connection atempt "+this.connection_attempt)
-      console.log("Connecting on "+this.port)
       if(this.connection_attempt > 8) {
         cb(new Error("Unable to start the terminal. Restart VSC or file an issue on our github"))
         return
       }
       var _this = this
       var stopped = false
+      this.connected = false
       this.stream = new Socket();
       this.stream.connect(this.port,this.host);
-      this.stream.on('connect',cb);
+      this.stream.on('connect',function(err){
+        _this.logger.info("Terminal connected")
+        _this.connected = true
+        cb(err)
+      });
       this.stream.on('timeout', function () {
         if(!stopped){
           stopped = true
@@ -94,23 +98,21 @@ export default class Term {
         }
       });
       this.stream.on('error', function (error) {
-        console.log('Error:')
-        console.log(error)
+        _this.logger.warning('Error while connecting to term')
         if(!stopped){
           stopped = true
           _this.connectReattempt(cb)
         }
       });
       this.stream.on('close', function (had_error) {
-        console.log("closed")
-        console.log(had_error)
+        _this.logger.warning('Term connection closed')
         if(!stopped){
           stopped = true
           _this.connectReattempt(cb)
         }
       });
       this.stream.on('end', function () {
-          console.log("Ended")
+          _this.logger.warning('Term connection ended ')
           if(!stopped){
           stopped = true
           _this.connectReattempt(cb)

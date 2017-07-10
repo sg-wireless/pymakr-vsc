@@ -147,8 +147,7 @@ export default class SettingsWrapper extends EventEmitter {
               vscode.window.showTextDocument(textDoc)
               cb()
             })
-          }
-          
+          }  
       })
     }else{
       cb(new Error("No project open"))
