@@ -67,6 +67,12 @@ function activate(context) {
     });
     context.subscriptions.push(disposable);
 
+    var disposable = vscode.commands.registerCommand('pymakr.toggleConnect', function () {
+        pymakr.toggleConnect()
+    });
+    context.subscriptions.push(disposable);
+
+
     var disposable = vscode.commands.registerCommand('pymakr.extra.getVersion', function () {
         pymakr.getVersion()
     });

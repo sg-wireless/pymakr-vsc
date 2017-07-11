@@ -7,7 +7,7 @@ var net = require('net')
 var clients = []
 var stdin = process.openStdin();
 stdin.setRawMode(true);
-var debug = false
+var debug = false;
 
 var server = net.createServer(function(socket){
 

@@ -26,7 +26,7 @@ export default class PanelView extends EventEmitter {
     this.logger = new Logger('PanelView')
 
     this.statusItems = {}
-    this.statusItems['status'] = this.createStatusItem("","pymakr.toggleREPL","Toggle terminal") // name is set using setTitle function
+    this.statusItems['status'] = this.createStatusItem("","pymakr.toggleConnect","Toggle terminal") // name is set using setTitle function
     this.statusItems['run'] = this.createStatusItem("$(triangle-right) Run","pymakr.run","Run current file")
     this.statusItems['sync'] = this.createStatusItem("$(triangle-down) Sync","pymakr.sync","Synchronize project")
     this.statusItems['other'] = this.createStatusItem("$(list-unordered) All commands","pymakr.listCommands","List all available pymakr commands")

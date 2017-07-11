@@ -301,6 +301,10 @@ export default class Pymakr {
   toggleVisibility(){
     this.view.visible ? this.hidePanel() : this.showPanel();
   }
+  toggleConnect(){
+    console.log(this.pyboard.connected)
+    this.pyboard.connected ? this.disconnect() : this.connect();
+  }
 
   // Tear down any state and detach
   destroy() {
