@@ -26,6 +26,7 @@ export default class SettingsWrapper extends EventEmitter {
     this.ctrl_c_on_connect = this.api.config('ctrl_c_on_connect')
     this.open_on_start = this.api.config('open_on_start')
 
+
     this.refresh()
     // this.refreshConfig()
     this.watchConfigFile()
@@ -136,14 +137,14 @@ export default class SettingsWrapper extends EventEmitter {
               }
               _this.watchConfigFile()
               var uri = vscode.Uri.file(config_file)
-              vscode.workspace.openTextDocument(uri).then(function(textDoc){
+              workspace.openTextDocument(uri).then(function(textDoc){
                 vscode.window.showTextDocument(textDoc)
                 cb()
               })  
             })
           }else{
             var uri = vscode.Uri.file(config_file)
-            vscode.workspace.openTextDocument(uri).then(function(textDoc){
+            workspace.openTextDocument(uri).then(function(textDoc){
               vscode.window.showTextDocument(textDoc)
               cb()
             })

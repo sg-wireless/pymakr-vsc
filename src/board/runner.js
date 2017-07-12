@@ -1,11 +1,6 @@
 'use babel';
 
-var crypto = require('crypto');
-import Monitor from './monitor.js'
-import Config from '../config.js'
-import Logger from '../helpers/logger.js'
 import ApiWrapper from '../main/api-wrapper.js';
-var fs = require('fs');
 
 export default class Runner {
   constructor(pyboard,terminal,pymakr) {

@@ -1,17 +1,12 @@
 'use babel';
 
-import Pyboard from './board/pyboard';
 import Sync from './board/sync';
 import Runner from './board/runner';
-import Term from './main/terminal';
 import Pyserial from './connections/pyserial';
 import ApiWrapper from './main/api-wrapper.js';
 import Logger from './helpers/logger.js'
-import PanelView from './main/panel-view.js'
 import Config from './config.js'
 
-var fs = require('fs');
-var ElementResize = require("element-resize-detector");
 
 export default class Pymakr {
 
@@ -24,6 +19,7 @@ export default class Pymakr {
     this.logger = new Logger('PymakrView')
     this.config = Config.constants()
     this.view = view
+    this.first_time_start = !this.api.settingsExist()
 
     this.terminal = this.view.terminal
     this.runner = new Runner(pyboard,this.terminal,this)
@@ -35,9 +31,12 @@ export default class Pymakr {
       }
     })
 
-    this.view.on('connect',function(){
+    this.view.on('term-connected',function(){
       _this.logger.info("Connected trigger from view")
-      _this.connect()
+      console.log(_this.settings.open_on_start)
+      if(_this.settings.open_on_start){
+        _this.connect()
+      }
     })
     this.view.on('close',function(){
       _this.disconnect()
@@ -102,6 +101,8 @@ export default class Pymakr {
         _this.terminal.enter()
       }
     })
+
+    
   }
 
 
@@ -169,12 +170,18 @@ export default class Pymakr {
     this.view.setButtonState(this.runner.busy)
   }
 
-  setTitle(status){
-	 this.view.setTitle()
-  }
+  // setTitle(status){
+	//  this.view.setTitle()
+  // }
 
   connect(){
     var _this = this
+
+    if(this.first_time_start){
+      this.first_time_start = false
+      _this.api.openSettings()
+      _this.writeGetStartedText()
+    }
 
     // stop config observer from triggering again
     clearTimeout(this.observeTimeout)
@@ -271,10 +278,19 @@ export default class Pymakr {
 
 
   writeHelpText(){
-    var lines = []
 
     this.terminal.enter()
     this.terminal.write(this.config.help_text)
+
+    if(this.pyboard.connected){
+      this.terminal.writePrompt()
+    }
+  }
+
+  writeGetStartedText(){
+
+    this.terminal.enter()
+    this.terminal.write(this.config.start_text)
 
     if(this.pyboard.connected){
       this.terminal.writePrompt()
@@ -301,8 +317,8 @@ export default class Pymakr {
   toggleVisibility(){
     this.view.visible ? this.hidePanel() : this.showPanel();
   }
+
   toggleConnect(){
-    console.log(this.pyboard.connected)
     this.pyboard.connected ? this.disconnect() : this.connect();
   }
 

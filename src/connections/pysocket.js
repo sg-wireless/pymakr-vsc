@@ -58,7 +58,6 @@ export default class PySocket {
   }
 
   registerListener(cb){
-    var _this = this
     this.onmessage = cb
     this.stream.on('data', function (data) {
         cb(data)
@@ -83,7 +82,7 @@ export default class PySocket {
 
   send_cmd(cmd,cb){
     var mssg = '\x1b\x1b' + cmd
-    data = new Buffer(mssg,"binary")
+    var data = new Buffer(mssg,"binary")
     this.send_raw(data,cb)
   }
 

@@ -117,7 +117,7 @@ export default class Sync {
     }
 
     if(this.total_file_size > this.config.max_sync_size){
-      err = "Total size of "+this.total_number_of_files.toString()+" files too big ("+parseInt(this.total_file_size/1000).toString()+"kb). Reduce the total filesize to < 350kb or select the correct sync folder in the settings"
+      var err = "Total size of "+this.total_number_of_files.toString()+" files too big ("+parseInt(this.total_file_size/1000).toString()+"kb). Reduce the total filesize to < 350kb or select the correct sync folder in the settings"
 
       cb(new Error(err))
       return
@@ -217,7 +217,6 @@ export default class Sync {
   }
 
   complete(cb){
-    var _this = this
     this.exit(function(){
       cb()
     })
@@ -284,7 +283,6 @@ export default class Sync {
   }
 
   init(cb){
-    var _this = this
     this.monitor = new Monitor(this.pyboard,cb)
   }
 
@@ -363,7 +361,6 @@ export default class Sync {
   }
 
   exit(cb){
-    var _this = this
     this.monitor.exit(cb)
   }
 }

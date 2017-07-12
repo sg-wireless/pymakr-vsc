@@ -20,7 +20,7 @@ export default class Term {
       this.onMessage = function(){}
       this.term_rows = Config.constants().term_rows
       this.lastWrite = ""
-      this.sw = settings
+      this.settings = settings
       this.connection_attempt = 1
       this.active = true
       this.terminal = null
@@ -67,9 +67,9 @@ export default class Term {
       try{
         var shellpath = this.api.getPackagePath() + "terminalExec.js"
         this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: shellpath, shellArgs: [this.port]} )
-        // if(this.sw.open_on_start){
+        if(this.settings.open_on_start){
             this.show()
-        // }
+        }
       }catch(e){
         this.create_failed = true
       }
@@ -174,10 +174,6 @@ export default class Term {
     }
 
     copy(ev){
-      var selection = window.getSelection().toString()
-      if(selection.length > 0) {
-        this.logger.silly("Copied content to clipboard of length "+selection.length)
-        this.api.writeClipboard(selection)
-      }
+      
     }
 }

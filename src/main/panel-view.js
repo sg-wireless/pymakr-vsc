@@ -1,18 +1,14 @@
 'use babel';
 
 var vscode = require('vscode');
-import {StatusBarAlignment, StatusBarItem, window, workspace,commands} from "vscode";
+import {StatusBarAlignment, window} from "vscode";
 
 import Term from './terminal';
-import Pyserial from '../connections/pyserial';
 import ApiWrapper from '../main/api-wrapper.js';
 import Logger from '../helpers/logger.js'
 
 
 var EventEmitter = require('events');
-
-var fs = require('fs');
-var ElementResize = require("element-resize-detector");
 
 export default class PanelView extends EventEmitter {
 
@@ -34,11 +30,11 @@ export default class PanelView extends EventEmitter {
 
     // terminal logic
     var onTermConnect = function(){
-      _this.emit('connect')
+      _this.emit('term-connected')
     }
 
     // create terminal
-    this.terminal = new Term(onTermConnect,null,this.pyboard,_this.settings)
+    this.terminal = new Term(onTermConnect,this.pyboard,_this.settings)
     this.terminal.setOnMessageListener(function(input){
       _this.emit('user_input',input)
     })

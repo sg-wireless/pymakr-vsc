@@ -3,7 +3,7 @@
 export default class Config {
   static constants(){
     return {
-      logging_level: 1, // 4 = error. anything higher than 5 = off. see logger.js
+      logging_level: 0, // 4 = error. anything higher than 5 = off. see logger.js
       max_sync_size: 350000,
       error_messages: {
         "EHOSTDOWN": "Host down",
@@ -33,9 +33,22 @@ export default class Config {
               +  "- open_on_start     : true                : Weather to open the terminal and connect to the board when starting vsc\r\n"
               +  "Any of these can be used inside the Project config to override the global config\r\n"
               +  "\r\n"
-              +  "For more information, check github/py or docs.pycom.io\r\n"
+              +  "For more information, check github.com/pycom/pymakr-vsc or docs.pycom.io\r\n"
+              +  "\r\n",
+
+      start_text: "Welcome to the Pymakr plugin! Use the buttons on the left bottom to access all features and commands.\r\n"
+              +  "This is how you get started:\r\n"
+              +  " 1: Open 'Global Settings'\r\n"
+              +  " 2: Fill in the correct IP or serial port of your Pycom board in 'address'\r\n"
+              +  "  2.1: When using serial, use the 'List serial ports' to find the correct serial port\r\n"
+              +  " 3: Connect using the 'Connect' command or the 'Pycom Console' button\r\n"
+              +  " 4: Open a micropython project with main.py and boot.py files\r\n"
+              +  " 5: Start running files and synchronizing your project \r\n"
+              +  "\r\n"
+              +  " Use the 'Help' command for more info about all the options \r\n"
     }
   }
+
   static settings(){
     return {
       address: {
@@ -76,6 +89,13 @@ export default class Config {
           default: "py,txt,log,json,xml",
           title: 'Sync file types',
           description: 'All types of files that will be synced to the board, seperated by comma. All other filetypes will be ignored during a sync action',
+          order: 6
+      }, 
+      open_on_start: {
+          type: 'boolean',
+          default: true,
+          title: 'Open on start',
+          description: 'Open the pymakr console and connect to the board after starting vsc or opening a project',
           order: 6
       },
     }

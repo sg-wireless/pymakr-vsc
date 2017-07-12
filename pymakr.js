@@ -3,7 +3,6 @@ var PanelView = require('./lib/main/panel-view').default;
 var Pymakr = require('./lib/pymakr').default;
 var Pyboard = require('./lib/board/pyboard').default;
 var SettingsWrapper = require('./lib/main/settings-wrapper').default;
-var ApiWrapper = require('./lib/main/api-wrapper').default;
 
 var pb,v,sw,pymakr
 
@@ -68,22 +67,28 @@ function activate(context) {
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.toggleConnect', function () {
+        if(!pymakr.pyboard.connected){
+            terminal.show()
+        }
         pymakr.toggleConnect()
     });
     context.subscriptions.push(disposable);
 
 
     var disposable = vscode.commands.registerCommand('pymakr.extra.getVersion', function () {
+        terminal.show()
         pymakr.getVersion()
     });
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.extra.getWifiMac', function () {
+        terminal.show()
         pymakr.getWifiMac()
     });
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.extra.getSerial', function () {
+        terminal.show()
         pymakr.getSerial()
     });
     context.subscriptions.push(disposable);

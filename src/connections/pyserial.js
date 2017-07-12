@@ -111,7 +111,7 @@ export default class PySerial {
 
   send_cmd(cmd,cb){
     var mssg = '\x1b\x1b' + cmd
-    data = new Buffer(mssg,"binary")
+    var data = new Buffer(mssg,"binary")
     this.send_raw(data,function(){
       // setTimeout(cb,400)
       cb()

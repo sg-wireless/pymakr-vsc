@@ -11,6 +11,8 @@ export default class ApiWrapper {
   constructor(settings) {
     this.default_config = Config.settings()
     this.settings = settings
+    this.first_time_opening = false
+    this.config_file = Utils.getConfigPath("pymakr.json")
   }
 
   config(key){
@@ -26,33 +28,44 @@ export default class ApiWrapper {
       cb = function(){}
     }
     var _this = this
-    var config_file = Utils.getConfigPath("pymakr.json")
+    var config_file = this.config_file
     if(config_file){
-      fs.open(config_file,'r',function(err,contents){
-          if(err){
-            var json_string = _this.settings.newSettingsJson(true) // first param to 'true' gets global settings
-            fs.writeFile(config_file, json_string, function(err) {
-              if(err){
-                cb(new Error(err))
-                return
-              }
-              _this.settings.watchConfigFile(config_file)
-              var uri = vscode.Uri.file(config_file)
-              vscode.workspace.openTextDocument(uri).then(function(textDoc){
-                vscode.window.showTextDocument(textDoc)
-                cb()
-              })  
-            })
-          }else{
+      if(!this.settingsExist()){
+          var json_string = _this.settings.newSettingsJson(true) // first param to 'true' gets global settings
+          fs.writeFile(config_file, json_string, function(err) {
+            if(err){
+              cb(new Error(err))
+              return
+            }
+            _this.settings.watchConfigFile(config_file)
             var uri = vscode.Uri.file(config_file)
             vscode.workspace.openTextDocument(uri).then(function(textDoc){
               vscode.window.showTextDocument(textDoc)
               cb()
-            })
-          }
-      })
+            })  
+          })
+        }else{
+          var uri = vscode.Uri.file(config_file)
+          vscode.workspace.openTextDocument(uri).then(function(textDoc){
+            vscode.window.showTextDocument(textDoc)
+            cb()
+          })
+        }
     }else{
       cb(new Error("No config file found"))
+    }
+  }
+
+  settingsExist(cb){
+   
+    if(this.config_file){
+      try{
+        fs.openSync(this.config_file,'r')
+        return true
+      }catch(e){
+        return false
+      }
+      
     }
   }
 
@@ -85,9 +98,9 @@ export default class ApiWrapper {
   }
 
   getProjectPaths(){
-    var folder = workspace.rootPath
-    if(path != "") []
-    return [folder] 
+    var path = workspace.rootPath
+    if(path != "") return []
+    return [path] 
   }
 
   getProjectPath(){

@@ -75,7 +75,6 @@ export default class PyTelnet {
   }
 
   registerListener(cb){
-    var _this = this
     this.onmessage = cb
 
     this.stream.read(function(err,recv){
@@ -99,7 +98,7 @@ export default class PyTelnet {
 
   send_cmd(cmd,cb){
     var mssg = '\x1b\x1b' + cmd
-    data = new Buffer(mssg,"binary")
+    var data = new Buffer(mssg,"binary")
     this.send_raw(data,cb)
   }
 

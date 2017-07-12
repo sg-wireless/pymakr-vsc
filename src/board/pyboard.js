@@ -5,9 +5,7 @@ import Pyserial from '../connections/pyserial';
 import Pytelnet from '../connections/pytelnet';
 import Pysocket from '../connections/pysocket';
 import Authorize from './authorize';
-import Monitor from './monitor';
 import Logger from '../helpers/logger.js'
-var timer = require('timers')
 
 var CTRL_A = '\x01' // raw repl
 var CTRL_B = '\x02' // exit raw repl
@@ -443,7 +441,6 @@ export default class Pyboard {
     var command_bytes = new Buffer(code,"binary")
     // for(var i=0;i<command_bytes.length;i+=265){
     var data = command_bytes
-    var _this = this
     this.send_raw(data,function(err){
       cb(err)
     })
