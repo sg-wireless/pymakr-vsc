@@ -288,13 +288,21 @@ export default class Pymakr {
   }
 
   writeGetStartedText(){
-
+    var _this = this
     this.terminal.enter()
     this.terminal.write(this.config.start_text)
 
-    if(this.pyboard.connected){
-      this.terminal.writePrompt()
-    }
+    Pyserial.list(function(list){
+      if(list.length > 0){
+        _this.terminal.writeln("Here are the devices you've connected to the serial port at the moment:")
+        _this.getSerial()
+      }else if(this.pyboard.connected){
+        this.terminal.writeln()
+        this.terminal.writePrompt()
+      }
+    })
+
+    
   }
 
 

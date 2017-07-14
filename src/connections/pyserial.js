@@ -137,15 +137,18 @@ export default class PySerial {
       var portnames = []
       var other_portnames = []
       for(var i=0;i<ports.length;i++){
-        var manu = ports[i].manufacturer
-        if(COMPORT_MANUFACTURERS.indexOf(manu) > -1){
-          if(COMPORT_MANUFACTURERS[0] == manu){
-            portnames.unshift(ports[i].comName) // push to top of array
+        var name = ports[i].comName
+        if(name.indexOf('Bluetooth') == -1){
+          var manu = ports[i].manufacturer
+          if(COMPORT_MANUFACTURERS.indexOf(manu) > -1){
+            if(COMPORT_MANUFACTURERS[0] == manu){
+              portnames.unshift(ports[i].comName) // push to top of array
+            }else{
+              portnames.push(ports[i].comName)
+            }
           }else{
-            portnames.push(ports[i].comName)
+            other_portnames.push(ports[i].comName)
           }
-        }else{
-          other_portnames.push(ports[i].comName)
         }
       }
       cb(portnames.concat(other_portnames))
