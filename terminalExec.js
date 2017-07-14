@@ -9,6 +9,7 @@ var stdin = process.openStdin();
 stdin.setRawMode(true);
 var debug = false;
 
+log("Starting server...")
 net.createServer(function(socket){
 
     log("Client connected")

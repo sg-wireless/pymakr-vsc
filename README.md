@@ -17,9 +17,22 @@ More info and documentation can be found on https://docs.pycom.io/
 
 ## Usage
 
-The commandline will open by default after the package is installed. Use the 'Pymakr > Global settings' or 'Pymakr > Project settings' command to setup your connection. After changing the settings, use the 'Connect' command to connect using the new settings.
+The terminal will open by default after the package is installed. Use the 'Pymakr > Global settings' or 'Pymakr > Project settings' command to setup your connection. After changing the settings, use the 'Connect' command to connect using the new settings.
 
 At any time, use the 'Pycom Console' button on the left bottom to toggle the terminal. When closing, the board is disconnected, indicated by the x icon in the button. When manually closing the terminal (x on the right top of the terminal) the connection stays active. Press the 'Pycom Console' button or use the 'Disconnect' command to close the connection.
+
+## Commands
+
+- Connect (ctrl-shift-c)         : Disconnects from the board
+- Disconnect                     : Disconnects from the board
+- Global settings (ctrl-shift-g) : Opens the installation-wide settings file
+- Project Settings               : Opens project specific settings that overwrite global settings
+- Run (ctrl-shift-r)             : Runs currently open file to the board
+- Sync (ctrl-shift-s)            : Synchronizes the complete project to the board, using the sync folder settings
+- List serial ports              : Lists all available serial ports and copies the first one to the clipboard
+- Get board version              : Displays firmware version of the connected board
+- Get WiFi SSID                  : Gets the SSID of the boards wifi accesspoint
+- Help                           : Print this list of commands and settings
 
 Useful keymaps:
 - `ctrl-shift-c`: (Re)connect
@@ -29,9 +42,19 @@ Useful keymaps:
 
 ## Settings
 
-To connect to your board, use the 'Global settings' commandto go to the extensions settings. Fill in the correct IP address or comport for your device. If you changed your username and password to something else than 'micro' and 'python', please update them accordingly if you connect over IP. Username and password are not required when using serial.
+To connect to your board, use the 'Global settings' command to go to the extensions settings. Fill in the correct IP address or comport for your device. If you changed your username and password to something else than 'micro' and 'python', please update them accordingly if you connect over IP. Username and password are not required when using serial.
 
 If you want to synchronize a subfolder of your project instead of the entire project, enter the name of the subfolder in the 'sync folder' field (for more info, see the Sync chapter below)
+
+All possible settings (name : default : description):
+- address           : 192.168.4.1         : IP address or comport for your device
+- username          : micro               : Board username, only for telnet
+- password          : python              : Board password, only for telnet
+- sync_folder       : <empty>             : Folder to synchronize. Empty to sync projects main folder
+- sync_file_types   : py,txt,log,json,xml : Type of files to be synchronized
+- ctrl_c_on_connect : false               : If true, executes a ctrl-c on connect to stop running programs
+- open_on_start     : true                : Weather to open the terminal and connect to the board when starting vsc
+Any of these can be used inside the Project config to override the global config
 
 ## REPL
 
@@ -45,7 +68,7 @@ Ctrl-C and Ctrl-V (or cmd-c/cmd-v on mac) can also be used to copy and paste in 
 
 ## Run
 
-The 'Run' command will run the code from the currently open file to the connected board. Any print output or exceptions from this code will appear in the commandline. There is a shortcut button to the run command on the left bottom of the status bar.
+The 'Run' command will run the code from the currently open file to the connected board. Any print output or exceptions from this code will appear in the terminal. There is a shortcut button to the run command on the left bottom of the status bar.
 
 ## Sync
 
@@ -57,36 +80,18 @@ By default, only the following file types are synchronized: py, txt, log, json a
 
 The sync limit is set to 350kb. If your sync folder contains more than that, the plugin will refuse to sync.
 
-## Manual install
-
-To manually install the plugin, follow these steps
-
 
 ## Common issues
 
-### Synchronizing a project results in 'Failed to allocate memory' error
+### Synchronizing a project fails
 Synchronizing takes a bit of memory, so this error can occur when code running on the board already is taking a substantial amount of memory.
 
 Solution: Run the board in [safe mode](https://docs.pycom.io/pycom_esp32/pycom_esp32/toolsandfeatures.html#boot-modes-and-safe-boot) when synchronizing
 
-\!\[feature X\]\(images/feature-x.png\)
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
-
-## Known Issues
-
-
 
 ## Release Notes
 
-### 0.9.0 - Initial release
-* Feature complete, same features as atom plugin 1.0.1
+## 0.1.0 - Initial release
+- All basic features working the same as Pymakr Atom v1.0.3
+- Terminal implemented inside existing VSC terminal tab
+- All features accessagle as commands as well as status bar buttons

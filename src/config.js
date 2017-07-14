@@ -3,7 +3,7 @@
 export default class Config {
   static constants(){
     return {
-      logging_level: 0, // 4 = error. anything higher than 5 = off. see logger.js
+      logging_level: 4, // 4 = error. anything higher than 5 = off. see logger.js
       max_sync_size: 350000,
       error_messages: {
         "EHOSTDOWN": "Host down",
@@ -53,7 +53,7 @@ export default class Config {
     return {
       address: {
           type: 'string',
-          default: '/dev/cu.usbserial-DQ0058DW',
+          default: '192.168.4.1',
           title: 'Device address',
           description: 'Either connect through USB serial using a comport (for example /dev/cu.usbserial-DQ00573Z) or an IP address for a telnet connection. Username and password are not needed for serial connections.',
           order: 1

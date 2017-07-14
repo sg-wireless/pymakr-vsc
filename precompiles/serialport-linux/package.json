@@ -2,18 +2,18 @@
   "_args": [
     [
       {
-        "raw": "serialport@4.0.7",
+        "raw": "serialport@^4.0.7",
         "scope": null,
         "escapedName": "serialport",
         "name": "serialport",
-        "rawSpec": "4.0.7",
-        "spec": "4.0.7",
-        "type": "version"
+        "rawSpec": "^4.0.7",
+        "spec": ">=4.0.7 <5.0.0",
+        "type": "range"
       },
-      "/home/ralph/Projects/pymakr-atom"
+      "/home/ralph/Projects/pymakr-vsc"
     ]
   ],
-  "_from": "serialport@4.0.7",
+  "_from": "serialport@>=4.0.7 <5.0.0",
   "_id": "serialport@4.0.7",
   "_inCache": true,
   "_installable": true,
@@ -29,16 +29,16 @@
   },
   "_npmVersion": "2.15.6",
   "_phantomChildren": {
-    "commander": "2.10.0"
+    "commander": "2.11.0"
   },
   "_requested": {
-    "raw": "serialport@4.0.7",
+    "raw": "serialport@^4.0.7",
     "scope": null,
     "escapedName": "serialport",
     "name": "serialport",
-    "rawSpec": "4.0.7",
-    "spec": "4.0.7",
-    "type": "version"
+    "rawSpec": "^4.0.7",
+    "spec": ">=4.0.7 <5.0.0",
+    "type": "range"
   },
   "_requiredBy": [
     "#USER",
@@ -47,8 +47,8 @@
   "_resolved": "https://registry.npmjs.org/serialport/-/serialport-4.0.7.tgz",
   "_shasum": "421c618a8a612bd40cfa461b4a46154daf2229a5",
   "_shrinkwrap": null,
-  "_spec": "serialport@4.0.7",
-  "_where": "/home/ralph/Projects/pymakr-atom",
+  "_spec": "serialport@^4.0.7",
+  "_where": "/home/ralph/Projects/pymakr-vsc",
   "author": {
     "name": "Chris Williams",
     "email": "voodootikigod@gmail.com",

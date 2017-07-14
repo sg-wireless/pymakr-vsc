@@ -22,34 +22,19 @@
     <Filter Include="C:\Users\ralph">
       <UniqueIdentifier>{9B68FF2E-026F-E5DD-66F9-84BDAA4A91F6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\ralph\AppData">
-      <UniqueIdentifier>{F852EB63-437C-846A-220F-8D9ED6DAEC1D}</UniqueIdentifier>
+    <Filter Include="C:\Users\ralph\Projects">
+      <UniqueIdentifier>{7CAFA559-49D5-0913-BD41-C91CD6F35482}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local">
-      <UniqueIdentifier>{AA1ADE49-EB66-4CF9-B60D-A95495F1ED01}</UniqueIdentifier>
+    <Filter Include="C:\Users\ralph\Projects\pymakr-vsc">
+      <UniqueIdentifier>{B5CAD1D4-EBF0-C3E2-33FD-C967CFE63CD9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local\atom">
-      <UniqueIdentifier>{91AF2E38-7687-5704-2A6C-4C38A76C6C7C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0">
-      <UniqueIdentifier>{192F2D43-FBC7-0540-5B90-5C39368DAC27}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources">
-      <UniqueIdentifier>{02993FF4-6DD0-55B6-6A36-E99A964FF863}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources\app">
-      <UniqueIdentifier>{796C56B0-A938-902A-0081-40464DA4EDD9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources\app\apm">
-      <UniqueIdentifier>{50B2B692-91A6-28AC-1352-B4A963293364}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources\app\apm\node_modules">
+    <Filter Include="C:\Users\ralph\Projects\pymakr-vsc\node_modules">
       <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources\app\apm\node_modules\node-gyp">
+    <Filter Include="C:\Users\ralph\Projects\pymakr-vsc\node_modules\node-gyp">
       <UniqueIdentifier>{77348C0E-2034-7791-74D5-63C077DF5A3B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources\app\apm\node_modules\node-gyp\src">
+    <Filter Include="C:\Users\ralph\Projects\pymakr-vsc\node_modules\node-gyp\src">
       <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
     </Filter>
     <Filter Include="..">
@@ -63,8 +48,8 @@
     <ClCompile Include="..\src\serialport_win.cpp">
       <Filter>..\src</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources\app\apm\node_modules\node-gyp\src\win_delay_load_hook.cc">
-      <Filter>C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources\app\apm\node_modules\node-gyp\src</Filter>
+    <ClCompile Include="C:\Users\ralph\Projects\pymakr-vsc\node_modules\node-gyp\src\win_delay_load_hook.cc">
+      <Filter>C:\Users\ralph\Projects\pymakr-vsc\node_modules\node-gyp\src</Filter>
     </ClCompile>
     <None Include="..\binding.gyp">
       <Filter>..</Filter>

@@ -1,6 +1,6 @@
  serialport
 
- Timestamp is 594d08ae (Fri Jun 23 05:25:18 2017)
+ Timestamp is 59662e82 (Wed Jul 12 07:13:22 2017)
 
  Preferred load address is 10000000
 
@@ -23,20 +23,20 @@
  0002:000002a8 00000004H .CRT$XPZ                DATA
  0002:000002ac 00000004H .CRT$XTA                DATA
  0002:000002b0 00000010H .CRT$XTZ                DATA
- 0002:000002c0 00006224H .rdata                  DATA
- 0002:000064e4 0000026cH .rdata$r                DATA
- 0002:00006750 000000e0H .rdata$sxdata           DATA
- 0002:00006830 00000384H .rdata$zzzdbg           DATA
- 0002:00006bb4 00000004H .rtc$IAA                DATA
- 0002:00006bb8 00000004H .rtc$IZZ                DATA
- 0002:00006bbc 00000004H .rtc$TAA                DATA
- 0002:00006bc0 00000008H .rtc$TZZ                DATA
- 0002:00006bc8 00001418H .xdata$x                DATA
- 0002:00007fe0 00000058H .edata                  DATA
- 0002:00008038 00000050H .idata$2                DATA
- 0002:00008088 00000014H .idata$3                DATA
- 0002:0000809c 00000270H .idata$4                DATA
- 0002:0000830c 00001548H .idata$6                DATA
+ 0002:000002c0 00006214H .rdata                  DATA
+ 0002:000064d4 0000026cH .rdata$r                DATA
+ 0002:00006740 000000e0H .rdata$sxdata           DATA
+ 0002:00006820 00000380H .rdata$zzzdbg           DATA
+ 0002:00006ba0 00000004H .rtc$IAA                DATA
+ 0002:00006ba4 00000004H .rtc$IZZ                DATA
+ 0002:00006ba8 00000004H .rtc$TAA                DATA
+ 0002:00006bac 00000004H .rtc$TZZ                DATA
+ 0002:00006bb0 00001410H .xdata$x                DATA
+ 0002:00007fc0 00000058H .edata                  DATA
+ 0002:00008018 00000050H .idata$2                DATA
+ 0002:00008068 00000014H .idata$3                DATA
+ 0002:0000807c 00000270H .idata$4                DATA
+ 0002:000082ec 00001548H .idata$6                DATA
  0003:00000000 000007c0H .data                   DATA
  0003:000007c0 000000f8H .data$r                 DATA
  0003:000008b8 00000a34H .bss                    DATA
@@ -76,8 +76,8 @@
  0001:000009e0       ?Reset@Callback@Nan@@QAEXABV?$Local@VFunction@v8@@@v8@@@Z 100019e0 f i serialport.obj
  0001:00000a20       ?Call@Callback@Nan@@QBE?AV?$Local@VValue@v8@@@v8@@HQAV34@@Z 10001a20 f i serialport.obj
  0001:00000ad0       ?Call_@Callback@Nan@@ABE?AV?$Local@VValue@v8@@@v8@@PAVIsolate@4@V?$Local@VObject@v8@@@4@HQAV34@@Z 10001ad0 f i serialport.obj
- 0001:00000b90       ??1?$Persistent@VObject@v8@@V?$NonCopyablePersistentTraits@VObject@v8@@@2@@Nan@@QAE@XZ 10001b90 f i serialport.obj
  0001:00000b90       ??1?$Persistent@VFunction@v8@@V?$NonCopyablePersistentTraits@VFunction@v8@@@2@@Nan@@QAE@XZ 10001b90 f i serialport.obj
+ 0001:00000b90       ??1?$Persistent@VObject@v8@@V?$NonCopyablePersistentTraits@VObject@v8@@@2@@Nan@@QAE@XZ 10001b90 f i serialport.obj
  0001:00000bd0       ??1QueuedWrite@@QAE@XZ     10001bd0 f i serialport.obj
  0001:00000e50       ??_G_WriteQueue@@QAEPAXI@Z 10001e50 f i serialport.obj
  0001:00000ec0       ?getValueFromObject@@YA?AV?$Local@VValue@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10001ec0 f   serialport.obj
@@ -152,20 +152,20 @@
  0001:00005a78       ??0logic_error@std@@QAE@ABV01@@Z 10006a78 f i libcpmt:xthrow.obj
  0001:00005a93       ??0out_of_range@std@@QAE@ABV01@@Z 10006a93 f i libcpmt:xthrow.obj
  0001:00005aae       ??0out_of_range@std@@QAE@PBD@Z 10006aae f i libcpmt:xthrow.obj
- 0001:00005acf       ??_Eexception@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
- 0001:00005acf       ??_Gout_of_range@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
- 0001:00005acf       ??_Glength_error@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
- 0001:00005acf       ??_Ebad_alloc@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
  0001:00005acf       ??_Gexception@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
- 0001:00005acf       ??_Gbad_alloc@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
+ 0001:00005acf       ??_Glength_error@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
+ 0001:00005acf       ??_Gbad_exception@std@@UAEPAXI@Z 10006acf f i libvcruntime:frame.obj
  0001:00005acf       ??_Elength_error@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
  0001:00005acf       ??_Eout_of_range@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
- 0001:00005acf       ??_Ebad_array_new_length@std@@UAEPAXI@Z 10006acf f i LIBCMT:throw_bad_alloc.obj
- 0001:00005acf       ??_Gbad_exception@std@@UAEPAXI@Z 10006acf f i libvcruntime:frame.obj
+ 0001:00005acf       ??_Glogic_error@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
+ 0001:00005acf       ??_Gout_of_range@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
+ 0001:00005acf       ??_Gbad_alloc@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
  0001:00005acf       ??_Elogic_error@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
  0001:00005acf       ??_Ebad_exception@std@@UAEPAXI@Z 10006acf f i libvcruntime:frame.obj
- 0001:00005acf       ??_Glogic_error@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
+ 0001:00005acf       ??_Ebad_alloc@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
+ 0001:00005acf       ??_Eexception@std@@UAEPAXI@Z 10006acf f i libcpmt:xthrow.obj
  0001:00005acf       ??_Gbad_array_new_length@std@@UAEPAXI@Z 10006acf f i LIBCMT:throw_bad_alloc.obj
+ 0001:00005acf       ??_Ebad_array_new_length@std@@UAEPAXI@Z 10006acf f i LIBCMT:throw_bad_alloc.obj
  0001:00005afc       ?_Xlength_error@std@@YAXPBD@Z 10006afc f   libcpmt:xthrow.obj
  0001:00005b1c       ?_Xout_of_range@std@@YAXPBD@Z 10006b1c f   libcpmt:xthrow.obj
  0001:00005b3c       ?what@exception@std@@UBEPBDXZ 10006b3c f i libcpmt:xthrow.obj
@@ -201,11 +201,11 @@
  0001:00006455       ??0bad_array_new_length@std@@QAE@XZ 10007455 f i LIBCMT:throw_bad_alloc.obj
  0001:0000646d       ??1bad_exception@std@@UAE@XZ 1000746d f i libvcruntime:frame.obj
  0001:0000646d       ??1bad_alloc@std@@UAE@XZ   1000746d f i libcpmt:xthrow.obj
+ 0001:0000646d       ??1bad_array_new_length@std@@UAE@XZ 1000746d f i LIBCMT:throw_bad_alloc.obj
  0001:0000646d       ??1out_of_range@std@@UAE@XZ 1000746d f i libcpmt:xthrow.obj
  0001:0000646d       ??1length_error@std@@UAE@XZ 1000746d f i libcpmt:xthrow.obj
- 0001:0000646d       ??1bad_array_new_length@std@@UAE@XZ 1000746d f i LIBCMT:throw_bad_alloc.obj
- 0001:0000647e       ?__scrt_throw_std_bad_alloc@@YAXXZ 1000747e f   LIBCMT:throw_bad_alloc.obj
  0001:0000647e       ?_Xbad_alloc@std@@YAXXZ    1000747e f   libcpmt:xthrow.obj
+ 0001:0000647e       ?__scrt_throw_std_bad_alloc@@YAXXZ 1000747e f   LIBCMT:throw_bad_alloc.obj
  0001:0000649b       ?__scrt_throw_std_bad_array_new_length@@YAXXZ 1000749b f   LIBCMT:throw_bad_alloc.obj
  0001:000064b8       ___isa_available_init      100074b8 f   LIBCMT:_cpu_disp_.obj
  0001:00006652       __get_startup_argv_mode    10007652 f   LIBCMT:argv_mode.obj
@@ -262,16 +262,16 @@
  0001:00007cb5       @_EH4_TransferToHandler@8  10008cb5 f   libvcruntime:_exsup4_.obj
  0001:00007cce       @_EH4_GlobalUnwind2@8      10008cce f   libvcruntime:_exsup4_.obj
  0001:00007ce7       @_EH4_LocalUnwind@16       10008ce7 f   libvcruntime:_exsup4_.obj
+ 0001:00007cfe       ___except_validate_jump_buffer 10008cfe f   libvcruntime:jbcxrval.obj
  0001:00007cfe       ___except_validate_context_record 10008cfe f   libvcruntime:jbcxrval.obj
  0001:00007cfe       @_guard_check_icall_nop@4  10008cfe f   LIBCMT:guard_support.obj
- 0001:00007cfe       ___except_validate_jump_buffer 10008cfe f   libvcruntime:jbcxrval.obj
  0001:00007d00       __global_unwind2           10008d00 f   libvcruntime:_exsup_.obj
  0001:00007d65       __local_unwind2            10008d65 f   libvcruntime:_exsup_.obj
  0001:00007de9       __abnormal_termination     10008de9 f   libvcruntime:_exsup_.obj
  0001:00007e0c       __NLG_Notify1              10008e0c f   libvcruntime:_exsup_.obj
  0001:00007e15       __NLG_Notify               10008e15 f   libvcruntime:_exsup_.obj
- 0001:00007e2c       __NLG_Dispatch             10008e2c     libvcruntime:_exsup_.obj
  0001:00007e2c       __NLG_Dispatch2            10008e2c     libvcruntime:_exsup_.obj
+ 0001:00007e2c       __NLG_Dispatch             10008e2c     libvcruntime:_exsup_.obj
  0001:00007e34       __NLG_Call                 10008e34 f   libvcruntime:_exsup_.obj
  0001:00007e36       __NLG_Return2              10008e36     libvcruntime:_exsup_.obj
  0001:00007e37       _free                      10008e37 f   libucrt:free.obj
@@ -296,12 +296,12 @@
  0001:00008e61       ??$is_wide_character_specifier@D@__crt_stdio_output@@YA_N_KDW4length_modifier@0@@Z 10009e61 f i libucrt:output.obj
  0001:00008ea1       ??$is_wide_character_specifier@_W@__crt_stdio_output@@YA_N_K_WW4length_modifier@0@@Z 10009ea1 f i libucrt:output.obj
  0001:00008ef0       ??$scratch_data@D@formatting_buffer@__crt_stdio_output@@QAEPADXZ 10009ef0 f i libucrt:output.obj
- 0001:00008f0e       ??$type_case_integer_parse_into_buffer@I@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEXII_N@Z 10009f0e f i libucrt:output.obj
- 0001:00008f0e       ??$type_case_integer_parse_into_buffer@I@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEXII_N@Z 10009f0e f i libucrt:output.obj
  0001:00008f0e       ??$type_case_integer_parse_into_buffer@I@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEXII_N@Z 10009f0e f i libucrt:output.obj
- 0001:00008f83       ??$type_case_integer_parse_into_buffer@_K@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEX_KI_N@Z 10009f83 f i libucrt:output.obj
+ 0001:00008f0e       ??$type_case_integer_parse_into_buffer@I@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEXII_N@Z 10009f0e f i libucrt:output.obj
+ 0001:00008f0e       ??$type_case_integer_parse_into_buffer@I@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEXII_N@Z 10009f0e f i libucrt:output.obj
  0001:00008f83       ??$type_case_integer_parse_into_buffer@_K@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEX_KI_N@Z 10009f83 f i libucrt:output.obj
  0001:00008f83       ??$type_case_integer_parse_into_buffer@_K@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEX_KI_N@Z 10009f83 f i libucrt:output.obj
+ 0001:00008f83       ??$type_case_integer_parse_into_buffer@_K@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAEX_KI_N@Z 10009f83 f i libucrt:output.obj
  0001:0000900b       ??$write_multiple_characters@V?$stream_output_adapter@_W@__crt_stdio_output@@D@__crt_stdio_output@@YAXABV?$stream_output_adapter@_W@0@DHQAH@Z 1000a00b f i libucrt:output.obj
  0001:0000903c       ??$write_multiple_characters@V?$string_output_adapter@D@__crt_stdio_output@@D@__crt_stdio_output@@YAXABV?$string_output_adapter@D@0@DHQAH@Z 1000a03c f i libucrt:output.obj
  0001:00009068       ??$write_multiple_characters@V?$string_output_adapter@_W@__crt_stdio_output@@D@__crt_stdio_output@@YAXABV?$string_output_adapter@_W@0@DHQAH@Z 1000a068 f i libucrt:output.obj
@@ -318,12 +318,12 @@
  0001:000092ab       ??4?$__crt_unique_heap_ptr@DU__crt_internal_free_policy@@@@QAEAAV0@$$QAV0@@Z 1000a2ab f i libucrt:output.obj
  0001:0000938c       ?crop_zeroes@__crt_stdio_output@@YAXPADQAU__crt_locale_pointers@@@Z 1000a38c f i libucrt:output.obj
  0001:000093e3       ?find_next_state@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@ABE?AW4state@2@DW432@@Z 1000a3e3 f i libucrt:output.obj
- 0001:00009418       ?find_next_state@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@ABE?AW4state@2@_WW432@@Z 1000a418 f i libucrt:output.obj
  0001:00009418       ?find_next_state@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@ABE?AW4state@2@_WW432@@Z 1000a418 f i libucrt:output.obj
+ 0001:00009418       ?find_next_state@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@ABE?AW4state@2@_WW432@@Z 1000a418 f i libucrt:output.obj
  0001:0000944c       ?force_decimal_point@__crt_stdio_output@@YAXPADQAU__crt_locale_pointers@@@Z 1000a44c f i libucrt:output.obj
  0001:000094a8       ?parse_int_from_format_string@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NQAH@Z 1000a4a8 f i libucrt:output.obj
- 0001:00009504       ?parse_int_from_format_string@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NQAH@Z 1000a504 f i libucrt:output.obj
  0001:00009504       ?parse_int_from_format_string@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NQAH@Z 1000a504 f i libucrt:output.obj
+ 0001:00009504       ?parse_int_from_format_string@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NQAH@Z 1000a504 f i libucrt:output.obj
  0001:00009562       ?process@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@QAEHXZ 1000a562 f i libucrt:output.obj
  0001:0000968a       ?process@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@QAEHXZ 1000a68a f i libucrt:output.obj
  0001:000097aa       ?process@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@QAEHXZ 1000a7aa f i libucrt:output.obj
@@ -338,8 +338,8 @@
  0001:000099e6       ?state_case_normal_common@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000a9e6 f i libucrt:output.obj
  0001:00009a01       ?state_case_normal_tchar@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_ND@Z 1000aa01 f i libucrt:output.obj
  0001:00009a62       ?state_case_precision@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000aa62 f i libucrt:output.obj
- 0001:00009a8a       ?state_case_precision@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000aa8a f i libucrt:output.obj
  0001:00009a8a       ?state_case_precision@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000aa8a f i libucrt:output.obj
+ 0001:00009a8a       ?state_case_precision@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000aa8a f i libucrt:output.obj
  0001:00009ab3       ?state_case_size@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000aab3 f i libucrt:output.obj
  0001:00009c1c       ?state_case_size@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000ac1c f i libucrt:output.obj
  0001:00009d98       ?state_case_size@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000ad98 f i libucrt:output.obj
@@ -357,25 +357,25 @@
  0001:0000a8d0       ?type_case_a@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000b8d0 f i libucrt:output.obj
  0001:0000a8d0       ?type_case_a@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000b8d0 f i libucrt:output.obj
  0001:0000aa42       ?type_case_c_tchar@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_ND@Z 1000ba42 f i libucrt:output.obj
- 0001:0000aad2       ?type_case_c_tchar@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_N_W@Z 1000bad2 f i libucrt:output.obj
  0001:0000aad2       ?type_case_c_tchar@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_N_W@Z 1000bad2 f i libucrt:output.obj
+ 0001:0000aad2       ?type_case_c_tchar@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_N_W@Z 1000bad2 f i libucrt:output.obj
+ 0001:0000ab6a       ?type_case_integer@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NI_N@Z 1000bb6a f i libucrt:output.obj
  0001:0000ab6a       ?type_case_integer@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NI_N@Z 1000bb6a f i libucrt:output.obj
  0001:0000ab6a       ?type_case_integer@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NI_N@Z 1000bb6a f i libucrt:output.obj
- 0001:0000ab6a       ?type_case_integer@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NI_N@Z 1000bb6a f i libucrt:output.obj
  0001:0000acb4       ?type_case_n@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bcb4 f i libucrt:output.obj
  0001:0000acb4       ?type_case_n@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bcb4 f i libucrt:output.obj
  0001:0000acb4       ?type_case_n@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bcb4 f i libucrt:output.obj
- 0001:0000ad28       ?type_case_o@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd28 f i libucrt:output.obj
  0001:0000ad28       ?type_case_o@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd28 f i libucrt:output.obj
+ 0001:0000ad28       ?type_case_o@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd28 f i libucrt:output.obj
  0001:0000ad28       ?type_case_o@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd28 f i libucrt:output.obj
- 0001:0000ad47       ?type_case_p@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd47 f i libucrt:output.obj
- 0001:0000ad47       ?type_case_p@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd47 f i libucrt:output.obj
  0001:0000ad47       ?type_case_p@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd47 f i libucrt:output.obj
+ 0001:0000ad47       ?type_case_p@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd47 f i libucrt:output.obj
+ 0001:0000ad47       ?type_case_p@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd47 f i libucrt:output.obj
  0001:0000ad5f       ?type_case_s@?$output_processor@DV?$string_output_adapter@D@__crt_stdio_output@@V?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bd5f f i libucrt:output.obj
  0001:0000add2       ?type_case_s@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bdd2 f i libucrt:output.obj
  0001:0000add2       ?type_case_s@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@AAE_NXZ 1000bdd2 f i libucrt:output.obj
- 0001:0000ae46       ?type_case_s_compute_narrow_string_length@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@ABEHH_W@Z 1000be46 f i libucrt:output.obj
  0001:0000ae46       ?type_case_s_compute_narrow_string_length@?$output_processor@_WV?$stream_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$stream_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@ABEHH_W@Z 1000be46 f i libucrt:output.obj
+ 0001:0000ae46       ?type_case_s_compute_narrow_string_length@?$output_processor@_WV?$string_output_adapter@_W@__crt_stdio_output@@V?$standard_base@_WV?$string_output_adapter@_W@__crt_stdio_output@@@2@@__crt_stdio_output@@ABEHH_W@Z 1000be46 f i libucrt:output.obj
  0001:0000ae86       ?validate_and_update_state_at_end_of_format_string@?$format_validation_base@DV?$string_output_adapter@D@__crt_stdio_output@@@__crt_stdio_output@@IBE_NXZ 1000be86 f i libucrt:output.obj
  0001:0000aea8       ?write_character@?$stream_output_adapter@_W@__crt_stdio_output@@QBEX_WQAH@Z 1000bea8 f i libucrt:output.obj
  0001:0000aee8       ?write_character@?$string_output_adapter@D@__crt_stdio_output@@QBE_NDQAH@Z 1000bee8 f i libucrt:output.obj
@@ -401,8 +401,8 @@
  0001:0000b960       __is_c_termination_complete 1000c960 f   libucrt:exit.obj
  0001:0000bbff       ___acrt_allocate_buffer_for_argv 1000cbff f   libucrt:argv_parsing.obj
  0001:0000bc54       __configure_narrow_argv    1000cc54 f   libucrt:argv_parsing.obj
- 0001:0000bdb8       ??$uninitialize@A6AXAAPAPAD@Z@?$dual_state_global@PAPAD@__crt_state_management@@QAEXA6AXAAPAPAD@Z@Z 1000cdb8 f i libucrt:environment_initialization.obj
  0001:0000bdb8       ??$uninitialize@A6AXAAPAPA_W@Z@?$dual_state_global@PAPA_W@__crt_state_management@@QAEXA6AXAAPAPA_W@Z@Z 1000cdb8 f i libucrt:environment_initialization.obj
+ 0001:0000bdb8       ??$uninitialize@A6AXAAPAPAD@Z@?$dual_state_global@PAPAD@__crt_state_management@@QAEXA6AXAAPAPAD@Z@Z 1000cdb8 f i libucrt:environment_initialization.obj
  0001:0000be2e       ___dcrt_uninitialize_environments_nolock 1000ce2e f   libucrt:environment_initialization.obj
  0001:0000be65       __initialize_narrow_environment 1000ce65 f   libucrt:environment_initialization.obj
  0001:0000be6a       ??$?RV<lambda_800076c951b434888f4765a74a194fcc>@@AAV<lambda_4e60a939b0d047cfe11ddc22648dfba9>@@V<lambda_6dbb1268764f43b569ce7b67e331d33a>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_800076c951b434888f4765a74a194fcc>@@AAV<lambda_4e60a939b0d047cfe11ddc22648dfba9>@@$$QAV<lambda_6dbb1268764f43b569ce7b67e331d33a>@@@Z 1000ce6a f i libucrt:onexit.obj
@@ -422,8 +422,8 @@
  0001:0000c3ac       __initterm                 1000d3ac f   libucrt:initterm.obj
  0001:0000c408       __initterm_e               1000d408 f   libucrt:initterm.obj
  0001:0000c44d       _terminate                 1000d44d f   libucrt:terminate.obj
- 0001:0000c489       _strnicmp                  1000d489 f   libucrt:strnicmp.obj
  0001:0000c489       __strnicmp                 1000d489 f   libucrt:strnicmp.obj
+ 0001:0000c489       _strnicmp                  1000d489 f   libucrt:strnicmp.obj
  0001:0000c4f5       __strnicmp_l               1000d4f5 f   libucrt:strnicmp.obj
  0001:0000c5ac       __strdup                   1000d5ac f   libucrt:strdup.obj
  0001:0000c5ac       _strdup                    1000d5ac f   libucrt:strdup.obj
@@ -437,11 +437,11 @@
  0001:0000c9df       ??$parse_integer@KV?$c_string_character_source@_W@__crt_strtox@@@__crt_strtox@@YAKQAU__crt_locale_pointers@@V?$c_string_character_source@_W@0@H_N@Z 1000d9df f i libucrt:atox.obj
  0001:0000d0c4       ?unget@?$c_string_character_source@D@__crt_strtox@@QAEXD@Z 1000e0c4 f i libucrt:atox.obj
  0001:0000d0ec       ?unget@?$c_string_character_source@_W@__crt_strtox@@QAEX_W@Z 1000e0ec f i libucrt:atox.obj
- 0001:0000d118       ?validate@?$c_string_character_source@D@__crt_strtox@@QBE_NXZ 1000e118 f i libucrt:atox.obj
- 0001:0000d118       ?validate@?$string_output_adapter@_W@__crt_stdio_output@@QBE_NXZ 1000e118 f i libucrt:output.obj
  0001:0000d118       ?validate@?$c_string_character_source@_W@__crt_strtox@@QBE_NXZ 1000e118 f i libucrt:atox.obj
- 0001:0000d118       ?validate@?$stream_output_adapter@_W@__crt_stdio_output@@QBE_NXZ 1000e118 f i libucrt:output.obj
+ 0001:0000d118       ?validate@?$c_string_character_source@D@__crt_strtox@@QBE_NXZ 1000e118 f i libucrt:atox.obj
  0001:0000d118       ?validate@?$string_output_adapter@D@__crt_stdio_output@@QBE_NXZ 1000e118 f i libucrt:output.obj
+ 0001:0000d118       ?validate@?$string_output_adapter@_W@__crt_stdio_output@@QBE_NXZ 1000e118 f i libucrt:output.obj
+ 0001:0000d118       ?validate@?$stream_output_adapter@_W@__crt_stdio_output@@QBE_NXZ 1000e118 f i libucrt:output.obj
  0001:0000d133       __chvalidchk_l             1000e133 f i libucrt:atox.obj
  0001:0000d15d       __ischartype_l             1000e15d f i libucrt:atox.obj
  0001:0000d190       __query_app_type           1000e190 f   libucrt:report_runtime_error.obj
@@ -469,12 +469,12 @@
  0001:0000dacf       _setvbuf                   1000eacf f   libucrt:setvbuf.obj
  0001:0000db45       ??$?RV<lambda_a048d3beccc847880fc8490e18b82769>@@AAV<lambda_ec61778202f4f5fc7e7711acc23c3bca>@@V<lambda_f7496a158712204296dd6628a163878e>@@@?$__crt_seh_guarded_call@P6AXH@Z@@QAEP6AXH@Z$$QAV<lambda_a048d3beccc847880fc8490e18b82769>@@AAV<lambda_ec61778202f4f5fc7e7711acc23c3bca>@@$$QAV<lambda_f7496a158712204296dd6628a163878e>@@@Z 1000eb45 f i libucrt:signal.obj
  0001:0000db9f       ??$__acrt_lock_and_call@V<lambda_ec61778202f4f5fc7e7711acc23c3bca>@@@@YAP6AXH@ZW4__acrt_lock_id@@$$QAV<lambda_ec61778202f4f5fc7e7711acc23c3bca>@@@Z 1000eb9f f i libucrt:signal.obj
- 0001:0000dc09       ?initialize@?$dual_state_global@P6AHI@Z@__crt_state_management@@QAEXQ6AHI@Z@Z 1000ec09 f i libucrt:new_handler.obj
  0001:0000dc09       ?initialize@?$dual_state_global@PAU__crt_locale_data@@@__crt_state_management@@QAEXQAU__crt_locale_data@@@Z 1000ec09 f i libucrt:initialization.obj
- 0001:0000dc09       ?initialize@?$dual_state_global@PAPAD@__crt_state_management@@QAEXQAPAD@Z 1000ec09 f i libucrt:environment_initialization.obj
- 0001:0000dc09       ?initialize@?$dual_state_global@P6AXPB_W00II@Z@__crt_state_management@@QAEXQ6AXPB_W00II@Z@Z 1000ec09 f i libucrt:invalid_parameter.obj
- 0001:0000dc09       ?initialize@?$dual_state_global@P6AHPAU_exception@@@Z@__crt_state_management@@QAEXQ6AHPAU_exception@@@Z@Z 1000ec09 f i libucrt:matherr.obj
  0001:0000dc09       ?initialize@?$dual_state_global@P6AXH@Z@__crt_state_management@@QAEXQ6AXH@Z@Z 1000ec09 f i libucrt:signal.obj
+ 0001:0000dc09       ?initialize@?$dual_state_global@P6AHPAU_exception@@@Z@__crt_state_management@@QAEXQ6AHPAU_exception@@@Z@Z 1000ec09 f i libucrt:matherr.obj
+ 0001:0000dc09       ?initialize@?$dual_state_global@P6AXPB_W00II@Z@__crt_state_management@@QAEXQ6AXPB_W00II@Z@Z 1000ec09 f i libucrt:invalid_parameter.obj
+ 0001:0000dc09       ?initialize@?$dual_state_global@P6AHI@Z@__crt_state_management@@QAEXQ6AHI@Z@Z 1000ec09 f i libucrt:new_handler.obj
+ 0001:0000dc09       ?initialize@?$dual_state_global@PAPAD@__crt_state_management@@QAEXQAPAD@Z 1000ec09 f i libucrt:environment_initialization.obj
  0001:0000dc62       ___acrt_get_sigabrt_handler 1000ec62 f   libucrt:signal.obj
  0001:0000dc79       ___acrt_initialize_signal_handlers 1000ec79 f   libucrt:signal.obj
  0001:0000dcb4       ___fpecode                 1000ecb4 f   libucrt:signal.obj
@@ -496,8 +496,8 @@
  0001:0000e3ea       _isdigit                   1000f3ea f i libucrt:_ctype.obj
  0001:0000e57e       __tolower_l                1000f57e f   libucrt:tolower_toupper.obj
  0001:0000e598       _tolower                   1000f598 f   libucrt:tolower_toupper.obj
- 0001:0000e5c8       ??$make_c_string_character_source@_WPAPA_W@__crt_strtox@@YA?AV?$c_string_character_source@_W@0@QB_WQAPA_W@Z 1000f5c8 f i libucrt:strtox.obj
  0001:0000e5c8       ??$make_c_string_character_source@DPAPAD@__crt_strtox@@YA?AV?$c_string_character_source@D@0@QBDQAPAD@Z 1000f5c8 f i libucrt:strtox.obj
+ 0001:0000e5c8       ??$make_c_string_character_source@_WPAPA_W@__crt_strtox@@YA?AV?$c_string_character_source@_W@0@QB_WQAPA_W@Z 1000f5c8 f i libucrt:strtox.obj
  0001:0000e5e3       _strtol                    1000f5e3 f   libucrt:strtox.obj
  0001:0000e60f       _wcstol                    1000f60f f   libucrt:strtox.obj
  0001:0000e63b       __mbtowc_l                 1000f63b f   libucrt:mbtowc.obj
@@ -1633,158 +1633,158 @@
  0002:00005c10       __d_mzero                  10021c10     libucrt:util.obj
  0002:00005c18       ??_C@_00CNPNBAHC@?$AA@     10021c18     serialport.obj
  0002:00005c1c       ??_C@_0BA@JFNIOLAK@string?5too?5long?$AA@ 10021c1c     serialport.obj
- 0002:00005c30       ??_C@_1KC@EKKLAAOH@?$AAc?$AA?3?$AA?2?$AAu?$AAs?$AAe?$AAr?$AAs?$AA?2?$AAr?$AAa?$AAl?$AAp?$AAh?$AA?2?$AAp?$AAr?$AAo?$AAj?$AAe?$AAc?$AAt?$AAs?$AA?2?$AAp?$AAy?$AAm?$AAa?$AAk?$AAr?$AA?9?$AAa@ 10021c30     serialport.obj
- 0002:00005cd8       ??_C@_1FK@CBGIJHDF@?$AAv?$AAa?$AAl?$AAu?$AAe?$AA?4?$AAs?$AAi?$AAz?$AAe?$AA?$CI?$AA?$CJ?$AA?5?$AA?$DM?$AA?$DN?$AA?5?$AAI?$AAN?$AAT?$AA_?$AAM?$AAA?$AAX?$AA?5?$AA?$CG?$AA?$CG?$AA?5?$AA?$CC?$AAs?$AAt?$AAr?$AAi@ 10021cd8     serialport.obj
- 0002:00005d38       ??_C@_1HG@PJDLICMG@?$AAC?$AA?3?$AA?2?$AAU?$AAs?$AAe?$AAr?$AAs?$AA?2?$AAr?$AAa?$AAl?$AAp?$AAh?$AA?2?$AAP?$AAr?$AAo?$AAj?$AAe?$AAc?$AAt?$AAs?$AA?2?$AAp?$AAy?$AAm?$AAa?$AAk?$AAr?$AA?9?$AAa@ 10021d38     serialport.obj
- 0002:00005db0       ??_C@_1BO@OPFMAOCA@?$AAl?$AAe?$AAn?$AA?5?$AA?$DM?$AA?$DN?$AA?5?$AAI?$AAN?$AAT?$AA_?$AAM?$AAA?$AAX?$AA?$AA@ 10021db0     serialport.obj
- 0002:00005dd0       ??_C@_1BE@CKDJNAPC@?$AAs?$AAt?$AAr?$AA_?$AA?5?$AA?$CB?$AA?$DN?$AA?5?$AA0?$AA?$AA@ 10021dd0     serialport.obj
- 0002:00005de4       ??_C@_0CA@PHEBDBMF@First?5argument?5must?5be?5a?5string?$AA@ 10021de4     serialport.obj
- 0002:00005e04       ??_C@_0CC@DOLIGLGO@Second?5argument?5must?5be?5an?5objec@ 10021e04     serialport.obj
- 0002:00005e28       ??_C@_0CC@KNCIJJMF@Third?5argument?5must?5be?5a?5functio@ 10021e28     serialport.obj
- 0002:00005e4c       ??_C@_08NACMADDF@baudRate?$AA@ 10021e4c     serialport.obj
- 0002:00005e58       ??_C@_08OMEAOKAC@dataBits?$AA@ 10021e58     serialport.obj
- 0002:00005e64       ??_C@_0L@FCEIMOFK@bufferSize?$AA@ 10021e64     serialport.obj
- 0002:00005e70       ??_C@_06CFGKCFEA@parity?$AA@ 10021e70     serialport.obj
- 0002:00005e78       ??_C@_08LNOJODPP@stopBits?$AA@ 10021e78     serialport.obj
- 0002:00005e84       ??_C@_06EJNMIGBP@rtscts?$AA@ 10021e84     serialport.obj
- 0002:00005e8c       ??_C@_03MIMFGCKE@xon?$AA@  10021e8c     serialport.obj
- 0002:00005e90       ??_C@_04OMMHDPAK@xoff?$AA@ 10021e90     serialport.obj
- 0002:00005e98       ??_C@_04MPFBBHBP@xany?$AA@ 10021e98     serialport.obj
- 0002:00005ea0       ??_C@_05HDEOENJK@hupcl?$AA@ 10021ea0     serialport.obj
- 0002:00005ea8       ??_C@_04MKMCLCOO@lock?$AA@ 10021ea8     serialport.obj
- 0002:00005eb0       ??_C@_0BA@MGPPHKHC@platformOptions?$AA@ 10021eb0     serialport.obj
- 0002:00005ec0       ??_C@_0N@JJGGGCOE@dataCallback?$AA@ 10021ec0     serialport.obj
- 0002:00005ed0       ??_C@_0BF@MMKFENOF@disconnectedCallback?$AA@ 10021ed0     serialport.obj
- 0002:00005ee8       ??_C@_0O@GBPNIDIK@errorCallback?$AA@ 10021ee8     serialport.obj
- 0002:00005ef8       ??_C@_0BO@BHDHAAIC@First?5argument?5must?5be?5an?5int?$AA@ 10021ef8     serialport.obj
- 0002:00005f18       ??_C@_0CH@LMLBKNAD@baudRate?5must?5be?5set?5on?5options?5@ 10021f18     serialport.obj
- 0002:00005f40       ??_C@_0CB@CADFKPNI@Second?5argument?5must?5be?5a?5buffer@ 10021f40     serialport.obj
- 0002:00005f64       ??_C@_0DJ@LHGJDFBA@There?8s?5no?5write?5queue?5for?5that?5@ 10021f64     serialport.obj
- 0002:00005fa0       ??_C@_0DP@OOBEEJFH@There?8s?5no?5write?5queue?5for?5that?5@ 10021fa0     serialport.obj
- 0002:00005fe0       ??_C@_0CD@FDCLPLBL@Second?5argument?5must?5be?5a?5functi@ 10021fe0     serialport.obj
- 0002:00006004       ??_C@_0CC@LODBDECI@First?5argument?5must?5be?5a?5functio@ 10022004     serialport.obj
- 0002:00006028       ??_C@_07DBPBBGJJ@comName?$AA@ 10022028     serialport.obj
- 0002:00006030       ??_C@_0N@KCKFIEGL@manufacturer?$AA@ 10022030     serialport.obj
- 0002:00006040       ??_C@_0N@OMOHFKCJ@serialNumber?$AA@ 10022040     serialport.obj
- 0002:00006050       ??_C@_05HGPICCMB@pnpId?$AA@ 10022050     serialport.obj
- 0002:00006058       ??_C@_0L@BOGINKLP@locationId?$AA@ 10022058     serialport.obj
- 0002:00006064       ??_C@_08OOCGBFEC@vendorId?$AA@ 10022064     serialport.obj
- 0002:00006070       ??_C@_09FNKBJNGL@productId?$AA@ 10022070     serialport.obj
- 0002:0000607c       ??_C@_03JOOIBBDJ@brk?$AA@  1002207c     serialport.obj
- 0002:00006080       ??_C@_03EIGHKCEN@rts?$AA@  10022080     serialport.obj
- 0002:00006084       ??_C@_03KAMCJCLH@cts?$AA@  10022084     serialport.obj
- 0002:00006088       ??_C@_03CEAOJLEP@dtr?$AA@  10022088     serialport.obj
- 0002:0000608c       ??_C@_03CBEBINMK@dsr?$AA@  1002208c     serialport.obj
- 0002:00006090       ??_C@_04CGFJFPFD@none?$AA@ 10022090     serialport.obj
- 0002:00006098       ??_C@_04JDDJEAHN@even?$AA@ 10022098     serialport.obj
- 0002:000060a0       ??_C@_04KJJCFCK@mark?$AA@  100220a0     serialport.obj
- 0002:000060a8       ??_C@_03PDLBAKOJ@odd?$AA@  100220a8     serialport.obj
- 0002:000060ac       ??_C@_05OLNILLAB@space?$AA@ 100220ac     serialport.obj
- 0002:000060b4       ??_C@_03KCHOJKKI@set?$AA@  100220b4     serialport.obj
- 0002:000060b8       ??_C@_04PMOCAHAA@open?$AA@ 100220b8     serialport.obj
- 0002:000060c0       ??_C@_06HDLLMMEJ@update?$AA@ 100220c0     serialport.obj
- 0002:000060c8       ??_C@_05NGFEDHGN@write?$AA@ 100220c8     serialport.obj
- 0002:000060d0       ??_C@_05LBOHBHFK@close?$AA@ 100220d0     serialport.obj
- 0002:000060d8       ??_C@_04DONFEANM@list?$AA@ 100220d8     serialport.obj
- 0002:000060e0       ??_C@_05GLCAEPFP@flush?$AA@ 100220e0     serialport.obj
- 0002:000060e8       ??_C@_05GBKIIGFP@drain?$AA@ 100220e8     serialport.obj
- 0002:000060f0       ??_C@_0BG@BKNJDEGG@?4?4?2src?2serialport?4cpp?$AA@ 100220f0     serialport.obj
- 0002:00006108       ??_C@_0L@BMBGKDA@serialport?$AA@ 10022108     serialport.obj
- 0002:00006114       ??_C@_0BI@CFPLBAOH@invalid?5string?5position?$AA@ 10022114     serialport.obj
- 0002:00006130       ??_C@_1GA@PFOOBIAG@?$AAl?$AAe?$AAn?$AAg?$AAt?$AAh?$AA?5?$AA?$DM?$AA?$DN?$AA?5?$AAi?$AAm?$AAp?$AA?3?$AA?3?$AAk?$AAM?$AAa?$AAx?$AAL?$AAe?$AAn?$AAg?$AAt?$AAh?$AA?5?$AA?$CG?$AA?$CG?$AA?5?$AA?$CC?$AAt?$AAo@ 10022130     serialport_win.obj
- 0002:00006190       ??_C@_0BD@BLPNGLIH@?$CFs?3?5File?5not?5found?$AA@ 10022190     serialport_win.obj
- 0002:000061a4       ??_C@_0BD@GPOKPNCK@?$CFs?3?5Invalid?5handle?$AA@ 100221a4     serialport_win.obj
- 0002:000061b8       ??_C@_0BC@KPJPBKFJ@?$CFs?3?5Access?5denied?$AA@ 100221b8     serialport_win.obj
- 0002:000061cc       ??_C@_0BG@FFOFPOPJ@?$CFs?3?5operation?5aborted?$AA@ 100221cc     serialport_win.obj
- 0002:000061e4       ??_C@_0BK@JFNDFHEK@?$CFs?3?5Unknown?5error?5code?5?$CFd?$AA@ 100221e4     serialport_win.obj
- 0002:00006200       ??_C@_04GBDIODIA@?2?2?4?2?$AA@ 10022200     serialport_win.obj
- 0002:00006208       ??_C@_0L@GJHAJNIB@Opening?5?$CFs?$AA@ 10022208     serialport_win.obj
- 0002:00006214       ??_C@_0BE@PBLLKEKO@Open?5?$CIGetCommState?$CJ?$AA@ 10022214     serialport_win.obj
- 0002:00006228       ??_C@_0BE@IOKFBHNJ@Open?5?$CISetCommState?$CJ?$AA@ 10022228     serialport_win.obj
- 0002:0000623c       ??_C@_0BH@KCOGJOCP@Open?5?$CISetCommTimeouts?$CJ?$AA@ 1002223c     serialport_win.obj
- 0002:00006254       ??_C@_0N@NHAHINCA@GetCommState?$AA@ 10022254     serialport_win.obj
- 0002:00006264       ??_C@_0N@KDLJEBGM@SetCommState?$AA@ 10022264     serialport_win.obj
- 0002:00006274       ??_C@_0CK@NCBLKDEH@Setting?5options?5on?5COM?5port?5?$CISet@ 10022274     serialport_win.obj
- 0002:000062a0       ??_C@_0CB@IFPFGDDE@Reading?5from?5COM?5port?5?$CIReadFile?$CJ@ 100222a0     serialport_win.obj
- 0002:000062c4       ??_C@_0CM@KIDAHMDM@Reading?5from?5COM?5port?5?$CIGetOverla@ 100222c4     serialport_win.obj
- 0002:000062f0       ??_C@_0CA@DEKDENAJ@Writing?5to?5COM?5port?5?$CIWriteFile?$CJ?$AA@ 100222f0     serialport_win.obj
- 0002:00006310       ??_C@_0CK@BGPOGOML@Writing?5to?5COM?5port?5?$CIGetOverlapp@ 10022310     serialport_win.obj
- 0002:0000633c       ??_C@_0N@MDJJJHMB@kernel32?4dll?$AA@ 1002233c     serialport_win.obj
- 0002:0000634c       ??_C@_0L@COJLGOAG@CancelIoEx?$AA@ 1002234c     serialport_win.obj
- 0002:00006358       ??_C@_0BD@FABABKML@closing?5connection?$AA@ 10022358     serialport_win.obj
- 0002:0000636c       ??_C@_04CCCCEBLJ@VID_?$AA@ 1002236c     serialport_win.obj
- 0002:00006374       ??_C@_04KNGCLEBJ@PID_?$AA@ 10022374     serialport_win.obj
- 0002:0000637c       ??_C@_08LFPHCHDK@PortName?$AA@ 1002237c     serialport_win.obj
- 0002:00006388       ??_C@_03GJALCMIF@COM?$AA@  10022388     serialport_win.obj
- 0002:0000638c       ??_C@_0CH@GEGDMILK@flushing?5connection?5?$CIFlushFileBu@ 1002238c     serialport_win.obj
- 0002:000063b4       ??_C@_0CH@MALLNKLF@draining?5connection?5?$CIFlushFileBu@ 100223b4     serialport_win.obj
- 0002:000063dc       ??_C@_0BB@MOGOBHAF@list?$DMT?$DO?5too?5long?$AA@ 100223dc     serialport_win.obj
- 0002:000063f0       __real@3ff6666666666666    100223f0     serialport.obj
- 0002:000063f8       __real@3ff999999999999a    100223f8     serialport.obj
- 0002:00006400       __real@4000000000000000    10022400     serialport.obj
- 0002:00006408       __pDestructExceptionObject 10022408     libvcruntime:frame.obj
- 0002:00006410       ??_7bad_exception@std@@6B@ 10022410     libvcruntime:frame.obj
- 0002:00006418       ??_C@_0O@DPKOEFFH@bad?5exception?$AA@ 10022418     libvcruntime:frame.obj
- 0002:00006488       __load_config_used         10022488     LIBCMT:loadcfg.obj
- 0002:000064e4       ??_R4exception@std@@6B@    100224e4     libcpmt:xthrow.obj
- 0002:000064f8       ??_R3exception@std@@8      100224f8     libcpmt:xthrow.obj
- 0002:00006508       ??_R2exception@std@@8      10022508     libcpmt:xthrow.obj
- 0002:00006510       ??_R1A@?0A@EA@exception@std@@8 10022510     libcpmt:xthrow.obj
- 0002:0000652c       ??_R4bad_alloc@std@@6B@    1002252c     libcpmt:xthrow.obj
- 0002:00006540       ??_R3bad_alloc@std@@8      10022540     libcpmt:xthrow.obj
- 0002:00006550       ??_R2bad_alloc@std@@8      10022550     libcpmt:xthrow.obj
- 0002:0000655c       ??_R1A@?0A@EA@bad_alloc@std@@8 1002255c     libcpmt:xthrow.obj
- 0002:00006578       ??_R4logic_error@std@@6B@  10022578     libcpmt:xthrow.obj
- 0002:0000658c       ??_R3logic_error@std@@8    1002258c     libcpmt:xthrow.obj
- 0002:0000659c       ??_R2logic_error@std@@8    1002259c     libcpmt:xthrow.obj
- 0002:000065a8       ??_R1A@?0A@EA@logic_error@std@@8 100225a8     libcpmt:xthrow.obj
- 0002:000065c4       ??_R4length_error@std@@6B@ 100225c4     libcpmt:xthrow.obj
- 0002:000065d8       ??_R3length_error@std@@8   100225d8     libcpmt:xthrow.obj
- 0002:000065e8       ??_R2length_error@std@@8   100225e8     libcpmt:xthrow.obj
- 0002:000065f8       ??_R1A@?0A@EA@length_error@std@@8 100225f8     libcpmt:xthrow.obj
- 0002:00006614       ??_R4out_of_range@std@@6B@ 10022614     libcpmt:xthrow.obj
- 0002:00006628       ??_R3out_of_range@std@@8   10022628     libcpmt:xthrow.obj
- 0002:00006638       ??_R2out_of_range@std@@8   10022638     libcpmt:xthrow.obj
- 0002:00006648       ??_R1A@?0A@EA@out_of_range@std@@8 10022648     libcpmt:xthrow.obj
- 0002:00006664       ??_R4type_info@@6B@        10022664     LIBCMT:std_type_info_static.obj
- 0002:00006678       ??_R3type_info@@8          10022678     LIBCMT:std_type_info_static.obj
- 0002:00006688       ??_R2type_info@@8          10022688     LIBCMT:std_type_info_static.obj
- 0002:00006690       ??_R1A@?0A@EA@type_info@@8 10022690     LIBCMT:std_type_info_static.obj
- 0002:000066ac       ??_R4bad_array_new_length@std@@6B@ 100226ac     LIBCMT:throw_bad_alloc.obj
- 0002:000066c0       ??_R3bad_array_new_length@std@@8 100226c0     LIBCMT:throw_bad_alloc.obj
- 0002:000066d0       ??_R2bad_array_new_length@std@@8 100226d0     LIBCMT:throw_bad_alloc.obj
- 0002:000066e0       ??_R1A@?0A@EA@bad_array_new_length@std@@8 100226e0     LIBCMT:throw_bad_alloc.obj
- 0002:000066fc       ??_R4bad_exception@std@@6B@ 100226fc     libvcruntime:frame.obj
- 0002:00006710       ??_R3bad_exception@std@@8  10022710     libvcruntime:frame.obj
- 0002:00006720       ??_R2bad_exception@std@@8  10022720     libvcruntime:frame.obj
- 0002:0000672c       ??_R1A@?0A@EA@bad_exception@std@@8 1002272c     libvcruntime:frame.obj
- 0002:00006750       ___safe_se_handler_table   10022750     <linker-defined>
- 0002:00006bb4       ___rtc_iaa                 10022bb4     LIBCMT:_initsect_.obj
- 0002:00006bb8       ___rtc_izz                 10022bb8     LIBCMT:_initsect_.obj
- 0002:00006bbc       ___rtc_taa                 10022bbc     LIBCMT:_initsect_.obj
- 0002:00006bc0       ___rtc_tzz                 10022bc0     LIBCMT:_initsect_.obj
- 0002:00007968       __TI2?AVbad_alloc@std@@    10023968     libcpmt:xthrow.obj
- 0002:00007978       __CTA2?AVbad_alloc@std@@   10023978     libcpmt:xthrow.obj
- 0002:00007984       __CT??_R0?AVbad_alloc@std@@@8??0bad_alloc@std@@QAE@ABV01@@Z12 10023984     libcpmt:xthrow.obj
- 0002:000079a0       __CT??_R0?AVexception@std@@@8??0exception@std@@QAE@ABV01@@Z12 100239a0     libcpmt:xthrow.obj
- 0002:000079bc       __CT??_R0?AVlogic_error@std@@@8??0logic_error@std@@QAE@ABV01@@Z12 100239bc     libcpmt:xthrow.obj
- 0002:000079d8       __TI3?AVlength_error@std@@ 100239d8     libcpmt:xthrow.obj
- 0002:000079e8       __CTA3?AVlength_error@std@@ 100239e8     libcpmt:xthrow.obj
- 0002:000079f8       __CT??_R0?AVlength_error@std@@@8??0length_error@std@@QAE@ABV01@@Z12 100239f8     libcpmt:xthrow.obj
- 0002:00007a14       __TI3?AVout_of_range@std@@ 10023a14     libcpmt:xthrow.obj
- 0002:00007a24       __CTA3?AVout_of_range@std@@ 10023a24     libcpmt:xthrow.obj
- 0002:00007a34       __CT??_R0?AVout_of_range@std@@@8??0out_of_range@std@@QAE@ABV01@@Z12 10023a34     libcpmt:xthrow.obj
- 0002:00007acc       __TI3?AVbad_array_new_length@std@@ 10023acc     LIBCMT:throw_bad_alloc.obj
- 0002:00007adc       __CTA3?AVbad_array_new_length@std@@ 10023adc     LIBCMT:throw_bad_alloc.obj
- 0002:00007aec       __CT??_R0?AVbad_array_new_length@std@@@8??0bad_array_new_length@std@@QAE@ABV01@@Z12 10023aec     LIBCMT:throw_bad_alloc.obj
- 0002:00007f9c       __TI2?AVbad_exception@std@@ 10023f9c     libvcruntime:frame.obj
- 0002:00007fac       __CTA2?AVbad_exception@std@@ 10023fac     libvcruntime:frame.obj
- 0002:00007fb8       __CT??_R0?AVbad_exception@std@@@8??0bad_exception@std@@QAE@ABV01@@Z12 10023fb8     libvcruntime:frame.obj
- 0002:00008038       __IMPORT_DESCRIPTOR_KERNEL32 10024038     kernel32:KERNEL32.dll
- 0002:0000804c       __IMPORT_DESCRIPTOR_ADVAPI32 1002404c     advapi32:ADVAPI32.dll
- 0002:00008060       __IMPORT_DESCRIPTOR_node   10024060     iojs:node.dll
- 0002:00008074       __IMPORT_DESCRIPTOR_SETUPAPI 10024074     setupapi:SETUPAPI.dll
- 0002:00008088       __NULL_IMPORT_DESCRIPTOR   10024088     kernel32:KERNEL32.dll
+ 0002:00005c30       ??_C@_1KA@LEMHGDCF@?$AAc?$AA?3?$AA?2?$AAu?$AAs?$AAe?$AAr?$AAs?$AA?2?$AAr?$AAa?$AAl?$AAp?$AAh?$AA?2?$AAp?$AAr?$AAo?$AAj?$AAe?$AAc?$AAt?$AAs?$AA?2?$AAp?$AAy?$AAm?$AAa?$AAk?$AAr?$AA?9?$AAv@ 10021c30     serialport.obj
+ 0002:00005cd0       ??_C@_1FK@CBGIJHDF@?$AAv?$AAa?$AAl?$AAu?$AAe?$AA?4?$AAs?$AAi?$AAz?$AAe?$AA?$CI?$AA?$CJ?$AA?5?$AA?$DM?$AA?$DN?$AA?5?$AAI?$AAN?$AAT?$AA_?$AAM?$AAA?$AAX?$AA?5?$AA?$CG?$AA?$CG?$AA?5?$AA?$CC?$AAs?$AAt?$AAr?$AAi@ 10021cd0     serialport.obj
+ 0002:00005d30       ??_C@_1HE@DDPCFBMC@?$AAC?$AA?3?$AA?2?$AAU?$AAs?$AAe?$AAr?$AAs?$AA?2?$AAR?$AAa?$AAl?$AAp?$AAh?$AA?2?$AAP?$AAr?$AAo?$AAj?$AAe?$AAc?$AAt?$AAs?$AA?2?$AAp?$AAy?$AAm?$AAa?$AAk?$AAr?$AA?9?$AAv@ 10021d30     serialport.obj
+ 0002:00005da4       ??_C@_1BO@OPFMAOCA@?$AAl?$AAe?$AAn?$AA?5?$AA?$DM?$AA?$DN?$AA?5?$AAI?$AAN?$AAT?$AA_?$AAM?$AAA?$AAX?$AA?$AA@ 10021da4     serialport.obj
+ 0002:00005dc4       ??_C@_1BE@CKDJNAPC@?$AAs?$AAt?$AAr?$AA_?$AA?5?$AA?$CB?$AA?$DN?$AA?5?$AA0?$AA?$AA@ 10021dc4     serialport.obj
+ 0002:00005dd8       ??_C@_0CA@PHEBDBMF@First?5argument?5must?5be?5a?5string?$AA@ 10021dd8     serialport.obj
+ 0002:00005df8       ??_C@_0CC@DOLIGLGO@Second?5argument?5must?5be?5an?5objec@ 10021df8     serialport.obj
+ 0002:00005e1c       ??_C@_0CC@KNCIJJMF@Third?5argument?5must?5be?5a?5functio@ 10021e1c     serialport.obj
+ 0002:00005e40       ??_C@_08NACMADDF@baudRate?$AA@ 10021e40     serialport.obj
+ 0002:00005e4c       ??_C@_08OMEAOKAC@dataBits?$AA@ 10021e4c     serialport.obj
+ 0002:00005e58       ??_C@_0L@FCEIMOFK@bufferSize?$AA@ 10021e58     serialport.obj
+ 0002:00005e64       ??_C@_06CFGKCFEA@parity?$AA@ 10021e64     serialport.obj
+ 0002:00005e6c       ??_C@_08LNOJODPP@stopBits?$AA@ 10021e6c     serialport.obj
+ 0002:00005e78       ??_C@_06EJNMIGBP@rtscts?$AA@ 10021e78     serialport.obj
+ 0002:00005e80       ??_C@_03MIMFGCKE@xon?$AA@  10021e80     serialport.obj
+ 0002:00005e84       ??_C@_04OMMHDPAK@xoff?$AA@ 10021e84     serialport.obj
+ 0002:00005e8c       ??_C@_04MPFBBHBP@xany?$AA@ 10021e8c     serialport.obj
+ 0002:00005e94       ??_C@_05HDEOENJK@hupcl?$AA@ 10021e94     serialport.obj
+ 0002:00005e9c       ??_C@_04MKMCLCOO@lock?$AA@ 10021e9c     serialport.obj
+ 0002:00005ea4       ??_C@_0BA@MGPPHKHC@platformOptions?$AA@ 10021ea4     serialport.obj
+ 0002:00005eb4       ??_C@_0N@JJGGGCOE@dataCallback?$AA@ 10021eb4     serialport.obj
+ 0002:00005ec4       ??_C@_0BF@MMKFENOF@disconnectedCallback?$AA@ 10021ec4     serialport.obj
+ 0002:00005edc       ??_C@_0O@GBPNIDIK@errorCallback?$AA@ 10021edc     serialport.obj
+ 0002:00005eec       ??_C@_0BO@BHDHAAIC@First?5argument?5must?5be?5an?5int?$AA@ 10021eec     serialport.obj
+ 0002:00005f0c       ??_C@_0CH@LMLBKNAD@baudRate?5must?5be?5set?5on?5options?5@ 10021f0c     serialport.obj
+ 0002:00005f34       ??_C@_0CB@CADFKPNI@Second?5argument?5must?5be?5a?5buffer@ 10021f34     serialport.obj
+ 0002:00005f58       ??_C@_0DJ@LHGJDFBA@There?8s?5no?5write?5queue?5for?5that?5@ 10021f58     serialport.obj
+ 0002:00005f94       ??_C@_0DP@OOBEEJFH@There?8s?5no?5write?5queue?5for?5that?5@ 10021f94     serialport.obj
+ 0002:00005fd4       ??_C@_0CD@FDCLPLBL@Second?5argument?5must?5be?5a?5functi@ 10021fd4     serialport.obj
+ 0002:00005ff8       ??_C@_0CC@LODBDECI@First?5argument?5must?5be?5a?5functio@ 10021ff8     serialport.obj
+ 0002:0000601c       ??_C@_07DBPBBGJJ@comName?$AA@ 1002201c     serialport.obj
+ 0002:00006024       ??_C@_0N@KCKFIEGL@manufacturer?$AA@ 10022024     serialport.obj
+ 0002:00006034       ??_C@_0N@OMOHFKCJ@serialNumber?$AA@ 10022034     serialport.obj
+ 0002:00006044       ??_C@_05HGPICCMB@pnpId?$AA@ 10022044     serialport.obj
+ 0002:0000604c       ??_C@_0L@BOGINKLP@locationId?$AA@ 1002204c     serialport.obj
+ 0002:00006058       ??_C@_08OOCGBFEC@vendorId?$AA@ 10022058     serialport.obj
+ 0002:00006064       ??_C@_09FNKBJNGL@productId?$AA@ 10022064     serialport.obj
+ 0002:00006070       ??_C@_03JOOIBBDJ@brk?$AA@  10022070     serialport.obj
+ 0002:00006074       ??_C@_03EIGHKCEN@rts?$AA@  10022074     serialport.obj
+ 0002:00006078       ??_C@_03KAMCJCLH@cts?$AA@  10022078     serialport.obj
+ 0002:0000607c       ??_C@_03CEAOJLEP@dtr?$AA@  1002207c     serialport.obj
+ 0002:00006080       ??_C@_03CBEBINMK@dsr?$AA@  10022080     serialport.obj
+ 0002:00006084       ??_C@_04CGFJFPFD@none?$AA@ 10022084     serialport.obj
+ 0002:0000608c       ??_C@_04JDDJEAHN@even?$AA@ 1002208c     serialport.obj
+ 0002:00006094       ??_C@_04KJJCFCK@mark?$AA@  10022094     serialport.obj
+ 0002:0000609c       ??_C@_03PDLBAKOJ@odd?$AA@  1002209c     serialport.obj
+ 0002:000060a0       ??_C@_05OLNILLAB@space?$AA@ 100220a0     serialport.obj
+ 0002:000060a8       ??_C@_03KCHOJKKI@set?$AA@  100220a8     serialport.obj
+ 0002:000060ac       ??_C@_04PMOCAHAA@open?$AA@ 100220ac     serialport.obj
+ 0002:000060b4       ??_C@_06HDLLMMEJ@update?$AA@ 100220b4     serialport.obj
+ 0002:000060bc       ??_C@_05NGFEDHGN@write?$AA@ 100220bc     serialport.obj
+ 0002:000060c4       ??_C@_05LBOHBHFK@close?$AA@ 100220c4     serialport.obj
+ 0002:000060cc       ??_C@_04DONFEANM@list?$AA@ 100220cc     serialport.obj
+ 0002:000060d4       ??_C@_05GLCAEPFP@flush?$AA@ 100220d4     serialport.obj
+ 0002:000060dc       ??_C@_05GBKIIGFP@drain?$AA@ 100220dc     serialport.obj
+ 0002:000060e4       ??_C@_0BG@BKNJDEGG@?4?4?2src?2serialport?4cpp?$AA@ 100220e4     serialport.obj
+ 0002:000060fc       ??_C@_0L@BMBGKDA@serialport?$AA@ 100220fc     serialport.obj
+ 0002:00006108       ??_C@_0BI@CFPLBAOH@invalid?5string?5position?$AA@ 10022108     serialport.obj
+ 0002:00006120       ??_C@_1GA@PFOOBIAG@?$AAl?$AAe?$AAn?$AAg?$AAt?$AAh?$AA?5?$AA?$DM?$AA?$DN?$AA?5?$AAi?$AAm?$AAp?$AA?3?$AA?3?$AAk?$AAM?$AAa?$AAx?$AAL?$AAe?$AAn?$AAg?$AAt?$AAh?$AA?5?$AA?$CG?$AA?$CG?$AA?5?$AA?$CC?$AAt?$AAo@ 10022120     serialport_win.obj
+ 0002:00006180       ??_C@_0BD@BLPNGLIH@?$CFs?3?5File?5not?5found?$AA@ 10022180     serialport_win.obj
+ 0002:00006194       ??_C@_0BD@GPOKPNCK@?$CFs?3?5Invalid?5handle?$AA@ 10022194     serialport_win.obj
+ 0002:000061a8       ??_C@_0BC@KPJPBKFJ@?$CFs?3?5Access?5denied?$AA@ 100221a8     serialport_win.obj
+ 0002:000061bc       ??_C@_0BG@FFOFPOPJ@?$CFs?3?5operation?5aborted?$AA@ 100221bc     serialport_win.obj
+ 0002:000061d4       ??_C@_0BK@JFNDFHEK@?$CFs?3?5Unknown?5error?5code?5?$CFd?$AA@ 100221d4     serialport_win.obj
+ 0002:000061f0       ??_C@_04GBDIODIA@?2?2?4?2?$AA@ 100221f0     serialport_win.obj
+ 0002:000061f8       ??_C@_0L@GJHAJNIB@Opening?5?$CFs?$AA@ 100221f8     serialport_win.obj
+ 0002:00006204       ??_C@_0BE@PBLLKEKO@Open?5?$CIGetCommState?$CJ?$AA@ 10022204     serialport_win.obj
+ 0002:00006218       ??_C@_0BE@IOKFBHNJ@Open?5?$CISetCommState?$CJ?$AA@ 10022218     serialport_win.obj
+ 0002:0000622c       ??_C@_0BH@KCOGJOCP@Open?5?$CISetCommTimeouts?$CJ?$AA@ 1002222c     serialport_win.obj
+ 0002:00006244       ??_C@_0N@NHAHINCA@GetCommState?$AA@ 10022244     serialport_win.obj
+ 0002:00006254       ??_C@_0N@KDLJEBGM@SetCommState?$AA@ 10022254     serialport_win.obj
+ 0002:00006264       ??_C@_0CK@NCBLKDEH@Setting?5options?5on?5COM?5port?5?$CISet@ 10022264     serialport_win.obj
+ 0002:00006290       ??_C@_0CB@IFPFGDDE@Reading?5from?5COM?5port?5?$CIReadFile?$CJ@ 10022290     serialport_win.obj
+ 0002:000062b4       ??_C@_0CM@KIDAHMDM@Reading?5from?5COM?5port?5?$CIGetOverla@ 100222b4     serialport_win.obj
+ 0002:000062e0       ??_C@_0CA@DEKDENAJ@Writing?5to?5COM?5port?5?$CIWriteFile?$CJ?$AA@ 100222e0     serialport_win.obj
+ 0002:00006300       ??_C@_0CK@BGPOGOML@Writing?5to?5COM?5port?5?$CIGetOverlapp@ 10022300     serialport_win.obj
+ 0002:0000632c       ??_C@_0N@MDJJJHMB@kernel32?4dll?$AA@ 1002232c     serialport_win.obj
+ 0002:0000633c       ??_C@_0L@COJLGOAG@CancelIoEx?$AA@ 1002233c     serialport_win.obj
+ 0002:00006348       ??_C@_0BD@FABABKML@closing?5connection?$AA@ 10022348     serialport_win.obj
+ 0002:0000635c       ??_C@_04CCCCEBLJ@VID_?$AA@ 1002235c     serialport_win.obj
+ 0002:00006364       ??_C@_04KNGCLEBJ@PID_?$AA@ 10022364     serialport_win.obj
+ 0002:0000636c       ??_C@_08LFPHCHDK@PortName?$AA@ 1002236c     serialport_win.obj
+ 0002:00006378       ??_C@_03GJALCMIF@COM?$AA@  10022378     serialport_win.obj
+ 0002:0000637c       ??_C@_0CH@GEGDMILK@flushing?5connection?5?$CIFlushFileBu@ 1002237c     serialport_win.obj
+ 0002:000063a4       ??_C@_0CH@MALLNKLF@draining?5connection?5?$CIFlushFileBu@ 100223a4     serialport_win.obj
+ 0002:000063cc       ??_C@_0BB@MOGOBHAF@list?$DMT?$DO?5too?5long?$AA@ 100223cc     serialport_win.obj
+ 0002:000063e0       __real@3ff6666666666666    100223e0     serialport.obj
+ 0002:000063e8       __real@3ff999999999999a    100223e8     serialport.obj
+ 0002:000063f0       __real@4000000000000000    100223f0     serialport.obj
+ 0002:000063f8       __pDestructExceptionObject 100223f8     libvcruntime:frame.obj
+ 0002:00006400       ??_7bad_exception@std@@6B@ 10022400     libvcruntime:frame.obj
+ 0002:00006408       ??_C@_0O@DPKOEFFH@bad?5exception?$AA@ 10022408     libvcruntime:frame.obj
+ 0002:00006478       __load_config_used         10022478     LIBCMT:loadcfg.obj
+ 0002:000064d4       ??_R4exception@std@@6B@    100224d4     libcpmt:xthrow.obj
+ 0002:000064e8       ??_R3exception@std@@8      100224e8     libcpmt:xthrow.obj
+ 0002:000064f8       ??_R2exception@std@@8      100224f8     libcpmt:xthrow.obj
+ 0002:00006500       ??_R1A@?0A@EA@exception@std@@8 10022500     libcpmt:xthrow.obj
+ 0002:0000651c       ??_R4bad_alloc@std@@6B@    1002251c     libcpmt:xthrow.obj
+ 0002:00006530       ??_R3bad_alloc@std@@8      10022530     libcpmt:xthrow.obj
+ 0002:00006540       ??_R2bad_alloc@std@@8      10022540     libcpmt:xthrow.obj
+ 0002:0000654c       ??_R1A@?0A@EA@bad_alloc@std@@8 1002254c     libcpmt:xthrow.obj
+ 0002:00006568       ??_R4logic_error@std@@6B@  10022568     libcpmt:xthrow.obj
+ 0002:0000657c       ??_R3logic_error@std@@8    1002257c     libcpmt:xthrow.obj
+ 0002:0000658c       ??_R2logic_error@std@@8    1002258c     libcpmt:xthrow.obj
+ 0002:00006598       ??_R1A@?0A@EA@logic_error@std@@8 10022598     libcpmt:xthrow.obj
+ 0002:000065b4       ??_R4length_error@std@@6B@ 100225b4     libcpmt:xthrow.obj
+ 0002:000065c8       ??_R3length_error@std@@8   100225c8     libcpmt:xthrow.obj
+ 0002:000065d8       ??_R2length_error@std@@8   100225d8     libcpmt:xthrow.obj
+ 0002:000065e8       ??_R1A@?0A@EA@length_error@std@@8 100225e8     libcpmt:xthrow.obj
+ 0002:00006604       ??_R4out_of_range@std@@6B@ 10022604     libcpmt:xthrow.obj
+ 0002:00006618       ??_R3out_of_range@std@@8   10022618     libcpmt:xthrow.obj
+ 0002:00006628       ??_R2out_of_range@std@@8   10022628     libcpmt:xthrow.obj
+ 0002:00006638       ??_R1A@?0A@EA@out_of_range@std@@8 10022638     libcpmt:xthrow.obj
+ 0002:00006654       ??_R4type_info@@6B@        10022654     LIBCMT:std_type_info_static.obj
+ 0002:00006668       ??_R3type_info@@8          10022668     LIBCMT:std_type_info_static.obj
+ 0002:00006678       ??_R2type_info@@8          10022678     LIBCMT:std_type_info_static.obj
+ 0002:00006680       ??_R1A@?0A@EA@type_info@@8 10022680     LIBCMT:std_type_info_static.obj
+ 0002:0000669c       ??_R4bad_array_new_length@std@@6B@ 1002269c     LIBCMT:throw_bad_alloc.obj
+ 0002:000066b0       ??_R3bad_array_new_length@std@@8 100226b0     LIBCMT:throw_bad_alloc.obj
+ 0002:000066c0       ??_R2bad_array_new_length@std@@8 100226c0     LIBCMT:throw_bad_alloc.obj
+ 0002:000066d0       ??_R1A@?0A@EA@bad_array_new_length@std@@8 100226d0     LIBCMT:throw_bad_alloc.obj
+ 0002:000066ec       ??_R4bad_exception@std@@6B@ 100226ec     libvcruntime:frame.obj
+ 0002:00006700       ??_R3bad_exception@std@@8  10022700     libvcruntime:frame.obj
+ 0002:00006710       ??_R2bad_exception@std@@8  10022710     libvcruntime:frame.obj
+ 0002:0000671c       ??_R1A@?0A@EA@bad_exception@std@@8 1002271c     libvcruntime:frame.obj
+ 0002:00006740       ___safe_se_handler_table   10022740     <linker-defined>
+ 0002:00006ba0       ___rtc_iaa                 10022ba0     LIBCMT:_initsect_.obj
+ 0002:00006ba4       ___rtc_izz                 10022ba4     LIBCMT:_initsect_.obj
+ 0002:00006ba8       ___rtc_taa                 10022ba8     LIBCMT:_initsect_.obj
+ 0002:00006bac       ___rtc_tzz                 10022bac     LIBCMT:_initsect_.obj
+ 0002:00007950       __TI2?AVbad_alloc@std@@    10023950     libcpmt:xthrow.obj
+ 0002:00007960       __CTA2?AVbad_alloc@std@@   10023960     libcpmt:xthrow.obj
+ 0002:0000796c       __CT??_R0?AVbad_alloc@std@@@8??0bad_alloc@std@@QAE@ABV01@@Z12 1002396c     libcpmt:xthrow.obj
+ 0002:00007988       __CT??_R0?AVexception@std@@@8??0exception@std@@QAE@ABV01@@Z12 10023988     libcpmt:xthrow.obj
+ 0002:000079a4       __CT??_R0?AVlogic_error@std@@@8??0logic_error@std@@QAE@ABV01@@Z12 100239a4     libcpmt:xthrow.obj
+ 0002:000079c0       __TI3?AVlength_error@std@@ 100239c0     libcpmt:xthrow.obj
+ 0002:000079d0       __CTA3?AVlength_error@std@@ 100239d0     libcpmt:xthrow.obj
+ 0002:000079e0       __CT??_R0?AVlength_error@std@@@8??0length_error@std@@QAE@ABV01@@Z12 100239e0     libcpmt:xthrow.obj
+ 0002:000079fc       __TI3?AVout_of_range@std@@ 100239fc     libcpmt:xthrow.obj
+ 0002:00007a0c       __CTA3?AVout_of_range@std@@ 10023a0c     libcpmt:xthrow.obj
+ 0002:00007a1c       __CT??_R0?AVout_of_range@std@@@8??0out_of_range@std@@QAE@ABV01@@Z12 10023a1c     libcpmt:xthrow.obj
+ 0002:00007ab4       __TI3?AVbad_array_new_length@std@@ 10023ab4     LIBCMT:throw_bad_alloc.obj
+ 0002:00007ac4       __CTA3?AVbad_array_new_length@std@@ 10023ac4     LIBCMT:throw_bad_alloc.obj
+ 0002:00007ad4       __CT??_R0?AVbad_array_new_length@std@@@8??0bad_array_new_length@std@@QAE@ABV01@@Z12 10023ad4     LIBCMT:throw_bad_alloc.obj
+ 0002:00007f84       __TI2?AVbad_exception@std@@ 10023f84     libvcruntime:frame.obj
+ 0002:00007f94       __CTA2?AVbad_exception@std@@ 10023f94     libvcruntime:frame.obj
+ 0002:00007fa0       __CT??_R0?AVbad_exception@std@@@8??0bad_exception@std@@QAE@ABV01@@Z12 10023fa0     libvcruntime:frame.obj
+ 0002:00008018       __IMPORT_DESCRIPTOR_KERNEL32 10024018     kernel32:KERNEL32.dll
+ 0002:0000802c       __IMPORT_DESCRIPTOR_ADVAPI32 1002402c     advapi32:ADVAPI32.dll
+ 0002:00008040       __IMPORT_DESCRIPTOR_node   10024040     iojs:node.dll
+ 0002:00008054       __IMPORT_DESCRIPTOR_SETUPAPI 10024054     setupapi:SETUPAPI.dll
+ 0002:00008068       __NULL_IMPORT_DESCRIPTOR   10024068     kernel32:KERNEL32.dll
  0003:00000000       ___scrt_native_dllmain_reason 10026000     LIBCMT:utility.obj
  0003:00000004       ___security_cookie_complement 10026004     LIBCMT:gs_cookie.obj
  0003:00000008       ___security_cookie         10026008     LIBCMT:gs_cookie.obj
@@ -2583,176 +2583,176 @@
  0002:00005238       _over                      10021238     libucrt:fpctrl.obj
  0002:00005244       _under                     10021244     libucrt:fpctrl.obj
  0002:00005b08       ?_names@?1??_get_fname@@9@9 10021b08     libucrt:fpexcept.obj
- 0002:00006bc8       __unwindtable$?NewInstance@Nan@@YA?AV?$MaybeLocal@VObject@v8@@@v8@@V?$Local@VObjectTemplate@v8@@@3@@Z 10022bc8     serialport.obj
- 0002:00006bc8       __unwindtable$?GetFunction@Nan@@YA?AV?$MaybeLocal@VFunction@v8@@@v8@@V?$Local@VFunctionTemplate@v8@@@3@@Z 10022bc8     serialport.obj
- 0002:00006bc8       __unwindtable$?Get@Nan@@YA?AV?$MaybeLocal@VValue@v8@@@v8@@V?$Local@VObject@v8@@@3@V?$Local@VValue@v8@@@3@@Z 10022bc8     serialport.obj
- 0002:00006bd8       __ehfuncinfo$?NewInstance@Nan@@YA?AV?$MaybeLocal@VObject@v8@@@v8@@V?$Local@VObjectTemplate@v8@@@3@@Z 10022bd8     serialport.obj
- 0002:00006bd8       __ehfuncinfo$?GetFunction@Nan@@YA?AV?$MaybeLocal@VFunction@v8@@@v8@@V?$Local@VFunctionTemplate@v8@@@3@@Z 10022bd8     serialport.obj
- 0002:00006bd8       __ehfuncinfo$?Get@Nan@@YA?AV?$MaybeLocal@VValue@v8@@@v8@@V?$Local@VObject@v8@@@3@V?$Local@VValue@v8@@@3@@Z 10022bd8     serialport.obj
- 0002:00006bfc       __unwindtable$?Has@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@V?$Local@VString@v8@@@3@@Z 10022bfc     serialport.obj
- 0002:00006bfc       __unwindtable$?Set@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@V?$Local@VValue@v8@@@3@1@Z 10022bfc     serialport.obj
- 0002:00006c04       __ehfuncinfo$?Has@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@V?$Local@VString@v8@@@3@@Z 10022c04     serialport.obj
- 0002:00006c04       __ehfuncinfo$?Set@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@V?$Local@VValue@v8@@@3@1@Z 10022c04     serialport.obj
- 0002:00006c28       __unwindtable$?Set@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@IV?$Local@VValue@v8@@@3@@Z 10022c28     serialport.obj
- 0002:00006c30       __ehfuncinfo$?Set@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@IV?$Local@VValue@v8@@@3@@Z 10022c30     serialport.obj
- 0002:00006c54       __unwindtable$?convert@?$ToFactory@VInt32@v8@@@imp@Nan@@SA?AV?$MaybeLocal@VInt32@v8@@@v8@@V?$Local@VValue@v8@@@5@@Z 10022c54     serialport.obj
- 0002:00006c64       __ehfuncinfo$?convert@?$ToFactory@VInt32@v8@@@imp@Nan@@SA?AV?$MaybeLocal@VInt32@v8@@@v8@@V?$Local@VValue@v8@@@5@@Z 10022c64     serialport.obj
- 0002:00006c88       __unwindtable$?New@?$Factory@VFunctionTemplate@v8@@@imp@Nan@@SA?AV?$Local@VFunctionTemplate@v8@@@v8@@P6AXABV?$FunctionCallbackInfo@VValue@v8@@@3@@ZV?$Local@VValue@v8@@@5@V?$Local@VSignature@v8@@@5@@Z 10022c88     serialport.obj
- 0002:00006c98       __ehfuncinfo$?New@?$Factory@VFunctionTemplate@v8@@@imp@Nan@@SA?AV?$Local@VFunctionTemplate@v8@@@v8@@P6AXABV?$FunctionCallbackInfo@VValue@v8@@@3@@ZV?$Local@VValue@v8@@@5@V?$Local@VSignature@v8@@@5@@Z 10022c98     serialport.obj
- 0002:00006cbc       __unwindtable$??1EscapableHandleScope@Nan@@QAE@XZ 10022cbc     serialport.obj
- 0002:00006ccc       __ehfuncinfo$??1EscapableHandleScope@Nan@@QAE@XZ 10022ccc     serialport.obj
- 0002:00006cf0       __unwindtable$??1HandleScope@Nan@@QAE@XZ 10022cf0     serialport.obj
- 0002:00006cf8       __ehfuncinfo$??1HandleScope@Nan@@QAE@XZ 10022cf8     serialport.obj
- 0002:00006d1c       __unwindtable$?ThrowTypeError@Nan@@YAXPBD@Z 10022d1c     serialport.obj
- 0002:00006d34       __ehfuncinfo$?ThrowTypeError@Nan@@YAXPBD@Z 10022d34     serialport.obj
- 0002:00006d58       __unwindtable$??0Utf8String@Nan@@QAE@V?$Local@VValue@v8@@@v8@@@Z 10022d58     serialport.obj
- 0002:00006d70       __ehfuncinfo$??0Utf8String@Nan@@QAE@V?$Local@VValue@v8@@@v8@@@Z 10022d70     serialport.obj
- 0002:00006d94       __ehfuncinfo$??1?$Persistent@VObject@v8@@V?$NonCopyablePersistentTraits@VObject@v8@@@2@@v8@@QAE@XZ 10022d94     serialport.obj
- 0002:00006d94       __ehfuncinfo$??1?$Persistent@VFunction@v8@@V?$NonCopyablePersistentTraits@VFunction@v8@@@2@@v8@@QAE@XZ 10022d94     serialport.obj
- 0002:00006d94       __ehfuncinfo$??1Utf8String@Nan@@QAE@XZ 10022d94     serialport.obj
- 0002:00006db8       __unwindtable$??1Callback@Nan@@QAE@XZ 10022db8     serialport.obj
- 0002:00006dc8       __ehfuncinfo$??1Callback@Nan@@QAE@XZ 10022dc8     serialport.obj
- 0002:00006dec       __unwindtable$?Call@Callback@Nan@@QBE?AV?$Local@VValue@v8@@@v8@@HQAV34@@Z 10022dec     serialport.obj
- 0002:00006dfc       __ehfuncinfo$?Call@Callback@Nan@@QBE?AV?$Local@VValue@v8@@@v8@@HQAV34@@Z 10022dfc     serialport.obj
- 0002:00006e20       __unwindtable$?Call_@Callback@Nan@@ABE?AV?$Local@VValue@v8@@@v8@@PAVIsolate@4@V?$Local@VObject@v8@@@4@HQAV34@@Z 10022e20     serialport.obj
- 0002:00006e40       __ehfuncinfo$?Call_@Callback@Nan@@ABE?AV?$Local@VValue@v8@@@v8@@PAVIsolate@4@V?$Local@VObject@v8@@@4@HQAV34@@Z 10022e40     serialport.obj
- 0002:00006e64       __unwindtable$??1?$Persistent@VFunction@v8@@V?$NonCopyablePersistentTraits@VFunction@v8@@@2@@Nan@@QAE@XZ 10022e64     serialport.obj
- 0002:00006e64       __unwindtable$??1?$Persistent@VObject@v8@@V?$NonCopyablePersistentTraits@VObject@v8@@@2@@Nan@@QAE@XZ 10022e64     serialport.obj
- 0002:00006e6c       __ehfuncinfo$??1?$Persistent@VFunction@v8@@V?$NonCopyablePersistentTraits@VFunction@v8@@@2@@Nan@@QAE@XZ 10022e6c     serialport.obj
- 0002:00006e6c       __ehfuncinfo$??1?$Persistent@VObject@v8@@V?$NonCopyablePersistentTraits@VObject@v8@@@2@@Nan@@QAE@XZ 10022e6c     serialport.obj
- 0002:00006e90       __unwindtable$?newQForFD@@YAPAU_WriteQueue@@H@Z 10022e90     serialport.obj
- 0002:00006eb0       __ehfuncinfo$?newQForFD@@YAPAU_WriteQueue@@H@Z 10022eb0     serialport.obj
- 0002:00006ed4       __unwindtable$?deleteQForFD@@YAXH@Z 10022ed4     serialport.obj
- 0002:00006edc       __ehfuncinfo$?deleteQForFD@@YAXH@Z 10022edc     serialport.obj
- 0002:00006f00       __unwindtable$??_G_WriteQueue@@QAEPAXI@Z 10022f00     serialport.obj
- 0002:00006f08       __ehfuncinfo$??_G_WriteQueue@@QAEPAXI@Z 10022f08     serialport.obj
- 0002:00006f2c       __unwindtable$?getValueFromObject@@YA?AV?$Local@VValue@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f2c     serialport.obj
- 0002:00006f2c       __unwindtable$?getBoolFromObject@@YA_NV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f2c     serialport.obj
- 0002:00006f2c       __unwindtable$?getDoubleFromObject@@YANV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f2c     serialport.obj
- 0002:00006f2c       __unwindtable$?getIntFromObject@@YAHV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f2c     serialport.obj
- 0002:00006f3c       __ehfuncinfo$?getIntFromObject@@YAHV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f3c     serialport.obj
- 0002:00006f3c       __ehfuncinfo$?getDoubleFromObject@@YANV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f3c     serialport.obj
- 0002:00006f3c       __ehfuncinfo$?getValueFromObject@@YA?AV?$Local@VValue@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f3c     serialport.obj
- 0002:00006f3c       __ehfuncinfo$?getBoolFromObject@@YA_NV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f3c     serialport.obj
- 0002:00006f60       __unwindtable$?getStringFromObj@@YA?AV?$Local@VString@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f60     serialport.obj
- 0002:00006f70       __ehfuncinfo$?getStringFromObj@@YA?AV?$Local@VString@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f70     serialport.obj
- 0002:00006f94       __ehfuncinfo$?Open@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10022f94     serialport.obj
- 0002:00006fb8       __unwindtable$?Open@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10022fb8     serialport.obj
- 0002:000070a0       __ehfuncinfo$?EIO_AfterOpen@@YAXPAUuv_work_s@@@Z 100230a0     serialport.obj
- 0002:000070c4       __unwindtable$?EIO_AfterOpen@@YAXPAUuv_work_s@@@Z 100230c4     serialport.obj
- 0002:00007124       __unwindtable$?Update@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023124     serialport.obj
- 0002:00007144       __ehfuncinfo$?Update@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023144     serialport.obj
- 0002:00007168       __ehfuncinfo$?EIO_AfterUpdate@@YAXPAUuv_work_s@@@Z 10023168     serialport.obj
- 0002:0000718c       __unwindtable$?EIO_AfterUpdate@@YAXPAUuv_work_s@@@Z 1002318c     serialport.obj
- 0002:000071bc       __ehfuncinfo$?Write@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100231bc     serialport.obj
- 0002:000071e0       __unwindtable$?Write@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100231e0     serialport.obj
- 0002:00007218       __ehfuncinfo$?EIO_AfterWrite@@YAXPAUuv_work_s@@@Z 10023218     serialport.obj
- 0002:0000723c       __unwindtable$?EIO_AfterWrite@@YAXPAUuv_work_s@@@Z 1002323c     serialport.obj
- 0002:00007264       __ehfuncinfo$??_GWriteBaton@@QAEPAXI@Z 10023264     serialport.obj
- 0002:00007288       __unwindtable$??_GWriteBaton@@QAEPAXI@Z 10023288     serialport.obj
- 0002:000072b0       __unwindtable$?Close@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100232b0     serialport.obj
- 0002:000072d0       __ehfuncinfo$?Close@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100232d0     serialport.obj
- 0002:000072f4       __ehfuncinfo$?EIO_AfterClose@@YAXPAUuv_work_s@@@Z 100232f4     serialport.obj
- 0002:00007318       __unwindtable$?EIO_AfterClose@@YAXPAUuv_work_s@@@Z 10023318     serialport.obj
- 0002:00007348       __ehfuncinfo$?List@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023348     serialport.obj
- 0002:0000736c       __unwindtable$?List@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 1002336c     serialport.obj
- 0002:000073a4       __unwindtable$?setIfNotEmpty@@YAXV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBD@Z 100233a4     serialport.obj
- 0002:000073b4       __ehfuncinfo$?setIfNotEmpty@@YAXV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBD@Z 100233b4     serialport.obj
- 0002:000073d8       __ehfuncinfo$?EIO_AfterList@@YAXPAUuv_work_s@@@Z 100233d8     serialport.obj
- 0002:000073fc       __unwindtable$?EIO_AfterList@@YAXPAUuv_work_s@@@Z 100233fc     serialport.obj
- 0002:00007484       __ehfuncinfo$??1ListBaton@@QAE@XZ 10023484     serialport.obj
- 0002:000074a8       __unwindtable$??1ListBaton@@QAE@XZ 100234a8     serialport.obj
- 0002:000074d8       __unwindtable$?Drain@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100234d8     serialport.obj
- 0002:000074d8       __unwindtable$?Flush@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100234d8     serialport.obj
- 0002:000074f8       __ehfuncinfo$?Flush@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100234f8     serialport.obj
- 0002:000074f8       __ehfuncinfo$?Drain@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100234f8     serialport.obj
- 0002:0000751c       __ehfuncinfo$?EIO_AfterFlush@@YAXPAUuv_work_s@@@Z 1002351c     serialport.obj
- 0002:00007540       __unwindtable$?EIO_AfterFlush@@YAXPAUuv_work_s@@@Z 10023540     serialport.obj
- 0002:00007570       __ehfuncinfo$?Set@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023570     serialport.obj
- 0002:00007594       __unwindtable$?Set@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023594     serialport.obj
- 0002:000075dc       __ehfuncinfo$?EIO_AfterSet@@YAXPAUuv_work_s@@@Z 100235dc     serialport.obj
- 0002:000075dc       __ehfuncinfo$?EIO_AfterDrain@@YAXPAUuv_work_s@@@Z 100235dc     serialport.obj
- 0002:00007600       __unwindtable$?EIO_AfterSet@@YAXPAUuv_work_s@@@Z 10023600     serialport.obj
- 0002:00007600       __unwindtable$?EIO_AfterDrain@@YAXPAUuv_work_s@@@Z 10023600     serialport.obj
- 0002:00007630       __unwindtable$?ToParityEnum@@YA?AW4SerialPortParity@@ABV?$Local@VString@v8@@@v8@@@Z 10023630     serialport.obj
- 0002:00007650       __ehfuncinfo$?ToParityEnum@@YA?AW4SerialPortParity@@ABV?$Local@VString@v8@@@v8@@@Z 10023650     serialport.obj
- 0002:00007674       __unwindtable$_init        10023674     serialport.obj
- 0002:0000768c       __ehfuncinfo$_init         1002368c     serialport.obj
- 0002:000076b0       __unwindtable$??1?$list@PAUListResultItem@@V?$allocator@PAUListResultItem@@@std@@@std@@QAE@XZ 100236b0     serialport.obj
- 0002:000076c0       __ehfuncinfo$??1?$list@PAUListResultItem@@V?$allocator@PAUListResultItem@@@std@@@std@@QAE@XZ 100236c0     serialport.obj
- 0002:000076e4       __unwindtable$??1?$_List_buy@PAUListResultItem@@V?$allocator@PAUListResultItem@@@std@@@std@@QAE@XZ 100236e4     serialport.obj
- 0002:000076ec       __ehfuncinfo$??1?$_List_buy@PAUListResultItem@@V?$allocator@PAUListResultItem@@@std@@@std@@QAE@XZ 100236ec     serialport.obj
- 0002:00007710       __unwindtable$??$New@VString@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Nan@@YA?AV?$MaybeLocal@VString@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10023710     serialport.obj
- 0002:00007718       __ehfuncinfo$??$New@VString@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Nan@@YA?AV?$MaybeLocal@VString@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10023718     serialport.obj
- 0002:0000773c       __unwindtable$??$SetMethod@VObject@v8@@VLocal@2@@Nan@@YAXV?$Local@VObject@v8@@@v8@@PBDP6AXABV?$FunctionCallbackInfo@VValue@v8@@@0@@Z@Z 1002373c     serialport.obj
- 0002:00007754       __ehfuncinfo$??$SetMethod@VObject@v8@@VLocal@2@@Nan@@YAXV?$Local@VObject@v8@@@v8@@PBDP6AXABV?$FunctionCallbackInfo@VValue@v8@@@0@@Z@Z 10023754     serialport.obj
- 0002:00007778       __unwindtable$?Error@Nan@@YA?AV?$Local@VValue@v8@@@v8@@PBD@Z 10023778     serialport_win.obj
- 0002:00007798       __ehfuncinfo$?Error@Nan@@YA?AV?$Local@VValue@v8@@@v8@@PBD@Z 10023798     serialport_win.obj
- 0002:000077bc       __unwindtable$??__Eg_closingHandles@@YAXXZ 100237bc     serialport_win.obj
- 0002:000077cc       __ehfuncinfo$??__Eg_closingHandles@@YAXXZ 100237cc     serialport_win.obj
- 0002:000077f0       __ehfuncinfo$?DisposeWatchPortCallbacks@@YAXPAUWatchPortBaton@@@Z 100237f0     serialport_win.obj
- 0002:00007814       __unwindtable$?DisposeWatchPortCallbacks@@YAXPAUWatchPortBaton@@@Z 10023814     serialport_win.obj
- 0002:00007844       __unwindtable$?EIO_AfterWatchPort@@YAXPAUuv_work_s@@@Z 10023844     serialport_win.obj
- 0002:0000785c       __ehfuncinfo$?EIO_AfterWatchPort@@YAXPAUuv_work_s@@@Z 1002385c     serialport_win.obj
- 0002:00007880       __unwindtable$?EIO_List@@YAXPAUuv_work_s@@@Z 10023880     serialport_win.obj
- 0002:00007888       __ehfuncinfo$?EIO_List@@YAXPAUuv_work_s@@@Z 10023888     serialport_win.obj
- 0002:000078ac       __ehfuncinfo$??0ListResultItem@@QAE@XZ 100238ac     serialport_win.obj
- 0002:000078d0       __unwindtable$??0ListResultItem@@QAE@XZ 100238d0     serialport_win.obj
- 0002:00007908       __unwindtable$??1?$list@HV?$allocator@H@std@@@std@@QAE@XZ 10023908     serialport_win.obj
- 0002:00007918       __ehfuncinfo$??1?$list@HV?$allocator@H@std@@@std@@QAE@XZ 10023918     serialport_win.obj
- 0002:0000793c       __unwindtable$??1?$_List_buy@HV?$allocator@H@std@@@std@@QAE@XZ 1002393c     serialport_win.obj
- 0002:00007944       __ehfuncinfo$??1?$_List_buy@HV?$allocator@H@std@@@std@@QAE@XZ 10023944     serialport_win.obj
- 0002:00007a50       __sehtable$___scrt_is_nonwritable_in_current_image 10023a50     LIBCMT:utility.obj
- 0002:00007a70       __sehtable$?dllmain_crt_process_attach@@YAHQAUHINSTANCE__@@QAX@Z 10023a70     LIBCMT:dll_dllmain.obj
- 0002:00007a90       __sehtable$?dllmain_crt_process_detach@@YAH_N@Z 10023a90     LIBCMT:dll_dllmain.obj
- 0002:00007ab0       __sehtable$?dllmain_dispatch@@YAHQAUHINSTANCE__@@KQAX@Z 10023ab0     LIBCMT:dll_dllmain.obj
- 0002:00007b08       __sehtable$??$?RV<lambda_ab9923ffb5d694ec0d78876dd103e44f>@@AAV<lambda_481dd5778c961fbcd3b60b650e9b9dc4>@@V<lambda_7923d86c9e3f319b415918ec4b39749c>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_ab9923ffb5d694ec0d78876dd103e44f>@@AAV<lambda_481dd5778c961fbcd3b60b650e9b9dc4>@@$$QAV<lambda_7923d86c9e3f319b415918ec4b39749c>@@@Z 10023b08     libucrt:output.obj
- 0002:00007b28       __sehtable$__query_new_handler 10023b28     libucrt:new_handler.obj
- 0002:00007b48       __sehtable$?common_exit@@YAXHW4_crt_exit_cleanup_mode@@W4_crt_exit_return_mode@@@Z 10023b48     libucrt:exit.obj
- 0002:00007b70       __sehtable$??$?RV<lambda_800076c951b434888f4765a74a194fcc>@@AAV<lambda_4e60a939b0d047cfe11ddc22648dfba9>@@V<lambda_6dbb1268764f43b569ce7b67e331d33a>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_800076c951b434888f4765a74a194fcc>@@AAV<lambda_4e60a939b0d047cfe11ddc22648dfba9>@@$$QAV<lambda_6dbb1268764f43b569ce7b67e331d33a>@@@Z 10023b70     libucrt:onexit.obj
- 0002:00007b90       __sehtable$??$?RV<lambda_995298e7d72eb4c2aab26c0585b3abe5>@@AAV<lambda_275893d493268fdec8709772e3fcec0e>@@V<lambda_293819299cbf9a7022e18b56a874bb5c>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_995298e7d72eb4c2aab26c0585b3abe5>@@AAV<lambda_275893d493268fdec8709772e3fcec0e>@@$$QAV<lambda_293819299cbf9a7022e18b56a874bb5c>@@@Z 10023b90     libucrt:onexit.obj
- 0002:00007bb0       __sehtable$_terminate      10023bb0     libucrt:terminate.obj
- 0002:00007bd0       __sehtable$_fflush         10023bd0     libucrt:fflush.obj
- 0002:00007bf0       __sehtable$_common_flush_all 10023bf0     libucrt:fflush.obj
- 0002:00007c18       __sehtable$??$?RV<lambda_d92cfe8357b99225085016881b624cb0>@@AAV<lambda_b721fa326cdb32351d23dfa67958c160>@@V<lambda_42d75b0848218ec137fa420c8ba9fdf9>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_d92cfe8357b99225085016881b624cb0>@@AAV<lambda_b721fa326cdb32351d23dfa67958c160>@@$$QAV<lambda_42d75b0848218ec137fa420c8ba9fdf9>@@@Z 10023c18     libucrt:setvbuf.obj
- 0002:00007c38       __sehtable$_raise          10023c38     libucrt:signal.obj
- 0002:00007c58       __sehtable$??$?RV<lambda_a048d3beccc847880fc8490e18b82769>@@AAV<lambda_ec61778202f4f5fc7e7711acc23c3bca>@@V<lambda_f7496a158712204296dd6628a163878e>@@@?$__crt_seh_guarded_call@P6AXH@Z@@QAEP6AXH@Z$$QAV<lambda_a048d3beccc847880fc8490e18b82769>@@AAV<lambda_ec61778202f4f5fc7e7711acc23c3bca>@@$$QAV<lambda_f7496a158712204296dd6628a163878e>@@@Z 10023c58     libucrt:signal.obj
- 0002:00007c78       __sehtable$??$?RV<lambda_9df27f884b057bc3edfc946cb5b7cf47>@@AAV<lambda_e69574bed617af4e071282c136b37893>@@V<lambda_cc0d902bcbbeb830f749456577db4721>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_9df27f884b057bc3edfc946cb5b7cf47>@@AAV<lambda_e69574bed617af4e071282c136b37893>@@$$QAV<lambda_cc0d902bcbbeb830f749456577db4721>@@@Z 10023c78     libucrt:per_thread_data.obj
- 0002:00007c98       __sehtable$??$?RV<lambda_3518db117f0e7cdb002338c5d3c47b6c>@@AAV<lambda_b2ea41f6bbb362cd97d94c6828d90b61>@@V<lambda_abdedf541bb04549bc734292b4a045d4>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_3518db117f0e7cdb002338c5d3c47b6c>@@AAV<lambda_b2ea41f6bbb362cd97d94c6828d90b61>@@$$QAV<lambda_abdedf541bb04549bc734292b4a045d4>@@@Z 10023c98     libucrt:per_thread_data.obj
- 0002:00007cb8       __sehtable$??$?RV<lambda_51b6e8b1eb166f2a3faf91f424b38130>@@AAV<lambda_6250bd4b2a391816dd638c3bf72b0bcb>@@V<lambda_0b5a4a3e68152e1d9b943535f5f47bed>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_51b6e8b1eb166f2a3faf91f424b38130>@@AAV<lambda_6250bd4b2a391816dd638c3bf72b0bcb>@@$$QAV<lambda_0b5a4a3e68152e1d9b943535f5f47bed>@@@Z 10023cb8     libucrt:per_thread_data.obj
- 0002:00007cd8       __sehtable$??$?RV<lambda_5b71d36f03204c0beab531769a5b5694>@@AAV<lambda_be2b3da3f62db62e9dad5dc70221a656>@@V<lambda_8f9ce462984622f9bf76b59e2aaaf805>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_5b71d36f03204c0beab531769a5b5694>@@AAV<lambda_be2b3da3f62db62e9dad5dc70221a656>@@$$QAV<lambda_8f9ce462984622f9bf76b59e2aaaf805>@@@Z 10023cd8     libucrt:per_thread_data.obj
- 0002:00007cf8       __sehtable$___acrt_uninitialize_locale 10023cf8     libucrt:wsetlocale.obj
- 0002:00007d18       __sehtable$___acrt_initialize_lowio 10023d18     libucrt:ioinit.obj
- 0002:00007d38       __sehtable$___acrt_update_thread_multibyte_data 10023d38     libucrt:mbctype.obj
- 0002:00007d58       __sehtable$??$?RV<lambda_978dc153c237d78434369da87b74ff60>@@AAV<lambda_ad1ced32f4ac17aa236e5ef05d6b3b7c>@@V<lambda_4a8533e2866a575feecb8298ce776b0d>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_978dc153c237d78434369da87b74ff60>@@AAV<lambda_ad1ced32f4ac17aa236e5ef05d6b3b7c>@@$$QAV<lambda_4a8533e2866a575feecb8298ce776b0d>@@@Z 10023d58     libucrt:mbctype.obj
- 0002:00007d78       __sehtable$__fcloseall     10023d78     libucrt:closeall.obj
- 0002:00007d98       __sehtable$??$?RV<lambda_61cee617f5178ae960314fd4d05640a0>@@AAV<lambda_6978c1fb23f02e42e1d9e99668cc68aa>@@V<lambda_9cd88cf8ad10232537feb2133f08c833>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_61cee617f5178ae960314fd4d05640a0>@@AAV<lambda_6978c1fb23f02e42e1d9e99668cc68aa>@@$$QAV<lambda_9cd88cf8ad10232537feb2133f08c833>@@@Z 10023d98     libucrt:commit.obj
- 0002:00007db8       __sehtable$__write         10023db8     libucrt:write.obj
- 0002:00007dd8       __sehtable$___acrt_update_thread_locale_data 10023dd8     libucrt:locale_refcounting.obj
- 0002:00007df8       __sehtable$___acrt_lowio_ensure_fh_exists 10023df8     libucrt:osfinfo.obj
- 0002:00007e18       __sehtable$_fclose         10023e18     libucrt:fclose.obj
- 0002:00007e38       __sehtable$??$common_lseek@_J@@YA_JH_JH@Z 10023e38     libucrt:lseek.obj
- 0002:00007e58       __sehtable$??$?RV<lambda_123407a5e2ac06da108355a851863b7a>@@AAV<lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec>@@V<lambda_ae55bdf541ad94d75914d381c370e64d>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_123407a5e2ac06da108355a851863b7a>@@AAV<lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec>@@$$QAV<lambda_ae55bdf541ad94d75914d381c370e64d>@@@Z 10023e58     libucrt:close.obj
- 0002:00007e78       __sehtable$__IsNonwritableInCurrentImage 10023e78     LIBCMT:pesect.obj
- 0002:00007e98       __sehtable$___FrameUnwindToState 10023e98     libvcruntime:frame.obj
- 0002:00007ec0       __sehtable$?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z 10023ec0     libvcruntime:frame.obj
- 0002:00007ee8       __sehtable$___BuildCatchObject 10023ee8     libvcruntime:frame.obj
- 0002:00007f08       __sehtable$___DestructExceptionObject 10023f08     libvcruntime:frame.obj
- 0002:00007f24       __catchsym$?CallUnexpected@@YAXPBU_s_ESTypeList@@@Z$2 10023f24     libvcruntime:frame.obj
- 0002:00007f34       __unwindtable$?CallUnexpected@@YAXPBU_s_ESTypeList@@@Z 10023f34     libvcruntime:frame.obj
- 0002:00007f44       __tryblocktable$?CallUnexpected@@YAXPBU_s_ESTypeList@@@Z 10023f44     libvcruntime:frame.obj
- 0002:00007f58       __ehfuncinfo$?CallUnexpected@@YAXPBU_s_ESTypeList@@@Z 10023f58     libvcruntime:frame.obj
- 0002:00007f80       __sehtable$___BuildCatchObjectHelper 10023f80     libvcruntime:frame.obj
- 0002:00007fe0       .edata                     10023fe0     serialport.exp
- 0002:00008008       rgpv                       10024008     serialport.exp
- 0002:0000800c       rgszName                   1002400c     serialport.exp
- 0002:00008010       rgwOrd                     10024010     serialport.exp
- 0002:00008012       szName                     10024012     serialport.exp
- 0002:00008022       $N00001                    10024022     serialport.exp
- 0002:00008424       .idata$6                   10024424     kernel32:KERNEL32.dll
- 0002:00008454       .idata$6                   10024454     advapi32:ADVAPI32.dll
- 0002:000092de       .idata$6                   100252de     iojs:node.dll
- 0002:00009392       .idata$6                   10025392     setupapi:SETUPAPI.dll
+ 0002:00006bb0       __unwindtable$?NewInstance@Nan@@YA?AV?$MaybeLocal@VObject@v8@@@v8@@V?$Local@VObjectTemplate@v8@@@3@@Z 10022bb0     serialport.obj
+ 0002:00006bb0       __unwindtable$?GetFunction@Nan@@YA?AV?$MaybeLocal@VFunction@v8@@@v8@@V?$Local@VFunctionTemplate@v8@@@3@@Z 10022bb0     serialport.obj
+ 0002:00006bb0       __unwindtable$?Get@Nan@@YA?AV?$MaybeLocal@VValue@v8@@@v8@@V?$Local@VObject@v8@@@3@V?$Local@VValue@v8@@@3@@Z 10022bb0     serialport.obj
+ 0002:00006bc0       __ehfuncinfo$?NewInstance@Nan@@YA?AV?$MaybeLocal@VObject@v8@@@v8@@V?$Local@VObjectTemplate@v8@@@3@@Z 10022bc0     serialport.obj
+ 0002:00006bc0       __ehfuncinfo$?GetFunction@Nan@@YA?AV?$MaybeLocal@VFunction@v8@@@v8@@V?$Local@VFunctionTemplate@v8@@@3@@Z 10022bc0     serialport.obj
+ 0002:00006bc0       __ehfuncinfo$?Get@Nan@@YA?AV?$MaybeLocal@VValue@v8@@@v8@@V?$Local@VObject@v8@@@3@V?$Local@VValue@v8@@@3@@Z 10022bc0     serialport.obj
+ 0002:00006be4       __unwindtable$?Has@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@V?$Local@VString@v8@@@3@@Z 10022be4     serialport.obj
+ 0002:00006be4       __unwindtable$?Set@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@V?$Local@VValue@v8@@@3@1@Z 10022be4     serialport.obj
+ 0002:00006bec       __ehfuncinfo$?Has@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@V?$Local@VString@v8@@@3@@Z 10022bec     serialport.obj
+ 0002:00006bec       __ehfuncinfo$?Set@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@V?$Local@VValue@v8@@@3@1@Z 10022bec     serialport.obj
+ 0002:00006c10       __unwindtable$?Set@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@IV?$Local@VValue@v8@@@3@@Z 10022c10     serialport.obj
+ 0002:00006c18       __ehfuncinfo$?Set@Nan@@YA?AV?$Maybe@_N@v8@@V?$Local@VObject@v8@@@3@IV?$Local@VValue@v8@@@3@@Z 10022c18     serialport.obj
+ 0002:00006c3c       __unwindtable$?convert@?$ToFactory@VInt32@v8@@@imp@Nan@@SA?AV?$MaybeLocal@VInt32@v8@@@v8@@V?$Local@VValue@v8@@@5@@Z 10022c3c     serialport.obj
+ 0002:00006c4c       __ehfuncinfo$?convert@?$ToFactory@VInt32@v8@@@imp@Nan@@SA?AV?$MaybeLocal@VInt32@v8@@@v8@@V?$Local@VValue@v8@@@5@@Z 10022c4c     serialport.obj
+ 0002:00006c70       __unwindtable$?New@?$Factory@VFunctionTemplate@v8@@@imp@Nan@@SA?AV?$Local@VFunctionTemplate@v8@@@v8@@P6AXABV?$FunctionCallbackInfo@VValue@v8@@@3@@ZV?$Local@VValue@v8@@@5@V?$Local@VSignature@v8@@@5@@Z 10022c70     serialport.obj
+ 0002:00006c80       __ehfuncinfo$?New@?$Factory@VFunctionTemplate@v8@@@imp@Nan@@SA?AV?$Local@VFunctionTemplate@v8@@@v8@@P6AXABV?$FunctionCallbackInfo@VValue@v8@@@3@@ZV?$Local@VValue@v8@@@5@V?$Local@VSignature@v8@@@5@@Z 10022c80     serialport.obj
+ 0002:00006ca4       __unwindtable$??1EscapableHandleScope@Nan@@QAE@XZ 10022ca4     serialport.obj
+ 0002:00006cb4       __ehfuncinfo$??1EscapableHandleScope@Nan@@QAE@XZ 10022cb4     serialport.obj
+ 0002:00006cd8       __unwindtable$??1HandleScope@Nan@@QAE@XZ 10022cd8     serialport.obj
+ 0002:00006ce0       __ehfuncinfo$??1HandleScope@Nan@@QAE@XZ 10022ce0     serialport.obj
+ 0002:00006d04       __unwindtable$?ThrowTypeError@Nan@@YAXPBD@Z 10022d04     serialport.obj
+ 0002:00006d1c       __ehfuncinfo$?ThrowTypeError@Nan@@YAXPBD@Z 10022d1c     serialport.obj
+ 0002:00006d40       __unwindtable$??0Utf8String@Nan@@QAE@V?$Local@VValue@v8@@@v8@@@Z 10022d40     serialport.obj
+ 0002:00006d58       __ehfuncinfo$??0Utf8String@Nan@@QAE@V?$Local@VValue@v8@@@v8@@@Z 10022d58     serialport.obj
+ 0002:00006d7c       __ehfuncinfo$??1?$Persistent@VObject@v8@@V?$NonCopyablePersistentTraits@VObject@v8@@@2@@v8@@QAE@XZ 10022d7c     serialport.obj
+ 0002:00006d7c       __ehfuncinfo$??1?$Persistent@VFunction@v8@@V?$NonCopyablePersistentTraits@VFunction@v8@@@2@@v8@@QAE@XZ 10022d7c     serialport.obj
+ 0002:00006d7c       __ehfuncinfo$??1Utf8String@Nan@@QAE@XZ 10022d7c     serialport.obj
+ 0002:00006da0       __unwindtable$??1Callback@Nan@@QAE@XZ 10022da0     serialport.obj
+ 0002:00006db0       __ehfuncinfo$??1Callback@Nan@@QAE@XZ 10022db0     serialport.obj
+ 0002:00006dd4       __unwindtable$?Call@Callback@Nan@@QBE?AV?$Local@VValue@v8@@@v8@@HQAV34@@Z 10022dd4     serialport.obj
+ 0002:00006de4       __ehfuncinfo$?Call@Callback@Nan@@QBE?AV?$Local@VValue@v8@@@v8@@HQAV34@@Z 10022de4     serialport.obj
+ 0002:00006e08       __unwindtable$?Call_@Callback@Nan@@ABE?AV?$Local@VValue@v8@@@v8@@PAVIsolate@4@V?$Local@VObject@v8@@@4@HQAV34@@Z 10022e08     serialport.obj
+ 0002:00006e28       __ehfuncinfo$?Call_@Callback@Nan@@ABE?AV?$Local@VValue@v8@@@v8@@PAVIsolate@4@V?$Local@VObject@v8@@@4@HQAV34@@Z 10022e28     serialport.obj
+ 0002:00006e4c       __unwindtable$??1?$Persistent@VFunction@v8@@V?$NonCopyablePersistentTraits@VFunction@v8@@@2@@Nan@@QAE@XZ 10022e4c     serialport.obj
+ 0002:00006e4c       __unwindtable$??1?$Persistent@VObject@v8@@V?$NonCopyablePersistentTraits@VObject@v8@@@2@@Nan@@QAE@XZ 10022e4c     serialport.obj
+ 0002:00006e54       __ehfuncinfo$??1?$Persistent@VFunction@v8@@V?$NonCopyablePersistentTraits@VFunction@v8@@@2@@Nan@@QAE@XZ 10022e54     serialport.obj
+ 0002:00006e54       __ehfuncinfo$??1?$Persistent@VObject@v8@@V?$NonCopyablePersistentTraits@VObject@v8@@@2@@Nan@@QAE@XZ 10022e54     serialport.obj
+ 0002:00006e78       __unwindtable$?newQForFD@@YAPAU_WriteQueue@@H@Z 10022e78     serialport.obj
+ 0002:00006e98       __ehfuncinfo$?newQForFD@@YAPAU_WriteQueue@@H@Z 10022e98     serialport.obj
+ 0002:00006ebc       __unwindtable$?deleteQForFD@@YAXH@Z 10022ebc     serialport.obj
+ 0002:00006ec4       __ehfuncinfo$?deleteQForFD@@YAXH@Z 10022ec4     serialport.obj
+ 0002:00006ee8       __unwindtable$??_G_WriteQueue@@QAEPAXI@Z 10022ee8     serialport.obj
+ 0002:00006ef0       __ehfuncinfo$??_G_WriteQueue@@QAEPAXI@Z 10022ef0     serialport.obj
+ 0002:00006f14       __unwindtable$?getValueFromObject@@YA?AV?$Local@VValue@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f14     serialport.obj
+ 0002:00006f14       __unwindtable$?getBoolFromObject@@YA_NV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f14     serialport.obj
+ 0002:00006f14       __unwindtable$?getDoubleFromObject@@YANV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f14     serialport.obj
+ 0002:00006f14       __unwindtable$?getIntFromObject@@YAHV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f14     serialport.obj
+ 0002:00006f24       __ehfuncinfo$?getIntFromObject@@YAHV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f24     serialport.obj
+ 0002:00006f24       __ehfuncinfo$?getDoubleFromObject@@YANV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f24     serialport.obj
+ 0002:00006f24       __ehfuncinfo$?getValueFromObject@@YA?AV?$Local@VValue@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f24     serialport.obj
+ 0002:00006f24       __ehfuncinfo$?getBoolFromObject@@YA_NV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f24     serialport.obj
+ 0002:00006f48       __unwindtable$?getStringFromObj@@YA?AV?$Local@VString@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f48     serialport.obj
+ 0002:00006f58       __ehfuncinfo$?getStringFromObj@@YA?AV?$Local@VString@v8@@@v8@@V?$Local@VObject@v8@@@2@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10022f58     serialport.obj
+ 0002:00006f7c       __ehfuncinfo$?Open@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10022f7c     serialport.obj
+ 0002:00006fa0       __unwindtable$?Open@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10022fa0     serialport.obj
+ 0002:00007088       __ehfuncinfo$?EIO_AfterOpen@@YAXPAUuv_work_s@@@Z 10023088     serialport.obj
+ 0002:000070ac       __unwindtable$?EIO_AfterOpen@@YAXPAUuv_work_s@@@Z 100230ac     serialport.obj
+ 0002:0000710c       __unwindtable$?Update@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 1002310c     serialport.obj
+ 0002:0000712c       __ehfuncinfo$?Update@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 1002312c     serialport.obj
+ 0002:00007150       __ehfuncinfo$?EIO_AfterUpdate@@YAXPAUuv_work_s@@@Z 10023150     serialport.obj
+ 0002:00007174       __unwindtable$?EIO_AfterUpdate@@YAXPAUuv_work_s@@@Z 10023174     serialport.obj
+ 0002:000071a4       __ehfuncinfo$?Write@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100231a4     serialport.obj
+ 0002:000071c8       __unwindtable$?Write@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100231c8     serialport.obj
+ 0002:00007200       __ehfuncinfo$?EIO_AfterWrite@@YAXPAUuv_work_s@@@Z 10023200     serialport.obj
+ 0002:00007224       __unwindtable$?EIO_AfterWrite@@YAXPAUuv_work_s@@@Z 10023224     serialport.obj
+ 0002:0000724c       __ehfuncinfo$??_GWriteBaton@@QAEPAXI@Z 1002324c     serialport.obj
+ 0002:00007270       __unwindtable$??_GWriteBaton@@QAEPAXI@Z 10023270     serialport.obj
+ 0002:00007298       __unwindtable$?Close@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023298     serialport.obj
+ 0002:000072b8       __ehfuncinfo$?Close@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100232b8     serialport.obj
+ 0002:000072dc       __ehfuncinfo$?EIO_AfterClose@@YAXPAUuv_work_s@@@Z 100232dc     serialport.obj
+ 0002:00007300       __unwindtable$?EIO_AfterClose@@YAXPAUuv_work_s@@@Z 10023300     serialport.obj
+ 0002:00007330       __ehfuncinfo$?List@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023330     serialport.obj
+ 0002:00007354       __unwindtable$?List@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023354     serialport.obj
+ 0002:0000738c       __unwindtable$?setIfNotEmpty@@YAXV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBD@Z 1002338c     serialport.obj
+ 0002:0000739c       __ehfuncinfo$?setIfNotEmpty@@YAXV?$Local@VObject@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@PBD@Z 1002339c     serialport.obj
+ 0002:000073c0       __ehfuncinfo$?EIO_AfterList@@YAXPAUuv_work_s@@@Z 100233c0     serialport.obj
+ 0002:000073e4       __unwindtable$?EIO_AfterList@@YAXPAUuv_work_s@@@Z 100233e4     serialport.obj
+ 0002:0000746c       __ehfuncinfo$??1ListBaton@@QAE@XZ 1002346c     serialport.obj
+ 0002:00007490       __unwindtable$??1ListBaton@@QAE@XZ 10023490     serialport.obj
+ 0002:000074c0       __unwindtable$?Drain@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100234c0     serialport.obj
+ 0002:000074c0       __unwindtable$?Flush@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100234c0     serialport.obj
+ 0002:000074e0       __ehfuncinfo$?Flush@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100234e0     serialport.obj
+ 0002:000074e0       __ehfuncinfo$?Drain@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 100234e0     serialport.obj
+ 0002:00007504       __ehfuncinfo$?EIO_AfterFlush@@YAXPAUuv_work_s@@@Z 10023504     serialport.obj
+ 0002:00007528       __unwindtable$?EIO_AfterFlush@@YAXPAUuv_work_s@@@Z 10023528     serialport.obj
+ 0002:00007558       __ehfuncinfo$?Set@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 10023558     serialport.obj
+ 0002:0000757c       __unwindtable$?Set@@YAXABV?$FunctionCallbackInfo@VValue@v8@@@Nan@@@Z 1002357c     serialport.obj
+ 0002:000075c4       __ehfuncinfo$?EIO_AfterSet@@YAXPAUuv_work_s@@@Z 100235c4     serialport.obj
+ 0002:000075c4       __ehfuncinfo$?EIO_AfterDrain@@YAXPAUuv_work_s@@@Z 100235c4     serialport.obj
+ 0002:000075e8       __unwindtable$?EIO_AfterSet@@YAXPAUuv_work_s@@@Z 100235e8     serialport.obj
+ 0002:000075e8       __unwindtable$?EIO_AfterDrain@@YAXPAUuv_work_s@@@Z 100235e8     serialport.obj
+ 0002:00007618       __unwindtable$?ToParityEnum@@YA?AW4SerialPortParity@@ABV?$Local@VString@v8@@@v8@@@Z 10023618     serialport.obj
+ 0002:00007638       __ehfuncinfo$?ToParityEnum@@YA?AW4SerialPortParity@@ABV?$Local@VString@v8@@@v8@@@Z 10023638     serialport.obj
+ 0002:0000765c       __unwindtable$_init        1002365c     serialport.obj
+ 0002:00007674       __ehfuncinfo$_init         10023674     serialport.obj
+ 0002:00007698       __unwindtable$??1?$list@PAUListResultItem@@V?$allocator@PAUListResultItem@@@std@@@std@@QAE@XZ 10023698     serialport.obj
+ 0002:000076a8       __ehfuncinfo$??1?$list@PAUListResultItem@@V?$allocator@PAUListResultItem@@@std@@@std@@QAE@XZ 100236a8     serialport.obj
+ 0002:000076cc       __unwindtable$??1?$_List_buy@PAUListResultItem@@V?$allocator@PAUListResultItem@@@std@@@std@@QAE@XZ 100236cc     serialport.obj
+ 0002:000076d4       __ehfuncinfo$??1?$_List_buy@PAUListResultItem@@V?$allocator@PAUListResultItem@@@std@@@std@@QAE@XZ 100236d4     serialport.obj
+ 0002:000076f8       __unwindtable$??$New@VString@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Nan@@YA?AV?$MaybeLocal@VString@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 100236f8     serialport.obj
+ 0002:00007700       __ehfuncinfo$??$New@VString@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Nan@@YA?AV?$MaybeLocal@VString@v8@@@v8@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z 10023700     serialport.obj
+ 0002:00007724       __unwindtable$??$SetMethod@VObject@v8@@VLocal@2@@Nan@@YAXV?$Local@VObject@v8@@@v8@@PBDP6AXABV?$FunctionCallbackInfo@VValue@v8@@@0@@Z@Z 10023724     serialport.obj
+ 0002:0000773c       __ehfuncinfo$??$SetMethod@VObject@v8@@VLocal@2@@Nan@@YAXV?$Local@VObject@v8@@@v8@@PBDP6AXABV?$FunctionCallbackInfo@VValue@v8@@@0@@Z@Z 1002373c     serialport.obj
+ 0002:00007760       __unwindtable$?Error@Nan@@YA?AV?$Local@VValue@v8@@@v8@@PBD@Z 10023760     serialport_win.obj
+ 0002:00007780       __ehfuncinfo$?Error@Nan@@YA?AV?$Local@VValue@v8@@@v8@@PBD@Z 10023780     serialport_win.obj
+ 0002:000077a4       __unwindtable$??__Eg_closingHandles@@YAXXZ 100237a4     serialport_win.obj
+ 0002:000077b4       __ehfuncinfo$??__Eg_closingHandles@@YAXXZ 100237b4     serialport_win.obj
+ 0002:000077d8       __ehfuncinfo$?DisposeWatchPortCallbacks@@YAXPAUWatchPortBaton@@@Z 100237d8     serialport_win.obj
+ 0002:000077fc       __unwindtable$?DisposeWatchPortCallbacks@@YAXPAUWatchPortBaton@@@Z 100237fc     serialport_win.obj
+ 0002:0000782c       __unwindtable$?EIO_AfterWatchPort@@YAXPAUuv_work_s@@@Z 1002382c     serialport_win.obj
+ 0002:00007844       __ehfuncinfo$?EIO_AfterWatchPort@@YAXPAUuv_work_s@@@Z 10023844     serialport_win.obj
+ 0002:00007868       __unwindtable$?EIO_List@@YAXPAUuv_work_s@@@Z 10023868     serialport_win.obj
+ 0002:00007870       __ehfuncinfo$?EIO_List@@YAXPAUuv_work_s@@@Z 10023870     serialport_win.obj
+ 0002:00007894       __ehfuncinfo$??0ListResultItem@@QAE@XZ 10023894     serialport_win.obj
+ 0002:000078b8       __unwindtable$??0ListResultItem@@QAE@XZ 100238b8     serialport_win.obj
+ 0002:000078f0       __unwindtable$??1?$list@HV?$allocator@H@std@@@std@@QAE@XZ 100238f0     serialport_win.obj
+ 0002:00007900       __ehfuncinfo$??1?$list@HV?$allocator@H@std@@@std@@QAE@XZ 10023900     serialport_win.obj
+ 0002:00007924       __unwindtable$??1?$_List_buy@HV?$allocator@H@std@@@std@@QAE@XZ 10023924     serialport_win.obj
+ 0002:0000792c       __ehfuncinfo$??1?$_List_buy@HV?$allocator@H@std@@@std@@QAE@XZ 1002392c     serialport_win.obj
+ 0002:00007a38       __sehtable$___scrt_is_nonwritable_in_current_image 10023a38     LIBCMT:utility.obj
+ 0002:00007a58       __sehtable$?dllmain_crt_process_attach@@YAHQAUHINSTANCE__@@QAX@Z 10023a58     LIBCMT:dll_dllmain.obj
+ 0002:00007a78       __sehtable$?dllmain_crt_process_detach@@YAH_N@Z 10023a78     LIBCMT:dll_dllmain.obj
+ 0002:00007a98       __sehtable$?dllmain_dispatch@@YAHQAUHINSTANCE__@@KQAX@Z 10023a98     LIBCMT:dll_dllmain.obj
+ 0002:00007af0       __sehtable$??$?RV<lambda_ab9923ffb5d694ec0d78876dd103e44f>@@AAV<lambda_481dd5778c961fbcd3b60b650e9b9dc4>@@V<lambda_7923d86c9e3f319b415918ec4b39749c>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_ab9923ffb5d694ec0d78876dd103e44f>@@AAV<lambda_481dd5778c961fbcd3b60b650e9b9dc4>@@$$QAV<lambda_7923d86c9e3f319b415918ec4b39749c>@@@Z 10023af0     libucrt:output.obj
+ 0002:00007b10       __sehtable$__query_new_handler 10023b10     libucrt:new_handler.obj
+ 0002:00007b30       __sehtable$?common_exit@@YAXHW4_crt_exit_cleanup_mode@@W4_crt_exit_return_mode@@@Z 10023b30     libucrt:exit.obj
+ 0002:00007b58       __sehtable$??$?RV<lambda_800076c951b434888f4765a74a194fcc>@@AAV<lambda_4e60a939b0d047cfe11ddc22648dfba9>@@V<lambda_6dbb1268764f43b569ce7b67e331d33a>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_800076c951b434888f4765a74a194fcc>@@AAV<lambda_4e60a939b0d047cfe11ddc22648dfba9>@@$$QAV<lambda_6dbb1268764f43b569ce7b67e331d33a>@@@Z 10023b58     libucrt:onexit.obj
+ 0002:00007b78       __sehtable$??$?RV<lambda_995298e7d72eb4c2aab26c0585b3abe5>@@AAV<lambda_275893d493268fdec8709772e3fcec0e>@@V<lambda_293819299cbf9a7022e18b56a874bb5c>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_995298e7d72eb4c2aab26c0585b3abe5>@@AAV<lambda_275893d493268fdec8709772e3fcec0e>@@$$QAV<lambda_293819299cbf9a7022e18b56a874bb5c>@@@Z 10023b78     libucrt:onexit.obj
+ 0002:00007b98       __sehtable$_terminate      10023b98     libucrt:terminate.obj
+ 0002:00007bb8       __sehtable$_fflush         10023bb8     libucrt:fflush.obj
+ 0002:00007bd8       __sehtable$_common_flush_all 10023bd8     libucrt:fflush.obj
+ 0002:00007c00       __sehtable$??$?RV<lambda_d92cfe8357b99225085016881b624cb0>@@AAV<lambda_b721fa326cdb32351d23dfa67958c160>@@V<lambda_42d75b0848218ec137fa420c8ba9fdf9>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_d92cfe8357b99225085016881b624cb0>@@AAV<lambda_b721fa326cdb32351d23dfa67958c160>@@$$QAV<lambda_42d75b0848218ec137fa420c8ba9fdf9>@@@Z 10023c00     libucrt:setvbuf.obj
+ 0002:00007c20       __sehtable$_raise          10023c20     libucrt:signal.obj
+ 0002:00007c40       __sehtable$??$?RV<lambda_a048d3beccc847880fc8490e18b82769>@@AAV<lambda_ec61778202f4f5fc7e7711acc23c3bca>@@V<lambda_f7496a158712204296dd6628a163878e>@@@?$__crt_seh_guarded_call@P6AXH@Z@@QAEP6AXH@Z$$QAV<lambda_a048d3beccc847880fc8490e18b82769>@@AAV<lambda_ec61778202f4f5fc7e7711acc23c3bca>@@$$QAV<lambda_f7496a158712204296dd6628a163878e>@@@Z 10023c40     libucrt:signal.obj
+ 0002:00007c60       __sehtable$??$?RV<lambda_9df27f884b057bc3edfc946cb5b7cf47>@@AAV<lambda_e69574bed617af4e071282c136b37893>@@V<lambda_cc0d902bcbbeb830f749456577db4721>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_9df27f884b057bc3edfc946cb5b7cf47>@@AAV<lambda_e69574bed617af4e071282c136b37893>@@$$QAV<lambda_cc0d902bcbbeb830f749456577db4721>@@@Z 10023c60     libucrt:per_thread_data.obj
+ 0002:00007c80       __sehtable$??$?RV<lambda_3518db117f0e7cdb002338c5d3c47b6c>@@AAV<lambda_b2ea41f6bbb362cd97d94c6828d90b61>@@V<lambda_abdedf541bb04549bc734292b4a045d4>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_3518db117f0e7cdb002338c5d3c47b6c>@@AAV<lambda_b2ea41f6bbb362cd97d94c6828d90b61>@@$$QAV<lambda_abdedf541bb04549bc734292b4a045d4>@@@Z 10023c80     libucrt:per_thread_data.obj
+ 0002:00007ca0       __sehtable$??$?RV<lambda_51b6e8b1eb166f2a3faf91f424b38130>@@AAV<lambda_6250bd4b2a391816dd638c3bf72b0bcb>@@V<lambda_0b5a4a3e68152e1d9b943535f5f47bed>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_51b6e8b1eb166f2a3faf91f424b38130>@@AAV<lambda_6250bd4b2a391816dd638c3bf72b0bcb>@@$$QAV<lambda_0b5a4a3e68152e1d9b943535f5f47bed>@@@Z 10023ca0     libucrt:per_thread_data.obj
+ 0002:00007cc0       __sehtable$??$?RV<lambda_5b71d36f03204c0beab531769a5b5694>@@AAV<lambda_be2b3da3f62db62e9dad5dc70221a656>@@V<lambda_8f9ce462984622f9bf76b59e2aaaf805>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_5b71d36f03204c0beab531769a5b5694>@@AAV<lambda_be2b3da3f62db62e9dad5dc70221a656>@@$$QAV<lambda_8f9ce462984622f9bf76b59e2aaaf805>@@@Z 10023cc0     libucrt:per_thread_data.obj
+ 0002:00007ce0       __sehtable$___acrt_uninitialize_locale 10023ce0     libucrt:wsetlocale.obj
+ 0002:00007d00       __sehtable$___acrt_initialize_lowio 10023d00     libucrt:ioinit.obj
+ 0002:00007d20       __sehtable$___acrt_update_thread_multibyte_data 10023d20     libucrt:mbctype.obj
+ 0002:00007d40       __sehtable$??$?RV<lambda_978dc153c237d78434369da87b74ff60>@@AAV<lambda_ad1ced32f4ac17aa236e5ef05d6b3b7c>@@V<lambda_4a8533e2866a575feecb8298ce776b0d>@@@?$__crt_seh_guarded_call@X@@QAEX$$QAV<lambda_978dc153c237d78434369da87b74ff60>@@AAV<lambda_ad1ced32f4ac17aa236e5ef05d6b3b7c>@@$$QAV<lambda_4a8533e2866a575feecb8298ce776b0d>@@@Z 10023d40     libucrt:mbctype.obj
+ 0002:00007d60       __sehtable$__fcloseall     10023d60     libucrt:closeall.obj
+ 0002:00007d80       __sehtable$??$?RV<lambda_61cee617f5178ae960314fd4d05640a0>@@AAV<lambda_6978c1fb23f02e42e1d9e99668cc68aa>@@V<lambda_9cd88cf8ad10232537feb2133f08c833>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_61cee617f5178ae960314fd4d05640a0>@@AAV<lambda_6978c1fb23f02e42e1d9e99668cc68aa>@@$$QAV<lambda_9cd88cf8ad10232537feb2133f08c833>@@@Z 10023d80     libucrt:commit.obj
+ 0002:00007da0       __sehtable$__write         10023da0     libucrt:write.obj
+ 0002:00007dc0       __sehtable$___acrt_update_thread_locale_data 10023dc0     libucrt:locale_refcounting.obj
+ 0002:00007de0       __sehtable$___acrt_lowio_ensure_fh_exists 10023de0     libucrt:osfinfo.obj
+ 0002:00007e00       __sehtable$_fclose         10023e00     libucrt:fclose.obj
+ 0002:00007e20       __sehtable$??$common_lseek@_J@@YA_JH_JH@Z 10023e20     libucrt:lseek.obj
+ 0002:00007e40       __sehtable$??$?RV<lambda_123407a5e2ac06da108355a851863b7a>@@AAV<lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec>@@V<lambda_ae55bdf541ad94d75914d381c370e64d>@@@?$__crt_seh_guarded_call@H@@QAEH$$QAV<lambda_123407a5e2ac06da108355a851863b7a>@@AAV<lambda_2fe9b910cf3cbf4a0ab98a02ba45b3ec>@@$$QAV<lambda_ae55bdf541ad94d75914d381c370e64d>@@@Z 10023e40     libucrt:close.obj
+ 0002:00007e60       __sehtable$__IsNonwritableInCurrentImage 10023e60     LIBCMT:pesect.obj
+ 0002:00007e80       __sehtable$___FrameUnwindToState 10023e80     libvcruntime:frame.obj
+ 0002:00007ea8       __sehtable$?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z 10023ea8     libvcruntime:frame.obj
+ 0002:00007ed0       __sehtable$___BuildCatchObject 10023ed0     libvcruntime:frame.obj
+ 0002:00007ef0       __sehtable$___DestructExceptionObject 10023ef0     libvcruntime:frame.obj
+ 0002:00007f0c       __catchsym$?CallUnexpected@@YAXPBU_s_ESTypeList@@@Z$2 10023f0c     libvcruntime:frame.obj
+ 0002:00007f1c       __unwindtable$?CallUnexpected@@YAXPBU_s_ESTypeList@@@Z 10023f1c     libvcruntime:frame.obj
+ 0002:00007f2c       __tryblocktable$?CallUnexpected@@YAXPBU_s_ESTypeList@@@Z 10023f2c     libvcruntime:frame.obj
+ 0002:00007f40       __ehfuncinfo$?CallUnexpected@@YAXPBU_s_ESTypeList@@@Z 10023f40     libvcruntime:frame.obj
+ 0002:00007f68       __sehtable$___BuildCatchObjectHelper 10023f68     libvcruntime:frame.obj
+ 0002:00007fc0       .edata                     10023fc0     serialport.exp
+ 0002:00007fe8       rgpv                       10023fe8     serialport.exp
+ 0002:00007fec       rgszName                   10023fec     serialport.exp
+ 0002:00007ff0       rgwOrd                     10023ff0     serialport.exp
+ 0002:00007ff2       szName                     10023ff2     serialport.exp
+ 0002:00008002       $N00001                    10024002     serialport.exp
+ 0002:00008404       .idata$6                   10024404     kernel32:KERNEL32.dll
+ 0002:00008434       .idata$6                   10024434     advapi32:ADVAPI32.dll
+ 0002:000092be       .idata$6                   100252be     iojs:node.dll
+ 0002:00009372       .idata$6                   10025372     setupapi:SETUPAPI.dll
  0003:00000010       ?__vcrt_flsindex@@3KA      10026010     libvcruntime:per_thread_data.obj
  0003:00000034       _errno_no_memory           10026034     libucrt:errno.obj
  0003:00000038       _doserrno_no_memory        10026038     libucrt:errno.obj

@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2015
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "serialport", "serialport.vcxproj", "{2CD5584D-68E3-4F16-129A-6EE9C017E03F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "serialport", "serialport.vcxproj", "{DBBB78FC-6FD4-6FDF-C81C-07F67DDEF6CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,10 +8,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2CD5584D-68E3-4F16-129A-6EE9C017E03F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{2CD5584D-68E3-4F16-129A-6EE9C017E03F}.Debug|Win32.Build.0 = Debug|Win32
-		{2CD5584D-68E3-4F16-129A-6EE9C017E03F}.Release|Win32.ActiveCfg = Release|Win32
-		{2CD5584D-68E3-4F16-129A-6EE9C017E03F}.Release|Win32.Build.0 = Release|Win32
+		{DBBB78FC-6FD4-6FDF-C81C-07F67DDEF6CF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DBBB78FC-6FD4-6FDF-C81C-07F67DDEF6CF}.Debug|Win32.Build.0 = Debug|Win32
+		{DBBB78FC-6FD4-6FDF-C81C-07F67DDEF6CF}.Release|Win32.ActiveCfg = Release|Win32
+		{DBBB78FC-6FD4-6FDF-C81C-07F67DDEF6CF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

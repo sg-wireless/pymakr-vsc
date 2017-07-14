@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2CD5584D-68E3-4F16-129A-6EE9C017E03F}</ProjectGuid>
+    <ProjectGuid>{DBBB78FC-6FD4-6FDF-C81C-07F67DDEF6CF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>serialport</RootNamespace>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
@@ -46,7 +46,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\include\node;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\src;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\deps\uv\include;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\include\node;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\src;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\deps\uv\include;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -65,7 +65,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\$(Configuration)\iojs.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\ia32\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -80,13 +80,13 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\include\node;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\src;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\deps\uv\include;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\include\node;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\src;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\deps\uv\include;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=serialport;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;DEBUG;_DEBUG;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\include\node;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\src;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\deps\uv\include;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\include\node;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\src;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\deps\uv\include;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -113,7 +113,7 @@
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\$(Configuration)\iojs.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\ia32\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -131,7 +131,7 @@
       <TargetMachine>MachineX86</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\include\node;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\src;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\deps\uv\include;C:\Users\ralph\.atom\.node-gyp\.node-gyp\iojs-1.3.15\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\include\node;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\src;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\deps\uv\include;C:\Users\ralph\.electron-gyp\.node-gyp\iojs-1.6.11\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=serialport;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
@@ -141,7 +141,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\serialport.cpp"/>
     <ClCompile Include="..\src\serialport_win.cpp"/>
-    <ClCompile Include="C:\Users\ralph\AppData\Local\atom\app-1.18.0\resources\app\apm\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
+    <ClCompile Include="C:\Users\ralph\Projects\pymakr-vsc\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>
