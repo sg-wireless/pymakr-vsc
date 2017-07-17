@@ -162,11 +162,13 @@ export default class PySerial {
       this.stream.set({dtr: true},function(err){
         if(cb){
           cb(err)
-          _this.logger.info
-        } 
+          return err ? false : true
+        }
       })
+    }else{
+      cb()
+      return true
     }
-    return true
   }
 
   flush(cb){

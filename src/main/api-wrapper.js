@@ -3,7 +3,7 @@ const EventEmitter = require('events');
 var fs = require('fs');
 var vscode = require('vscode');
 var ncp = require('copy-paste')
-import Utils from './utils.js';
+import Utils from '../helpers/utils.js';
 import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace, extension} from 'vscode';
 import Config from '../config.js';
 
@@ -13,6 +13,7 @@ export default class ApiWrapper {
     this.settings = settings
     this.first_time_opening = false
     this.config_file = Utils.getConfigPath("pymakr.json")
+    this.is_windows = process.platform == 'win32'
   }
 
   config(key){
@@ -56,7 +57,7 @@ export default class ApiWrapper {
     }
   }
 
-  settingsExist(cb){
+  settingsExist(){
    
     if(this.config_file){
       try{
@@ -80,13 +81,16 @@ export default class ApiWrapper {
   }
 
   getPackagePath(){
-    var dir = __dirname.replace('/lib/main','/')
-    return dir
+    if(this.is_windows){
+      return Utils.normalize(__dirname).replace('/lib/main','/').replace(/\//g,'\\')
+    }else{
+      return __dirname.replace('/lib/main','/')
+    }
   }
 
   getPackageSrcPath(){
-    var dir = __dirname.replace('/lib/main','/src/')
-    return dir
+    var dir = Utils.normalize(__dirname).replace('/lib/main','/src/')
+    return dir.replace(/\//g,'\\')
   }
 
   clipboard(){
@@ -98,14 +102,23 @@ export default class ApiWrapper {
   }
 
   getProjectPaths(){
-    var path = workspace.rootPath
-    if(path != "") return []
+    var path = this.rootPath()
+    if(path == null) return []
     return [path] 
   }
 
   getProjectPath(){
+    return this.rootPath()
+  }
+
+  rootPath(){
     var path =  workspace.rootPath
-    if(path != "") return path
+    if(path && path != "") {
+      if(this.is_windows){
+        path = path.replace(/\//g,'\\')
+      }
+      return path
+    }
     return null
   }
 

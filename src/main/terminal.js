@@ -27,6 +27,7 @@ export default class Term {
       this.create_failed = false
       this.stream = new Socket();
       this.connected = false
+      this.is_windows = process.platform == 'win32'
 
       //dragging
       this.startY = null
@@ -65,8 +66,9 @@ export default class Term {
     create(){
       this.create_failed = false
       try{
-        var shellpath = this.api.getPackagePath() + "terminalExec.js"
-        this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: shellpath, shellArgs: [this.port]} )
+        var termpath = this.api.getPackagePath() + "terminalExec.js"
+        var shellpath = this.is_windows ? "node.exe" : "node"
+        this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: shellpath, shellArgs: [termpath,this.port]} )
         if(this.settings.open_on_start){
             this.show()
         }

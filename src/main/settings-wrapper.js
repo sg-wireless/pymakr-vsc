@@ -4,7 +4,7 @@ import ApiWrapper from './api-wrapper.js';
 import Logger from '../helpers/logger.js'
 var fs = require('fs');
 var vscode = require('vscode');
-import Utils from './utils.js';
+import Utils from '../helpers/utils.js';
 import {workspace} from 'vscode';
 
 
