@@ -21,7 +21,6 @@ export default class Monitor {
     data = connection_type_params + data
 
     var _this = this
-
     this.pyboard.enter_raw_repl_no_reset(function(err){
       if(err){
         cb(err)

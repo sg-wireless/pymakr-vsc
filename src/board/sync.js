@@ -122,7 +122,6 @@ export default class Sync {
       cb(new Error(err))
       return
     }
-
     this.init(function(err){
       if(err){
         cb(err)

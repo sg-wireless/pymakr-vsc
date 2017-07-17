@@ -90,7 +90,10 @@ export default class ApiWrapper {
 
   getPackageSrcPath(){
     var dir = Utils.normalize(__dirname).replace('/lib/main','/src/')
-    return dir.replace(/\//g,'\\')
+    if(this.is_windows){
+      dir = dir.replace(/\//g,'\\')
+    }
+    return dir
   }
 
   clipboard(){

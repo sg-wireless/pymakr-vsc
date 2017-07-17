@@ -45,7 +45,7 @@ function activate(context) {
     context.subscriptions.push(disposable);
 
     var disposable = vscode.commands.registerCommand('pymakr.globalSettings', function () {
-        v.openGlobalSettings()
+        pymakr.openGlobalSettings()
     })
     context.subscriptions.push(disposable);
 

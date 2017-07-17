@@ -120,8 +120,8 @@ export default class Pymakr {
   }
 
   openGlobalSettings(){
-    this.settings.openGlobalSettings(function(){
-        // nothing
+    this.api.openSettings(function(){
+      // nothing
     })
   }
 
