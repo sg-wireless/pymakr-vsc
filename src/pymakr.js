@@ -42,6 +42,15 @@ export default class Pymakr {
       _this.disconnect()
       _this.setButtonState()
     })
+
+    this.view.on('disconnect',function(){
+      _this.disconnect()
+    })
+
+    this.view.on('connect',function(){
+      _this.connect()
+    })
+    
     this.view.on('open',function(){
       _this.connect()
       _this.setButtonState()
@@ -249,6 +258,7 @@ export default class Pymakr {
     }else{
       this.terminal.writeln("Disconnected. Press any key to reconnect.")
     }
+
     this.pyboard.disconnect(function(){
       if(cb) cb()
     })

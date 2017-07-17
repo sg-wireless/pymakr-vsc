@@ -10,7 +10,7 @@ try {
   SerialPort = require("serialport");
 } catch (e) {
   // include the precompiled version of serialport
-  var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
+  var precompiles = {'win32': 'win32', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
   if(process.platform in precompiles) { // always returns win32 on windows, even on 64bit
 
     var plf = precompiles[process.platform]
