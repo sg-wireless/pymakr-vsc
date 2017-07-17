@@ -127,6 +127,11 @@ export default class Pymakr {
 
   getWifiMac(){
     var _this = this
+    if(!this.pyboard.connected){
+      this.terminal.writeln("Please connect to your device")
+      return
+    }
+
     var command = "from network import WLAN; from binascii import hexlify; from os import uname; wlan = WLAN(); mac = hexlify(wlan.mac()).decode('ascii'); device = uname().sysname;print('WiFi AP SSID: %(device)s-wlan-%(mac)s' % {'device': device, 'mac': mac[len(mac)-4:len(mac)]})"
       _this.pyboard.send_wait_for_blocking(command+'\n\r',command,function(err){
         if(err){
@@ -157,6 +162,10 @@ export default class Pymakr {
 
   getVersion(){
     var _this = this
+    if(!this.pyboard.connected){
+      this.terminal.writeln("Please connect to your device")
+      return
+    }
     var command = "import os; os.uname().release\r\n"
     this.pyboard.send_wait_for_blocking(command,command,function(err){
       if(err){
@@ -251,6 +260,10 @@ export default class Pymakr {
 
   run(){
     var _this = this
+    if(!this.pyboard.connected){
+      this.terminal.writeln("Please connect your device")
+      return
+    }
     if(!this.synchronizing){
         this.runner.toggle(function(){
           _this.setButtonState()
@@ -261,6 +274,10 @@ export default class Pymakr {
 
   sync(){
     var _this = this
+    if(!this.pyboard.connected){
+      this.terminal.writeln("Please connect your device")
+      return
+    }
     if(!this.synchronizing){
         this.syncObj = new Sync(this.pyboard,this.settings,this.terminal)
         this.synchronizing = true
