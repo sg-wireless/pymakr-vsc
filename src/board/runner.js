@@ -27,7 +27,7 @@ export default class Runner {
       _this.pymakr.view.setButtonState()
       _this.pyboard.run(file,function(){
         _this.busy = false
-        cb()
+        if(cb) cb()
       })
     },function onerror(err){
       _this.terminal.writeln_and_prompt(err)
@@ -42,7 +42,7 @@ export default class Runner {
           _this.pyboard.enter_friendly_repl(function(){
           })
           _this.busy = false
-          cb()
+          if(cb) cb()
         })
       })
     }
