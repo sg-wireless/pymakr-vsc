@@ -37,9 +37,9 @@ export default class Config {
 
       start_text: "Welcome to the Pymakr plugin! Use the buttons on the left bottom to access all features and commands.\r\n"
               +  "This is how you get started:\r\n"
-              +  " 1: Open 'Global Settings'\r\n"
+              +  " 1: Open 'Global Settings' (we went ahead and did that for you)\r\n"
               +  " 2: Fill in the correct IP or serial port of your Pycom board in 'address'\r\n"
-              +  "  2.1: When using serial, use the 'List serial ports' to find the correct serial port\r\n"
+              +  "     (When using serial, use the 'List serial ports' to find the correct serial port)\r\n"
               +  " 3: Connect using the 'Connect' command or the 'Pycom Console' button\r\n"
               +  " 4: Open a micropython project with main.py and boot.py files\r\n"
               +  " 5: Start running files and synchronizing your project \r\n"
