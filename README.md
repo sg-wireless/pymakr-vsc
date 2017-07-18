@@ -1,9 +1,3 @@
-# Pre-release installation
-
-- Download the code or clone the repo
-- Open the folder in vsc
-- Press F1 and execute 'Tasks: Run build task'
-- Press F5 to run the plugin (opens a new vsc window)
 
 #  Pymakr VSC Package
 
@@ -88,6 +82,13 @@ Synchronizing takes a bit of memory, so this error can occur when code running o
 
 Solution: Run the board in [safe mode](https://docs.pycom.io/pycom_esp32/pycom_esp32/toolsandfeatures.html#boot-modes-and-safe-boot) when synchronizing
 
+# Developing
+If you want to contribute to this project you can test the app the following way:
+
+- Download the code or clone the repo
+- Open the folder in vsc
+- Press F1 and execute 'Tasks: Run build task' to run the babel builder
+- Press F5 to run the plugin (opens a new vsc window)
 
 ## Release Notes
 

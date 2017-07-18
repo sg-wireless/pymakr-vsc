@@ -18,7 +18,6 @@ export default class Term {
       this.logger = new Logger('Term')
       this.api = new ApiWrapper()
       this.onMessage = function(){}
-      this.term_rows = Config.constants().term_rows
       this.lastWrite = ""
       this.settings = settings
       this.connection_attempt = 1
@@ -38,7 +37,7 @@ export default class Term {
 
       vscode.window.onDidCloseTerminal(function(){
         if(!_this.create_failed){
-          // _this.create()
+          _this.create()
         }
       })
     }

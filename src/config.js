@@ -12,7 +12,6 @@ export default class Config {
         "ECONNRESET":" Connection was reset",
         "EPIPE": "Broken pipe",
       },
-      term_rows: {default: 11,max: 25, min: 1},
       help_text: "Pymakr VSC Plugin Help. Commands to use (cmd/ctrl + p):\r\n"
               +  "- Disconnect        : Disconnects from the board\r\n"
               +  "- Global settings   : Opens the installation-wide settings file\r\n"
