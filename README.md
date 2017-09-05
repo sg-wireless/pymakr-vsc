@@ -1,4 +1,3 @@
-
 #  Pymakr VSC Package
 
 Pymakr enables you to communicate to your Pycom board using the build in command line REPL. Run a single file to your board, sync your entire project or directly type and execute commands.
@@ -17,7 +16,7 @@ At any time, use the 'Pycom Console' button on the left bottom to toggle the ter
 
 ## Commands
 
-- Connect (ctrl-shift-c)         : Disconnects from the board
+- Connect (ctrl-shift-c)         : Connects to the board
 - Disconnect                     : Disconnects from the board
 - Global settings (ctrl-shift-g) : Opens the installation-wide settings file
 - Project Settings               : Opens project specific settings that overwrite global settings

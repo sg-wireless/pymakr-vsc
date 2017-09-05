@@ -94,7 +94,7 @@ export default class Config {
           type: 'boolean',
           default: true,
           title: 'Open on start',
-          description: 'Open the pymakr console and connect to the board after starting vsc or opening a project',
+          description: 'Open the pymakr console and connect to the board after starting the editor or opening a project',
           order: 6
       },
     }

@@ -3,6 +3,7 @@ var PanelView = require('./lib/main/panel-view').default;
 var Pymakr = require('./lib/pymakr').default;
 var Pyboard = require('./lib/board/pyboard').default;
 var SettingsWrapper = require('./lib/main/settings-wrapper').default;
+var exec = require('child_process').exec
 
 var pb,v,sw,pymakr
 
@@ -12,7 +13,9 @@ function activate(context) {
     pb = new Pyboard(sw)
     v = new PanelView(pb,sw)
     pymakr = new Pymakr({},pb,v,sw)
-
+    
+    checkNodeVersion()
+    
     var terminal = v.terminal
 
     var disposable = vscode.commands.registerCommand('pymakr.help', function () {
@@ -99,5 +102,15 @@ exports.activate = activate;
 
 function deactivate() {
     v.destroy()
+}
+
+function checkNodeVersion(){
+    exec('node -v',function(err,stdout,stderr){
+        if(stdout.substr(0,1) != "v"){
+            vscode.window.showWarningMessage("NodeJS not detected on this machine, Pymakr terminal might not work properly")
+        }
+    })
+    
+
 }
 exports.deactivate = deactivate

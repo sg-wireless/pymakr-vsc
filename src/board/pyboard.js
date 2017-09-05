@@ -275,9 +275,10 @@ export default class Pyboard {
       this.onmessage(mssg)
     }
 
-    if(this.waiting_for != null){
+    if(this.waiting_for != null && mssg){
       this.logger.silly("Waiting for "+this.waiting_for)
       this.receive_buffer += mssg
+      if(this.receive_buffer === undefined) this.receive_buffer = ""
       if(this.receive_buffer.indexOf("Invalid credentials, try again.") > -1){
         this._disconnected()
         this.onconnect("Invalid credentials")
@@ -293,7 +294,7 @@ export default class Pyboard {
         }
       }else if(this.receive_buffer.indexOf(this.waiting_for) > -1 ){
         var trail = this.receive_buffer.split(this.waiting_for).pop(-1)
-        if(trail.length > 0 && this.wait_for_block){
+        if(trail && trail.length > 0 && this.wait_for_block){
           this.onmessage(trail)
         }
         this.stopWaitingFor(mssg)

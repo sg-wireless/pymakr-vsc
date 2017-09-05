@@ -33,7 +33,6 @@ export default class Pymakr {
 
     this.view.on('term-connected',function(){
       _this.logger.info("Connected trigger from view")
-      console.log(_this.settings.open_on_start)
       if(_this.settings.open_on_start){
         _this.connect()
       }
@@ -110,8 +109,6 @@ export default class Pymakr {
         _this.terminal.enter()
       }
     })
-
-    
   }
 
 
