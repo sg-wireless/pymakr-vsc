@@ -107,7 +107,7 @@ function deactivate() {
 function checkNodeVersion(){
     exec('node -v',function(err,stdout,stderr){
         if(stdout.substr(0,1) != "v"){
-            vscode.window.showWarningMessage("NodeJS not detected on this machine, Pymakr terminal might not work properly")
+            vscode.window.showWarningMessage("NodeJS not detected on this machine, Pymakr terminal might not work properly.")
         }
     })
     

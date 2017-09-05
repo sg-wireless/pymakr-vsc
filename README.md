@@ -8,6 +8,9 @@ Pymakr enables you to communicate to your Pycom board using the build in command
 
 More info and documentation can be found on https://docs.pycom.io/
 
+## Dependencies
+- NodeJS installed on the system.
+
 ## Usage
 
 The terminal will open by default after the package is installed. Use the 'Pymakr > Global settings' or 'Pymakr > Project settings' command to setup your connection. After changing the settings, use the 'Connect' command to connect using the new settings.
@@ -80,6 +83,11 @@ The sync limit is set to 350kb. If your sync folder contains more than that, the
 Synchronizing takes a bit of memory, so this error can occur when code running on the board already is taking a substantial amount of memory.
 
 Solution: Run the board in [safe mode](https://docs.pycom.io/pycom_esp32/pycom_esp32/toolsandfeatures.html#boot-modes-and-safe-boot) when synchronizing
+
+### Terminal not opening
+If the Pymakr terminal is not opening or giving an error, this might be because NodeJS is not installed on your system. This is becuase the terminal process is running separate from VSCode and depends on your systems NodeJS install.
+
+Solution: Install NodeJS. For windows 64 machines, install a 32 bit version of nodejs (for example ```nvm install 7.8.0 32``` when using nvm).
 
 # Developing
 If you want to contribute to this project you can test the app the following way:
