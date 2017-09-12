@@ -34,10 +34,10 @@ CFLAGS_CC_Debug := \
 	-std=gnu++0x
 
 INCS_Debug := \
-	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/include/node \
-	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/src \
-	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/deps/uv/include \
-	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/deps/v8/include \
+	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/include/node \
+	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/src \
+	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/uv/include \
+	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/v8/include \
 	-I$(srcdir)/../nan
 
 DEFS_Release := \
@@ -70,10 +70,10 @@ CFLAGS_CC_Release := \
 	-std=gnu++0x
 
 INCS_Release := \
-	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/include/node \
-	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/src \
-	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/deps/uv/include \
-	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/deps/v8/include \
+	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/include/node \
+	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/src \
+	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/uv/include \
+	-I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/v8/include \
 	-I$(srcdir)/../nan
 
 OBJS := \

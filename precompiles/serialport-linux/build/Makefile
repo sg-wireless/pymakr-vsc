@@ -308,8 +308,8 @@ ifeq ($(strip $(foreach prefix,$(NO_LOAD),\
 endif
 
 quiet_cmd_regen_makefile = ACTION Regenerating $@
-cmd_regen_makefile = cd $(srcdir); /home/ralph/Projects/pymakr-vsc/node_modules/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "--toplevel-dir=." -I/home/ralph/Projects/pymakr-vsc/node_modules/serialport/build/config.gypi -I/home/ralph/Projects/pymakr-vsc/node_modules/node-gyp/addon.gypi -I/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/common.gypi "--depth=." "-Goutput_dir=." "--generator-output=build" "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11" "-Dnode_gyp_dir=/home/ralph/Projects/pymakr-vsc/node_modules/node-gyp" "-Dnode_lib_file=/home/ralph/.electron-gyp/.node-gyp/iojs-1.6.11/<(target_arch)/iojs.lib" "-Dmodule_root_dir=/home/ralph/Projects/pymakr-vsc/node_modules/serialport" "-Dnode_engine=v8" binding.gyp
-Makefile: $(srcdir)/../../../../.electron-gyp/.node-gyp/iojs-1.6.11/common.gypi $(srcdir)/../node-gyp/addon.gypi $(srcdir)/build/config.gypi $(srcdir)/binding.gyp
+cmd_regen_makefile = cd $(srcdir); /home/ralph/Projects/pymakr-vsc/node_modules/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "--toplevel-dir=." -I/home/ralph/Projects/pymakr-vsc/node_modules/serialport/build/config.gypi -I/home/ralph/Projects/pymakr-vsc/node_modules/node-gyp/addon.gypi -I/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/common.gypi "--depth=." "-Goutput_dir=." "--generator-output=build" "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7" "-Dnode_gyp_dir=/home/ralph/Projects/pymakr-vsc/node_modules/node-gyp" "-Dnode_lib_file=/home/ralph/.electron-gyp/.node-gyp/iojs-1.7.7/<(target_arch)/iojs.lib" "-Dmodule_root_dir=/home/ralph/Projects/pymakr-vsc/node_modules/serialport" "-Dnode_engine=v8" binding.gyp
+Makefile: $(srcdir)/../../../../.electron-gyp/.node-gyp/iojs-1.7.7/common.gypi $(srcdir)/../node-gyp/addon.gypi $(srcdir)/build/config.gypi $(srcdir)/binding.gyp
 	$(call do_cmd,regen_makefile)
 
 # "all" is a concatenation of the "all" targets from all the included

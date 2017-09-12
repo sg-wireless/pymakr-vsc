@@ -32,6 +32,7 @@ CFLAGS_C_Debug := \
 # Flags passed to only C++ files.
 CFLAGS_CC_Debug := \
 	-std=gnu++0x \
+	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
 	-fno-threadsafe-statics \
@@ -44,10 +45,10 @@ CFLAGS_OBJC_Debug :=
 CFLAGS_OBJCC_Debug :=
 
 INCS_Debug := \
-	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/include/node \
-	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/src \
-	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/deps/uv/include \
-	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/deps/v8/include \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/include/node \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/src \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/uv/include \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/v8/include \
 	-I$(srcdir)/../nan
 
 DEFS_Release := \
@@ -78,6 +79,7 @@ CFLAGS_C_Release := \
 # Flags passed to only C++ files.
 CFLAGS_CC_Release := \
 	-std=gnu++0x \
+	-stdlib=libc++ \
 	-fno-rtti \
 	-fno-exceptions \
 	-fno-threadsafe-statics \
@@ -90,10 +92,10 @@ CFLAGS_OBJC_Release :=
 CFLAGS_OBJCC_Release :=
 
 INCS_Release := \
-	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/include/node \
-	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/src \
-	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/deps/uv/include \
-	-I/Users/Ralph/.atom/.node-gyp/.node-gyp/iojs-1.3.15/deps/v8/include \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/include/node \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/src \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/uv/include \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/v8/include \
 	-I$(srcdir)/../nan
 
 OBJS := \
@@ -134,7 +136,8 @@ LDFLAGS_Debug := \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.7 \
 	-arch x86_64 \
-	-L$(builddir)
+	-L$(builddir) \
+	-stdlib=libc++
 
 LIBTOOLFLAGS_Debug := \
 	-framework CoreFoundation -framework IOKit \
@@ -149,7 +152,8 @@ LDFLAGS_Release := \
 	-Wl,-search_paths_first \
 	-mmacosx-version-min=10.7 \
 	-arch x86_64 \
-	-L$(builddir)
+	-L$(builddir) \
+	-stdlib=libc++
 
 LIBTOOLFLAGS_Release := \
 	-framework CoreFoundation -framework IOKit \

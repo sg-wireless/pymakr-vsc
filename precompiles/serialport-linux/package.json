@@ -1,44 +1,21 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "serialport@^4.0.7",
-        "scope": null,
-        "escapedName": "serialport",
-        "name": "serialport",
-        "rawSpec": "^4.0.7",
-        "spec": ">=4.0.7 <5.0.0",
-        "type": "range"
-      },
-      "/home/ralph/Projects/pymakr-vsc"
-    ]
-  ],
-  "_from": "serialport@>=4.0.7 <5.0.0",
+  "_from": "serialport@^4.0.7",
   "_id": "serialport@4.0.7",
-  "_inCache": true,
-  "_installable": true,
+  "_inBundle": false,
+  "_integrity": "sha1-QhxhiophK9QM+kYbSkYVTa8iKaU=",
   "_location": "/serialport",
-  "_nodeVersion": "0.12.7",
-  "_npmOperationalInternal": {
-    "host": "packages-12-west.internal.npmjs.com",
-    "tmp": "tmp/serialport-4.0.7.tgz_1481518569217_0.2832766058854759"
-  },
-  "_npmUser": {
-    "name": "reconbot",
-    "email": "wizard@roborooter.com"
-  },
-  "_npmVersion": "2.15.6",
   "_phantomChildren": {
     "commander": "2.11.0"
   },
   "_requested": {
+    "type": "range",
+    "registry": true,
     "raw": "serialport@^4.0.7",
-    "scope": null,
-    "escapedName": "serialport",
     "name": "serialport",
+    "escapedName": "serialport",
     "rawSpec": "^4.0.7",
-    "spec": ">=4.0.7 <5.0.0",
-    "type": "range"
+    "saveSpec": null,
+    "fetchSpec": "^4.0.7"
   },
   "_requiredBy": [
     "#USER",
@@ -46,7 +23,6 @@
   ],
   "_resolved": "https://registry.npmjs.org/serialport/-/serialport-4.0.7.tgz",
   "_shasum": "421c618a8a612bd40cfa461b4a46154daf2229a5",
-  "_shrinkwrap": null,
   "_spec": "serialport@^4.0.7",
   "_where": "/home/ralph/Projects/pymakr-vsc",
   "author": {
@@ -78,6 +54,7 @@
     "node-pre-gyp": "^0.6.32",
     "object.assign": "^4.0.3"
   },
+  "deprecated": false,
   "description": "Node.js package to access serial ports. Welcome your robotic javascript overlords. Better yet, program them!",
   "devDependencies": {
     "chai": "^3.5.0",
@@ -96,15 +73,9 @@
     "sinon": "^1.17.3",
     "sinon-chai": "^2.8.0"
   },
-  "directories": {},
-  "dist": {
-    "shasum": "421c618a8a612bd40cfa461b4a46154daf2229a5",
-    "tarball": "https://registry.npmjs.org/serialport/-/serialport-4.0.7.tgz"
-  },
   "engines": {
     "node": ">= 0.10.0"
   },
-  "gitHead": "4a2a3cfae7ecba4e22e9c6d4cf7dfb7ec64324f6",
   "gypfile": true,
   "homepage": "https://github.com/EmergingTechnologyAdvisors/node-serialport#readme",
   "keywords": [
@@ -119,21 +90,31 @@
   "main": "./lib/serialport",
   "maintainers": [
     {
-      "name": "jjrosent",
+      "name": "Jacob Rosenthal",
       "email": "jakerosenthal@gmail.com"
     },
     {
-      "name": "reconbot",
-      "email": "wizard@roborooter.com"
+      "name": "Chris Williams",
+      "email": "voodootikigod@gmail.com"
     },
     {
-      "name": "voodootikigod",
-      "email": "voodootikigod@gmail.com"
+      "name": "Joe Ferner",
+      "email": "joe.ferner@nearinfinity.com"
+    },
+    {
+      "name": "Jay Beavers",
+      "email": "jay@hikinghomeschoolers.org"
+    },
+    {
+      "name": "Rob Giseburt",
+      "email": "giseburt@gmail.com"
+    },
+    {
+      "name": "Francis Gulotta",
+      "email": "wizard@roborooter.com"
     }
   ],
   "name": "serialport",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git://github.com/EmergingTechnologyAdvisors/node-serialport.git"
