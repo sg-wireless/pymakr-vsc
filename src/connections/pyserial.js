@@ -17,11 +17,19 @@ try {
     if(plf == 'win' && process.arch == 'ia32'){
       plf = 'win32'
     }
+
+    // workaround for missing bindings on windows 64
+    if(plf == 'win'){
+      require("../../precompiles/serialport-" + plf + "/lib/index");
+    }
+
     SerialPort = require("../../precompiles/serialport-" + plf + "/lib/serialport");
   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
     throw e;
   }
 }
+
+
 
 export default class PySerial {
 
@@ -78,7 +86,7 @@ export default class PySerial {
         })
       }
     },_this.params.timeout)
-  
+
   }
 
   disconnect(cb){
@@ -90,8 +98,9 @@ export default class PySerial {
     var _this = this
     this.onmessage = cb
     this.stream.on('data',function(data){
-      data = data.toString()
-      _this.onmessage(data)
+      var data_str = data.toString()
+      data = Buffer(data)  
+      _this.onmessage(data_str,data)
     })
   }
 

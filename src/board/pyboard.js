@@ -25,6 +25,7 @@ export default class Pyboard {
     this.connected = false
     this.connecting = false
     this.receive_buffer = ""
+    this.receive_buffer_raw = Buffer(0)
     this.waiting_for = null
     this.waiting_for_cb = null
     this.waiting_for_timeout = 8000
@@ -39,8 +40,6 @@ export default class Pyboard {
     this.logger = new Logger('Pyboard')
     this.config = Config.constants()
     this.refreshConfig()
-
-
   }
 
   refreshConfig(){
@@ -171,10 +170,8 @@ export default class Pyboard {
             callback()
         },5000)
       })
-
     })
   }
-
 
   isConnecting(){
       return this.connecting && !this.connected
@@ -218,8 +215,8 @@ export default class Pyboard {
 
 
       _this.connection.connect(function(){
-          _this.connection.registerListener(function(mssg){
-            _this.receive(mssg)
+          _this.connection.registerListener(function(mssg,raw){
+            _this.receive(mssg,raw)
           })
           if (_this.connection.type != 'telnet') {
             _this._onconnect(callback)
@@ -232,7 +229,7 @@ export default class Pyboard {
           // after that it might trigger unneccesarily
           if(_this.isConnecting()){
             _this._disconnected()
-            ontimeout(mssg)
+            ontimeout(mssg,raw)
           }
         }
       )
@@ -269,15 +266,27 @@ export default class Pyboard {
   }
 
 
-  receive(mssg){
+  receive(mssg,raw){
     this.logger.silly('Received message: '+mssg)
     if(!this.wait_for_block && typeof mssg != 'object'){
       this.onmessage(mssg)
     }
+    var err_in_output = this.getErrorMessage(mssg)
+    this.logger.silly("Error in output: "+err_in_output)
+    if(err_in_output != ""){
+      var err = new Error(err_in_output)
+      if(this.waiting_for != null){
+        this.receive_buffer += mssg
+        this.receive_buffer_raw = Buffer.concat([this.receive_buffer_raw,raw])
+        this.stopWaitingFor(this.receive_buffer,this.receive_buffer_raw, err)
+      }else{
+        this.onerror(err)
+      }
 
-    if(this.waiting_for != null && mssg){
+    }else if(this.waiting_for != null && mssg){
       this.logger.silly("Waiting for "+this.waiting_for)
       this.receive_buffer += mssg
+      this.receive_buffer_raw = Buffer.concat([this.receive_buffer_raw,raw])
       if(this.receive_buffer === undefined) this.receive_buffer = ""
       if(this.receive_buffer.indexOf("Invalid credentials, try again.") > -1){
         this._disconnected()
@@ -287,17 +296,18 @@ export default class Pyboard {
           // do nothing
         })
       }
+
       if(this.waiting_for_type == 'length'){
         this.logger.silly("Waiting for "+this.waiting_for+", got "+this.receive_buffer.length+" so far")
         if(this.receive_buffer.length >= this.waiting_for){
-          this.stopWaitingFor(this.receive_buffer)
+          this.stopWaitingFor(this.receive_buffer,this.receive_buffer_raw)
         }
       }else if(this.receive_buffer.indexOf(this.waiting_for) > -1 ){
         var trail = this.receive_buffer.split(this.waiting_for).pop(-1)
         if(trail && trail.length > 0 && this.wait_for_block){
           this.onmessage(trail)
         }
-        this.stopWaitingFor(mssg)
+        this.stopWaitingFor(mssg,raw)
       }
     }
   }
@@ -308,10 +318,10 @@ export default class Pyboard {
     this.wait_for_block = false
   }
 
-  stopWaitingFor(mssg){
+  stopWaitingFor(mssg,raw,err){
     this.stopWaitingForSilent()
     if(this.waiting_for_cb){
-      this.waiting_for_cb(null,mssg)
+      this.waiting_for_cb(err,mssg,raw)
     }
   }
 
@@ -405,8 +415,11 @@ export default class Pyboard {
   }
 
   send_read(mssg,number,cb,timeout){
-    this.read(number,cb,timeout)
+    var _this = this
     this.send_with_enter(mssg)
+    this.flush(function(){
+      _this.read(number,cb,timeout)
+    })
   }
 
   read(number,cb,timeout){
@@ -421,6 +434,7 @@ export default class Pyboard {
     this.waiting_for_cb = cb;
     this.waiting_for_timeout = timeout;
     this.receive_buffer = ""
+    this.receive_buffer_raw = Buffer(0)
     var _this = this
     if(timeout){
       this.waiting_for_timer = setTimeout(function(){
@@ -466,7 +480,7 @@ export default class Pyboard {
   getErrorMessage(text){
     var messages = this.config.error_messages
     for(var key in messages){
-      if(key.indexOf(text) > -1) {
+      if(text.indexOf(key) > -1) {
         return messages[key]
       }
     }

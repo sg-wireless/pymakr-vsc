@@ -279,7 +279,16 @@ export default class Pymakr {
     this.setButtonState()
   }
 
-  sync(){
+
+  download(){
+    this.sync('receive')
+  }
+
+  upload(){
+    this.sync('send')
+  }
+
+  sync(type){
     var _this = this
     if(!this.pyboard.connected){
       this.terminal.writeln("Please connect your device")
@@ -288,15 +297,20 @@ export default class Pymakr {
     if(!this.synchronizing){
         this.syncObj = new Sync(this.pyboard,this.settings,this.terminal)
         this.synchronizing = true
-        this.syncObj.start(function(err){
-        _this.synchronizing = false
-        _this.setButtonState()
-        if(!err && _this.pyboard.type != 'serial'){
-            setTimeout(function(){
-                _this.connect()
-            },2000)
+        var cb = function(err){
+          _this.synchronizing = false
+          _this.setButtonState()
+          if(!err && _this.pyboard.type != 'serial'){
+              setTimeout(function(){
+                  _this.connect()
+              },2000)
+          }
         }
-        })
+        if(type == 'receive'){
+          this.syncObj.start_receive(cb)
+        }else{
+          this.syncObj.start(cb)
+        }
     }
   }
 

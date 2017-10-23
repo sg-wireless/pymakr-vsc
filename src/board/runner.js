@@ -51,19 +51,19 @@ export default class Runner {
 
   _getCurrentFile(cb,onerror){
     this.api.getOpenFile(function(file,name){
+      if(!file){
+        onerror("No file open to run")
+        return
+      }
+
       var filename = "untitled file"
-      if(file){
+      if(name){
         filename = name.split('/').pop(-1)
         var filetype = filename.split('.').pop(-1)
         if(filetype != 'py'){
           onerror("Can't run "+filetype+" files, please run only python files")
           return
         }
-    //   }else if(buffer.cachedText && buffer.cachedText.length > 0){
-    //     file = {cachedContents: buffer.cachedText}
-      }else{
-        onerror("No file open to run")
-        return
       }
       cb(file,filename)
     },onerror)

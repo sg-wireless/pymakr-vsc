@@ -41,9 +41,16 @@ function activate(context) {
     })
     context.subscriptions.push(disposable);
 
-    var disposable = vscode.commands.registerCommand('pymakr.sync', function () {
+    var disposable = vscode.commands.registerCommand('pymakr.upload', function () {
         terminal.show()
-        pymakr.sync()
+        pymakr.upload()
+    })
+    context.subscriptions.push(disposable);
+
+
+    var disposable = vscode.commands.registerCommand('pymakr.download', function () {
+        terminal.show()
+        pymakr.download()
     })
     context.subscriptions.push(disposable);
 

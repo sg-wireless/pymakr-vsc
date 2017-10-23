@@ -1,5 +1,3 @@
-'use babel';
-
 // From: https://www.npmjs.com/package/telnetit
 
 var Telnet = require('./util-telnet');
@@ -154,7 +152,7 @@ function TelnetClient(name){
 			connectState = true;
 			connecting = false;
 			format.log(name, data);
-			svrReplyList.push(data.toString());
+			svrReplyList.push(data);
 			connectCallback(null);
 			connectCallback = noop;
 
@@ -167,13 +165,13 @@ function TelnetClient(name){
 			var svrReplyWatchersCopy=svrReplyWatchers.splice(0);
 			for(var i=0,len=svrReplyWatchersCopy.length; i < len; i++){
 				var watcher = svrReplyWatchersCopy[i];
-				watcher(null,[data.toString()]);
+				watcher(null,[data]);
 				svrReplyWatchers.push(watcher)
 			}
 
 		}else{
 			// no reader, so store the message.
-			svrReplyList.push(data.toString());
+			svrReplyList.push(data);
 		}
 	});
 

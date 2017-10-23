@@ -14,6 +14,7 @@ export default class ApiWrapper {
     this.first_time_opening = false
     this.config_file = Utils.getConfigPath("pymakr.json")
     this.is_windows = process.platform == 'win32'
+    this.project_path = this.getProjectPath()
   }
 
   config(key){
@@ -108,6 +109,28 @@ export default class ApiWrapper {
     var path = this.rootPath()
     if(path == null) return []
     return [path] 
+  }
+
+  listenToProjectChange(cb){
+    // no implementation, VSC doesn't support multi project
+    return
+  }
+
+  confirm(title,text,options){
+    var items = []
+    for(var key in options){
+      items.push(key);
+    }
+    var option_item = {
+        placeHolder: title+". "+text
+    }
+    window.showQuickPick(items,option_item).then(function(item){
+      if(item){
+        options[item]()
+      }else{
+        options['Cancel']()
+      }
+    })
   }
 
   getProjectPath(){

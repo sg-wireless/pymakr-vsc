@@ -24,7 +24,8 @@ export default class PanelView extends EventEmitter {
     this.statusItems = {}
     this.statusItems['status'] = this.createStatusItem("","pymakr.toggleConnect","Toggle terminal") // name is set using setTitle function
     this.statusItems['run'] = this.createStatusItem("$(triangle-right) Run","pymakr.run","Run current file")
-    this.statusItems['sync'] = this.createStatusItem("$(triangle-down) Sync","pymakr.sync","Synchronize project")
+    this.statusItems['upload'] = this.createStatusItem("$(triangle-up) Upload","pymakr.upload","Upload project")
+    this.statusItems['download'] = this.createStatusItem("$(triangle-down) Download","pymakr.download","Download Synchronize project")
     this.statusItems['other'] = this.createStatusItem("$(list-unordered) All commands","pymakr.listCommands","List all available pymakr commands")
     this.setTitle("not connected")
 
@@ -46,7 +47,8 @@ export default class PanelView extends EventEmitter {
     items.push({ label: "Pymakr > Connect", description: "", cmd: "connect" });
     items.push({ label: "Pymakr > Disconnect", description: "", cmd: "disconnect" });
     items.push({ label: "Pymakr > Run current file", description: "", cmd: "run" });
-    items.push({ label: "Pymakr > Synchronize Project", description: "", cmd: "sync" });
+    items.push({ label: "Pymakr > Upload Project", description: "", cmd: "upload" });
+    items.push({ label: "Pymakr > Download Project", description: "", cmd: "download" });
     items.push({ label: "Pymakr > Project Settings", description: "", cmd: "project_settings" });
     items.push({ label: "Pymakr > Global Setting", description: "", cmd: "global_settings" });
     items.push({ label: "Pymakr > Extra > Get board version", description: "", cmd: "get_version" });
@@ -133,6 +135,10 @@ export default class PanelView extends EventEmitter {
     this.terminal.show()
     this.visible = true
     this.setButtonState()
+  }
+
+  clearTerminal(){
+    this.terminal.clear()
   }
 
   // Returns an object that can be retrieved when package is activated

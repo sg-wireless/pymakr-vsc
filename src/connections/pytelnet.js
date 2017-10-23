@@ -79,8 +79,9 @@ export default class PyTelnet {
 
     this.stream.read(function(err,recv){
       if(recv){
-        recv=recv.join('');
-        cb(recv)
+        var data=recv.join('');
+        var raw = Buffer(recv)
+        cb(data,raw)
       }
     });
   }

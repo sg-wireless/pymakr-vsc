@@ -8,44 +8,49 @@ const ee = new EventEmitter();
 
 export default class Monitor {
 
-  constructor(pyboard,cb){
+  constructor(pyboard,cb,method){
     this.logger = new Logger('Monitor')
     this.pyboard = pyboard
     this.disconnecting = false
     this.callbacks = null
+    this.test_read_count = 0
     this.api = new ApiWrapper()
     var lib_folder = this.api.getPackageSrcPath()
 
-    var data = fs.readFileSync(lib_folder + 'python/monitor.py','utf8')
-    var connection_type_params = this.getScriptParams()
+    var data = fs.readFileSync(lib_folder + 'python/minified/monitor.py','utf8')
+    var connection_type_params = this.getScriptParams(method)
     data = connection_type_params + data
-
+    this.logger.silly("Try to enter raw mode")
     var _this = this
     this.pyboard.enter_raw_repl_no_reset(function(err){
       if(err){
         cb(err)
         return
       }
+      _this.logger.silly("Execute monitor code")
       _this.pyboard.exec_raw(data+"\r\n",function(err){
         if(err){
           cb(err)
           return
         }
         // giving monitor.py a little time to setup
+        _this.logger.silly("Wait 2 sec")
         setTimeout(function(){
+          _this.logger.silly("Setting up channel")
             _this.setupChannel(cb)
-        },600)
+        },2000)
       })
     })
   }
 
-  getScriptParams(){
+  getScriptParams(method){
+    var timeout = method == 'receive' ? 30000 : 5000
     if(this.pyboard.isSerial){
-      return "connection_type = 'u'\nTIMEOUT = 5000\n"
+      return "connection_type = 'u'\nTIMEOUT = "+timeout+"\n"
     }else{
       var pass = this.api.config('password')
       var user = this.api.config('username')
-      return "connection_type = 's'\ntelnet_login = ('"+pass+"', '"+user+"')\nTIMEOUT = 5000\n"
+      return "connection_type = 's'\ntelnet_login = ('"+pass+"', '"+user+"')\nTIMEOUT = "+timeout+"\n"
     }
   }
 
@@ -224,22 +229,56 @@ export default class Monitor {
     var _this = this
     this.pyboard.send_cmd('\x01\x01',function(){
       _this.pyboard.send_raw(_this.int_16(name.length),function(){
-        _this.pyboard.send_read(name,4,function(err,number){
+        setTimeout(function(){
+          _this.pyboard.send_read(name,4,function(err,number,raw_buffer){
+            if(err){
+              cb(err)
+              return
+            }
+            number = 0
+            if(raw_buffer.length >= 4){
+              number = raw_buffer.readUInt32BE()
+            }
+            if(number == 0){
+              cb(null,"")
+            }else{
+              _this.pyboard.read(number,function(err,content){
+                cb(err,content)
+              },3000)
+            }
+          },3000)
+        },200)
+      })
+    })
+  }
+
+  listFiles(cb){
+    var _this = this
+
+    this.pyboard.send_cmd('\x01\x06',function(){
+        _this.pyboard.read(4,function(err,number,raw_buffer){
           if(err){
             cb(err)
             return
           }
-          var b = Buffer(number)
-          number = b.readUInt32BE()
+          number = 0
+          if(raw_buffer.length >= 4){
+            number = raw_buffer.readUInt32BE()
+          }
           if(number == 0){
             cb(null,"")
           }else{
             _this.pyboard.read(number,function(err,content){
-              cb(err,content)
+              var json_content
+              try{
+                json_content = JSON.parse(content)
+              }catch(e){
+                err = new Error("Error listing files from the board")
+              }
+              cb(err,json_content)
             },3000)
           }
-        },2000)
-      })
+        })
     })
   }
 
