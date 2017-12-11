@@ -415,11 +415,8 @@ export default class Pyboard {
   }
 
   send_read(mssg,number,cb,timeout){
-    var _this = this
+    this.read(number,cb,timeout)
     this.send_with_enter(mssg)
-    this.flush(function(){
-      _this.read(number,cb,timeout)
-    })
   }
 
   read(number,cb,timeout){

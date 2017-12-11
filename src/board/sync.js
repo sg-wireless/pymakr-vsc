@@ -122,11 +122,16 @@ export default class Sync {
     this.file_hashes = this._getFilesHashed(this.files)
   }
 
-  check_file_size(){
-    if(this.method == 'send' && this.total_file_size > this.config.max_sync_size){
-      var mssg = "Total size of "+this.total_number_of_files.toString()+" files too big ("+parseInt(this.total_file_size/1000).toString()+"kb). Reduce the total filesize to < 350kb or select the correct sync folder in the settings"
-      throw new Error(mssg)
-    }
+  check_file_size(cb){
+    var _this = this
+    this.monitor.getFreeMemory(function(size){
+      if(_this.method == 'send' && size*1000 < _this.total_file_size){
+        var mssg = "Not enough space left on device ("+size+"kb) to fit  "+_this.total_number_of_files.toString()+" files of ("+parseInt(_this.total_file_size/1000).toString()+"kb)"
+        cb(Error(mssg))
+      }else{
+        cb(null)
+      }
+    })
   }
 
 
@@ -168,14 +173,14 @@ export default class Sync {
 
     // start sync
     this.terminal.write(this.method_action+" project ("+this.folder_name+")...\r\n")
-
-    try {
-      this.check_file_size()
-    } catch(e){
-      console.log(e)
-      this.sync_done(e)
-      return
-    }
+    //
+    // try {
+    //   this.check_file_size()
+    // } catch(e){
+    //   console.log(e)
+    //   this.sync_done(e)
+    //   return
+    // }
 
     this.logger.silly("Start monitor")
 
@@ -192,12 +197,21 @@ export default class Sync {
 
       }else{
 
-        console.log("Starting "+_this.method)
-
         if(_this.method=='receive'){
           _this.__receive(cb,err)
         }else{
-          _this.__send(cb,err)
+
+          _this.check_file_size(function(err){
+            if(err || !_this.isrunning){
+              console.log(err)
+              _this.throwError(cb,err)
+              _this.exit(function(){
+                // do nothing, callback with error has already been called
+              })
+              return
+            }
+            _this.__send(cb,err)
+          })
         }
       }
     })
@@ -314,10 +328,21 @@ export default class Sync {
           })
           return true
         }
-        var title = "Downloading files"
-        var message = mssg+". Do you want to download these files into your project ("+_this.project_name+" - "+_this.folder_name+"), overwriting existing files?"
-
-        _this.api.confirm(title,message,options)
+        
+        
+        // items.push({ label: "Pymakr > Connect", description: "", cmd: "connect" });
+        mssg = "Do you want to download these files into your project ("+_this.project_name+" - "+_this.folder_name+"), overwriting existing files?"
+        _this.progress(mssg)
+        _this.progress("(choose your option in the popup on the top of the screen)")
+        _this.api.confirm("Downloading files",mssg,options)
+        
+        // atom.confirm(
+        //   {
+        //     message: "Downloading files",
+        //     detailedMessage: mssg+". Do you want to download these files into your project ("+_this.project_name+" - "+_this.folder_name+"), overwriting existing files?",
+        //     buttons: options
+        //   }
+        // )
       },100)
     })
   }

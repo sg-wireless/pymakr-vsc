@@ -177,6 +177,7 @@ class Monitor(object):
             b"\x01\x04": self.create_dir,
             b"\x01\x05": self.remove_dir,
             b"\x01\x06": self.list_files,
+            b"\x01\x07": self.mem_free,
         }
 
     def process_command(self, cmd):
@@ -200,6 +201,7 @@ class Monitor(object):
 
     def init_hash(self, length):
         self.last_hash = hashlib.sha256(b'', length)
+
 
     @staticmethod
     def block_split_helper(length):
@@ -228,6 +230,14 @@ class Monitor(object):
     @staticmethod
     def encode_str_len16(string):
         return struct.pack('>H', len(string))
+
+
+    def mem_free(self):
+        import os
+        try:
+            self.write_int16(os.getfree('/flash'))
+        except AttributeError:
+            self.write_int16(350000)
 
     def write_to_file(self):
         print("Writing to file")

@@ -117,13 +117,15 @@ export default class ApiWrapper {
   }
 
   confirm(title,text,options){
+    
     var items = []
     for(var key in options){
       items.push(key);
     }
     var option_item = {
-        placeHolder: title+". "+text
+        placeHolder: text
     }
+    // title is ignored, there's no logical place for it in a quickpick
     window.showQuickPick(items,option_item).then(function(item){
       if(item){
         options[item]()

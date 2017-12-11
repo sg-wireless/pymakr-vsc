@@ -11,6 +11,7 @@ export default class Config {
         "ECONNREFUSED": "Connection refused",
         "ECONNRESET":" Connection was reset",
         "EPIPE": "Broken pipe",
+        "MemoryError": "Not enough memory available on the board."
       },
       help_text: "Pymakr VSC Plugin Help. Commands to use (cmd/ctrl + p):\r\n"
               +  "- Disconnect        : Disconnects from the board\r\n"

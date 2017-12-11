@@ -170,6 +170,32 @@ export default class Monitor {
     },3000)
   }
 
+
+  getFreeMemory(cb){
+    var _this = this
+    this.logger.info('Getting free memory info from board')
+    this.pyboard.send_cmd('\x01\x07',function(){
+      _this.pyboard.read(2,function(err,number,raw_buffer){
+        if(err){
+          cb(err)
+          return
+        }
+        number = 0
+        if(raw_buffer.length >= 2){
+          number = raw_buffer.readUInt16BE()
+        }
+        _this.logger.info("Got number: "+number)
+        _this.pyboard.flush(function(){
+          if(number == 0){
+            cb(null,"")
+          }else{
+            cb(number)
+          }
+        })
+      })
+    })
+  }
+
   writeFile(name,contents,cb){
     var _this = this
     this.logger.info('Seding write-file command for '+name)
