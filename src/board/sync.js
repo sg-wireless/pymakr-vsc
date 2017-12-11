@@ -335,14 +335,6 @@ export default class Sync {
         _this.progress(mssg)
         _this.progress("(choose your option in the popup on the top of the screen)")
         _this.api.confirm("Downloading files",mssg,options)
-        
-        // atom.confirm(
-        //   {
-        //     message: "Downloading files",
-        //     detailedMessage: mssg+". Do you want to download these files into your project ("+_this.project_name+" - "+_this.folder_name+"), overwriting existing files?",
-        //     buttons: options
-        //   }
-        // )
       },100)
     })
   }
