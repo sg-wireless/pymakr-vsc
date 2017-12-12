@@ -64,6 +64,7 @@ export default class Term {
 
     create(){
       this.create_failed = false
+      this.port = parseInt(Math.random()*1000 + 1337)
       try{
         var termpath = this.api.getPackagePath() + "terminalExec.js"
         var shellpath = this.is_windows ? "node.exe" : "node"
