@@ -77,6 +77,10 @@
     ],
     "keybindings": [
       {
+        "command": "",
+        "key": "ctrl+e",
+        "when": "terminalFocus"
+      },{
         "command": "pymakr.connect",
         "key": "ctrl+shift+c",
         "mac": "cmd+shift+c"
