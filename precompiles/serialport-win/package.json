@@ -24,7 +24,7 @@
   "_resolved": "https://registry.npmjs.org/serialport/-/serialport-4.0.7.tgz",
   "_shasum": "421c618a8a612bd40cfa461b4a46154daf2229a5",
   "_spec": "serialport@^4.0.7",
-  "_where": "C:\\Users\\devel\\Projects\\pymakr-vsc",
+  "_where": "d:\\Projects\\Pycom\\pymakr-vsc",
   "author": {
     "name": "Chris Williams",
     "email": "voodootikigod@gmail.com",

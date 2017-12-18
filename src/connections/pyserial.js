@@ -19,9 +19,9 @@ try {
     }
 
     // workaround for missing bindings on windows 64
-    if(plf == 'win'){
-      require("../../precompiles/serialport-" + plf + "/lib/index");
-    }
+    // if(plf == 'win'){
+    //   require("../../precompiles/serialport-" + plf + "/lib/index");
+    // }
 
     SerialPort = require("../../precompiles/serialport-" + plf + "/lib/serialport");
   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
