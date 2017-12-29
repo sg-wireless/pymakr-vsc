@@ -50,6 +50,8 @@ All possible settings (name : default : description):
 - sync_file_types   : py,txt,log,json,xml : Type of files to be synchronized
 - ctrl_c_on_connect : false               : If true, executes a ctrl-c on connect to stop running programs
 - open_on_start     : true                : Weather to open the terminal and connect to the board when starting vsc
+- statusbar_buttons : []                  : Which quick-access buttons to show in the statusbar. Options are:
+    - ['status','run','upload','download','disconnect','listserial','settings','projectsettings','getversion','getssid']
 Any of these can be used inside the Project config to override the global config
 
 ## REPL

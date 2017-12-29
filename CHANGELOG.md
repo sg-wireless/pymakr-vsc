@@ -16,3 +16,6 @@ All notable changes to the Pymakr extension will be documented in this file.
 ## 0.1.6
 - Fixed windows64 issue with serialport lib
 - Ctrl-e for paste-mode working on windows
+
+## 0.1.7
+- Added config option to change the status bar buttons

@@ -25,6 +25,8 @@ export default class SettingsWrapper extends EventEmitter {
     this.sync_folder = this.api.config('sync_folder')
     this.ctrl_c_on_connect = this.api.config('ctrl_c_on_connect')
     this.open_on_start = this.api.config('open_on_start')
+    this.statusbar_buttons = this.api.config('statusbar_buttons')
+    
 
 
     this.refresh()
@@ -106,6 +108,9 @@ export default class SettingsWrapper extends EventEmitter {
     if('open_on_start' in file){
       this.open_on_start = file.open_on_start
     }
+    if('statusbar_buttons' in file){
+      this.statusbar_buttons = file.statusbar_buttons
+    }
   }
 
   getDefaultConfig(global){
@@ -114,7 +119,8 @@ export default class SettingsWrapper extends EventEmitter {
         "username": this.api.config('username'),
         "password": this.api.config('password'),
         "sync_folder": this.api.config('sync_folder'),
-        "open_on_start": this.api.config('open_on_start')
+        "open_on_start": this.api.config('open_on_start'),
+        "statusbar_buttons": this.api.config('statusbar_buttons')
     }
     if(global){
       config.sync_file_types = this.api.config('sync_file_types')

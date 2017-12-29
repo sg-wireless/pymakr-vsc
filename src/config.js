@@ -31,7 +31,9 @@ export default class Config {
               +  "- sync_file_types   : py,txt,log,json,xml : Type of files to be synchronized\r\n"
               +  "- ctrl_c_on_connect : false               : If true, executes a ctrl-c on connect to stop running programs\r\n"
               +  "- open_on_start     : true                : Weather to open the terminal and connect to the board when starting vsc\r\n"
-              +  "Any of these can be used inside the Project config to override the global config\r\n"
+              +  "- statusbar_buttons : []                  : Which quick-access buttons to show in the statusbar. Options are:\r\n"
+              +  "['status','run','upload','download','disconnect','listserial','settings','projectsettings','getversion','getssid']\r\n"
+              +  "Any of these can be used inside the Global config, or inside the Project config to override the global config\r\n"
               +  "\r\n"
               +  "For more information, check github.com/pycom/pymakr-vsc or docs.pycom.io\r\n"
               +  "\r\n",
@@ -43,7 +45,7 @@ export default class Config {
               +  "     (When using serial, use the 'List serial ports' to find the correct serial port)\r\n"
               +  " 3: Connect using the 'Connect' command or the 'Pycom Console' button\r\n"
               +  " 4: Open a micropython project with main.py and boot.py files\r\n"
-              +  " 5: Start running files and synchronizing your project \r\n"
+              +  " 5: Start running files and uploading your code \r\n"
               +  "\r\n"
               +  " Use the 'Help' command for more info about all the options \r\n"
     }
@@ -96,6 +98,13 @@ export default class Config {
           default: true,
           title: 'Open on start',
           description: 'Open the pymakr console and connect to the board after starting the editor or opening a project',
+          order: 6
+      },
+      statusbar_buttons: {
+          type: 'array',
+          default: ["console","run","upload","download"],
+          title: 'statusbar_buttons',
+          description: '',
           order: 6
       },
     }

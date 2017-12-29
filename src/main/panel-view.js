@@ -22,11 +22,17 @@ export default class PanelView extends EventEmitter {
     this.logger = new Logger('PanelView')
 
     this.statusItems = {}
-    this.statusItems['status'] = this.createStatusItem("","pymakr.toggleConnect","Toggle terminal") // name is set using setTitle function
-    this.statusItems['run'] = this.createStatusItem("$(triangle-right) Run","pymakr.run","Run current file")
-    this.statusItems['upload'] = this.createStatusItem("$(triangle-up) Upload","pymakr.upload","Upload project")
-    this.statusItems['download'] = this.createStatusItem("$(triangle-down) Download","pymakr.download","Download Synchronize project")
-    this.statusItems['other'] = this.createStatusItem("$(list-unordered) All commands","pymakr.listCommands","List all available pymakr commands")
+    this.statusItems['status'] = this.createStatusItem('status',"","pymakr.toggleConnect","Toggle terminal") // name is set using setTitle function
+    this.statusItems['run'] = this.createStatusItem('run',"$(triangle-right) Run","pymakr.run","Run current file")
+    this.statusItems['upload'] = this.createStatusItem('upload',"$(triangle-up) Upload","pymakr.upload","Upload project to your board")
+    this.statusItems['download'] = this.createStatusItem('download',"$(triangle-down) Download","pymakr.download","Download project from your board")
+    this.statusItems['disconnect'] = this.createStatusItem('disconnect',"$(x) Disconnect","pymakr.disconnect","Disconnect")
+    this.statusItems['settings'] = this.createStatusItem('settings',"$(gear) Settings","pymakr.globalSettings","Global Pymakr settings")
+    this.statusItems['projectsettings'] = this.createStatusItem('projectsettings',"$(gear) Project settings","pymakr.projectSettings","Project settings for Pymakr")
+    this.statusItems['getversion'] = this.createStatusItem('getversion',"$(tag) Get version","pymakr.extra.getVersion","Get board version")
+    this.statusItems['getssid'] = this.createStatusItem('getssid',"$(rss) Get WiFi SSID","pymakr.extra.getWifiMac","Get WiFi AP SSID")
+    this.statusItems['listserial'] = this.createStatusItem('listserial',"$(list-unordered) List serialports","pymakr.extra.getSerial","List available serialports")
+    this.statusItems['listcommands'] = this.createStatusItem('listcommands',"$(list-unordered) All commands","pymakr.listCommands","List all available pymakr commands")
     this.setTitle("not connected")
 
     // terminal logic
@@ -70,15 +76,18 @@ export default class PanelView extends EventEmitter {
   }
 
 
-  createStatusItem(name,command,tooltip){
+  createStatusItem(key,name,command,tooltip){
+
     if(!this.statusItemPrio){
-      this.statusItemPrio = 10
+      this.statusItemPrio = 15
     }
     var statusBarItem = vscode.window.createStatusBarItem(StatusBarAlignment.Left,this.statusItemPrio)
     statusBarItem.command = command
     statusBarItem.text = name
     statusBarItem.tooltip = tooltip
-    statusBarItem.show()
+    if(this.settings.statusbar_buttons.indexOf(key) > -1 || key == 'listcommands'){
+      statusBarItem.show()
+    }
     this.statusItemPrio-=1
     return statusBarItem
   }
