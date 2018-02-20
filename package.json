@@ -39,8 +39,12 @@
         "title": "Pymakr > Disconnect"
       },
       {
-        "command": "pymakr.sync",
-        "title": "Pymakr > Synchronize project"
+        "command": "pymakr.upload",
+        "title": "Pymakr > Upload project"
+      },
+      {
+        "command": "pymakr.download",
+        "title": "Pymakr > Download project"
       },
       {
         "command": "pymakr.run",
@@ -86,7 +90,7 @@
         "mac": "cmd+shift+c"
       },
       {
-        "command": "pymakr.sync",
+        "command": "pymakr.upload",
         "key": "ctrl+shift+s",
         "mac": "cmd+shift+s"
       },
@@ -104,14 +108,14 @@
     "menus": {
       "explorer/context": [
         {
-          "command": "pymakr.sync",
+          "command": "pymakr.upload",
           "group": "pymakr"
         },
         {
           "command": "pymakr.run",
           "group": "pymakr"
         }
-      ],
+      ], 
       "editor/context": [
         {
           "command": "pymakr.connect",
@@ -122,7 +126,7 @@
           "group": "pymakr"
         },
         {
-          "command": "pymakr.sync",
+          "command": "pymakr.upload",
           "group": "pymakr"
         }
       ],
@@ -132,7 +136,7 @@
           "group": "pymakr"
         },
         {
-          "command": "pymakr.sync",
+          "command": "pymakr.upload",
           "group": "pymakr"
         }
       ]

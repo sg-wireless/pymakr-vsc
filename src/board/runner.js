@@ -60,7 +60,7 @@ export default class Runner {
       if(name){
         filename = name.split('/').pop(-1)
         var filetype = filename.split('.').pop(-1)
-        if(filetype != 'py'){
+        if(filetype.toLowerCase() != 'py'){
           onerror("Can't run "+filetype+" files, please run only python files")
           return
         }

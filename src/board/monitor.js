@@ -155,7 +155,9 @@ export default class Monitor {
 
     this.reset(function(err){
         _this.stopped()
-        cb(err)
+        if(cb){
+          cb(err)
+        }
     })
 
 
@@ -164,12 +166,37 @@ export default class Monitor {
   requestAck(cb){
     this.pyboard.send_cmd_read('\x00\x00',3,function(err){
       if(err){
+        console.log(err)
         err = "Failed to confirm file transfer"
       }
       cb(err)
     },3000)
   }
 
+  getVersion(cb){
+    var _this = this
+    this.logger.info('Getting version number from the board')
+    this.pyboard.send_cmd('\x01\x08',function(){
+      _this.pyboard.read(4,function(err,number,raw_buffer){
+        if(err){
+          cb(err)
+          return
+        }
+        number = 0
+        if(raw_buffer.length >= 4){
+          number = raw_buffer.readUInt32BE()
+        }
+        _this.logger.info("Got number: "+number)
+        _this.pyboard.flush(function(){
+          if(number == 0){
+            cb(null,"")
+          }else{
+            cb(number)
+          }
+        })
+      })
+    })
+  }
 
   getFreeMemory(cb){
     var _this = this
@@ -198,29 +225,29 @@ export default class Monitor {
 
   writeFile(name,contents,cb){
     var _this = this
-    this.logger.info('Seding write-file command for '+name)
-    this.pyboard.send_cmd('\x01\x00',function(){
-      _this.logger.verbose('Sending 16 bit name length ')
-        _this.pyboard.send_raw(_this.int_16(name.length),function(){
-          setTimeout(function(){
-            _this.logger.verbose('Sending name')
-            _this.pyboard.send(name,function(){
 
-              _this.requestAck(function(err){
-                if(err){
-                  cb(err)
-                  return
-                }
-                _this.logger.verbose('Sending 32 bit content length ('+contents.length+")")
-                _this.pyboard.send_raw(_this.int_32(contents.length),function(){
-                  _this.pyboard.flush(function(){
-                    _this._writeFileChunkRecursive(contents,0,256,cb)
-                  })
+    _this.logger.info('Sending write-file command for '+name)
+    _this.pyboard.send_cmd('\x01\x00',function(){
+      _this.logger.verbose('Sending 16 bit name length '+name.length)
+      _this.pyboard.send_raw(_this.int_16(name.length),function(){
+        setTimeout(function(){
+          _this.logger.verbose('Sending name')
+          _this.pyboard.send(name,function(){
+            _this.requestAck(function(err){
+              if(err){
+                cb(err)
+                return
+              }
+              _this.logger.verbose('Sending 32 bit content length ('+contents.length+")")
+              _this.pyboard.send_raw(_this.int_32(contents.length),function(){
+                _this.pyboard.flush(function(){
+                  _this._writeFileChunkRecursive(contents,0,256,cb)
                 })
-              },1000)
-            })
-          },100)
-        })
+              })
+            },1000)
+          })
+        },100)
+      })
     })
   }
   _writeFileChunkRecursive(content,block,blocksize,cb){
@@ -311,12 +338,24 @@ export default class Monitor {
   int_16(int){
     var b = new Buffer(2)
     b.writeUInt16BE(int)
+    b = this.escape_buffer(b)
     return b
   }
 
   int_32(int){
     var b = new Buffer(4)
     b.writeUInt32BE(int)
+    b = this.escape_buffer(b)
+    return b
+  }
+
+  escape_buffer(b){
+    var i = b.indexOf(27)
+    if(i>-1){
+      separator = new Buffer(1)
+      separator.writeUInt8(27)
+      b = Buffer.concat([b.slice(0,i),separator,b.slice(i,b.length)])
+    }
     return b
   }
 }

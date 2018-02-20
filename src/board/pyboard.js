@@ -11,6 +11,9 @@ var CTRL_A = '\x01' // raw repl
 var CTRL_B = '\x02' // exit raw repl
 var CTRL_C = '\x03' // ctrl-c
 var CTRL_D = '\x04' // reset (ctrl-d)
+var CTRL_E = '\x05' // reset (ctrl-d)
+var CTRL_F = '\x06' // reset (ctrl-d)
+
 
 //statuses
 var DISCONNECTED=0
@@ -136,10 +139,23 @@ export default class Pyboard {
     this.send_wait_for_blocking(CTRL_D,"OK",cb,5000)
   }
 
+  safe_boot(cb){
+    var _this = this
+
+    this.send_wait_for(CTRL_F,'Type "help()" for more information.\r\n>>>',function(err){
+      if(err){
+        _this.stop_running_programs(cb)
+      }else{
+        cb()
+      }
+    },2000)
+
+  }
+
   stop_running_programs(cb){
     this.send_wait_for(CTRL_C,">>>",function(){
       if(cb) cb()
-    })
+    },1000)
   }
 
   stop_running_programs_nofollow(callback){
@@ -150,7 +166,6 @@ export default class Pyboard {
 
   enter_raw_repl_no_reset(callback){
     var _this = this
-    this.stop_running_programs(function(){
       _this.flush(function(){
         _this.send_wait_for_blocking(CTRL_A,'raw REPL; CTRL-B to exit\r\n>',function(err){
           if(!err){
@@ -159,7 +174,7 @@ export default class Pyboard {
           callback(err)
         },5000)
       })
-    })
+    // })
   }
 
   enter_raw_repl(callback){
@@ -319,6 +334,7 @@ export default class Pyboard {
   }
 
   stopWaitingFor(mssg,raw,err){
+    this.logger.silly("Stopping waiting for")
     this.stopWaitingForSilent()
     if(this.waiting_for_cb){
       this.waiting_for_cb(err,mssg,raw)

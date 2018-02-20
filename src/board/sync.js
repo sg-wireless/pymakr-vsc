@@ -60,7 +60,6 @@ export default class Sync {
         _this.terminal.writeln(text)
       },0)
     }
-
   }
 
   sync_done(err){
@@ -127,21 +126,25 @@ export default class Sync {
     this.monitor.getFreeMemory(function(size){
       if(_this.method == 'send' && size*1000 < _this.total_file_size){
         var mssg = "Not enough space left on device ("+size+"kb) to fit  "+_this.total_number_of_files.toString()+" files of ("+parseInt(_this.total_file_size/1000).toString()+"kb)"
-        cb(Error(mssg))
+        cb(size,Error(mssg))
       }else{
-        cb(null)
+        cb(size,null)
       }
     })
   }
 
-
   start(oncomplete){
-    this.__start_sync(oncomplete,'send')
+    var _this = this
+    this.__safe_boot(function(err){
+      _this.__start_sync(oncomplete,'send')
+    })
+
   }
 
   start_receive(oncomplete){
     this.__start_sync(oncomplete,'receive')
   }
+
 
   __start_sync(oncomplete,method){
     this.logger.info("Start sync method "+method)
@@ -154,7 +157,7 @@ export default class Sync {
     try {
       this.reset_values(oncomplete,method)
     } catch(e){
-      console.log(e)
+      _this.logger.error(e)
       this.sync_done(e)
       return
     }
@@ -173,27 +176,19 @@ export default class Sync {
 
     // start sync
     this.terminal.write(this.method_action+" project ("+this.folder_name+")...\r\n")
-    //
-    // try {
-    //   this.check_file_size()
-    // } catch(e){
-    //   console.log(e)
-    //   this.sync_done(e)
-    //   return
-    // }
 
-    this.logger.silly("Start monitor")
+    // this.progress("Reading files from board")
 
-    this.start_monitor(function(err){
+    _this.logger.silly("Start monitor")
+
+    _this.start_monitor(function(err){
       _this.in_raw_mode = true
       _this.logger.silly("Entered raw mode")
 
       if(err || !_this.isrunning){
         console.log(err)
         _this.throwError(cb,err)
-        _this.exit(function(){
-          // do nothing, callback with error has already been called
-        })
+        _this.exit()
 
       }else{
 
@@ -201,13 +196,11 @@ export default class Sync {
           _this.__receive(cb,err)
         }else{
 
-          _this.check_file_size(function(err){
+          _this.check_file_size(function(size_kb,err){
             if(err || !_this.isrunning){
               console.log(err)
               _this.throwError(cb,err)
-              _this.exit(function(){
-                // do nothing, callback with error has already been called
-              })
+              _this.exit()
               return
             }
             _this.__send(cb,err)
@@ -328,19 +321,38 @@ export default class Sync {
           })
           return true
         }
-        
-        
-        // items.push({ label: "Pymakr > Connect", description: "", cmd: "connect" });
-        mssg = "Do you want to download these files into your project ("+_this.project_name+" - "+_this.folder_name+"), overwriting existing files?"
-        _this.progress(mssg)
-        _this.progress("(choose your option in the popup on the top of the screen)")
-        _this.api.confirm("Downloading files",mssg,options)
+
+        atom.confirm(
+          {
+            message: "Downloading files",
+            detailedMessage: mssg+". Do you want to download these files into your project ("+_this.project_name+" - "+_this.folder_name+"), overwriting existing files?",
+            buttons: options
+          }
+        )
       },100)
     })
   }
 
   plural(text,number){
     return text + (number == 1 ? "" : "s")
+  }
+
+  __safe_boot(cb){
+    var _this = this
+    if(!this.settings.safe_boot_on_upload){
+      cb()
+      return
+    }
+    this.get_version(function(version){
+      if(version >= _this.config.safeboot_version){
+        _this.logger.info("Safe booting...")
+        _this.progress("Safe boot device (see settings for more info)")
+        _this.pyboard.safe_boot(cb)
+      }else{
+        _this.logger.info("Version doesn't support safe booting")
+        cb()
+      }
+    })
   }
 
   receive_files(i,list,cb){
@@ -380,6 +392,49 @@ export default class Sync {
     this.ensureDirectoryExistence(dirname)
     fs.mkdirSync(dirname)
   }
+
+  get_version(cb){
+    var _this = this
+    var command = "import os; os.uname().release\r\n"
+    this.pyboard.send_wait_for_blocking(command,'>>>',function(err,content){
+      var version = content.replace(command,'').replace(/>>>/g,'').replace(/'/g,"").replace(/\r\n/g,"").trim()
+      var version_int = _this.__calculate_int_version(version)
+
+      if(err){
+        _this.logger.error("Failed to send command: "+command)
+      }
+      cb(version_int)
+    },1000)
+  }
+
+  __calculate_int_version(version){
+    known_types = ['a', 'b', 'rc', 'r']
+    version_parts = version.split(".")
+    dots = version_parts.length - 1
+    if(dots == 2){
+      version_parts.push('0')
+    }
+
+    for(var i=0;i<known_types.length;i++){
+      var t = known_types[i]
+      if(version_parts[3] && version_parts[3].indexOf(t)> -1){
+        version_parts[3] = version_parts[3].replace(t,'')
+      }
+    }
+
+    version_string = ""
+
+    for(var i=0;i<version_parts.length;i++){
+      val = version_parts[i]
+      if(parseInt(val) < 10){
+        version_parts[i] = '0'+val
+      }
+      version_string += version_parts[i]
+    }
+    return parseInt(version_string)
+  }
+
+
 
   __send(cb,err){
     var _this = this
@@ -469,7 +524,16 @@ export default class Sync {
   throwError(cb,err){
     var _this = this
     var mssg = err ? err : new Error("")
-    cb(mssg)
+
+    this.logger.warning("Error thrown during sync procedure")
+
+    if(!cb){
+      this.sync_done(mssg)
+    }else{
+      cb(mssg)
+    }
+
+
 
     _this.pyboard.stopWaitingForSilent()
 

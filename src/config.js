@@ -5,6 +5,7 @@ export default class Config {
     return {
       logging_level: 4, // 4 = error. anything higher than 5 = off. see logger.js
       max_sync_size: 350000,
+      safeboot_version: 1150002, // 1.15.0.b2
       error_messages: {
         "EHOSTDOWN": "Host down",
         "EHOSTUNREACH": "Host unreachable",
@@ -31,12 +32,10 @@ export default class Config {
               +  "- sync_file_types   : py,txt,log,json,xml : Type of files to be synchronized\r\n"
               +  "- ctrl_c_on_connect : false               : If true, executes a ctrl-c on connect to stop running programs\r\n"
               +  "- open_on_start     : true                : Weather to open the terminal and connect to the board when starting vsc\r\n"
-              +  "- statusbar_buttons : []                  : Which quick-access buttons to show in the statusbar. Options are:\r\n"
-              +  "['status','run','upload','download','disconnect','listserial','settings','projectsettings','getversion','getssid']\r\n"
-              +  "Any of these can be used inside the Global config, or inside the Project config to override the global config\r\n"
+              +  "- safe_boot_before_upload : true          : Safe-boots the board before uploading code, to prevent running out of RAM while uploading.\r\n"
+              +  "Any of these can be used inside the Project config to override the global config\r\n"
               +  "\r\n"
-              +  "For more information, check github.com/pycom/pymakr-vsc or docs.pycom.io\r\n"
-              +  "\r\n",
+              +  "For more information, check github.com/pycom/pymakr-atom or docs.pycom.io\r\n",
 
       start_text: "Welcome to the Pymakr plugin! Use the buttons on the left bottom to access all features and commands.\r\n"
               +  "This is how you get started:\r\n"
@@ -107,6 +106,13 @@ export default class Config {
           description: '',
           order: 6
       },
+      safe_boot_on_upload: {
+        type: 'boolean',
+        default: true,
+        title: 'Safe-boot before upload',
+        description: 'Only works with firmware v1.16.0.b1 and up. Safe boots the board before uploading to prevent running out of memory while uploading. Especially useful on older boards with less memory, but adds about 2 seconds to the upload procedure',
+        order: 9
+      }
     }
   }
 }

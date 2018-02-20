@@ -26,6 +26,7 @@ export default class SettingsWrapper extends EventEmitter {
     this.ctrl_c_on_connect = this.api.config('ctrl_c_on_connect')
     this.open_on_start = this.api.config('open_on_start')
     this.statusbar_buttons = this.api.config('statusbar_buttons')
+    this.safe_boot_on_upload = this.api.config('safe_boot_on_upload')
     
 
 
@@ -111,6 +112,9 @@ export default class SettingsWrapper extends EventEmitter {
     if('statusbar_buttons' in file){
       this.statusbar_buttons = file.statusbar_buttons
     }
+    if('safe_boot_on_upload' in this.project_config){
+      this.safe_boot_on_upload = this.project_config.safe_boot_on_upload
+    }
   }
 
   getDefaultConfig(global){
@@ -120,6 +124,7 @@ export default class SettingsWrapper extends EventEmitter {
         "password": this.api.config('password'),
         "sync_folder": this.api.config('sync_folder'),
         "open_on_start": this.api.config('open_on_start'),
+        "safe_boot_on_upload": this.api.config('safe_boot_on_upload'),
         "statusbar_buttons": this.api.config('statusbar_buttons')
     }
     if(global){
