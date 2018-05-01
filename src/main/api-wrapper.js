@@ -111,6 +111,11 @@ export default class ApiWrapper {
     return [path] 
   }
 
+  onProjectsChange(cb){
+    // no implementation, VSC doesn't support multi project
+    return
+  }
+
   listenToProjectChange(cb){
     // no implementation, VSC doesn't support multi project
     return

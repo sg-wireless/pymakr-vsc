@@ -1,7 +1,7 @@
 'use babel';
 
 var crypto = require('crypto');
-import Monitor from './monitor.js'
+import Shell from './shell.js'
 import Config from '../config.js'
 import Logger from '../helpers/logger.js'
 import ApiWrapper from '../main/api-wrapper.js';
@@ -63,6 +63,7 @@ export default class Sync {
   }
 
   sync_done(err){
+    this.logger.verbose("Sync done!")
     this.isrunning = false
     var mssg = this.method_name+" done"
     if(err){
@@ -71,7 +72,7 @@ export default class Sync {
       if(this.in_raw_mode){
         mssg += " Please reboot your device manually."
       }
-    }else if(this.in_raw_mode){
+    }else if(this.in_raw_mode && this.settings.reboot_after_upload){
       mssg += ", resetting board..."
     }
 
@@ -102,28 +103,32 @@ export default class Sync {
     this.in_raw_mode = false
 
     this.project_path = this.api.getProjectPath()
-    this.project_name = this.project_path.split('/').pop()
-    var dir = this.settings.sync_folder.replace(/^\/|\/$/g, '') // remove first and last slash
-    this.py_folder = this.project_path + "/"
-    if(dir){
-      this.py_folder += dir+"/"
+    if(this.project_path){
+      this.project_name = this.project_path.split('/').pop()
+
+      var dir = this.settings.sync_folder.replace(/^\/|\/$/g, '') // remove first and last slash
+      this.py_folder = this.project_path + "/"
+      if(dir){
+        this.py_folder += dir+"/"
+      }
+
+
+      this.files = null
+      this.file_hashes = null
+
+      var sync_folder = this.settings.sync_folder
+      var folder_name = sync_folder == "" ? "main folder" : sync_folder
+      this.folder_name = folder_name
+
+
+      this.files = this._getFiles(this.py_folder)
+      this.file_hashes = this._getFilesHashed(this.files)
     }
-
-    this.files = null
-    this.file_hashes = null
-
-    var sync_folder = this.settings.sync_folder
-    var folder_name = sync_folder == "" ? "main folder" : sync_folder
-    this.folder_name = folder_name
-
-
-    this.files = this._getFiles(this.py_folder)
-    this.file_hashes = this._getFilesHashed(this.files)
   }
 
   check_file_size(cb){
     var _this = this
-    this.monitor.getFreeMemory(function(size){
+    this.shell.getFreeMemory(function(size){
       if(_this.method == 'send' && size*1000 < _this.total_file_size){
         var mssg = "Not enough space left on device ("+size+"kb) to fit  "+_this.total_number_of_files.toString()+" files of ("+parseInt(_this.total_file_size/1000).toString()+"kb)"
         cb(size,Error(mssg))
@@ -134,14 +139,12 @@ export default class Sync {
   }
 
   start(oncomplete){
-    var _this = this
-    this.__safe_boot(function(err){
-      _this.__start_sync(oncomplete,'send')
-    })
-
+    this.settings.refresh()
+    this.__start_sync(oncomplete,'send')
   }
 
   start_receive(oncomplete){
+    this.settings.refresh()
     this.__start_sync(oncomplete,'receive')
   }
 
@@ -162,51 +165,50 @@ export default class Sync {
       return
     }
 
-
-    // make sure next messages will be written on a new line
-    this.terminal.enter()
-
     // check if project is ready to sync
     var ready = this.isReady()
     if(ready instanceof Error){
-      console.log("Not ready")
       this.sync_done(ready)
       return
     }
 
-    // start sync
+    // make sure next messages will be written on a new line
+    this.terminal.enter()
+
     this.terminal.write(this.method_action+" project ("+this.folder_name+")...\r\n")
 
-    // this.progress("Reading files from board")
+    
+    this.__safe_boot(function(err){
 
-    _this.logger.silly("Start monitor")
 
-    _this.start_monitor(function(err){
-      _this.in_raw_mode = true
-      _this.logger.silly("Entered raw mode")
-
-      if(err || !_this.isrunning){
-        console.log(err)
-        _this.throwError(cb,err)
-        _this.exit()
-
+      if(err){
+        _this.logger.error("Safeboot failed")
+        _this.logger.error(err)
       }else{
+        _this.logger.info("Safeboot succesful")
+      }
 
-        if(_this.method=='receive'){
-          _this.__receive(cb,err)
+      _this.logger.silly("Start shell")
+
+      _this.start_shell(function(err){
+        _this.in_raw_mode = true
+        _this.logger.silly("Entered raw mode")
+
+        if(err || !_this.isrunning){
+          this.logger.error(err)
+          _this.throwError(cb,err)
+          _this.exit()
+
         }else{
 
-          _this.check_file_size(function(size_kb,err){
-            if(err || !_this.isrunning){
-              console.log(err)
-              _this.throwError(cb,err)
-              _this.exit()
-              return
-            }
+
+          if(_this.method=='receive'){
+            _this.__receive(cb,err)
+          }else{
             _this.__send(cb,err)
-          })
+          }
         }
-      }
+      })
     })
   }
 
@@ -221,7 +223,7 @@ export default class Sync {
       return
     }
 
-    this.monitor.listFiles(function(err,file_list){
+    this.shell.list_files(function(err,file_list){
       if(err){
         _this.progress("Failed to read files from board, canceling file download")
         _this.throwError(cb,err)
@@ -232,11 +234,11 @@ export default class Sync {
       var existing_files = []
       for(var i=0;i<file_list.length;i++){
         var file = file_list[i]
-        if(_this.allowed_file_types.indexOf(file[0].split('.').pop()) > -1){
-          if(_this.files.indexOf(file[0]) > -1){
-            existing_files.push(file[0])
+        if(_this.allowed_file_types.indexOf(file.split('.').pop()) > -1){
+          if(_this.files.indexOf(file) > -1){
+            existing_files.push(file)
           }else{
-            new_files.push(file[0])
+            new_files.push(file)
           }
         }
       }
@@ -339,19 +341,29 @@ export default class Sync {
 
   __safe_boot(cb){
     var _this = this
-    if(!this.settings.safe_boot_on_upload){
-      cb()
-      return
-    }
-    this.get_version(function(version){
-      if(version >= _this.config.safeboot_version){
-        _this.logger.info("Safe booting...")
-        _this.progress("Safe boot device (see settings for more info)")
-        _this.pyboard.safe_boot(cb)
-      }else{
-        _this.logger.info("Version doesn't support safe booting")
+    this.logger.info("Stopping any running programs")
+    _this.pyboard.stop_running_programs_double(function(){
+      this.logger.verbose("Programs stopped")
+      if(!_this.settings.safe_boot_on_upload){
+        _this.progress("Not safe booting, disabled in settings")
         cb()
+        return false
       }
+      _this.get_version(function(err,version,version_str){
+        if(err){
+          _this.logger.info("Error requesting version")
+          _this.progress("Failed getting version number, not safe booting")
+          cb()
+        }else if(version >= _this.config.safeboot_version){
+          _this.logger.info("Safe booting...")
+          _this.progress("Safe booting device... (see settings for more info)")
+          _this.pyboard.safe_boot(cb)
+        }else{
+          _this.logger.info("Version doesn't support safe booting")
+          _this.progress("Safe boot not available for this version ("+version_str+")")
+          cb()
+        }
+      })
     })
   }
 
@@ -363,23 +375,20 @@ export default class Sync {
     }
     var filename = list[i]
     _this.progress("Reading "+filename,true)
-    _this.monitor.readFile(filename,function(err,content){
+    _this.shell.readFile(filename,function(err,content){
       if(err){
         _this.progress("Failed to download "+filename)
-        _this.pyboard.flush(function(){
-          _this.receive_files(i+1,list,cb)
-        })
+        _this.receive_files(i+1,list,cb)
+
       }else{
         var f = _this.py_folder + filename
         _this.ensureDirectoryExistence(f)
-        var stream = fs.createWriteStream(f);
+        var stream = fs.createWriteStream(f)
         stream.once('open', function(fd) {
-          stream.write(content);
-          stream.end();
-          _this.pyboard.flush(function(){
-            _this.receive_files(i+1,list,cb)
-          })
-        });
+          stream.write(content)
+          stream.end()
+          _this.receive_files(i+1,list,cb)
+        })
       }
     })
   }
@@ -396,19 +405,23 @@ export default class Sync {
   get_version(cb){
     var _this = this
     var command = "import os; os.uname().release\r\n"
-    this.pyboard.send_wait_for_blocking(command,'>>>',function(err,content){
+    this.pyboard.send_wait_for_blocking(command,'\'\r\n>>>',function(err,content){
       var version = content.replace(command,'').replace(/>>>/g,'').replace(/'/g,"").replace(/\r\n/g,"").trim()
       var version_int = _this.__calculate_int_version(version)
-
-      if(err){
-        _this.logger.error("Failed to send command: "+command)
+      if(version_int == 0 || isNaN(version_int)){
+        err = new Error("Error retrieving version number")
+      }else{
+        err = undefined
       }
-      cb(version_int)
+      cb(err,version_int,version)
     },1000)
   }
 
   __calculate_int_version(version){
     known_types = ['a', 'b', 'rc', 'r']
+    if(!version){
+      return 0
+    }
     version_parts = version.split(".")
     dots = version_parts.length - 1
     if(dots == 2){
@@ -434,24 +447,25 @@ export default class Sync {
     return parseInt(version_string)
   }
 
-
-
   __send(cb,err){
     var _this = this
     this.progress("Reading file status")
     this.logger.info('Reading pymakr file')
-    this.monitor.readFile('project.pymakr',function(err,content){
+    this.shell.readFile('project.pymakr',function(err,content){
       if(!_this.isrunning){
         _this.throwError(cb,err)
         return
       }
 
       var json_content = []
-      try{
-        json_content = JSON.parse(content)
-        err = false
-      } catch(SyntaxError){
-        err = true
+      if(content != ""){
+        try{
+          json_content = JSON.parse(content)
+          err = false
+        } catch(e){
+          _this.logger.error(e)
+          err = true
+        }
       }
       _this.__write_changes(json_content,cb,err)
     })
@@ -498,15 +512,14 @@ export default class Sync {
             }
             setTimeout(function(){
               _this.logger.info('Writing project file')
-              _this.monitor.writeFile('project.pymakr',JSON.stringify(_this.file_hashes),function(err){
+              project_file_content = JSON.stringify(_this.file_hashes)
+              _this.shell.writeFile('project.pymakr',project_file_content,function(err){
                 if(err || !_this.isrunning){
                   _this.throwError(cb,err)
                   return
                 }
                 _this.logger.info('Exiting...')
-                _this.exit(function(){
-                  _this.complete(cb)
-                })
+                _this.complete(cb)
               })
             },300)
           })
@@ -532,8 +545,6 @@ export default class Sync {
     }else{
       cb(mssg)
     }
-
-
 
     _this.pyboard.stopWaitingForSilent()
 
@@ -561,14 +572,20 @@ export default class Sync {
       var filename = file[0]
       var type = file[1]
       if(type == "d"){
-        _this.progress("Removing "+filename)
-        _this.monitor.removeDir(filename,function(){
+        _this.progress("Removing dir "+filename)
+        _this.shell.removeDir(filename,function(err){
+          if(err){
+            _this.progress("Failed to remove dir "+filename)
+          }
           files.splice(0,1)
           _this.removeFilesRecursive(files,cb,depth+1)
         })
       }else{
-        _this.progress("Removing "+filename)
-        _this.monitor.removeFile(filename,function(){
+        _this.progress("Removing file "+filename)
+        _this.shell.removeFile(filename,function(err){
+          if(err){
+            _this.progress("Failed to remove file "+filename)
+          }
           files.splice(0,1)
           _this.removeFilesRecursive(files,cb,depth+1)
         })
@@ -589,30 +606,28 @@ export default class Sync {
       if(type == "f"){
         var contents = fs.readFileSync(this.py_folder + filename,'utf8')
         _this.progress("Writing file "+filename,true)
-        _this.monitor.writeFile(filename,contents,function(err){
+        _this.shell.writeFile(filename,contents,function(err){
           if(err){
             cb(err)
             return
           }
-          _this.pyboard.flush(function(){
+          // _this.pyboard.flush(function(){
             files.splice(0,1)
             _this.writeFilesRecursive(files,cb,depth+1)
-          })
+          // })
         })
       }else{
         _this.progress("Creating dir "+filename)
-        _this.monitor.createDir(filename,function(){
-          _this.pyboard.flush(function(){
-            files.splice(0,1)
-            _this.writeFilesRecursive(files,cb,depth+1)
-          })
+        _this.shell.createDir(filename,function(){
+          files.splice(0,1)
+          _this.writeFilesRecursive(files,cb,depth+1)
         })
       }
     }
   }
 
-  start_monitor(cb){
-    this.monitor = new Monitor(this.pyboard,cb,this.method)
+  start_shell(cb){
+    this.shell = new Shell(this.pyboard,cb,this.method,this.settings)
   }
 
   _getFiles(dir){
@@ -669,12 +684,19 @@ export default class Sync {
     var changed_files = []
     var changed_folders = []
     var deletes = []
+    // all local files
     for(var i=0;i<hashes.length;i++){
       var h = hashes[i]
       var found = false
+
+
       for(var j=0;j<board_hashes.length;j++){
         var bh = board_hashes[j]
+
+        // search for matching board file
         if(h[0] == bh[0]){
+
+          // check is hash is the same
           if (h[2] != bh[2]){
             if(h[1] == "f"){
               changed_files.push(h)
@@ -698,10 +720,22 @@ export default class Sync {
     for(var i=0;i<board_hashes.length;i++){
       deletes.push(board_hashes[i])
     }
+
+    function compare(a,b) {
+      if (a[1] == 'f' && b[1] != 'f')
+        return -1;
+      if (b[1] == 'f' && a[1] != 'f')
+        return 1;
+      return 0;
+    }
+
+    deletes.sort(compare);
+
     return {'delete': deletes, 'files': changed_files,'folders': changed_folders}
   }
 
+
   exit(cb){
-    this.monitor.exit(cb)
+    this.shell.exit(cb)
   }
 }

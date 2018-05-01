@@ -18,18 +18,11 @@ try {
       plf = 'win32'
     }
 
-    // workaround for missing bindings on windows 64
-    // if(plf == 'win'){
-    //   require("../../precompiles/serialport-" + plf + "/lib/index");
-    // }
-
     SerialPort = require("../../precompiles/serialport-" + plf + "/lib/serialport");
   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
     throw e;
   }
 }
-
-
 
 export default class PySerial {
 
@@ -99,7 +92,7 @@ export default class PySerial {
     this.onmessage = cb
     this.stream.on('data',function(data){
       var data_str = data.toString()
-      data = Buffer(data)  
+      data = Buffer(data)
       _this.onmessage(data_str,data)
     })
   }
@@ -122,7 +115,6 @@ export default class PySerial {
     var mssg = '\x1b\x1b' + cmd
     var data = new Buffer(mssg,"binary")
     this.send_raw(data,function(){
-      // setTimeout(cb,400)
       cb()
     })
   }
@@ -143,29 +135,39 @@ export default class PySerial {
 
   static list(cb){
     SerialPort.list(function(err,ports){
+      console.log("Not list, prepairing return value")
       var portnames = []
       var other_portnames = []
+      var manufacurers = []
+      var other_manufacurers = []
       for(var i=0;i<ports.length;i++){
         var name = ports[i].comName
+
         if(name.indexOf('Bluetooth') == -1){
-          var manu = ports[i].manufacturer
+          var manu = ports[i].manufacturer ? ports[i].manufacturer : "Unknown manufacturer"
           if(COMPORT_MANUFACTURERS.indexOf(manu) > -1){
             if(COMPORT_MANUFACTURERS[0] == manu){
-              portnames.unshift(ports[i].comName) // push to top of array
+              portnames.unshift(name) // push to top of array
+              manufacurers.unshift(manu) // push to top of array
             }else{
-              portnames.push(ports[i].comName)
+              portnames.push(name)
+              manufacurers.push(manu) // push to top of array
             }
           }else{
-            other_portnames.push(ports[i].comName)
+            other_portnames.push(name)
+            other_manufacurers.push(manu) // push to top of array
           }
         }
       }
-      cb(portnames.concat(other_portnames))
+
+      var result = portnames.concat(other_portnames)
+      var manus = manufacurers.concat(other_manufacurers)
+      console.log("Returning two lists")
+      cb(result,manus)
     })
   }
 
   sendPing(cb){
-    var _this = this
     // not implemented
     if(this.dtr_supported){
       this.stream.set({dtr: true},function(err){

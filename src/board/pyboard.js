@@ -11,8 +11,9 @@ var CTRL_A = '\x01' // raw repl
 var CTRL_B = '\x02' // exit raw repl
 var CTRL_C = '\x03' // ctrl-c
 var CTRL_D = '\x04' // reset (ctrl-d)
-var CTRL_E = '\x05' // reset (ctrl-d)
-var CTRL_F = '\x06' // reset (ctrl-d)
+var CTRL_E = '\x05' // paste mode (ctrl-e)
+var CTRL_F = '\x06' // safe boot (ctrl-f)
+var EOF = '\x04'    // end of file
 
 
 //statuses
@@ -21,6 +22,7 @@ var CONNECTED=1
 var FRIENDLY_REPL=2
 var RAW_REPL=3
 var RUNNING_FILE=4
+
 
 export default class Pyboard {
 
@@ -135,30 +137,44 @@ export default class Pyboard {
     },2000)
   }
 
-  soft_reset(cb){
-    this.send_wait_for_blocking(CTRL_D,"OK",cb,5000)
+  soft_reset(cb,timeout){
+    if(!timeout){
+      timeout = 5000
+    }
+    this.logger.info("Soft reset")
+    var wait_for = this.status == RAW_REPL ? ">" : "OK"
+    this.send_wait_for_blocking(CTRL_D,wait_for,cb,timeout)
+  }
+
+  soft_reset_no_follow(cb){
+    this.logger.info("Soft reset no follow")
+    this.send(CTRL_D,cb,5000)
   }
 
   safe_boot(cb){
     var _this = this
-
+    this.logger.info("Safe boot")
     this.send_wait_for(CTRL_F,'Type "help()" for more information.\r\n>>>',function(err){
-      if(err){
-        _this.stop_running_programs(cb)
-      }else{
-        cb()
-      }
-    },2000)
+      cb(err)
+    },4000)
 
   }
 
   stop_running_programs(cb){
-    this.send_wait_for(CTRL_C,">>>",function(){
-      if(cb) cb()
-    },1000)
+    this.send_wait_for(CTRL_C,">>>",function(err){
+      if(cb) cb(err)
+    },5000)
   }
 
+  stop_running_programs_double(cb){
+    this.send_wait_for(CTRL_C+CTRL_C,">>>",function(err){
+      if(cb) cb(err)
+    },5000)
+  }
+
+
   stop_running_programs_nofollow(callback){
+    this.logger.info("CTRL-C (nofollow)")
     this.send_with_enter(CTRL_C,function(){
       callback()
     })
@@ -167,6 +183,7 @@ export default class Pyboard {
   enter_raw_repl_no_reset(callback){
     var _this = this
       _this.flush(function(){
+        _this.logger.info("Entering raw repl")
         _this.send_wait_for_blocking(CTRL_A,'raw REPL; CTRL-B to exit\r\n>',function(err){
           if(!err){
             _this.setStatus(RAW_REPL)
@@ -287,12 +304,16 @@ export default class Pyboard {
       this.onmessage(mssg)
     }
     var err_in_output = this.getErrorMessage(mssg)
-    this.logger.silly("Error in output: "+err_in_output)
+
+    this.receive_buffer += mssg
+    this.receive_buffer_raw = Buffer.concat([this.receive_buffer_raw,raw])
+
+    this.logger.silly('Buffer length now '+this.receive_buffer.length)
+
     if(err_in_output != ""){
+      this.logger.silly("Error in output: "+err_in_output)
       var err = new Error(err_in_output)
       if(this.waiting_for != null){
-        this.receive_buffer += mssg
-        this.receive_buffer_raw = Buffer.concat([this.receive_buffer_raw,raw])
         this.stopWaitingFor(this.receive_buffer,this.receive_buffer_raw, err)
       }else{
         this.onerror(err)
@@ -300,8 +321,6 @@ export default class Pyboard {
 
     }else if(this.waiting_for != null && mssg){
       this.logger.silly("Waiting for "+this.waiting_for)
-      this.receive_buffer += mssg
-      this.receive_buffer_raw = Buffer.concat([this.receive_buffer_raw,raw])
       if(this.receive_buffer === undefined) this.receive_buffer = ""
       if(this.receive_buffer.indexOf("Invalid credentials, try again.") > -1){
         this._disconnected()
@@ -317,12 +336,12 @@ export default class Pyboard {
         if(this.receive_buffer.length >= this.waiting_for){
           this.stopWaitingFor(this.receive_buffer,this.receive_buffer_raw)
         }
-      }else if(this.receive_buffer.indexOf(this.waiting_for) > -1 ){
+      }else if(this.receive_buffer.indexOf(this.waiting_for) > -1 || this.receive_buffer_raw.indexOf(this.waiting_for) > -1){
         var trail = this.receive_buffer.split(this.waiting_for).pop(-1)
         if(trail && trail.length > 0 && this.wait_for_block){
           this.onmessage(trail)
         }
-        this.stopWaitingFor(mssg,raw)
+        this.stopWaitingFor(this.receive_buffer,this.receive_buffer_raw)
       }
     }
   }
@@ -334,10 +353,13 @@ export default class Pyboard {
   }
 
   stopWaitingFor(mssg,raw,err){
-    this.logger.silly("Stopping waiting for")
+    this.logger.silly("Stopping waiting for, got message of "+mssg.length+" chars")
     this.stopWaitingForSilent()
     if(this.waiting_for_cb){
+      this.logger.silly("Callback after waiting for")
       this.waiting_for_cb(err,mssg,raw)
+    }else{
+      this.logger.silly("No callback after waiting")
     }
   }
 
@@ -404,7 +426,6 @@ export default class Pyboard {
     })
   }
 
-
   send_user_input(mssg,cb){
     this.send(mssg,cb)
   }
@@ -439,15 +460,19 @@ export default class Pyboard {
     this.wait_for_blocking(number,cb,timeout,'length')
   }
 
-  wait_for(wait_for,cb,timeout,type){
+  wait_for(wait_for,cb,timeout,type,clear=true){
     if(!type){ type = 'string'}
     this.waiting_for_type = type
     this.wait_for_block = false
     this.waiting_for = wait_for;
     this.waiting_for_cb = cb;
     this.waiting_for_timeout = timeout;
-    this.receive_buffer = ""
-    this.receive_buffer_raw = Buffer(0)
+    if(clear){
+      this.receive_buffer = ""
+      this.receive_buffer_raw = Buffer(0)
+    }
+
+
     var _this = this
     if(timeout){
       this.waiting_for_timer = setTimeout(function(){
@@ -456,9 +481,18 @@ export default class Pyboard {
           _this.waiting_for_cb = null
           _this.wait_for_block = false
           _this.waiting_for = null
+          _this.receive_buffer = ""
+          _this.receive_buffer_raw = Buffer(0)
         }
       },timeout)
     }
+  }
+
+  follow(cb){
+    var _this = this
+    var data_err,data = ""
+    this.logger.verbose("Following up...")  
+    cb(null,"")
   }
 
   send_raw(mssg,cb){
@@ -466,23 +500,28 @@ export default class Pyboard {
   }
 
   exec_raw_no_reset(code,cb){
-    var command_bytes = new Buffer(code,"binary")
-    // for(var i=0;i<command_bytes.length;i+=265){
-    var data = command_bytes
+    this.logger.info("Executing code:" +code)
+    var data = new Buffer(code,"binary")
     this.send_raw(data,function(err){
-      cb(err)
+      if(cb){
+        cb(err)
+      }
     })
   }
 
-  exec_raw(code,cb){
+  exec_raw(code,cb,timeout){
     var _this = this
     this.exec_raw_no_reset(code,function(){
-      // _this.flush(function(){
-        _this.soft_reset(function(){
-          cb()
-        })
-      // })
+      _this.logger.silly("Executed raw code, now resetting")
+        _this.soft_reset(cb,timeout)
+    })
+  }
 
+  exec_(code,cb){
+    var _this = this
+    this.exec_raw_no_reset("\r\n"+code,function(){
+        _this.logger.silly("Executed code, now resetting")
+          _this.soft_reset(cb)
     })
   }
 

@@ -147,21 +147,22 @@ export default class Pymakr {
   }
 
   getSerial(){
+    console.log("Getting serial list...")
     var _this = this
     this.terminal.enter()
 
-    Pyserial.list(function(list){
+    Pyserial.list(function(list,manufacturers){
+      console.log("Got it!")
       _this.terminal.writeln("Found "+list.length+" serialport"+(list.length == 1 ? "" : "s"))
       for(var i=0;i<list.length;i++){
-        var text = list[i]
+        var name = list[i]
+        var text = name + " (" + manufacturers[i]+ ")"
         if(i==0){
-          _this.api.writeToCipboard(text)
+          _this.api.writeToCipboard(name)
           text += " (copied to clipboard)"
         }
+
         _this.terminal.writeln(text)
-      }
-      if(_this.pyboard.connected){
-        _this.terminal.writePrompt()
       }
     })
   }
