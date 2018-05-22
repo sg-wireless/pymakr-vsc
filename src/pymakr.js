@@ -59,8 +59,12 @@ export default class Pymakr {
       _this.run()
     })
 
-    this.view.on('sync',function(){
-      _this.sync()
+    this.view.on('download',function(){
+      _this.download()
+    })
+
+    this.view.on('upload',function(){
+      _this.upload()
     })
 
     this.view.on('global_settings',function(){
@@ -147,12 +151,10 @@ export default class Pymakr {
   }
 
   getSerial(){
-    console.log("Getting serial list...")
     var _this = this
     this.terminal.enter()
 
     Pyserial.list(function(list,manufacturers){
-      console.log("Got it!")
       _this.terminal.writeln("Found "+list.length+" serialport"+(list.length == 1 ? "" : "s"))
       for(var i=0;i<list.length;i++){
         var name = list[i]

@@ -24,7 +24,7 @@ export default class Utils{
     }
 
     parse_error(content){
-        err_index = content.indexOf("OSError:")
+        var err_index = content.indexOf("OSError:")
         if(err_index > -1){
             return Error(content.slice(err_index,content.length-2))
         }else{

@@ -7,7 +7,7 @@ export default class Runner {
     this.pyboard = pyboard
     this.terminal = terminal
     this.pymakr = pymakr
-    this.api = this.api = new ApiWrapper()
+    this.api = new ApiWrapper()
     this.busy = false
   }
 

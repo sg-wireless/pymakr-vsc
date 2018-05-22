@@ -11,8 +11,6 @@ var EventEmitter = require('events');
 const ee = new EventEmitter();
 
 export default class Shell {
-  
-  
 
   constructor(pyboard,cb,method,settings){
     this.BIN_CHUNK_SIZE = 512
@@ -23,11 +21,7 @@ export default class Shell {
     this.logger = new Logger('Monitor')
     this.workers = new ShellWorkers(this,pyboard,settings)
     this.utils = new Utils()
-    var lib_folder = this.api.getPackageSrcPath()
-
-    var data = fs.readFileSync(lib_folder + 'python/minified/monitor.py','utf8')
     this.logger.silly("Try to enter raw mode")
-    var _this = this
     this.pyboard.enter_raw_repl_no_reset(cb)
   }
 

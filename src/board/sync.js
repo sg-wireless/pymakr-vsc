@@ -177,7 +177,6 @@ export default class Sync {
 
     this.terminal.write(this.method_action+" project ("+this.folder_name+")...\r\n")
 
-    
     this.__safe_boot(function(err){
 
 
@@ -324,13 +323,10 @@ export default class Sync {
           return true
         }
 
-        atom.confirm(
-          {
-            message: "Downloading files",
-            detailedMessage: mssg+". Do you want to download these files into your project ("+_this.project_name+" - "+_this.folder_name+"), overwriting existing files?",
-            buttons: options
-          }
-        )
+        mssg = "Do you want to download these files into your project ("+_this.project_name+" - "+_this.folder_name+"), overwriting existing files?"
+        _this.progress(mssg)
+        _this.progress("(Use the confirmation box at the top of the screen)")
+        _this.api.confirm("Downloading files",mssg,options)
       },100)
     })
   }
@@ -341,9 +337,8 @@ export default class Sync {
 
   __safe_boot(cb){
     var _this = this
-    this.logger.info("Stopping any running programs")
     _this.pyboard.stop_running_programs_double(function(){
-      this.logger.verbose("Programs stopped")
+
       if(!_this.settings.safe_boot_on_upload){
         _this.progress("Not safe booting, disabled in settings")
         cb()
@@ -418,12 +413,12 @@ export default class Sync {
   }
 
   __calculate_int_version(version){
-    known_types = ['a', 'b', 'rc', 'r']
+    var known_types = ['a', 'b', 'rc', 'r']
     if(!version){
       return 0
     }
-    version_parts = version.split(".")
-    dots = version_parts.length - 1
+    var version_parts = version.split(".")
+    var dots = version_parts.length - 1
     if(dots == 2){
       version_parts.push('0')
     }
@@ -435,10 +430,10 @@ export default class Sync {
       }
     }
 
-    version_string = ""
+    var version_string = ""
 
     for(var i=0;i<version_parts.length;i++){
-      val = version_parts[i]
+      var val = version_parts[i]
       if(parseInt(val) < 10){
         version_parts[i] = '0'+val
       }
@@ -450,7 +445,7 @@ export default class Sync {
   __send(cb,err){
     var _this = this
     this.progress("Reading file status")
-    this.logger.info('Reading pymakr file')
+    this.logger.info('Reading pymakr filestart')
     this.shell.readFile('project.pymakr',function(err,content){
       if(!_this.isrunning){
         _this.throwError(cb,err)
@@ -512,7 +507,7 @@ export default class Sync {
             }
             setTimeout(function(){
               _this.logger.info('Writing project file')
-              project_file_content = JSON.stringify(_this.file_hashes)
+              var project_file_content = JSON.stringify(_this.file_hashes)
               _this.shell.writeFile('project.pymakr',project_file_content,function(err){
                 if(err || !_this.isrunning){
                   _this.throwError(cb,err)
