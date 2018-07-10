@@ -96,11 +96,23 @@ export default class SettingsWrapper extends EventEmitter {
   }
 
   refresh(){
-    this.refreshProjectConfig()
     this.refreshGlobalConfig()
+    this.refreshProjectConfig()
 
   }
   refreshGlobalConfig(){
+
+    this.logger.info("Refreshing global config")
+    try{
+      var contents = this.readConfigFileSync(this.global_config_file)
+      this.global_config = contents
+      console.log(contents)
+    }catch(e){
+      this.emit('format_error')
+      console.log(e)
+      return
+    }
+    
     this.address = this.api.config('address')
     this.username = this.api.config('username')
     this.password = this.api.config('password')
@@ -155,6 +167,21 @@ export default class SettingsWrapper extends EventEmitter {
       cb()
     }
   }
+  
+  readConfigFileSync(path){
+    console.log("Reading config file" +path)
+    var contents = fs.readFileSync(path,{encoding: 'utf-8'})
+    console.log("Read file")
+    
+    console.log(contents)
+    console.log("Parsing content")
+    contents = JSON.parse(contents)
+    console.log(contents)
+    
+    return contents
+    
+
+  }
 
   readConfigFile(path,check_complete,cb){
     var _this = this
@@ -196,27 +223,11 @@ export default class SettingsWrapper extends EventEmitter {
     this.project_config = {}
     this.project_path = this.api.getProjectPath()
     this.config_file = this.project_path+"/pymakr.conf"
-    var contents = null
-    try{
-      contents = fs.readFileSync(this.config_file,{encoding: 'utf-8'})
-      this.logger.silly("Found contents")
-    }catch(Error){
-      // file not found
-      return null
-    }
-
+    var contents = this.readConfigFileSync(this.config_file)
+    
     if(contents){
-      try{
-        var conf = JSON.parse(contents)
-        _this.project_config = conf
-      }catch(SyntaxError){
-        if(_this.json_valid){
-          _this.json_valid = false
-          _this.emit('format_error')
-        }else{
-          _this.json_valid = true
-        }
-      }
+      this.logger.silly("Found contents")
+      this.project_config = contents
       _this.setProjectConfig()
     }
   }

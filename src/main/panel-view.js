@@ -85,7 +85,7 @@ export default class PanelView extends EventEmitter {
     statusBarItem.command = command
     statusBarItem.text = name
     statusBarItem.tooltip = tooltip
-    if(this.settings.statusbar_buttons.indexOf(key) > -1 || key == 'listcommands'){
+    if((this.settings.statusbar_buttons && this.settings.statusbar_buttons.indexOf(key) > -1) || key == 'listcommands'){
       statusBarItem.show()
     }
     this.statusItemPrio-=1
