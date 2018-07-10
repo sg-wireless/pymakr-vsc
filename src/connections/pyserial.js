@@ -3,7 +3,6 @@
 import Logger from '../helpers/logger.js'
 var fs = require('fs');
 
-var COMPORT_MANUFACTURERS = ['Pycom Ltd.','FTDI','Pycom']
 
 var SerialPort = null
 try {
@@ -18,6 +17,10 @@ try {
       plf = 'win32'
     }
 
+    if(plf == 'win' || plf == 'win32'){
+      require("../../precompiles/serialport-" + plf + "/lib/index")
+    }
+
     SerialPort = require("../../precompiles/serialport-" + plf + "/lib/serialport");
   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
     throw e;
@@ -26,12 +29,13 @@ try {
 
 export default class PySerial {
 
-  constructor(params){
+  constructor(address,params){
     this.type = "serial"
     this.params = params
+    this.address = address
     this.ayt_pending = false
     this.logger = new Logger('PySerial')
-    this.stream = new SerialPort(this.params.host, {
+    this.stream = new SerialPort(address, {
       baudRate: 115200,
       autoOpen: false
     },function(err){
@@ -41,6 +45,10 @@ export default class PySerial {
     var dtr_support = ['darwin']
 
     this.dtr_supported = dtr_support.indexOf(process.platform) > -1
+  }
+
+  static COMPORT_MANUFACTURERS(){
+    return ['Pycom','Pycom Ltd.','FTDI']
   }
 
 
@@ -104,8 +112,10 @@ export default class PySerial {
 
   send_raw(data,cb){
     var _this = this
+    var r = false
     this.stream.write(data,function(){
       if(cb){
+        r=true
         _this.stream.drain(cb)
       }
     })
@@ -115,6 +125,7 @@ export default class PySerial {
     var mssg = '\x1b\x1b' + cmd
     var data = new Buffer(mssg,"binary")
     this.send_raw(data,function(){
+      // setTimeout(cb,400)
       cb()
     })
   }
@@ -133,41 +144,69 @@ export default class PySerial {
     }
   }
 
+  static listPycom(cb){
+    var pycom_list = []
+    var pycom_manus = []
+    console.log("Listpycom")
+    PySerial.list(function(names,manus){
+      console.log("got pycom list")
+      for(var i=0;i<names.length;i++){
+        var name = names[i]
+        var manu = manus[i]
+        if(PySerial.COMPORT_MANUFACTURERS().indexOf(manu) > -1){
+          pycom_list.push(name)
+          pycom_manus.push(manu)
+        }
+      }
+      cb(pycom_list,pycom_manus)
+    })
+  }
+
   static list(cb){
+    console.log("List ports")
     SerialPort.list(function(err,ports){
-      console.log("Not list, prepairing return value")
+      console.log("got list")
       var portnames = []
       var other_portnames = []
-      var manufacurers = []
-      var other_manufacurers = []
+      var manufacturers = []
+      var other_manufacturers = []
       for(var i=0;i<ports.length;i++){
         var name = ports[i].comName
 
         if(name.indexOf('Bluetooth') == -1){
           var manu = ports[i].manufacturer ? ports[i].manufacturer : "Unknown manufacturer"
-          if(COMPORT_MANUFACTURERS.indexOf(manu) > -1){
-            if(COMPORT_MANUFACTURERS[0] == manu){
-              portnames.unshift(name) // push to top of array
-              manufacurers.unshift(manu) // push to top of array
-            }else{
-              portnames.push(name)
-              manufacurers.push(manu) // push to top of array
+          var pycom_manu_index = PySerial.COMPORT_MANUFACTURERS().indexOf(manu)
+          if(pycom_manu_index > -1){
+            var j;
+            for(j=0;j<manufacturers.length;j++){
+              if(pycom_manu_index < PySerial.COMPORT_MANUFACTURERS().indexOf(manufacturers[j])){
+                break
+              }
             }
+            portnames.splice(j,0,name)
+            manufacturers.splice(j,0,manu)
+            // if(PySerial.COMPORT_MANUFACTURERS[0] == manu){
+            //   portnames.unshift(name) // push to top of array
+            //   manufacurers.unshift(manu) // push to top of array
+            // }else{
+            //   portnames.push(name)
+            //   manufacurers.push(manu) // push to top of array
+            // }
           }else{
             other_portnames.push(name)
-            other_manufacurers.push(manu) // push to top of array
+            other_manufacturers.push(manu) // push to top of array
           }
         }
       }
 
       var result = portnames.concat(other_portnames)
-      var manus = manufacurers.concat(other_manufacurers)
-      console.log("Returning two lists")
+      var manus = manufacturers.concat(other_manufacturers)
       cb(result,manus)
     })
   }
 
   sendPing(cb){
+    var _this = this
     // not implemented
     if(this.dtr_supported){
       this.stream.set({dtr: true},function(err){

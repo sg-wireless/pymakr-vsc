@@ -8,7 +8,7 @@ var EventEmitter = require('events');
 const ee = new EventEmitter();
 
 export default class ShellWorkers {
-  
+
 
   constructor(shell,pyboard,settings){
     this.BIN_CHUNK_SIZE = 512
@@ -18,23 +18,32 @@ export default class ShellWorkers {
     this.logger = new Logger('ShellWorkers')
   }
 
-  write_file(content,callback){
+  write_file(value,callback){
     var _this = this
     var blocksize = _this.BIN_CHUNK_SIZE
-    var chunk = content.slice(0,blocksize)
-    content = content.slice(blocksize,content.length)
-    if(chunk.length == 0){
+    var content = value[0]
+    var counter = value[1]
+
+    if(counter*blocksize >= content.length){
       callback(null,content,true)
     }else{
-      var c = binascii.hexlify(chunk)
-      _this.pyboard.exec_raw("f.write(ubinascii.unhexlify('"+c+"'))\r\n",function(err,data){
+      var start = counter*blocksize
+      var end = Math.min((counter+1)*blocksize,content.length)
+      var chunk = content.base64Slice(start,end)
+      // c = binascii.b2a_base64(chunk)
+
+      _this.pyboard.exec_raw("f.write(ubinascii.a2b_base64('"+chunk+"'))\r\n",function(err,data){
+        if(data.indexOf("Traceback: ") > -1 || data.indexOf("Error: ") > -1){
+          err_mssg = data.slice(data.indexOf("Error: ")+7,-3)
+          err = new Error("Failed to write file: "+err_mssg)
+        }
         if(err){
           _this.logger.error("Failed to write chunk:")
           _this.logger.error(err)
-          callback(err)
+          callback(err,null)
           return
         }
-        callback(null,content)
+        callback(null,[content,counter+1])
       })
     }
   }
@@ -51,15 +60,15 @@ export default class ShellWorkers {
       names = names.splice(1)
       var is_dir = current_file.indexOf('.') == -1
       if(is_dir){
-        var c = "import ubinascii,sys\r\n"
+        c = "import ubinascii,sys\r\n"
         c += "list = ubinascii.hexlify(str(os.listdir('"+current_file_root + "')))\r\n"
         c += "sys.stdout.write(list)\r\n"
         _this.shell.eval(c,function(err,content){
             if(content){
-              var data = binascii.unhexlify(content)
+              data = binascii.unhexlify(content)
               data = data.slice(1,-2)
               try{
-                var list = eval(data)
+                list = eval(data)
                 for(var i=0;i<list.length;i++){
                   var item = list[i]
                   names.push(_this.get_file_with_path(current_file_root,item))
@@ -75,7 +84,7 @@ export default class ShellWorkers {
             }
         })
       }else{
-        var file_path = current_file_root
+        file_path = current_file_root
         if(file_path[0] == "/"){
           file_path = file_path.substring(1)
         }
@@ -91,13 +100,13 @@ export default class ShellWorkers {
   }
 
   get_file_with_path(root,file){
-    var root_cleaned = root.replace('/flash/','')
+    root_cleaned = root.replace('/flash/','')
     root_cleaned = root_cleaned.replace('flash/','')
 
     if(root_cleaned != ""){
        root_cleaned += "/"
     }
-    var file_path = root_cleaned + file
+    file_path = root_cleaned + file
     if(file_path[0] == "/"){
       file_path = file_path.substring(1)
     }

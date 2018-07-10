@@ -1,7 +1,7 @@
 'use babel';
 const EventEmitter = require('events');
 import ApiWrapper from './api-wrapper.js';
-import Logger from '../helpers/logger.js'
+import Logger from '../helpers/logger.js';
 var fs = require('fs');
 var vscode = require('vscode');
 import Utils from '../helpers/utils.js';
@@ -12,23 +12,46 @@ export default class SettingsWrapper extends EventEmitter {
   constructor() {
     super()
     this.project_config = {}
-    this.api = new ApiWrapper()
+    this.api = new ApiWrapper(this)
     this.project_path = this.api.getProjectPath()
+    console.log(this.project_path)
+    this.global_config_file = Utils.getConfigPath("pymakr.json")
     this.config_file = this.project_path+"/pymakr.conf"
+    console.log(this.config_file)
     this.json_valid = true
     this.logger = new Logger('SettingsWrapper')
     this.project_change_callbacks = []
-
-    this.refresh()
-    this.watchConfigFile()
-    this.watchProjectChange()
-
+    this.global_config = {}
+    this.watching = {}
+    this.file_watcher = {}
+    var _this = this
+    
+    this.readConfigFile(this.global_config_file,true,function(contents){
+      _this.global_config = contents
+      _this.readConfigFile(_this.config_file,false,function(contents){
+        _this.project_config = contents
+        _this.refresh()
+        _this.watchProjectChange()
+      })
+    })
+    
+    // this.watchConfigFile(this.config_file)
+    
   }
+
+  onChange(key,cb){
+    var _this = this
+    this.api.onConfigChange(key,function(value){
+      _this[key] = value.newValue
+      cb(value.oldValue,value.newValue)
+    })
+  }
+
 
   projectChanged(){
     this.getProjectPath()
     this.refreshProjectConfig()
-    this.watchConfigFile()
+    this.watchConfigFile(this.config_file)
   }
 
   getProjectPath(){
@@ -51,17 +74,19 @@ export default class SettingsWrapper extends EventEmitter {
     })
   }
 
-  watchConfigFile(){
-    this.logger.info("Watching config file "+this.config_file)
+  watchConfigFile(file){
+    this.logger.info("Watching config file "+file)
     var _this = this
-    if(this.file_watcher){
-      this.file_watcher.close()
+    if(this.file_watcher[file]){
+      console.log("Already being watched, close previous")
+      this.file_watcher[file].close()
     }
-    fs.open(this.config_file,'r',function(err,content){
+    fs.open(file,'r',function(err,content){
       if(!err){
-        _this.file_watcher = fs.watch(_this.config_file,null,function(err){
+        console.log("Now watching config")
+        _this.file_watcher[file] = fs.watch(file,null,function(err){
           _this.logger.info("Config file changed, refreshing settings")
-          _this.refreshProjectConfig()
+          _this.refresh()
         })
       }else{
         _this.logger.warning("Error opening config file ")
@@ -81,21 +106,89 @@ export default class SettingsWrapper extends EventEmitter {
     this.password = this.api.config('password')
     this.sync_folder = this.api.config('sync_folder')
     this.sync_file_types = this.api.config('sync_file_types')
+    this.sync_all_file_types = this.api.config('sync_all_file_types')
+    
     this.ctrl_c_on_connect = this.api.config('ctrl_c_on_connect')
     this.open_on_start = this.api.config('open_on_start')
     this.safe_boot_on_upload = this.api.config('safe_boot_on_upload')
     this.statusbar_buttons = this.api.config('statusbar_buttons')
     this.reboot_after_upload = this.api.config('reboot_after_upload')
+    this.auto_connect = this.api.config('auto_connect')
 
     this.timeout = 15000
     this.setProjectConfig()
 
     if(this.statusbar_buttons == undefined || this.statusbar_buttons == ""){
-      this.statusbar_buttons = ["connect","upload","download","run"]
+      this.statusbar_buttons = ['status',"connect","upload","download","run"]
     }
     this.statusbar_buttons.push('global_settings')
     this.statusbar_buttons.push('project_settings')
   }
+
+  get_allowed_file_types(){
+    var types = this.sync_file_types.split(',')
+    for(var i = 0; i < types.length; i++) {
+      types[i] = types[i].trim();
+    }
+    return types
+  }
+
+
+  checkConfigComplete(path,contents,cb){
+    console.log("Config complete?")
+    if(!this.isConfigComplete(contents)){
+      contents = this.completeConfig(contents)
+      console.log("No, new config:")
+      console.log(this.contents)
+      var json_string =
+       JSON.stringify(contents,null,'\t')
+      
+      fs.writeFile(path, json_string, function(err) {
+        console.log("Written file with new config")
+        console.log(err)
+        if(cb){
+          cb()
+        }
+      })
+      return json_string
+    }else if(cb){
+      cb()
+    }
+  }
+
+  readConfigFile(path,check_complete,cb){
+    var _this = this
+    console.log("Reading config file" +path)
+    fs.readFile(path,function(err,contents){
+      console.log("Read file")
+      console.log(err)
+      if(!err){
+        try{
+          console.log("Parsing content")
+          contents = JSON.parse(contents)
+          console.log(contents)
+          if(check_complete){
+            console.log("Checking config")
+            _this.checkConfigComplete(path,contents,function(){
+              console.log("Watching config")
+              _this.watchConfigFile(path)
+              if(cb){
+                cb(contents)
+              }
+            })
+          }else if(cb){
+            cb(contents)
+          }
+
+          
+        }catch(e){
+          console.log(e)
+          // config file not properly formatted. TODO: throw error?
+        }
+      }
+    })
+  }
+
 
   refreshProjectConfig(){
     this.logger.info("Refreshing project config")
@@ -162,7 +255,34 @@ export default class SettingsWrapper extends EventEmitter {
 
   }
 
+  isConfigComplete(settings_object){
+    return Object.keys(settings_object).length >= Object.keys(this.getDefaultGlobalConfig()).length
+  }
+
+  completeConfig(settings_object){
+    var default_config = this.getDefaultGlobalConfig()
+    console.log(default_config)
+    if(Object.keys(settings_object).length < Object.keys(default_config).length){
+      for(var k in default_config){
+        if(settings_object[k] === undefined){
+          console.log("Adding "+k+" as "+default_config[k])
+          settings_object[k] = default_config[k]
+        }
+      }
+    }
+    console.log(settings_object)
+    return settings_object
+  }
+
   getDefaultProjectConfig(){
+    return this.__getDefaultConfig(false)
+  }
+
+  getDefaultGlobalConfig(){
+    return this.__getDefaultConfig(true)
+  }
+
+  __getDefaultConfig(global=false){
     var config = {
         "address": this.api.config('address'),
         "username": this.api.config('username'),
@@ -175,6 +295,8 @@ export default class SettingsWrapper extends EventEmitter {
     if(global){
       config.sync_file_types = this.api.config('sync_file_types')
       config.ctrl_c_on_connect = this.api.config('ctrl_c_on_connect')
+      config.sync_all_file_types = this.api.config('sync_all_file_types')
+      config.auto_connect = this.api.config('auto_connect')
     }
     return config
   }
@@ -191,7 +313,7 @@ export default class SettingsWrapper extends EventEmitter {
                 cb(new Error(err))
                 return
               }
-              _this.watchConfigFile()
+              _this.watchConfigFile(config_file)
               var uri = vscode.Uri.file(config_file)
               workspace.openTextDocument(uri).then(function(textDoc){
                 vscode.window.showTextDocument(textDoc)
@@ -210,6 +332,36 @@ export default class SettingsWrapper extends EventEmitter {
     }else{
       cb(new Error("No project open"))
     }
+  }
+
+  openSettingsFile(filename,cb){
+    var _this = this
+    var exists = fs.existsSync(filename)
+    if(!exists){
+      var json_string = _this.newProjectSettingsJson()
+      _this.createSettingsFile(filename,json_string,function(){
+        _this.api.openFile(filename,cb)
+      })
+    }else{
+      _this.api.openFile(filename,cb)
+    }
+
+  }
+
+  createSettingsFile(filename,contents,cb,open=false){
+    var _this = this
+    fs.writeFile(filename, contents, function(err) {
+      if(err){
+        cb(new Error(err))
+        return
+      }
+      _this.watchConfigFile(filename)
+      if(open){
+        _this.api.openFile(filename,cb)
+      }else{
+        cb()
+      } 
+    })
   }
 
   newProjectSettingsJson(){

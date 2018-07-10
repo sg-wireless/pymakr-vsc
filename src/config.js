@@ -3,7 +3,7 @@
 export default class Config {
   static constants(){
     return {
-      logging_level: 1, // 4 = error. anything higher than 5 = off. see logger.js
+      logging_level: 0, // 4 = error. anything higher than 5 = off. see logger.js
       max_sync_size: 350000,
       safeboot_version: 1150002, // 1.15.0.b2
       error_messages: {
@@ -58,62 +58,76 @@ export default class Config {
             type: 'string',
             default: '192.168.4.1',
             title: 'Device address',
-            description: 'Either connect through USB serial using a comport (for example /dev/cu.usbserial-DQ00573Z) or an IP address for a telnet connection. Username and password are not needed for serial connections.',
+            description: 'Either connect through USB serial using a comport, or an IP address for a telnet connection. Username and password are not needed for serial connections.',
             order: 1
+        },
+        auto_connect: {
+            type: 'boolean',
+            default: false,
+            title: 'Autoconnect on USB',
+            description: 'Ignores any \'device address\' setting and automatically connects to the top item in the serialport list',
+            order: 2
         },
         username: {
             type: 'string',
             default: 'micro',
             title: 'User name',
-            order: 2
+            order: 3
         },
         password: {
             type: 'string',
             default: 'python',
             title: 'Password',
-            order: 3
+            order: 4
+        },
+        sync_folder: {
+            type: 'string',
+            default: "",
+            title: 'Sync Folder',
+            description: 'This folder will be uploaded to the pyboard when using the sync button. Leave empty to sync the complete project. (only allows folders within the project). Use a path relative to the project you opened in atom, without leading or trailing slash',
+            order: 5
+        },
+        sync_all_file_types: {
+            type: 'boolean',
+            default: false,
+            title: 'Upload all file types',
+            description: 'If enabled, all files will be uploaded no matter the file type. The list of file types below will be ignored',
+            order: 6
+        },
+        sync_file_types: {
+            type: 'string',
+            default: "py,txt,log,json,xml,html,js,css,mpy",
+            title: 'Upload file types',
+            description: 'All types of files that will be uploaded to the board, seperated by comma. All other filetypes will be ignored during an upload (or download) action',
+            order: 7
         },
         ctrl_c_on_connect: {
             type: 'boolean',
             default: false,
             title: 'Ctrl-c on connect',
             description: 'Stops all running programs when connecting to the board',
-            order: 7
-        },
-        sync_folder: {
-            type: 'string',
-            default: "",
-            title: 'Sync Folder',
-            description: 'This folder will be uploaded to the pyboard when using the sync button. Leave empty to sync the complete project. (only allows folders within the project)',
-            order: 4
-        },
-        sync_file_types: {
-            type: 'string',
-            default: "py,txt,log,json,xml",
-            title: 'Sync file types',
-            description: 'All types of files that will be synced to the board, seperated by comma. All other filetypes will be ignored during a sync action',
-            order: 5
+            order: 8
         },
         open_on_start: {
             type: 'boolean',
             default: true,
             title: 'Open on start',
-            description: 'Open the pymakr console and connect to the board after starting the editor or opening a project',
-            order: 8
+            description: 'Automatically open the pymakr console and connect to the board after starting Atom',
+            order: 9
         },
         safe_boot_on_upload: {
             type: 'boolean',
             default: false,
             title: 'Safe-boot before upload',
-            description: 'Only works with firmware v1.16.0.b1 and up. Safe boots the board before uploading to prevent running out of memory while uploading. Especially useful on older boards with less memory, but adds about 2 seconds to the upload procedure',
-            order: 9
+            description: '[Only works with firmware v1.16.0.b1 and up.] Safe boots the board before uploading to prevent running out of memory while uploading. Especially useful on older boards with less memory, but adds about 2 seconds to the upload procedure',
+            order: 10
         },
         reboot_after_upload: {
             type: 'boolean',
             default: true,
             title: 'Reboot after upload',
             description: 'Reboots your pycom board after any upload or download action',
-            order: 10
+            order: 11
         }
     }
   }

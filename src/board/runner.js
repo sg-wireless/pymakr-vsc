@@ -7,7 +7,7 @@ export default class Runner {
     this.pyboard = pyboard
     this.terminal = terminal
     this.pymakr = pymakr
-    this.api = new ApiWrapper()
+    this.api = this.api = new ApiWrapper()
     this.busy = false
   }
 
@@ -59,10 +59,12 @@ export default class Runner {
       var filename = "untitled file"
       if(name){
         filename = name.split('/').pop(-1)
-        var filetype = filename.split('.').pop(-1)
-        if(filetype.toLowerCase() != 'py'){
-          onerror("Can't run "+filetype+" files, please run only python files")
-          return
+        if(filename.indexOf('.') > -1){
+          var filetype = filename.split('.').pop(-1)
+          if(filetype.toLowerCase() != 'py'){
+            onerror("Can't run "+filetype+" files, please run only python files")
+            return
+          }
         }
       }
       cb(file,filename)

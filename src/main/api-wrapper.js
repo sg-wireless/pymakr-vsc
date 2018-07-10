@@ -6,6 +6,7 @@ var ncp = require('copy-paste')
 import Utils from '../helpers/utils.js';
 import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace, extension} from 'vscode';
 import Config from '../config.js';
+import { OperationCanceledException } from 'typescript';
 
 export default class ApiWrapper {
   constructor(settings) {
@@ -15,15 +16,25 @@ export default class ApiWrapper {
     this.config_file = Utils.getConfigPath("pymakr.json")
     this.is_windows = process.platform == 'win32'
     this.project_path = this.getProjectPath()
+
+  }
+
+  onConfigChange(key,cb){
+   // TODO: implement
   }
 
   config(key){
-    if(this.default_config[key]){
+    if(this.settings.global_config[key] !== undefined){
+      return this.settings.global_config[key]
+    }else if(this.default_config[key] !== undefined){
+      console.log(key,this.default_config[key].default)
       return this.default_config[key].default
     }else{
       null
     }
   }
+
+
 
   openSettings(cb){
     if(!cb){
@@ -33,7 +44,8 @@ export default class ApiWrapper {
     var config_file = this.config_file
     if(config_file){
       if(!this.settingsExist()){
-          var json_string = _this.settings.newSettingsJson(true) // first param to 'true' gets global settings
+          var default_config = _this.settings.getDefaultGlobalConfig() // first param to 'true' gets global settings
+          var json_string = JSON.stringify(default_config,null,'\t')
           fs.writeFile(config_file, json_string, function(err) {
             if(err){
               cb(new Error(err))
@@ -153,6 +165,14 @@ export default class ApiWrapper {
       return path
     }
     return null
+  }
+
+  openFile(filename,cb){
+    var uri = vscode.Uri.file(filename)
+    workspace.openTextDocument(uri).then(function(textDoc){
+      vscode.window.showTextDocument(textDoc)
+      cb()
+    })
   }
 
   getOpenFile(cb,onerror){

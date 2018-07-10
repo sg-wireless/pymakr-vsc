@@ -23,7 +23,6 @@ var FRIENDLY_REPL=2
 var RAW_REPL=3
 var RUNNING_FILE=4
 
-
 export default class Pyboard {
 
   constructor(settings){
@@ -45,12 +44,12 @@ export default class Pyboard {
     this.logger = new Logger('Pyboard')
     this.config = Config.constants()
     this.refreshConfig()
+    this.address = null
   }
 
   refreshConfig(){
     this.settings.refresh()
     this.params = {
-      host: this.settings.address,
       port: 23,
       username: this.settings.username,
       password:this.settings.password,
@@ -58,6 +57,13 @@ export default class Pyboard {
       timeout: this.settings.timeout,
       ctrl_c_on_connect: this.settings.ctrl_c_on_connect
     }
+    if(!this.settings.auto_connect){
+      this.address = this.settings.address
+    }
+  }
+
+  setAddress(address){
+    this.address = address
   }
 
   getCallbacks(){
@@ -67,20 +73,22 @@ export default class Pyboard {
   startPings(interval){
     var _this = this
     this.pingTimer = setInterval(function(){
-      _this.connection.sendPing(function(err){
-        if(err){
-          _this.ping_count+=1
-        }else{
-          _this.ping_count = 0
-        }
+      if(_this.connection){
+        _this.connection.sendPing(function(err){
+          if(err){
+            _this.ping_count+=1
+          }else{
+            _this.ping_count = 0
+          }
 
-        if(_this.ping_count > 1){ // timeout after 2 pings
-          _this.ping_count = 0
-          clearInterval(_this.pingTimer)
-          _this.ontimeout(new Error("Connection lost"))
-          _this.disconnect()
-        }
-      })
+          if(_this.ping_count > 1){ // timeout after 2 pings
+            _this.ping_count = 0
+            clearInterval(_this.pingTimer)
+            _this.ontimeout(new Error("Connection lost"))
+            _this.disconnect()
+          }
+        })
+      }
     },interval*1000)
   }
 
@@ -151,12 +159,13 @@ export default class Pyboard {
     this.send(CTRL_D,cb,5000)
   }
 
-  safe_boot(cb){
+  safe_boot(cb,timeout){
     var _this = this
     this.logger.info("Safe boot")
     this.send_wait_for(CTRL_F,'Type "help()" for more information.\r\n>>>',function(err){
+      this.logger.info("Safe boot done...")
       cb(err)
-    },4000)
+    },timeout)
 
   }
 
@@ -166,10 +175,11 @@ export default class Pyboard {
     },5000)
   }
 
-  stop_running_programs_double(cb){
+  stop_running_programs_double(cb,timeout){
+
     this.send_wait_for(CTRL_C+CTRL_C,">>>",function(err){
       if(cb) cb(err)
-    },5000)
+    },timeout)
   }
 
 
@@ -185,9 +195,11 @@ export default class Pyboard {
       _this.flush(function(){
         _this.logger.info("Entering raw repl")
         _this.send_wait_for_blocking(CTRL_A,'raw REPL; CTRL-B to exit\r\n>',function(err){
+          console.log("entered raw repl")
           if(!err){
             _this.setStatus(RAW_REPL)
           }
+          console.log("CB:")
           callback(err)
         },5000)
       })
@@ -213,23 +225,27 @@ export default class Pyboard {
     this.connect(cb,onerror,ontimeout,onmessage,true)
   }
 
-  connect(callback,onerror,ontimeout,onmessage,raw){
+  connect(address,callback,onerror,ontimeout,onmessage,raw){
     this.connecting = true
     this.onconnect = callback
     this.onmessage = onmessage
     this.ontimeout = ontimeout
     this.onerror = onerror
+    this.address = address
     this.stopWaitingForSilent()
     this.refreshConfig()
     var _this = this
-    Pyserial.isSerialPort(this.params.host,function(res){
+    console.log("Checking if serialport")
+    Pyserial.isSerialPort(this.address,function(res){
+      console.log("Got result")
+      console.log(res)
       _this.isSerial = res
       if(res){
-        _this.connection = new Pyserial(_this.params)
+        _this.connection = new Pyserial(_this.address,_this.params)
       }else if (raw){
-        _this.connection = new Pysocket(_this.params)
+        _this.connection = new Pysocket(_this.address,_this.params)
       }else{
-        _this.connection = new Pytelnet(_this.params)
+        _this.connection = new Pytelnet(_this.address,_this.params)
       }
       _this.type = _this.connection.type
 
@@ -391,14 +407,26 @@ export default class Pyboard {
   }
 
   send(mssg,cb){
+    if(!this.connection){
+      cb(new Error("No connection"))
+      return
+    }
     this.connection.send(mssg,cb)
   }
 
   send_with_enter(mssg,cb){
+    if(!this.connection){
+      cb(new Error("No connection"))
+      return
+    }
     this.connection.send(mssg+'\r\n',cb)
   }
 
   send_cmd(cmd,cb){
+    if(!this.connection){
+      cb(new Error("No connection"))
+      return
+    }
     var mssg = '\x1b' + cmd
     var data = new Buffer(mssg,"binary")
     this.connection.send_raw(data,cb)
@@ -474,15 +502,17 @@ export default class Pyboard {
 
 
     var _this = this
+    clearTimeout(this.waiting_for_timer)
     if(timeout){
       this.waiting_for_timer = setTimeout(function(){
         if (_this.waiting_for_cb) {
-          _this.waiting_for_cb(new Error("timeout"),_this.receive_buffer)
+          var tmp_cb = _this.waiting_for_cb
           _this.waiting_for_cb = null
           _this.wait_for_block = false
           _this.waiting_for = null
           _this.receive_buffer = ""
           _this.receive_buffer_raw = Buffer(0)
+          tmp_cb(new Error("timeout"),_this.receive_buffer)
         }
       },timeout)
     }
@@ -491,16 +521,20 @@ export default class Pyboard {
   follow(cb){
     var _this = this
     var data_err,data = ""
-    this.logger.verbose("Following up...")  
+    this.logger.verbose("Following up...")
     cb(null,"")
   }
 
   send_raw(mssg,cb){
+    if(!this.connection){
+      cb(new Error("No connection"))
+      return
+    }
     this.connection.send_raw(mssg,cb)
   }
 
   exec_raw_no_reset(code,cb){
-    this.logger.info("Executing code:" +code)
+    this.logger.verbose("Executing code:" +code)
     var data = new Buffer(code,"binary")
     this.send_raw(data,function(err){
       if(cb){
@@ -520,12 +554,16 @@ export default class Pyboard {
   exec_(code,cb){
     var _this = this
     this.exec_raw_no_reset("\r\n"+code,function(){
-        _this.logger.silly("Executed code, now resetting")
-          _this.soft_reset(cb)
+      _this.logger.silly("Executed code, now resetting")
+      _this.soft_reset(cb)
     })
   }
 
   flush(cb){
+    if(!this.connection){
+      cb(new Error("No connection"))
+      return
+    }
     this.connection.flush(cb)
   }
 

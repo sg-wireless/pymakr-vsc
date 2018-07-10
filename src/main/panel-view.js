@@ -36,8 +36,8 @@ export default class PanelView extends EventEmitter {
     this.setTitle("not connected")
 
     // terminal logic
-    var onTermConnect = function(){
-      _this.emit('term-connected')
+    var onTermConnect = function(err){
+      _this.emit('term-connected',err)
     }
 
     // create terminal

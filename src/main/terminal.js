@@ -101,6 +101,7 @@ export default class Term {
       });
       this.stream.on('error', function (error) {
         _this.logger.warning('Error while connecting to term')
+        _this.logger.warning(error)
         if(!stopped){
           stopped = true
           _this.connectReattempt(cb)
@@ -108,6 +109,7 @@ export default class Term {
       });
       this.stream.on('close', function (had_error) {
         _this.logger.warning('Term connection closed')
+        _this.logger.warning(had_error)
         if(!stopped){
           stopped = true
           _this.connectReattempt(cb)
