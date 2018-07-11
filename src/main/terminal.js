@@ -89,7 +89,11 @@ export default class Term {
       this.stream = new Socket();
       this.stream.connect(this.port,this.host);
       this.stream.on('connect',function(err){
-        _this.logger.info("Terminal connected")
+        if(err){
+          _this.logger.info("Terminal failed to connect")  
+        }else{
+          _this.logger.info("Terminal connected")
+        }
         _this.connected = true
         cb(err)
       });

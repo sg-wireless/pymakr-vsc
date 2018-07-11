@@ -60,15 +60,15 @@ export default class ShellWorkers {
       names = names.splice(1)
       var is_dir = current_file.indexOf('.') == -1
       if(is_dir){
-        c = "import ubinascii,sys\r\n"
+        var c = "import ubinascii,sys\r\n"
         c += "list = ubinascii.hexlify(str(os.listdir('"+current_file_root + "')))\r\n"
         c += "sys.stdout.write(list)\r\n"
         _this.shell.eval(c,function(err,content){
             if(content){
-              data = binascii.unhexlify(content)
+              var data = binascii.unhexlify(content)
               data = data.slice(1,-2)
               try{
-                list = eval(data)
+                var list = eval(data)
                 for(var i=0;i<list.length;i++){
                   var item = list[i]
                   names.push(_this.get_file_with_path(current_file_root,item))
@@ -84,7 +84,7 @@ export default class ShellWorkers {
             }
         })
       }else{
-        file_path = current_file_root
+        var file_path = current_file_root
         if(file_path[0] == "/"){
           file_path = file_path.substring(1)
         }
@@ -100,13 +100,13 @@ export default class ShellWorkers {
   }
 
   get_file_with_path(root,file){
-    root_cleaned = root.replace('/flash/','')
+    var root_cleaned = root.replace('/flash/','')
     root_cleaned = root_cleaned.replace('flash/','')
 
     if(root_cleaned != ""){
        root_cleaned += "/"
     }
-    file_path = root_cleaned + file
+    var file_path = root_cleaned + file
     if(file_path[0] == "/"){
       file_path = file_path.substring(1)
     }

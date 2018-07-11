@@ -48,8 +48,19 @@ export default class Pymakr extends EventEmitter {
         _this.terminal.write(err)
       }
       _this.logger.info("Connected trigger from view")
-      if(_this.settings.open_on_start){
-        _this.connect()
+
+     // hide panel if it was hidden after last shutdown of atom
+      var close_terminal = serializedState && 'visible' in serializedState && !serializedState.visible
+
+      if(!_this.settings.open_on_start || close_terminal){
+        _this.hidePanel()
+      }else if(serializedState && 'visible' in serializedState && _this.view.visible) {
+        if(_this.settings.auto_connect){
+          _this.startAutoConnect()
+        }else{
+          _this.logger.verbose("No auto connect enabled, connecting normally:")
+          _this.connect()
+        }
       }
     })
 
@@ -169,19 +180,6 @@ export default class Pymakr extends EventEmitter {
       }
     })
 
-    // hide panel if it was hidden after last shutdown of atom
-    var close_terminal = serializedState && 'visible' in serializedState && !serializedState.visible
-
-    if(!this.settings.open_on_start || close_terminal){
-      this.hidePanel()
-    }else if(serializedState && 'visible' in serializedState && _this.view.visible) {
-      if(this.settings.auto_connect){
-        this.startAutoConnect()
-      }else{
-        _this.logger.verbose("No auto connect enabled, connecting normally:")
-        this.connect()
-      }
-    }
 
     this.settings.onChange('auto_connect',function(old_value,new_value){
       var v = new_value

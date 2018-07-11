@@ -66,11 +66,17 @@ export default class Utils {
     var content = ""
     var buffer_list = []
     var b64str_arr = b64str.split('=')
-
+    console.log(b64str_arr.length)
     for(var i=0;i<b64str_arr.length;i++){
       var chunk = b64str_arr[i]
       if(chunk.length > 0){
-        console.log(chunk+'=')
+        if(i == b64str_arr.length-3){
+          chunk += '=='
+        }else{
+          chunk += '='
+        }
+        console.log(i)
+        console.log(chunk)
         var bc = Buffer.from(chunk, 'base64')
         var bc_str = bc.toString()
         console.log(bc_str)
