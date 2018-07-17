@@ -4,6 +4,7 @@ import ApiWrapper from './api-wrapper.js';
 import Logger from '../helpers/logger.js';
 var fs = require('fs');
 var vscode = require('vscode');
+import Config from '../config.js'
 import Utils from '../helpers/utils.js';
 import {workspace} from 'vscode';
 
@@ -11,6 +12,7 @@ import {workspace} from 'vscode';
 export default class SettingsWrapper extends EventEmitter {
   constructor() {
     super()
+    this.config = Config.settings()
     this.project_config = {}
     this.api = new ApiWrapper(this)
     this.project_path = this.api.getProjectPath()
@@ -22,6 +24,7 @@ export default class SettingsWrapper extends EventEmitter {
     this.global_config = {}
     this.watching = {}
     this.file_watcher = {}
+    this.change_watcher = {}
     var _this = this
     
     this.readConfigFile(this.global_config_file,true,function(contents){
@@ -38,11 +41,7 @@ export default class SettingsWrapper extends EventEmitter {
   }
 
   onChange(key,cb){
-    var _this = this
-    this.api.onConfigChange(key,function(value){
-      _this[key] = value.newValue
-      cb(value.oldValue,value.newValue)
-    })
+    this.change_watcher[key] = cb
   }
 
 
@@ -84,7 +83,10 @@ export default class SettingsWrapper extends EventEmitter {
         console.log("Now watching config")
         _this.file_watcher[file] = fs.watch(file,null,function(err){
           _this.logger.info("Config file changed, refreshing settings")
-          _this.refresh()
+          // give it some time to close
+          setTimeout(function(){
+            _this.refresh()
+          },150)
         })
       }else{
         _this.logger.warning("Error opening config file ")
@@ -109,6 +111,8 @@ export default class SettingsWrapper extends EventEmitter {
       console.log(e)
       return
     }
+
+    this.trigger_global_change_watchers()
     
     this.address = this.api.config('address')
     this.username = this.api.config('username')
@@ -122,6 +126,7 @@ export default class SettingsWrapper extends EventEmitter {
     this.safe_boot_on_upload = this.api.config('safe_boot_on_upload')
     this.statusbar_buttons = this.api.config('statusbar_buttons')
     this.reboot_after_upload = this.api.config('reboot_after_upload')
+    
     this.auto_connect = this.api.config('auto_connect')
 
     this.timeout = 15000
@@ -132,6 +137,17 @@ export default class SettingsWrapper extends EventEmitter {
     }
     this.statusbar_buttons.push('global_settings')
     this.statusbar_buttons.push('project_settings')
+  }
+
+  trigger_global_change_watchers(){
+    var keys = Object.keys(this.config)
+    for(var i=0;i<keys.length;i++){
+      var k = keys[i]
+      if(this.api.config(k) != this[k] && this.change_watcher[k]){
+        this.change_watcher[k](this[k],this.api.config(k))
+      }
+    }
+    
   }
 
   get_allowed_file_types(){
@@ -166,8 +182,6 @@ export default class SettingsWrapper extends EventEmitter {
     contents = JSON.parse(contents)
     
     return contents
-    
-
   }
 
   readConfigFile(path,check_complete,cb){

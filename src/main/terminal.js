@@ -79,7 +79,7 @@ export default class Term {
 
     connect(cb){
       
-      if(this.connection_attempt > 8) {
+      if(this.connection_attempt > 20) {
         cb(new Error("Unable to start the terminal. Restart VSC or file an issue on our github"))
         return
       }
