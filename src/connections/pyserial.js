@@ -147,9 +147,7 @@ export default class PySerial {
   static listPycom(cb){
     var pycom_list = []
     var pycom_manus = []
-    console.log("Listpycom")
     PySerial.list(function(names,manus){
-      console.log("got pycom list")
       for(var i=0;i<names.length;i++){
         var name = names[i]
         var manu = manus[i]
@@ -163,9 +161,7 @@ export default class PySerial {
   }
 
   static list(cb){
-    console.log("List ports")
     SerialPort.list(function(err,ports){
-      console.log("got list")
       var portnames = []
       var other_portnames = []
       var manufacturers = []

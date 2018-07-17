@@ -15,7 +15,6 @@ export default class Sync {
 
 
   constructor(pyboard,settings,terminal) {
-    console.log("Sync init")
     this.logger = new Logger('Sync')
     this.api = new ApiWrapper()
     this.settings = settings
@@ -28,15 +27,12 @@ export default class Sync {
     this.method_action = "Downloading"
     this.method_name = "Download"
 
-    console.log("Creating tils")
     this.utils = new Utils(settings)
     this.config = Config.constants()
-    console.log("getting some settings")
     this.allowed_file_types = this.settings.get_allowed_file_types()
     this.project_path = this.api.getProjectPath()
     this.isrunning = false
     this.fails = 0
-    console.log("Done")
   }
 
   isReady(){
@@ -188,7 +184,6 @@ export default class Sync {
 
       _this.logger.silly("Start shell")
       _this.start_shell(function(err){
-        console.log("Started shell...")
         _this.in_raw_mode = true
 
         _this.project_status = new ProjectStatus(_this.shell,_this.settings,_this.py_folder)
@@ -222,6 +217,7 @@ export default class Sync {
     }
 
     this.shell.list_files(function(err,file_list){
+
       if(err){
         _this.progress("Failed to read files from board, canceling file download")
         _this.throwError(cb,err)
@@ -354,7 +350,7 @@ export default class Sync {
     }
     var filename = list[i]
     _this.progress("Reading "+filename,true)
-    _this.shell.readFile(filename,function(err,content_buffer,content_st){
+    _this.shell.readFile(filename,function(err,content_buffer,content_str){
 
       if(err){
         _this.progress("Failed to download "+filename)
@@ -546,10 +542,11 @@ export default class Sync {
         var type = file[1]
         if(type == "f"){
           try{
-            var contents = fs.readFileSync(_this.py_folder + filename)
+            var file_path = _this.py_folder + filename
+            var contents = fs.readFileSync(file_path)
 
             _this.progress("Writing file "+filename,true)
-            _this.shell.writeFile(filename,contents,function(err,retry){
+            _this.shell.writeFile(filename,file_path,contents,function(err,retry){
               if(retry){
                 _this.progress("Failed to write file, trying again...")
                 // shell.writeFile automatically starts a re-try and executes the callback again

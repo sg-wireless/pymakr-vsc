@@ -14,10 +14,8 @@ export default class SettingsWrapper extends EventEmitter {
     this.project_config = {}
     this.api = new ApiWrapper(this)
     this.project_path = this.api.getProjectPath()
-    console.log(this.project_path)
     this.global_config_file = Utils.getConfigPath("pymakr.json")
     this.config_file = this.project_path+"/pymakr.conf"
-    console.log(this.config_file)
     this.json_valid = true
     this.logger = new Logger('SettingsWrapper')
     this.project_change_callbacks = []
@@ -106,7 +104,6 @@ export default class SettingsWrapper extends EventEmitter {
     try{
       var contents = this.readConfigFileSync(this.global_config_file)
       this.global_config = contents
-      console.log(contents)
     }catch(e){
       this.emit('format_error')
       console.log(e)
@@ -150,14 +147,10 @@ export default class SettingsWrapper extends EventEmitter {
     console.log("Config complete?")
     if(!this.isConfigComplete(contents)){
       contents = this.completeConfig(contents)
-      console.log("No, new config:")
-      console.log(this.contents)
       var json_string =
        JSON.stringify(contents,null,'\t')
       
       fs.writeFile(path, json_string, function(err) {
-        console.log("Written file with new config")
-        console.log(err)
         if(cb){
           cb()
         }
@@ -169,14 +162,8 @@ export default class SettingsWrapper extends EventEmitter {
   }
   
   readConfigFileSync(path){
-    console.log("Reading config file" +path)
     var contents = fs.readFileSync(path,{encoding: 'utf-8'})
-    console.log("Read file")
-    
-    console.log(contents)
-    console.log("Parsing content")
     contents = JSON.parse(contents)
-    console.log(contents)
     
     return contents
     
@@ -187,17 +174,11 @@ export default class SettingsWrapper extends EventEmitter {
     var _this = this
     console.log("Reading config file" +path)
     fs.readFile(path,function(err,contents){
-      console.log("Read file")
-      console.log(err)
       if(!err){
         try{
-          console.log("Parsing content")
           contents = JSON.parse(contents)
-          console.log(contents)
           if(check_complete){
-            console.log("Checking config")
             _this.checkConfigComplete(path,contents,function(){
-              console.log("Watching config")
               _this.watchConfigFile(path)
               if(cb){
                 cb(contents)
@@ -272,16 +253,13 @@ export default class SettingsWrapper extends EventEmitter {
 
   completeConfig(settings_object){
     var default_config = this.getDefaultGlobalConfig()
-    console.log(default_config)
     if(Object.keys(settings_object).length < Object.keys(default_config).length){
       for(var k in default_config){
         if(settings_object[k] === undefined){
-          console.log("Adding "+k+" as "+default_config[k])
           settings_object[k] = default_config[k]
         }
       }
     }
-    console.log(settings_object)
     return settings_object
   }
 

@@ -45,7 +45,7 @@ export default class Pymakr extends EventEmitter {
       if(err){
         _this.logger.error("Error from terminal connect:")
         _this.logger.error(err)
-        _this.terminal.write(err)
+        _this.api.error("Unable to start the terminal")
       }
       _this.logger.info("Connected trigger from view")
 
@@ -54,7 +54,7 @@ export default class Pymakr extends EventEmitter {
 
       if(!_this.settings.open_on_start || close_terminal){
         _this.hidePanel()
-      }else if(serializedState && 'visible' in serializedState && _this.view.visible) {
+      }else{
         if(_this.settings.auto_connect){
           _this.startAutoConnect()
         }else{
@@ -88,7 +88,6 @@ export default class Pymakr extends EventEmitter {
       _this.startAutoConnect(function(connected_on_addr){
         if(!connected_on_addr){
           _this.logger.verbose("No address from autoconnect, connecting normally")
-          console.log(connected_on_addr)
           _this.connect()
           _this.setButtonState()
         }
@@ -285,15 +284,10 @@ export default class Pymakr extends EventEmitter {
 
   getPycomBoard(cb){
     var _this = this
-    console.log("Listing pycom boards")
     PySerial.listPycom(function(list,manufacturers){
-      console.log("Got it: ")
-      console.log(list)
-      var current_address = _this.pyboard.address
       if(list.length > 0){
         var name = list[0]
         var manu = manufacturers[0]
-        var text = name + " (" + manu+ ")"
         cb(name,manu,list)
       }else{
         cb(null,null,list)
@@ -388,8 +382,6 @@ export default class Pymakr extends EventEmitter {
       _this.writeGetStartedText()
     }
 
-    console.log("Test")
-
     if(!address && this.autoconnect_address){
       address = this.autoconnect_address
       this.logger.info("Using autoconnect address: "+address)
@@ -407,17 +399,12 @@ export default class Pymakr extends EventEmitter {
       }
     }
 
-    console.log("Test2")
     if(!address && _this.settings.auto_connect){
-      console.log("Test3")
       this.getAutoconnectAddress(function(address,manu_unused){
-        console.log("Test5")
         _this.pyboard.setAddress(address)
-        console.log("Test6")
         continueConnect()
       })
     }else{
-      console.log("Test4")
       if(address){
         _this.pyboard.setAddress(address)
       }
@@ -426,7 +413,6 @@ export default class Pymakr extends EventEmitter {
   }
 
   continueConnect(){
-    console.log("Continue connect")
     var _this = this
     this.pyboard.refreshConfig()
     var address = this.pyboard.address
@@ -436,7 +422,6 @@ export default class Pymakr extends EventEmitter {
       if(!this.settings.auto_connect){
         this.terminal.writeln("Address not configured. Please go to the settings to configure a valid address or comport")
       }
-      console.log("Address not configured")
     }else{
       if(this.settings.auto_connect){
         connect_preamble = "Autoconnect: "
@@ -478,7 +463,6 @@ export default class Pymakr extends EventEmitter {
           _this.terminal.write(mssg)
         }
       }
-      console.log("pyboad.connect")
       _this.pyboard.connect(address,onconnect,onerror, ontimeout, onmessage)
     }
   }
@@ -530,9 +514,7 @@ export default class Pymakr extends EventEmitter {
       return
     }
     if(!this.synchronizing){
-      console.log("Creating sync obj")
       this.syncObj = new Sync(this.pyboard,this.settings,this.terminal)
-      console.log("Done")
       this.synchronizing = true
       var cb = function(err){
 
@@ -544,11 +526,10 @@ export default class Pymakr extends EventEmitter {
           },4000)
         }
       }
-      console.log(type)
+      
       if(type == 'receive'){
         this.syncObj.start_receive(cb)
       }else{
-        console.log("startin sync obj")
         try{
           this.syncObj.start(cb)
         }catch(e){

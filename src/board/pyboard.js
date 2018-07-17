@@ -163,7 +163,7 @@ export default class Pyboard {
     var _this = this
     this.logger.info("Safe boot")
     this.send_wait_for(CTRL_F,'Type "help()" for more information.\r\n>>>',function(err){
-      this.logger.info("Safe boot done...")
+      _this.logger.info("Safe boot done...")
       cb(err)
     },timeout)
 
@@ -235,10 +235,7 @@ export default class Pyboard {
     this.stopWaitingForSilent()
     this.refreshConfig()
     var _this = this
-    console.log("Checking if serialport")
     Pyserial.isSerialPort(this.address,function(res){
-      console.log("Got result")
-      console.log(res)
       _this.isSerial = res
       if(res){
         _this.connection = new Pyserial(_this.address,_this.params)

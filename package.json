@@ -153,6 +153,7 @@
     "binascii": "0.0.2",
     "bindings": "1.3.0",
     "copy-paste": "^1.3.0",
+    "crypto-js": "^3.1.9-1",
     "electron-rebuild": "^1.7.3",
     "element-resize-detector": "1.1.11",
     "serialport": "^6.2.0",

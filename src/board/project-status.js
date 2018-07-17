@@ -14,39 +14,31 @@ const ee = new EventEmitter();
 export default class ProjectStatus {
 
   constructor(shell,settings,local_folder){
-    console.log("Starting project status")
     this.shell = shell
-    console.log("test")
     this.logger = new Logger('ProjectStatus')
-    console.log("test")
     this.utils = new Utils(settings)
     this.local_folder = local_folder
     this.settings = settings
-    console.log("test")
     this.allowed_file_types = this.settings.get_allowed_file_types()
     this.content = []
     this.board_file_hashes = {}
-    console.log("test")
     this.local_file_hashes = this.__get_local_files_hashed()
     this.changed = false
-    console.log("Done")
   }
 
   read(cb){
     var _this = this
-    console.log("Read")
+
     this.shell.readFile('project.pymakr',function(err,content_buffs,content_str){
       if(err){
         cb(err)
         return
       }
 
-      console.log("Done reading")
       
       while(content_str.slice(content_str.length-2,content_str.length) != "]]"){
         content_str += "]"
       }
-      console.log(content_str)
 
       var json_content = []
       if(content_str != ""){
@@ -58,7 +50,6 @@ export default class ProjectStatus {
           err = true
         }
       }
-      console.log(json_content)
       _this.content = json_content
       _this.__process_file()
       cb(err,json_content)
@@ -75,7 +66,7 @@ export default class ProjectStatus {
       this.logger.info('Writing project status file to board')
       var board_hash_array = Object.values(this.board_file_hashes)
       var project_file_content = new Buffer(JSON.stringify(board_hash_array))
-      this.shell.writeFile('project.pymakr',project_file_content,cb,10) // last param prevents any retries
+      this.shell.writeFile('project.pymakr',null,project_file_content,cb,10) // last param prevents any retries
     }else{
       this.logger.info('No changes to file, not writing')
       cb()

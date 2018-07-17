@@ -24,17 +24,23 @@ export default class ShellWorkers {
     var content = value[0]
     var counter = value[1]
 
+    if(!content){
+      callback(new Error("Failed to read file"),null)
+      return
+    }
+
     if(counter*blocksize >= content.length){
       callback(null,content,true)
     }else{
       var start = counter*blocksize
       var end = Math.min((counter+1)*blocksize,content.length)
       var chunk = content.base64Slice(start,end)
+      
       // c = binascii.b2a_base64(chunk)
 
       _this.pyboard.exec_raw("f.write(ubinascii.a2b_base64('"+chunk+"'))\r\n",function(err,data){
         if(data.indexOf("Traceback: ") > -1 || data.indexOf("Error: ") > -1){
-          err_mssg = data.slice(data.indexOf("Error: ")+7,-3)
+          var err_mssg = data.slice(data.indexOf("Error: ")+7,-3)
           err = new Error("Failed to write file: "+err_mssg)
         }
         if(err){

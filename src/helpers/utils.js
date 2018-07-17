@@ -30,17 +30,22 @@ export default class Utils {
   // calls 'end' whenever the processed_value comes back empty/null or when an error is thrown
   doRecursively(value,worker,end){
     var _this = this
-    worker(value,function(err,value_processed,done){
+    try{
+      worker(value,function(err,value_processed,done){
 
-        if(err){
-          end(err)
-        }else if(done){
-          end(null,value_processed)
-        }else{
-          _this.doRecursively(value_processed,worker,end)
-
-        }
-    })
+          if(err){
+            end(err)
+          }else if(done){
+            end(null,value_processed)
+          }else{
+            _this.doRecursively(value_processed,worker,end)
+          }
+      })
+    }catch(e){
+      _this.logger.error("Failed to execute worker:")
+      _this.logger.error(e)
+      end(e)
+    }
   }
 
   // vscode
@@ -66,7 +71,6 @@ export default class Utils {
     var content = ""
     var buffer_list = []
     var b64str_arr = b64str.split('=')
-    console.log(b64str_arr.length)
     for(var i=0;i<b64str_arr.length;i++){
       var chunk = b64str_arr[i]
       if(chunk.length > 0){
@@ -75,11 +79,8 @@ export default class Utils {
         }else{
           chunk += '='
         }
-        console.log(i)
-        console.log(chunk)
         var bc = Buffer.from(chunk, 'base64')
         var bc_str = bc.toString()
-        console.log(bc_str)
         buffer_list.push(bc)
         content += bc_str
       }
@@ -146,28 +147,5 @@ export default class Utils {
       }
     }
     return new_list
-  }
-
-  _was_file_not_existing(exception){
-   var error_list = ['ENOENT', 'ENODEV', 'EINVAL', 'OSError:']
-   var stre = exception.message
-   for(var i=0;i<error_list.length;i++){
-     if(stre.indexOf(error_list[i]) > -1){
-       return true
-     }
-   }
-   return false
-  }
-
-  int_16(int){
-    var b = new Buffer(2)
-    b.writeUInt16BE(int)
-    return b
-  }
-
-  int_32(int){
-    var b = new Buffer(4)
-    b.writeUInt32BE(int)
-    return b
   }
 }

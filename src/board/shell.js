@@ -7,6 +7,8 @@ import Utils from '../helpers/utils.js';
 var binascii = require('binascii');
 var utf8 = require('utf8');
 var crypto = require('crypto');
+var CryptoJS = require("crypto-js");
+var SHA256 = require("crypto-js/sha256");
 
 var EventEmitter = require('events');
 const ee = new EventEmitter();
@@ -52,7 +54,7 @@ export default class Shell {
     })
   }
 
-  writeFile(name,contents,callback,retries=0){
+  writeFile(name,file_path,contents,callback,retries=0){
     var _this = this
     this.logger.info("Writing file: "+name)
 
@@ -63,17 +65,23 @@ export default class Shell {
     }
 
     var worker = function(content,callback){
-      _this.workers.write_file(content,callback)
+      try{
+        _this.workers.write_file(content,callback)
+      }catch(e){
+        _this.logger.error("Failed to write file:")
+        console.log(e)
+        retry(e)
+      }
     }
 
     var retry = function(err){
       if(retries < _this.RETRIES){
         cb(null,true)
         setTimeout(function(){
-            _this.writeFile(name,contents,cb,retries+1)
+          _this.writeFile(name,file_path,contents,cb,retries+1)
         },1000)
       }else{
-        console.log("No more retries:")
+        _this.logger.silly("No more retries:")
         cb(err)
       }
     }
@@ -84,7 +92,7 @@ export default class Shell {
           retry(err)
 
         }else if(!err && !close_err){
-          _this.compare_hash(name,contents,function(match){
+          _this.compare_hash(name,file_path,contents,function(match){
             if(match){
               cb(null)
             }else{
@@ -106,7 +114,13 @@ export default class Shell {
       "f = open('"+name+"', 'wb')\r\n"
 
     this.pyboard.exec_raw_no_reset(get_file_command,function(){
-      _this.utils.doRecursively([contents,0],worker,end)
+      try{  
+        _this.utils.doRecursively([contents,0],worker,end)
+      }catch(e){
+        _this.logger.error("Failed to write file:")
+        console.log(e)
+        end(e)
+      }
     })
   }
 
@@ -135,14 +149,11 @@ export default class Shell {
 
       // Workaround for the "OK" return of soft reset, which is sometimes returned with the content
       if(content.indexOf("OK") == 0){
-        console.log(content)
         content = content.slice(2,content.length)
-        console.log(content)
       }
       var decode_result = _this.utils.base64decode(content)
       var content_buffer = decode_result[1]
       var content_str = decode_result[0].toString()
-      console.log(content_str)
 
       _this.logger.silly(err)
       cb(err,content_buffer,content_str)
@@ -219,14 +230,31 @@ export default class Shell {
     })
   }
 
+  compare_hash(filename,file_path,content_buffer,cb){
+    var _this = this
 
-  compare_hash(filename,contents,cb){
-    cb(true)
-    return
-    var hash = crypto.createHash('sha256').update(contents.toString()).digest('hex');
-    this.get_hash(filename,function(err,remote_hash){
-      cb(hash == remote_hash)
-    })
+    var compare = function(local_hash){
+      _this.get_hash(filename,function(err,remote_hash){
+        cb(local_hash == remote_hash)
+      })
+    }
+    // the file you want to get the hash
+    if(file_path){    
+      var fd = fs.createReadStream(file_path);
+      var hash = crypto.createHash('sha256');
+      hash.setEncoding('hex');
+      
+      fd.on('end', function() {
+          hash.end();
+          var local_hash = hash.read()
+          compare(local_hash)
+      });
+
+      fd.pipe(hash);
+    }else{
+      var local_hash = crypto.createHash('sha256').update(content_buffer.toString()).digest('hex');
+      compare(local_hash)
+    }
   }
 
   get_hash(filename,cb){

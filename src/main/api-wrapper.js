@@ -27,7 +27,6 @@ export default class ApiWrapper {
     if(this.settings.global_config[key] !== undefined){
       return this.settings.global_config[key]
     }else if(this.default_config[key] !== undefined){
-      console.log(key,this.default_config[key].default)
       return this.default_config[key].default
     }else{
       null
@@ -131,6 +130,10 @@ export default class ApiWrapper {
   listenToProjectChange(cb){
     // no implementation, VSC doesn't support multi project
     return
+  }
+
+  error(text){
+    window.showErrorMessage(text)
   }
 
   confirm(title,text,options){
