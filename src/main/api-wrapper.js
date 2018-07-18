@@ -6,7 +6,6 @@ var ncp = require('copy-paste')
 import Utils from '../helpers/utils.js';
 import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace, extension} from 'vscode';
 import Config from '../config.js';
-import { OperationCanceledException } from 'typescript';
 
 export default class ApiWrapper {
   constructor(settings) {
@@ -20,7 +19,7 @@ export default class ApiWrapper {
   }
 
   onConfigChange(key,cb){
-   // TODO: implement
+   // Unused in vscode (config change callbacks handled in setings-wrapper)
   }
 
   config(key){

@@ -18,10 +18,6 @@ try {
       plf = 'win32'
     }
 
-    if(plf == 'win' || plf == 'win32'){
-      require("../../precompiles/serialport-" + plf + "/lib/index")
-    }
-
     SerialPort = require("../../precompiles/serialport-" + plf);
     // var DarwinBinding = require("../../precompiles/serialport-" + plf + "/lib/serialport/lib/bindings/darwin");
     // SerialPort.Binding = DarwinBinding//require("../../precompiles/serialport-" + plf + "/lib/serialport/lib/bindings/darwin");

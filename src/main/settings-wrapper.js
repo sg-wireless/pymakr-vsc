@@ -218,12 +218,17 @@ export default class SettingsWrapper extends EventEmitter {
     this.project_config = {}
     this.project_path = this.api.getProjectPath()
     this.config_file = this.project_path+"/pymakr.conf"
-    var contents = this.readConfigFileSync(this.config_file)
     
-    if(contents){
-      this.logger.silly("Found contents")
-      this.project_config = contents
-      _this.setProjectConfig()
+    try{
+      var contents = this.readConfigFileSync(this.config_file)
+      if(contents){
+        this.logger.silly("Found contents")
+        this.project_config = contents
+        _this.setProjectConfig()
+      }
+    }catch(e){
+      _this.logger.info("No project config present")
+      return null
     }
   }
 
