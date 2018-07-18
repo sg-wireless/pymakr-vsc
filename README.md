@@ -111,3 +111,9 @@ If you want to contribute to this project you can test the app the following way
 - Code up to date with development in Pymakr for Atom
 - Fixed rare infinite loop bug in terminal
 - New precompiled serialport libs for all OS's
+
+## 1.0.0 - Same codebase as Pymakr for Atom
+- Complete rebuild of upload and download feature
+- Autoconnect feature
+- Upload any type of file (also binary files like jpg, mpy or cert files)
+- Several bugfixes and improvements

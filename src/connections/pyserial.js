@@ -7,6 +7,7 @@ var fs = require('fs');
 var SerialPort = null
 try {
   SerialPort = require("serialport");
+  
 } catch (e) {
   // include the precompiled version of serialport
   var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
@@ -21,7 +22,9 @@ try {
       require("../../precompiles/serialport-" + plf + "/lib/index")
     }
 
-    SerialPort = require("../../precompiles/serialport-" + plf + "/lib/serialport");
+    SerialPort = require("../../precompiles/serialport-" + plf);
+    // var DarwinBinding = require("../../precompiles/serialport-" + plf + "/lib/serialport/lib/bindings/darwin");
+    // SerialPort.Binding = DarwinBinding//require("../../precompiles/serialport-" + plf + "/lib/serialport/lib/bindings/darwin");
   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
     throw e;
   }
