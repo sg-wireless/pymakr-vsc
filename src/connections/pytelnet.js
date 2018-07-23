@@ -6,7 +6,7 @@ var AYT = '\xff\xf6'
 
 export default class PyTelnet {
 
-  constructor(params){
+  constructor(address,params){
     this.type = "telnet"
     this.stream = new TelnetClient('pycomboard');
     this.connected = false
@@ -14,6 +14,7 @@ export default class PyTelnet {
     this.username_sent = false
     this.password_sent = false
     this.params = params
+    this.address = address
     this.pingTimer = null
     this.receive_buffer = ""
     this.ayt_pending = false
@@ -39,6 +40,7 @@ export default class PyTelnet {
     this.username_sent = false
     this.password_sent = false
     var _this = this
+    this.params.host = this.address
     this.stream.connect(this.params,function(err){
       onconnect(new Error(err))
     });

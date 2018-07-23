@@ -4,13 +4,14 @@ var Socket = require('net').Socket;
 
 export default class PySocket {
 
-  constructor(params){
+  constructor(address,params){
     this.type = "socket"
     this.stream = new Socket();
 
     this.stream.setTimeout(params.timeout)
     this.connected = false
     this.params = params
+    this.address = address
     this.receive_buffer = ""
     this.on_error_called = false
   }
@@ -23,7 +24,7 @@ export default class PySocket {
     this.username_sent = false
     this.password_sent = false
     var _this = this
-    this.stream.connect(this.params.port,this.params.host);
+    this.stream.connect(this.params.port,this.address);
     this.stream.on('connect', function () {
         onconnect()
     });
