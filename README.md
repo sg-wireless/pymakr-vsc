@@ -117,3 +117,6 @@ If you want to contribute to this project you can test the app the following way
 - Autoconnect feature
 - Upload any type of file (also binary files like jpg, mpy or cert files)
 - Several bugfixes and improvements
+
+## 1.0.1 - Hotfix
+- Bugfix in telnet connection

@@ -19,3 +19,12 @@ All notable changes to the Pymakr extension will be documented in this file.
 
 ## 0.1.7
 - Added config option to change the status bar buttons
+
+## 1.0.0 - Same codebase as Pymakr for Atom
+- Complete rebuild of upload and download feature
+- Autoconnect feature
+- Upload any type of file (also binary files like jpg, mpy or cert files)
+- Several bugfixes and improvements
+
+## 1.0.1 - Hotfix
+- Bugfix in telnet connection
