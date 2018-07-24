@@ -497,7 +497,7 @@ export default class Sync {
   removeFilesRecursive(files,cb,depth){
     var _this = this
     if(!depth){ depth = 0 }
-    if(files.length == 0 || depth > 60){
+    if(files.length == 0){
       cb()
     }else{
       var file = files[0]
@@ -534,7 +534,7 @@ export default class Sync {
     if(!depth){ depth = 0 }
 
     var write_continue = function(files,cb,depth){
-      if(files.length == 0 || depth > 60){
+      if(files.length == 0){
         cb()
       }else{
         var file = files[0]
