@@ -4,12 +4,13 @@ Pymakr enables you to communicate to your Pycom board using the build in command
 
 - Works with Mac OSX, Linux and windows.
 - Connects to any Pycom board: WiPy, WiPy2.0, LoPy and any newer board.
-- Works best with firmware 1.6.11.b1 and higher. Earlier firmware might have unexpected behaviour when synchronizing files over serial.
+- Works best with firmware 1.6.11.b1 and higher. Earlier firmware might have unexpected behavior when synchronizing files over serial.
 
 More info and documentation can be found on https://docs.pycom.io/
 
 ## Dependencies
-- NodeJS installed on the system.
+- **VSCode June 2018 (version 1.25)** https://code.visualstudio.com/updates/v1_25
+- **NodeJS 8.11.4 LTS** https://nodejs.org *(also tested with 10.0.9 August security update)*
 
 ## Usage
 
@@ -34,7 +35,7 @@ Useful keymaps:
 - `ctrl-shift-c`: (Re)connect
 - `ctrl-shift-g`: Global settings
 - `ctrl-shift-s`: Synchronize project
-- `ctrl-shiftt-r`: Run current file
+- `ctrl-shift-r`: Run current file
 
 ## Settings
 
@@ -51,7 +52,7 @@ All possible settings (name : default : description):
 - ctrl_c_on_connect : false               : If true, executes a ctrl-c on connect to stop running programs
 - open_on_start     : true                : Weather to open the terminal and connect to the board when starting vsc
 - statusbar_buttons : []                  : Which quick-access buttons to show in the statusbar. Options are:
-    - ['status','run','upload','download','disconnect','listserial','settings','projectsettings','getversion','getssid']
+    - ['status', 'run', 'upload', 'download', 'disconnect', 'listserial', 'settings', 'projectsettings', 'getversion', 'getssid']
 Any of these can be used inside the Project config to override the global config
 
 ## REPL
@@ -87,7 +88,7 @@ Synchronizing takes a bit of memory, so this error can occur when code running o
 Solution: Run the board in [safe mode](https://docs.pycom.io/pycom_esp32/pycom_esp32/toolsandfeatures.html#boot-modes-and-safe-boot) when synchronizing
 
 ### Terminal not opening
-If the Pymakr terminal is not opening or giving an error, this might be because NodeJS is not installed on your system. This is becuase the terminal process is running separate from VSCode and depends on your systems NodeJS install.
+If the Pymakr terminal is not opening or giving an error, this might be because NodeJS is not installed on your system. This is because the terminal process is running separate from VSCode and depends on your systems NodeJS install.
 
 Solution: Install NodeJS. For windows 64 machines, install a 32 bit version of nodejs (for example ```nvm install 7.8.0 32``` when using nvm).
 
@@ -119,4 +120,4 @@ If you want to contribute to this project you can test the app the following way
 - Several bugfixes and improvements
 
 ## 1.0.1 - Hotfix
-- Bugfix in telnet connection
+- Fixed issue with telnet connection
