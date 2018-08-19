@@ -11,6 +11,7 @@ More info and documentation can be found on https://docs.pycom.io/
 ## Dependencies
 - **VSCode June 2018 (version 1.25)** https://code.visualstudio.com/updates/v1_25
 - **NodeJS 8.11.4 LTS** https://nodejs.org *(also tested with 10.0.9 August security update)*
+ ***For Windows 64 machines, install the 32 bit version of NodeJS***
 
 ## Usage
 
