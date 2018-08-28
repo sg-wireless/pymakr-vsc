@@ -47,7 +47,10 @@ CFLAGS_OBJCC_Debug :=
 INCS_Debug := \
 	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/include/node \
 	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/src \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/openssl/config \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/openssl/openssl/include \
 	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/uv/include \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/zlib \
 	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/v8/include \
 	-I$(srcdir)/../nan
 
@@ -94,14 +97,18 @@ CFLAGS_OBJCC_Release :=
 INCS_Release := \
 	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/include/node \
 	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/src \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/openssl/config \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/openssl/openssl/include \
 	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/uv/include \
+	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/zlib \
 	-I/Users/Ralph/.electron-gyp/.node-gyp/iojs-1.7.7/deps/v8/include \
 	-I$(srcdir)/../nan
 
 OBJS := \
 	$(obj).target/$(TARGET)/src/serialport.o \
 	$(obj).target/$(TARGET)/src/serialport_unix.o \
-	$(obj).target/$(TARGET)/src/serialport_poller.o
+	$(obj).target/$(TARGET)/src/poller.o \
+	$(obj).target/$(TARGET)/src/darwin_list.o
 
 # Add to the list of files we specially track dependencies for.
 all_deps += $(OBJS)
