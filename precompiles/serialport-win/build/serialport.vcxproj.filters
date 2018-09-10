@@ -19,19 +19,16 @@
     <Filter Include="D:\Projects">
       <UniqueIdentifier>{7CAFA559-49D5-0913-BD41-C91CD6F35482}</UniqueIdentifier>
     </Filter>
-    <Filter Include="D:\Projects\Pycom">
-      <UniqueIdentifier>{55862CE5-0598-C6B5-2B1F-2B02750E7A1F}</UniqueIdentifier>
+    <Filter Include="D:\Projects\pymakr-vsc-master">
+      <UniqueIdentifier>{7C614E20-DE17-110B-5C4A-AEE83D70AF33}</UniqueIdentifier>
     </Filter>
-    <Filter Include="D:\Projects\Pycom\pymakr-atom">
-      <UniqueIdentifier>{C1BC4AF0-F77A-1A1E-6577-0CDC71537CA7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="D:\Projects\Pycom\pymakr-atom\node_modules">
+    <Filter Include="D:\Projects\pymakr-vsc-master\node_modules">
       <UniqueIdentifier>{56DF7A98-063D-FB9D-485C-089023B4C16A}</UniqueIdentifier>
     </Filter>
-    <Filter Include="D:\Projects\Pycom\pymakr-atom\node_modules\node-gyp">
+    <Filter Include="D:\Projects\pymakr-vsc-master\node_modules\node-gyp">
       <UniqueIdentifier>{77348C0E-2034-7791-74D5-63C077DF5A3B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="D:\Projects\Pycom\pymakr-atom\node_modules\node-gyp\src">
+    <Filter Include="D:\Projects\pymakr-vsc-master\node_modules\node-gyp\src">
       <UniqueIdentifier>{8CDEE807-BC53-E450-C8B8-4DEBB66742D4}</UniqueIdentifier>
     </Filter>
     <Filter Include="..">
@@ -45,8 +42,8 @@
     <ClCompile Include="..\src\serialport_win.cpp">
       <Filter>..\src</Filter>
     </ClCompile>
-    <ClCompile Include="D:\Projects\Pycom\pymakr-atom\node_modules\node-gyp\src\win_delay_load_hook.cc">
-      <Filter>D:\Projects\Pycom\pymakr-atom\node_modules\node-gyp\src</Filter>
+    <ClCompile Include="D:\Projects\pymakr-vsc-master\node_modules\node-gyp\src\win_delay_load_hook.cc">
+      <Filter>D:\Projects\pymakr-vsc-master\node_modules\node-gyp\src</Filter>
     </ClCompile>
     <None Include="..\binding.gyp">
       <Filter>..</Filter>

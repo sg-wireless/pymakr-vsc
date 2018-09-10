@@ -1,64 +1,36 @@
 'use strict';
+/**
+ * Parsers are collection of transform streams to processes incoming data
+ * @summary The default `Parsers` are [Transform streams](https://nodejs.org/api/stream.html#stream_class_stream_transform) that process incoming data. To use the parsers, you must create them and then pipe the Serialport to the parser. Be careful to only write to the SerialPort object and not the parser. Full documentation for parsers can be found in [their api docs](https://node-serialport.github.io/parsers/).
+ * @typedef {Object} Parsers
+ * @property {Transform} ByteLength
+ * @property {Transform} CCtalk
+ * @property {Transform} Delimiter
+ * @property {Transform} Readline
+ * @property {Transform} Ready
+ * @property {Transform} Regex
 
-// Copyright 2011 Chris Williams <chris@iterativedesigns.com>
+ * @since 5.0.0
+ * @example
+```js
+const SerialPort = require('serialport');
+const Readline = SerialPort.parsers.Readline;
+const port = new SerialPort('/dev/tty-usbserial1');
+const parser = new Readline();
+port.pipe(parser);
+parser.on('data', console.log);
+port.write('ROBOT PLEASE RESPOND\n');
+
+// Creating the parser and piping can be shortened to
+// const parser = port.pipe(new Readline());
+```
+ */
 
 module.exports = {
-  raw: function(emitter, buffer) {
-    emitter.emit('data', buffer);
-  },
-
-  // encoding: ascii utf8 utf16le ucs2 base64 binary hex
-  // More: http://nodejs.org/api/buffer.html#buffer_buffer
-  readline: function(delimiter, encoding) {
-    if (typeof delimiter === 'undefined' || delimiter === null) { delimiter = '\r' }
-    if (typeof encoding === 'undefined' || encoding === null) { encoding = 'utf8' }
-    // Delimiter buffer saved in closure
-    var data = '';
-    return function(emitter, buffer) {
-      // Collect data
-      data += buffer.toString(encoding);
-      // Split collected data by delimiter
-      var parts = data.split(delimiter);
-      data = parts.pop();
-      parts.forEach(function(part) {
-        emitter.emit('data', part);
-      });
-    };
-  },
-
-  // Emit a data event every `length` bytes
-  byteLength: function(length) {
-    var data = new Buffer(0);
-    return function(emitter, buffer) {
-      data = Buffer.concat([data, buffer]);
-      while (data.length >= length) {
-        var out = data.slice(0, length);
-        data = data.slice(length);
-        emitter.emit('data', out);
-      }
-    };
-  },
-
-  // Emit a data event each time a byte sequence (delimiter is an array of byte) is found
-  // Sample usage : byteDelimiter([10, 13])
-  byteDelimiter: function(delimiter) {
-    if (Object.prototype.toString.call(delimiter) !== '[object Array]') {
-      delimiter = [ delimiter ];
-    }
-    var buf = [];
-    var nextDelimIndex = 0;
-    return function(emitter, buffer) {
-      for (var i = 0; i < buffer.length; i++) {
-        buf[buf.length] = buffer[i];
-        if (buf[buf.length - 1] === delimiter[nextDelimIndex]) {
-          nextDelimIndex++;
-        }
-        if (nextDelimIndex === delimiter.length) {
-          emitter.emit('data', buf);
-          buf = [];
-          nextDelimIndex = 0;
-        }
-      }
-    };
-  }
+  ByteLength: require('parser-byte-length'),
+  CCTalk: require('parser-cctalk'),
+  Delimiter: require('parser-delimiter'),
+  Readline: require('parser-readline'),
+  Ready: require('parser-ready'),
+  Regex: require('parser-regex')
 };
