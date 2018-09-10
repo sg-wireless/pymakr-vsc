@@ -9,9 +9,7 @@ Pymakr enables you to communicate to your Pycom board using the build in command
 More info and documentation can be found on https://docs.pycom.io/
 
 ## Dependencies
-- **VSCode June 2018 (version 1.25)** https://code.visualstudio.com/updates/v1_25
-- **NodeJS 8.11.4 LTS** https://nodejs.org *(also tested with 10.0.9 August security update)*
- ***For Windows 64 machines, install the 32 bit version of NodeJS***
+- **NodeJS installed on your system (6.9.5 or higher4** https://nodejs.org
 
 ## Usage
 
@@ -122,3 +120,6 @@ If you want to contribute to this project you can test the app the following way
 
 ## 1.0.1 - Hotfix
 - Fixed issue with telnet connection
+
+## 1.0.2 - Hotfix
+- Fixed compatibility with vscode v1.26 and v1.27
