@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var port = process.argv.length >=3 ? process.argv[2] : 1137
+var port = process.argv.length >=3 ? process.argv[2] : 1337
 var ip = '127.0.0.1'
 
 var net = require('net')

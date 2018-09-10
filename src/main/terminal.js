@@ -68,7 +68,7 @@ export default class Term {
       try{
         var termpath = this.api.getPackagePath() + "terminalExec.js"
         var shellpath = this.is_windows ? "node.exe" : "node"
-        this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: shellpath, shellArgs: [termpath,this.port]} )
+        this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: shellpath, shellArgs: [termpath,this.port.toString()]} )
         if(this.settings.open_on_start){
             this.show()
         }
