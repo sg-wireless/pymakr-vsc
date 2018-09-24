@@ -28,6 +28,7 @@ export default class Pymakr extends EventEmitter {
     this.view = view
     this.autoconnect_timer = null
     this.autoconnect_address = undefined
+    this.connection_timer = null
 
     this.first_time_start = !this.api.settingsExist()
 
@@ -387,6 +388,13 @@ export default class Pymakr extends EventEmitter {
       this.logger.info("Using autoconnect address: "+address)
     }
 
+    var state = this.api.getConnectionState(address)
+    var ts = new Date().getTime()
+    if(state && state['project'] != this.view.project_name && state['timestamp'] > ts-11000){
+      this.terminal.writeln("Already connected in another window (project '"+state['project']+"')")
+      return
+    }
+
     var continueConnect = function(){
       // stop config observer from triggering again
       if(_this.pyboard.connected || _this.pyboard.connecting){
@@ -431,7 +439,17 @@ export default class Pymakr extends EventEmitter {
       var onconnect = function(err){
         if(err){
           _this.terminal.writeln("Connection error: "+err)
+        }else{
+          _this.api.setConnectionState(address,true,_this.view.project_name)
+          _this.connection_timer = setInterval(function(){
+            if(_this.pyboard.connected){
+              _this.api.setConnectionState(address,true,_this.view.project_name)
+            }else{
+              clearTimeout(_this.connection_timer)
+            }
+          },10000)
         }
+      
         _this.setButtonState()
       }
 
@@ -468,6 +486,7 @@ export default class Pymakr extends EventEmitter {
   }
 
   disconnect(cb){
+
     this.logger.info("Disconnecting...")
     if(this.pyboard.isConnecting()){
         this.terminal.writeln("Connection attempt canceled")
@@ -475,6 +494,8 @@ export default class Pymakr extends EventEmitter {
     // else{
     //   this.terminal.writeln("Disconnected. Click here to reconnect.")
     // }
+    clearInterval(this.connection_timer)
+    this.api.setConnectionState(_this.pyboard.address,false)
     this.pyboard.disconnect(function(){
       if(cb) cb()
     })

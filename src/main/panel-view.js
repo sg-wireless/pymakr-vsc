@@ -40,6 +40,8 @@ export default class PanelView extends EventEmitter {
       _this.emit('term-connected',err)
     }
 
+    _this.setProjectName(_this.api.getProjectPath())
+
     // create terminal
     this.terminal = new Term(onTermConnect,this.pyboard,_this.settings)
     this.terminal.setOnMessageListener(function(input){
@@ -90,6 +92,15 @@ export default class PanelView extends EventEmitter {
     }
     this.statusItemPrio-=1
     return statusBarItem
+  }
+
+  setProjectName(project_path){
+    if(project_path && project_path.indexOf('/') > -1){
+      this.project_name = project_path.split('/').pop()
+    }else{
+      this.project_name = "No project"
+    }
+    this.setButtonState()
   }
 
   // refresh button display based on current status

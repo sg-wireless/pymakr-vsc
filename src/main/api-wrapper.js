@@ -15,6 +15,7 @@ export default class ApiWrapper {
     this.config_file = Utils.getConfigPath("pymakr.json")
     this.is_windows = process.platform == 'win32'
     this.project_path = this.getProjectPath()
+    this.connection_state_filename = 'connection_state.json'
 
   }
 
@@ -109,6 +110,52 @@ export default class ApiWrapper {
 
   clipboard(){
     // no implmenetation needed, terminal supports it by default
+  }
+
+  getConnectionState(com){
+    var state = this.getConnectionStateContents()
+    console.log(state)
+    if(!state) return state
+    return state[com]
+  }
+
+  getConnectionStatePath(){
+    var folder = this.getPackagePath()
+  
+    var atom_folder = folder.split('.vscode')[0] + ".atom/packages/pymakr/"
+
+    console.log(atom_folder)
+    
+    if(fs.existsSync(atom_folder+this.connection_state_filename)){
+      return atom_folder
+    }else{
+      return folder
+    }
+  }
+
+  getConnectionStateContents(){
+    var folder = this.getConnectionStatePath()
+    try{
+      return JSON.parse(fs.readFileSync(folder+this.connection_state_filename))
+    }catch(e){
+      console.log(e)
+      // ignore and continue
+      return {}
+    }
+  }
+
+  setConnectionState(com,state,project_name){
+    var folder = this.getConnectionStatePath()
+    var timestamp = new Date().getTime()
+    var state_object = this.getConnectionStateContents()
+
+    if(state){
+      state_object[com] = {timestamp: timestamp, project: project_name}
+    }else if(state_object[com]){
+      delete state_object[com]
+    }
+
+    fs.writeFileSync(folder+'/connection_state.json', JSON.stringify(state_object))
   }
 
   writeClipboard(text){
