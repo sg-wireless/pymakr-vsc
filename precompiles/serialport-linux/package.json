@@ -1,101 +1,143 @@
 {
-  "_from": "serialport@^4.0.7",
-  "_id": "serialport@4.0.7",
+  "_args": [
+    [
+      "serialport@6.2.1",
+      "/home/ralph/.vscode/extensions/pycom.pymakr-1.0.2"
+    ]
+  ],
+  "_from": "serialport@6.2.1",
+  "_id": "serialport@6.2.1",
   "_inBundle": false,
-  "_integrity": "sha1-QhxhiophK9QM+kYbSkYVTa8iKaU=",
+  "_integrity": "sha512-Z5irknsC8wJd/r6wR+oG3OJZAhMMcLiF817RrHMlC+3yKmAh0E0WuF0Gh4UfGYYcsXPcgdDcYkmMpQ56gB9pww==",
   "_location": "/serialport",
   "_phantomChildren": {
-    "commander": "2.11.0"
+    "detect-libc": "1.0.3",
+    "expand-template": "1.1.1",
+    "github-from-package": "0.0.0",
+    "mkdirp": "0.5.1",
+    "node-abi": "2.4.3",
+    "noop-logger": "0.1.1",
+    "npmlog": "4.1.2",
+    "os-homedir": "1.0.2",
+    "pump": "2.0.1",
+    "rc": "1.2.8",
+    "simple-get": "2.8.1",
+    "tar-fs": "1.16.3",
+    "tunnel-agent": "0.6.0",
+    "which-pm-runs": "1.0.0"
   },
   "_requested": {
-    "type": "range",
+    "type": "version",
     "registry": true,
-    "raw": "serialport@^4.0.7",
+    "raw": "serialport@6.2.1",
     "name": "serialport",
     "escapedName": "serialport",
-    "rawSpec": "^4.0.7",
+    "rawSpec": "6.2.1",
     "saveSpec": null,
-    "fetchSpec": "^4.0.7"
+    "fetchSpec": "6.2.1"
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/serialport/-/serialport-4.0.7.tgz",
-  "_shasum": "421c618a8a612bd40cfa461b4a46154daf2229a5",
-  "_spec": "serialport@^4.0.7",
-  "_where": "/home/ralph/Projects/pymakr-vsc",
-  "author": {
-    "name": "Chris Williams",
-    "email": "voodootikigod@gmail.com",
-    "url": "http://www.voodootikigod.com"
-  },
+  "_resolved": "https://registry.npmjs.org/serialport/-/serialport-6.2.1.tgz",
+  "_spec": "6.2.1",
+  "_where": "/home/ralph/.vscode/extensions/pycom.pymakr-1.0.2",
   "bin": {
-    "serialport-list": "./bin/serialport-list.js",
-    "serialport-term": "./bin/serialport-terminal.js"
-  },
-  "binary": {
-    "module_name": "serialport",
-    "module_path": "build/{configuration}/",
-    "host": "https://github.com/EmergingTechnologyAdvisors/node-serialport/releases/download/4.0.7"
+    "serialport-list": "./bin/list.js",
+    "serialport-repl": "./bin/repl.js",
+    "serialport-term": "./bin/terminal.js"
   },
   "bugs": {
-    "url": "https://github.com/EmergingTechnologyAdvisors/node-serialport/issues"
+    "url": "https://github.com/node-serialport/node-serialport/issues"
   },
-  "bundleDependencies": [
-    "node-pre-gyp"
-  ],
+  "cc": {
+    "filter": [
+      "legal/copyright",
+      "build/include"
+    ],
+    "files": [
+      "src/*.cpp",
+      "src/*.h"
+    ],
+    "linelength": "120"
+  },
   "dependencies": {
-    "bindings": "1.2.1",
-    "commander": "^2.9.0",
-    "debug": "^2.3.2",
-    "lie": "^3.1.0",
-    "nan": "^2.4.0",
-    "node-pre-gyp": "^0.6.32",
-    "object.assign": "^4.0.3"
+    "@serialport/parser-byte-length": "^1.0.5",
+    "@serialport/parser-cctalk": "^1.0.5",
+    "@serialport/parser-delimiter": "^1.0.5",
+    "@serialport/parser-readline": "^1.0.5",
+    "@serialport/parser-ready": "^1.0.5",
+    "@serialport/parser-regex": "^1.0.5",
+    "bindings": "1.3.0",
+    "commander": "^2.13.0",
+    "debug": "^3.1.0",
+    "nan": "^2.9.2",
+    "prebuild-install": "^4.0.0",
+    "promirepl": "^1.0.1",
+    "prompt-list": "^3.2.0",
+    "safe-buffer": "^5.1.2"
   },
-  "deprecated": false,
-  "description": "Node.js package to access serial ports. Welcome your robotic javascript overlords. Better yet, program them!",
+  "description": "Node.js package to access serial ports. Linux, OSX and Windows. Welcome your robotic JavaScript overlords. Better yet, program them!",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "chai-subset": "^1.2.2",
-    "coveralls": "^2.11.9",
-    "eslint-config-standard": "^5.1.0",
-    "eslint-plugin-promise": "^1.1.0",
-    "eslint-plugin-standard": "^1.3.2",
-    "grunt": "^1.0.0",
-    "grunt-mocha-test": "^0.12.7",
-    "gruntify-eslint": "^2.0.0",
-    "mocha": "^2.4.5",
-    "node-pre-gyp-github": "^1.1.2",
-    "nyc": "^6.4.4",
-    "sandboxed-module": "^2.0.3",
-    "sinon": "^1.17.3",
-    "sinon-chai": "^2.8.0"
+    "@reconbot/jsdoc-theme": "^1.0.0",
+    "bluebird": "^3.5.0",
+    "cc": "^1.0.1",
+    "chai": "^4.0.2",
+    "chai-subset": "^1.5.0",
+    "conventional-changelog-cli": "^2.0.0",
+    "eslint": "^5.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "istanbul": "^0.4.4",
+    "jsdoc": "^3.5.5",
+    "mocha": "^5.2.0",
+    "prebuild": "^7.6.0",
+    "prebuild-ci": "^2.2.3",
+    "proxyquire": "^2.0.0",
+    "sinon": "^6.0.1"
   },
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">=4.0.0"
   },
   "gypfile": true,
-  "homepage": "https://github.com/EmergingTechnologyAdvisors/node-serialport#readme",
+  "homepage": "https://github.com/node-serialport/node-serialport#readme",
   "keywords": [
-    "serialport",
-    "johnny-five",
-    "serial port",
+    "ccTalk",
+    "com port",
+    "data logging",
     "hardware",
     "iot",
-    "nodebots"
+    "johnny-five",
+    "modem",
+    "nodebots",
+    "RFID",
+    "sensor",
+    "serial port",
+    "serial",
+    "serialport",
+    "sms gateway",
+    "sms",
+    "stream",
+    "tty",
+    "UART"
   ],
   "license": "MIT",
-  "main": "./lib/serialport",
+  "main": "lib",
   "maintainers": [
+    {
+      "name": "Francis Gulotta",
+      "email": "wizard@roborooter.com",
+      "url": "https://www.roborooter.com"
+    },
     {
       "name": "Jacob Rosenthal",
       "email": "jakerosenthal@gmail.com"
     },
     {
       "name": "Chris Williams",
-      "email": "voodootikigod@gmail.com"
+      "email": "voodootikigod@gmail.com",
+      "url": "http://www.voodootikigod.com"
     },
     {
       "name": "Joe Ferner",
@@ -108,28 +150,30 @@
     {
       "name": "Rob Giseburt",
       "email": "giseburt@gmail.com"
-    },
-    {
-      "name": "Francis Gulotta",
-      "email": "wizard@roborooter.com"
     }
   ],
   "name": "serialport",
   "repository": {
     "type": "git",
-    "url": "git://github.com/EmergingTechnologyAdvisors/node-serialport.git"
+    "url": "git://github.com/node-serialport/node-serialport.git"
   },
   "scripts": {
-    "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "grunt": "grunt",
-    "gyp-rebuild": "node-gyp rebuild",
-    "install": "node-pre-gyp install --fallback-to-build",
-    "integration": "mocha test/arduinoTest/integration.js test/integration-lite.js",
-    "lint": "grunt --verbose lint",
+    "arduino-test": "TEST_PORT=$(./bin/find-arduino.js) npm test",
+    "changelog": "conventional-changelog -i CHANGELOG.md -s",
+    "debugger": "TEST_PORT=$(./bin/find-arduino.js) node --inspect --debug-brk test/manual-testing/performance.js",
+    "docs": "jsdoc -c ./.jsdoc.json ",
+    "install": "prebuild-install || node-gyp rebuild",
+    "lint": "eslint lib test bin examples && cc",
+    "prebuild": "prebuild --all --strip --verbose",
+    "prebuild-ci": "prebuild-ci",
+    "rebuild": "prebuild --compile",
     "rebuild-all": "npm rebuild && node-gyp rebuild",
+    "repl": "node bin/repl.js",
     "stress": "mocha --no-timeouts test/arduinoTest/stress.js",
-    "test": "nyc grunt --verbose test",
-    "valgrind": "valgrind --leak-check=full --show-possibly-lost=no node --expose-gc --trace-gc node_modules/.bin/grunt test"
+    "terminal": "node bin/terminal.js",
+    "test": "istanbul cover ./node_modules/mocha/bin/_mocha",
+    "test:watch": "mocha -w",
+    "valgrind": "TEST_PORT=$(./bin/find-arduino.js) valgrind --leak-check=full node test/manual-testing/memory-binding.js"
   },
-  "version": "4.0.7"
+  "version": "6.2.1"
 }

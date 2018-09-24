@@ -1,0 +1,33 @@
+{
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc"]
+  },
+  "source": {
+    "include": ["lib", "README.md"],
+    "includePattern": ".+\\.(js|jsx)?$"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "markdown": {
+		"parser": "gfm",
+		"hardwrap": true,
+		"excludeTags": []
+	},
+  "templates": {
+    "cleverLinks": true,
+    "monospaceLinks": true
+  },
+  "opts": {
+    "template": "node_modules/@reconbot/jsdoc-theme",
+    "encoding": "utf8",
+    "private": true,
+    "destination": "./docs/",
+    "recurse": true,
+    "_tutorials": "./examples"
+  },
+  "reconbot": {
+    "github": "https://github.com/node-serialport/node-serialport"
+  }
+}
