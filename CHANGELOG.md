@@ -28,3 +28,10 @@ All notable changes to the Pymakr extension will be documented in this file.
 
 ## 1.0.1 - Hotfix
 - Bugfix in telnet connection
+
+## 1.0.2 - Support
+- Updated support for latest VSCode versions / electron 2.0.5
+
+## 1.0.3 - Minor changes
+- Linux fix in precompiles of serialport library
+- Added warnings when board connected in other screen or atom
