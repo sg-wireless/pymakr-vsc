@@ -28,6 +28,6 @@ about: Create a report to help us improve
 
 **Operating system:**
 
-**Atom version:**
+**VSCode version:**
 
 **Pymakr version:**
