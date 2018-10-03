@@ -94,6 +94,7 @@ If the Pymakr terminal is not opening or giving an error, this might be because 
 If you want to contribute to this project you can test the app the following way:
 
 - Download the code or clone the repo
+- Install Babel by running `npm install --save-dev babel-core`
 - Open the folder in VSC
 - Press F1 and execute `Tasks: Run build task` to run the babel builder
 - Press F5 to run the plugin (opens a new VSC window)
