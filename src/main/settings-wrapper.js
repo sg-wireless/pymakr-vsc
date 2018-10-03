@@ -298,6 +298,7 @@ export default class SettingsWrapper extends EventEmitter {
         "sync_folder": this.api.config('sync_folder'),
         "open_on_start": this.api.config('open_on_start'),
         "safe_boot_on_upload": this.api.config('safe_boot_on_upload'),
+        "reboot_after_upload": this.api.config('reboot_after_upload'),
         "statusbar_buttons": this.api.config('statusbar_buttons')
     }
     if(global){
