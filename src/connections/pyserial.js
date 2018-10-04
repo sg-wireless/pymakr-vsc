@@ -43,7 +43,7 @@ export default class PySerial {
 
     var dtr_support = ['darwin']
 
-    this.dtr_supported = dtr_support.indexOf(process.platform) > -1
+    this.dtr_supported = dtr_support.indexOf(process.platform) > -1  
   }
 
   static COMPORT_MANUFACTURERS(){
@@ -201,7 +201,10 @@ export default class PySerial {
   }
 
   sendPing(cb){
-    var _this = this
+    if (process.platform == 'win32'){
+      // avoid MCU waiting in bootloader on hardware restart by setting both dtr and rts high
+      this.stream.set({rts: true})
+    }
     // not implemented
     if(this.dtr_supported){
       this.stream.set({dtr: true},function(err){
