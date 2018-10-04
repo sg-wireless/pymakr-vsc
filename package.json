@@ -2,7 +2,7 @@
   "name": "pymakr",
   "displayName": "Pymakr",
   "description": "Adds a REPL console to the terminal that connects to your Pycom board. Run single files or synchronize your project files to your board.",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "publisher": "pycom",
   "repository": "https://github.com/pycom/pymakr-vsc",
   "icon": "images/logo.png",
@@ -50,6 +50,10 @@
         "command": "pymakr.run",
         "title": "Pymakr > Run current file"
       },
+      {
+        "command": "pymakr.runselection",
+        "title": "Pymakr > Run current selection"
+      },      
       {
         "command": "pymakr.projectSettings",
         "title": "Pymakr > Project Settings"
@@ -101,6 +105,10 @@
         "mac": "cmd+shift+r"
       },
       {
+        "command": "pymakr.runselection",
+        "key": "ctrl+shift+l",
+        "mac": "cmd+shift+l"
+      },      {
         "command": "pymakr.globalSettings",
         "key": "ctrl+shift+g",
         "mac": "cmd+shift+g"
@@ -126,6 +134,10 @@
           "command": "pymakr.run",
           "group": "pymakr"
         },
+        {
+          "command": "pymakr.runselection",
+          "group": "pymakr"
+        },        
         {
           "command": "pymakr.upload",
           "group": "pymakr"

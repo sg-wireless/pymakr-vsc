@@ -35,3 +35,6 @@ All notable changes to the Pymakr extension will be documented in this file.
 ## 1.0.3 - Minor changes
 - Linux fix in precompiles of serialport library
 - Added warnings when board connected in other screen or atom
+
+## 1.0.4
+- Added Run Selection to run only a single line or block of code 
