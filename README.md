@@ -99,6 +99,11 @@ If you want to contribute to this project you can test the app the following way
 - Press F1 and execute `Tasks: Run build task` to run the babel builder
 - Press F5 to run the plugin (opens a new VSC window)
 
+## Create a local package
+- Install the vscode publishing tool by running `npm install -g vsce`
+- Create a .vsix package by running `vsce package`
+ - you can then install the .vsix package by running `code --install-extension pymakr-1.x.y.vsix`
+
 ## Release Notes
 
 ### 0.1.0 - Initial release
