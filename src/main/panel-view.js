@@ -24,6 +24,7 @@ export default class PanelView extends EventEmitter {
     this.statusItems = {}
     this.statusItems['status'] = this.createStatusItem('status',"","pymakr.toggleConnect","Toggle terminal") // name is set using setTitle function
     this.statusItems['run'] = this.createStatusItem('run',"$(triangle-right) Run","pymakr.run","Run current file")
+    //todo: --> this.statusItems['runselection'] = this.createStatusItem('runselection',"$(triangle-right) Run Line","pymakr.runselection","Run current line")
     this.statusItems['upload'] = this.createStatusItem('upload',"$(triangle-up) Upload","pymakr.upload","Upload project to your board")
     this.statusItems['download'] = this.createStatusItem('download',"$(triangle-down) Download","pymakr.download","Download project from your board")
     this.statusItems['disconnect'] = this.createStatusItem('disconnect',"$(x) Disconnect","pymakr.disconnect","Disconnect")
@@ -55,6 +56,7 @@ export default class PanelView extends EventEmitter {
     items.push({ label: "Pymakr > Connect", description: "", cmd: "connect" });
     items.push({ label: "Pymakr > Disconnect", description: "", cmd: "disconnect" });
     items.push({ label: "Pymakr > Run current file", description: "", cmd: "run" });
+    items.push({ label: "Pymakr > Run current line or selection", description: "", cmd: "runselection" });    
     items.push({ label: "Pymakr > Upload Project", description: "", cmd: "upload" });
     items.push({ label: "Pymakr > Download Project", description: "", cmd: "download" });
     items.push({ label: "Pymakr > Project Settings", description: "", cmd: "project_settings" });

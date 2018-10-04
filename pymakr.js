@@ -41,6 +41,11 @@ function activate(context) {
     })
     context.subscriptions.push(disposable);
 
+    var disposable = vscode.commands.registerCommand('pymakr.runselection', function () {
+        terminal.show()
+        pymakr.runselection()
+    })
+    context.subscriptions.push(disposable);
     var disposable = vscode.commands.registerCommand('pymakr.upload', function () {
         terminal.show()
         pymakr.upload()

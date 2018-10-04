@@ -102,6 +102,12 @@ export default class Pymakr extends EventEmitter {
       }
     })
 
+    this.view.on('runselection',function(){
+      if(!_this.synchronizing){
+        _this.run()
+      }
+    })
+
     this.view.on('sync',function(){
       if(!_this.synchronizing){
         _this.upload()
@@ -516,6 +522,26 @@ export default class Pymakr extends EventEmitter {
         _this.setButtonState()
       })
     }
+  }
+
+  runselection(){
+    var _this = this
+    var command = ""
+    if(!this.pyboard.connected){
+      this.terminal.writeln("Please connect your device")
+      return
+    }
+    
+    command = this.api.getSelected()
+    //todo: remove excessive identation 
+    
+    //pyboard.run uses raw mode 
+    _this.pyboard.runblock(command,function(err){
+      if(err){
+        _this.logger.error("Failed to send command: "+command)
+      }
+    })
+    //todo: return focus to editor
   }
 
   upload(){
