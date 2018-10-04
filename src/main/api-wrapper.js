@@ -230,4 +230,19 @@ export default class ApiWrapper {
     var name = doc.fileName
     cb(doc.getText(),name)
   }
+
+  getSelected(){
+    var editor = window.activeTextEditor
+    var selection = editor.selection;
+    var codesnip = ""
+    console.log('getSelected>>>')
+    if (selection.isEmpty) {
+      // the Active Selection object gives you the (0 based) line  and character where the cursor is 
+      codesnip = editor.document.lineAt(selection.active.line).text;       
+    } else { 
+      //no active selection , get the current line 
+      codesnip = editor.document.getText(selection); 
+    }
+    return(codesnip)
+  }
 }
