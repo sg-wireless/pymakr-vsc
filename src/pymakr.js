@@ -495,7 +495,7 @@ export default class Pymakr extends EventEmitter {
     //   this.terminal.writeln("Disconnected. Click here to reconnect.")
     // }
     clearInterval(this.connection_timer)
-    this.api.setConnectionState(_this.pyboard.address,false)
+    this.api.setConnectionState(this.pyboard.address,false)
     this.pyboard.disconnect(function(){
       if(cb) cb()
     })
