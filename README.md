@@ -94,9 +94,15 @@ If the Pymakr terminal is not opening or giving an error, this might be because 
 If you want to contribute to this project you can test the app the following way:
 
 - Download the code or clone the repo
+- Install Babel by running `npm install --save-dev babel-core`
 - Open the folder in VSC
 - Press F1 and execute `Tasks: Run build task` to run the babel builder
 - Press F5 to run the plugin (opens a new VSC window)
+
+## Create a local package
+- Install the vscode publishing tool by running `npm install -g vsce`
+- Create a .vsix package by running `vsce package`
+ - you can then install the .vsix package by running `code --install-extension pymakr-1.x.y.vsix`
 
 ## Release Notes
 
