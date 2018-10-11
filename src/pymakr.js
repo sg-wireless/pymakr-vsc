@@ -535,13 +535,14 @@ export default class Pymakr extends EventEmitter {
     command = this.api.getSelected()
     //todo: remove excessive identation 
     
-    //pyboard.run uses raw mode 
+    //pyboard.runblock uses paste mode 
     _this.pyboard.runblock(command,function(err){
       if(err){
         _this.logger.error("Failed to send command: "+command)
       }
     })
-    //todo: return focus to editor
+    //return focus to editor
+    _this.api.editorFocus
   }
 
   upload(){
