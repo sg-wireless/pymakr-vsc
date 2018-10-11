@@ -36,5 +36,7 @@ All notable changes to the Pymakr extension will be documented in this file.
 - Linux fix in precompiles of serialport library
 - Added warnings when board connected in other screen or atom
 
-## 1.0.4
-- Added Run Selection to run only a single line or block of code 
+## 1.0.5
+- Fix re-connection to board 
+- Prevent generic boards to hang in boatloader 
+- Add Run Selection to run only a single line or block of code 
