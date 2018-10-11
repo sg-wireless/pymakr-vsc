@@ -235,7 +235,7 @@ export default class ApiWrapper {
     var editor = window.activeTextEditor
     var selection = editor.selection;
     var codesnip = ""
-    console.log('getSelected>>>')
+    console.log('getSelected')
     if (selection.isEmpty) {
       // the Active Selection object gives you the (0 based) line  and character where the cursor is 
       codesnip = editor.document.lineAt(selection.active.line).text;       
@@ -245,4 +245,13 @@ export default class ApiWrapper {
     }
     return(codesnip)
   }
+
+  // restore the focus to the Editor after running a section of code
+  editorFocus(){
+    var editor = window.activeTextEditor  // last active editor 
+    // set focus 
+    console.log('Reset Focus')
+    window.showTextDocument(editor.document)
+  }
+
 }
