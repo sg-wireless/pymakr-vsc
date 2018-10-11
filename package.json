@@ -106,8 +106,8 @@
       },
       {
         "command": "pymakr.runselection",
-        "key": "ctrl+shift+l",
-        "mac": "cmd+shift+l"
+        "key": "ctrl+shift+enter",
+        "mac": "cmd+shift+enter"
       },      {
         "command": "pymakr.globalSettings",
         "key": "ctrl+shift+g",
