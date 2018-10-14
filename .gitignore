@@ -2,3 +2,5 @@ node_modules
 /lib
 *.vsix
 connection_state.json
+micropython/
+pymakr.conf
