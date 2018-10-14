@@ -124,7 +124,7 @@ export default class ApiWrapper {
   
     var atom_folder = folder.split('.vscode')[0] + ".atom/packages/pymakr/"
 
-    console.log(atom_folder)
+    //console.log(atom_folder)
     
     if(fs.existsSync(atom_folder+this.connection_state_filename)){
       return atom_folder
@@ -159,7 +159,7 @@ export default class ApiWrapper {
   }
 
   writeClipboard(text){
-    // no implmenetation needed, terminal supports it by default
+    // no implementation needed, terminal supports it by default
   }
 
   getProjectPaths(){

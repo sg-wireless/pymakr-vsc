@@ -44,6 +44,7 @@ export default class Shell {
   }
 
   getFreeMemory(cb){
+    //Note: not supported in standard micropython
     var command =
         "import os\r\n" +
         "m = os.getfree('/flash')" +
@@ -124,7 +125,7 @@ export default class Shell {
     })
   }
 
-  readFile(name,callback){
+  readFile(filename,callback){
     var _this = this
 
     var cb = function(err,content_buffer,content_str){
@@ -132,31 +133,40 @@ export default class Shell {
         callback(err,content_buffer,content_str)
       },100)
     }
-
-    var command = "import ubinascii,sys\r\n"
-    command += "f = open('"+name+"', 'rb')\r\n"
-
-    command += "import ubinascii\r\n"
-
+    // try to prevent memory exhaustion
+    var command = "from gc import collect; collect()\r\n"
     command +=
-        "while True:\r\n" +
+        "import ubinascii,sys\r\n" +
+        "with open('"+filename+"', 'rb') as f:\r\n" +
+        "  while True:\r\n" +
         "    c = ubinascii.b2a_base64(f.read("+this.BIN_CHUNK_SIZE+"))\r\n" +
         "    sys.stdout.write(c)\r\n" +
         "    if not len(c) or c == b'\\n':\r\n" +
         "        break\r\n"
 
     this.pyboard.exec_raw(command,function(err,content){
+      // todo: if (err !== null) { Handle error / retry }
+      _this.logger.silly(err)
 
       // Workaround for the "OK" return of soft reset, which is sometimes returned with the content
       if(content.indexOf("OK") == 0){
         content = content.slice(2,content.length)
       }
-      var decode_result = _this.utils.base64decode(content)
-      var content_buffer = decode_result[1]
-      var content_str = decode_result[0].toString()
+      // should this not include verification of the recieved content of some sort ?
+      if (content.includes("Traceback") ) {
+        // some type of error
+        _this.logger.silly("Error: "+ content)
+        // hack 
+        content_str = content
+        // todo: fill content buffer ?
+        cb(err,null ,content_str)
+      } else { 
+        var decode_result = _this.utils.base64decode(content)
+        var content_buffer = decode_result[1]
+        var content_str = decode_result[0].toString()
+        cb(err,content_buffer,content_str)
+      }
 
-      _this.logger.silly(err)
-      cb(err,content_buffer,content_str)
     },60000)
   }
 
