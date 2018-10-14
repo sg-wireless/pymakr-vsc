@@ -412,8 +412,8 @@ export default class Pyboard {
       var run_delay = _this.type == 'serial' ? 300 : 0
       setTimeout(function(){
         _this.exec_raw_no_reset(CTRL_E + codeblock+"\r\n" + CTRL_D ,function(){
-          _this.wait_for(">",function(){
-            cb;
+          _this.wait_for(">>>",function(){
+            cb();
           })
         })
       },run_delay)

@@ -248,10 +248,9 @@ export default class ApiWrapper {
 
   // restore the focus to the Editor after running a section of code
   editorFocus(){
-    var editor = window.activeTextEditor  // last active editor 
-    // set focus 
     console.log('Reset Focus')
-    window.showTextDocument(editor.document)
+    vscode.commands.executeCommand( 'workbench.action.focusPreviousGroup') 
+    // ? "command": "workbench.action.focusActiveEditorGroup",  var disposable = 
   }
 
 }
