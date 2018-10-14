@@ -537,10 +537,11 @@ export default class Pymakr extends EventEmitter {
     _this.pyboard.runblock(code,function(err){
       if(err){
         _this.logger.error("Failed to send and execute codeblock ")
+      } else {
+        //return focus to editor
+        _this.api.editorFocus()
       }
     })
-    //return focus to editor
-    _this.api.editorFocus
   }
 
   //remove excessive identation 
