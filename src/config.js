@@ -19,6 +19,7 @@ export default class Config {
             +  "- Global settings   : Opens the installation-wide settings file\r\n"
             +  "- Project Settings  : Opens project specific settings that overwrite global settings\r\n"
             +  "- Run               : Runs currently open file to the board\r\n"
+            +  "- Run selection     : Runs the current line or currently selected code on the board\r\n"
             +  "- Sync              : Synchronizes the complete project to the board, using the sync folder settings\r\n"
             +  "- List serial ports : Lists all available serial ports and copies the first one to the clipboard\r\n"
             +  "- Get board version : Displays firmware version of the connected board\r\n"
