@@ -1,14 +1,8 @@
 {
-  "_args": [
-    [
-      "serialport@6.2.1",
-      "/Users/Ralph/github/pymakr-vsc"
-    ]
-  ],
-  "_from": "serialport@6.2.1",
-  "_id": "serialport@6.2.1",
+  "_from": "serialport@6.2.2",
+  "_id": "serialport@6.2.2",
   "_inBundle": false,
-  "_integrity": "sha512-Z5irknsC8wJd/r6wR+oG3OJZAhMMcLiF817RrHMlC+3yKmAh0E0WuF0Gh4UfGYYcsXPcgdDcYkmMpQ56gB9pww==",
+  "_integrity": "sha512-BQqTR06ZXKwKB6rUjeANm3aIZo0rqNbQsrQX5zKEDcNY4rxiu5dvdcfIOaAGuZkhW7jAKJsgKC5TjeURtLVuOQ==",
   "_location": "/serialport",
   "_phantomChildren": {
     "detect-libc": "1.0.3",
@@ -29,18 +23,20 @@
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "serialport@6.2.1",
+    "raw": "serialport@6.2.2",
     "name": "serialport",
     "escapedName": "serialport",
-    "rawSpec": "6.2.1",
+    "rawSpec": "6.2.2",
     "saveSpec": null,
-    "fetchSpec": "6.2.1"
+    "fetchSpec": "6.2.2"
   },
   "_requiredBy": [
+    "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/serialport/-/serialport-6.2.1.tgz",
-  "_spec": "6.2.1",
+  "_resolved": "https://registry.npmjs.org/serialport/-/serialport-6.2.2.tgz",
+  "_shasum": "75532312571578b060eb29cbdf8f2f3e8ba03063",
+  "_spec": "serialport@6.2.2",
   "_where": "/Users/Ralph/github/pymakr-vsc",
   "bin": {
     "serialport-list": "./bin/list.js",
@@ -50,6 +46,7 @@
   "bugs": {
     "url": "https://github.com/node-serialport/node-serialport/issues"
   },
+  "bundleDependencies": false,
   "cc": {
     "filter": [
       "legal/copyright",
@@ -77,6 +74,7 @@
     "prompt-list": "^3.2.0",
     "safe-buffer": "^5.1.2"
   },
+  "deprecated": false,
   "description": "Node.js package to access serial ports. Linux, OSX and Windows. Welcome your robotic JavaScript overlords. Better yet, program them!",
   "devDependencies": {
     "@reconbot/jsdoc-theme": "^1.0.0",
@@ -92,8 +90,7 @@
     "istanbul": "^0.4.4",
     "jsdoc": "^3.5.5",
     "mocha": "^5.2.0",
-    "prebuild": "^7.6.0",
-    "prebuild-ci": "^2.2.3",
+    "prebuild": "github:reconbot/prebuild#reconbot/build_v8_with_gn",
     "proxyquire": "^2.0.0",
     "sinon": "^6.0.1"
   },
@@ -112,6 +109,7 @@
     "modem",
     "nodebots",
     "RFID",
+    "robotics",
     "sensor",
     "serial port",
     "serial",
@@ -165,7 +163,7 @@
     "install": "prebuild-install || node-gyp rebuild",
     "lint": "eslint lib test bin examples && cc",
     "prebuild": "prebuild --all --strip --verbose",
-    "prebuild-ci": "prebuild-ci",
+    "prebuild-upload": "prebuild --all --strip --verbose",
     "rebuild": "prebuild --compile",
     "rebuild-all": "npm rebuild && node-gyp rebuild",
     "repl": "node bin/repl.js",
@@ -175,5 +173,5 @@
     "test:watch": "mocha -w",
     "valgrind": "TEST_PORT=$(./bin/find-arduino.js) valgrind --leak-check=full node test/manual-testing/memory-binding.js"
   },
-  "version": "6.2.1"
+  "version": "6.2.2"
 }
