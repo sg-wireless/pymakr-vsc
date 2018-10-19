@@ -66,7 +66,7 @@ export default class ShellWorkers {
       names = names.splice(1)
       var is_dir = current_file.indexOf('.') == -1
       if(is_dir){
-        var c = "import ubinascii,sys\r\n"
+        var c = "import ubinascii,sys,uos as os\r\n"
         c += "list = ubinascii.hexlify(str(os.listdir('"+current_file_root + "')))\r\n"
         c += "sys.stdout.write(list)\r\n"
         _this.shell.eval(c,function(err,content){
