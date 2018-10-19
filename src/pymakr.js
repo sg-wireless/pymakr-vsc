@@ -102,6 +102,12 @@ export default class Pymakr extends EventEmitter {
       }
     })
 
+    this.view.on('runselection',function(){
+      if(!_this.synchronizing){
+        _this.runselection()
+      }
+    })
+
     this.view.on('sync',function(){
       if(!_this.synchronizing){
         _this.upload()
@@ -512,8 +518,36 @@ export default class Pymakr extends EventEmitter {
       return
     }
     if(!this.synchronizing){
-      this.runner.toggle(function(){
-        _this.setButtonState()
+      var code = this.api.getSelected() 
+
+      // if user has selected code, run that instead of the file
+      if(code){
+        this.runselection(code)
+      }else{
+        this.runner.toggle(function(){
+          _this.setButtonState()
+        })
+      }
+      
+    }
+  }
+
+  runselection(){
+    var _this = this
+    if(!this.pyboard.connected){
+      this.terminal.writeln("Please connect your device")
+      return
+    }
+
+    if(!this.synchronizing){
+      var code = this.api.getSelectedOrLine() 
+      _this.runner.selection(code,function(err){
+        if(err){
+          _this.logger.error("Failed to send and execute codeblock ")
+        } else {
+          //return focus to editor
+          _this.api.editorFocus()
+        }
       })
     }
   }

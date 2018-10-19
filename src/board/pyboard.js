@@ -22,6 +22,7 @@ var CONNECTED=1
 var FRIENDLY_REPL=2
 var RAW_REPL=3
 var RUNNING_FILE=4
+var PASTE_MODE=5
 
 export default class Pyboard {
 
@@ -389,16 +390,18 @@ export default class Pyboard {
     var _this = this
     this.stop_running_programs(function(){
       _this.enter_raw_repl_no_reset(function(){
-      // var contents = filecontents.replace('\n','\n\r')
         _this.setStatus(RUNNING_FILE)
-        var run_delay = _this.type == 'serial' ? 300 : 0
-        setTimeout(function(){
-          _this.exec_raw(filecontents+"\r\n",function(){
-            _this.wait_for(">",function(){
-                _this.enter_friendly_repl_wait(cb)
-            })
+
+        filecontents += "\r\nimport time"
+        filecontents += "\r\ntime.sleep(0.1)"
+
+        // executing code delayed (20ms) to make sure _this.wait_for(">") is executed before execution is complete
+        _this.exec_raw(filecontents+"\r\n",function(){
+          _this.wait_for(">",function(){
+            _this.enter_friendly_repl_wait(cb)
           })
-        },run_delay)
+        })
+        
       })
     })
   }
@@ -540,6 +543,12 @@ export default class Pyboard {
     })
   }
 
+  exec_raw_delayed(code,cb,timeout){
+    var _this = this
+    setTimeout(function(){
+      _this.exec_raw(code,cb,timeout)
+    },50)
+  }
   exec_raw(code,cb,timeout){
     var _this = this
     this.exec_raw_no_reset(code,function(){

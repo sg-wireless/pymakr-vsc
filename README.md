@@ -19,22 +19,24 @@ At any time, use the `Pycom Console` button on the left bottom to toggle the ter
 
 ## Commands
 
-- Connect (ctrl-shift-c)         : Connects to the board
-- Disconnect                     : Disconnects from the board
-- Global settings (ctrl-shift-g) : Opens the installation-wide settings file
-- Project Settings               : Opens project specific settings that overwrite global settings
-- Run (ctrl-shift-r)             : Runs currently open file to the board
-- Sync (ctrl-shift-s)            : Synchronizes the complete project to the board, using the sync folder settings
-- List serial ports              : Lists all available serial ports and copies the first one to the clipboard
-- Get board version              : Displays firmware version of the connected board
-- Get WiFi SSID                  : Gets the SSID of the boards WiFi access point
-- Help                           : Print this list of commands and settings
+- Connect (ctrl-shift-c)           : Connects to the board
+- Disconnect                       : Disconnects from the board
+- Global settings (ctrl-shift-g)   : Opens the installation-wide settings file
+- Project Settings                 : Opens project specific settings that overwrite global settings
+- Run (ctrl-shift-r)               : Runs currently open file on the board ()
+- Run selection (ctrl-shift-enter) : Rns the current selected line on the board
+- Sync (ctrl-shift-s)              : Synchronizes the complete project to the board, using the sync folder settings
+- List serial ports                : Lists all available serial ports and copies the first one to the clipboard
+- Get board version                : Displays firmware version of the connected board
+- Get WiFi SSID                    : Gets the SSID of the boards WiFi access point
+- Help                             : Print this list of commands and settings
 
 Useful keymaps:
-- `ctrl-shift-c`: (Re)connect
-- `ctrl-shift-g`: Global settings
-- `ctrl-shift-s`: Synchronize project
-- `ctrl-shift-r`: Run current file
+- `ctrl-shift-c`     : (Re)connect
+- `ctrl-shift-g`     : Global settings
+- `ctrl-shift-s`     : Synchronize project
+- `ctrl-shift-r`     : Run current file
+- `ctrl-shift-enter` : Run current Line
 
 ## Settings
 
@@ -67,6 +69,17 @@ Ctrl-C and Ctrl-V (or cmd-c/cmd-v on mac) can also be used to copy and paste in 
 ## Run
 
 The `Run` command will run the code from the currently open file to the connected board. Any print output or exceptions from this code will appear in the terminal. There is a shortcut button to the run command on the left bottom of the status bar.
+
+## Run Selection
+
+The `Run Selection` command will run the code on the current line in the active editor, to the connected board using paste-mode. If a block of code is selected, it will run the (first) selected block.
+
+This can be used to step though your code on a line-by-line basis, and allows you to inspect and debug your code.
+
+If the selected line of block of code is idented, as is often the case, it will be de-idented based on the first selected line. so if the first selected line is idented with 8 spaces, all lines will have 8 leading spaces removed.
+If you have lines with irregular identing, these lines will be trimmed, and a warning comment added.
+
+As Paste-Mode is used, you will see both your code , as well as the output in the terminal.
 
 ## Sync
 
@@ -104,7 +117,7 @@ Note: make sure you have the 'code' terminal command installed. See [code setup 
 ## Create a local package
 - Install the vscode publishing tool by running `npm install -g vsce`
 - Create a .vsix package by running `vsce package`
- - you can then install the .vsix package by running `code --install-extension pymakr-1.x.y.vsix`
+- you can then install the .vsix package by running `code --install-extension pymakr-1.x.y.vsix`
 
 ## Release Notes
 

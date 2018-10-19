@@ -114,7 +114,6 @@ export default class ApiWrapper {
 
   getConnectionState(com){
     var state = this.getConnectionStateContents()
-    console.log(state)
     if(!state) return state
     return state[com]
   }
@@ -124,8 +123,6 @@ export default class ApiWrapper {
   
     var atom_folder = folder.split('.vscode')[0] + ".atom/packages/pymakr/"
 
-    console.log(atom_folder)
-    
     if(fs.existsSync(atom_folder+this.connection_state_filename)){
       return atom_folder
     }else{
@@ -230,4 +227,35 @@ export default class ApiWrapper {
     var name = doc.fileName
     cb(doc.getText(),name)
   }
+
+  getSelected(){
+    var editor = window.activeTextEditor
+    var selection = editor.selection;
+    var codesnip = ""
+    if (!selection.isEmpty) {
+      //no active selection , get the current line 
+      return editor.document.getText(selection); 
+    }
+    return codesnip
+  }
+
+  getSelectedOrLine(){
+    var code = this.getSelected()
+  
+    if(!code){
+      var editor = window.activeTextEditor
+      var selection = editor.selection;
+      // the Active Selection object gives you the (0 based) line  and character where the cursor is 
+      code = editor.document.lineAt(selection.active.line).text;       
+    }
+    return code
+    
+  }
+
+  // restore the focus to the Editor after running a section of code
+  editorFocus(){
+    vscode.commands.executeCommand( 'workbench.action.focusPreviousGroup') 
+    // ? "command": "workbench.action.focusActiveEditorGroup",  var disposable = 
+  }
+
 }
