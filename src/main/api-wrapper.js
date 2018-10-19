@@ -232,14 +232,24 @@ export default class ApiWrapper {
     var editor = window.activeTextEditor
     var selection = editor.selection;
     var codesnip = ""
-    if (selection.isEmpty) {
-      // the Active Selection object gives you the (0 based) line  and character where the cursor is 
-      codesnip = editor.document.lineAt(selection.active.line).text;       
-    } else { 
+    if (!selection.isEmpty) {
       //no active selection , get the current line 
-      codesnip = editor.document.getText(selection); 
+      return editor.document.getText(selection); 
     }
-    return(codesnip)
+    return codesnip
+  }
+
+  getSelectedOrLine(){
+    var code = this.getSelected()
+  
+    if(!code){
+      var editor = window.activeTextEditor
+      var selection = editor.selection;
+      // the Active Selection object gives you the (0 based) line  and character where the cursor is 
+      code = editor.document.lineAt(selection.active.line).text;       
+    }
+    return code
+    
   }
 
   // restore the focus to the Editor after running a section of code
