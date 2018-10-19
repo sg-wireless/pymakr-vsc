@@ -34,6 +34,22 @@ export default class Runner {
     })
   }
 
+
+  selection(codeblock,cb){
+    var _this = this
+    codeblock = this.__trimcodeblock(codeblock)
+    _this.terminal.writeln("Running selected lines")
+    _this.busy = true
+    _this.pyboard.run(codeblock,function(){
+      _this.busy = false
+      if(cb) cb()
+    },function onerror(err){
+      _this.terminal.writeln_and_prompt(err)
+    })
+  
+  }
+
+
   stop(cb){
     var _this = this
     if(this.busy){
@@ -69,6 +85,31 @@ export default class Runner {
       }
       cb(file,filename)
     },onerror)
+  }
+
+  //remove excessive identation 
+  __trimcodeblock(codeblock){
+    // regex to split both win and unix style 
+    var lines = codeblock.match(/[^\n]+(?:\r?\n|$)/g);
+    // count leading spaces in line1 ( Only spaces, not TAB)
+    var count = 0 
+    while (lines[0].startsWith(' ',count ) ){
+      count ++;
+    }
+    // remove from all lines
+    if (count > 0){
+      var prefix = " ".repeat(count)      
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith(prefix) ) {
+          lines[i] = lines[i].slice(count);  
+        } else {
+            // funky identation or selection; just trim spaces and add warning
+            lines[i] = lines[i].trim() + " # <- IndentationError"; 
+        }
+      }
+    }
+    // glue the lines back together 
+    return( lines.join('')) 
   }
 
 }

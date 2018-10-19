@@ -390,34 +390,19 @@ export default class Pyboard {
     var _this = this
     this.stop_running_programs(function(){
       _this.enter_raw_repl_no_reset(function(){
-      // var contents = filecontents.replace('\n','\n\r')
         _this.setStatus(RUNNING_FILE)
-        var run_delay = _this.type == 'serial' ? 300 : 0
-        setTimeout(function(){
-          _this.exec_raw(filecontents+"\r\n",function(){
-            _this.wait_for(">",function(){
-                _this.enter_friendly_repl_wait(cb)
-            })
-          })
-        },run_delay)
-      })
-    })
-  }
 
-  // run a line or a block of code using paste mode
-  runblock(codeblock,cb){
-    var _this = this
-    this.stop_running_programs(function(){
-      _this.setStatus(PASTE_MODE)
-      var run_delay = _this.type == 'serial' ? 300 : 0
-      setTimeout(function(){
-        _this.exec_raw_no_reset(CTRL_E + codeblock+"\r\n" + CTRL_D ,function(){
-          _this.wait_for(">>>",function(){
-            cb();
+        filecontents += "\r\nimport time"
+        filecontents += "\r\ntime.sleep(0.1)"
+
+        // executing code delayed (20ms) to make sure _this.wait_for(">") is executed before execution is complete
+        _this.exec_raw(filecontents+"\r\n",function(){
+          _this.wait_for(">",function(){
+            _this.enter_friendly_repl_wait(cb)
           })
         })
-      },run_delay)
-      _this.setStatus(FRIENDLY_REPL)
+        
+      })
     })
   }
 
@@ -558,6 +543,12 @@ export default class Pyboard {
     })
   }
 
+  exec_raw_delayed(code,cb,timeout){
+    var _this = this
+    setTimeout(function(){
+      _this.exec_raw(code,cb,timeout)
+    },50)
+  }
   exec_raw(code,cb,timeout){
     var _this = this
     this.exec_raw_no_reset(code,function(){
