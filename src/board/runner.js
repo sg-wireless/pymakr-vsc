@@ -40,14 +40,15 @@ export default class Runner {
     codeblock = this.__trimcodeblock(codeblock)
     _this.terminal.writeln("Running selected lines")
     _this.busy = true
-    _this.pyboard.run(codeblock,function(){
+    _this.pyboard.runblock(codeblock,function(){
       _this.busy = false
       if(cb) cb()
     },function onerror(err){
       _this.terminal.writeln_and_prompt(err)
     })
-  
   }
+
+  
 
 
   stop(cb){

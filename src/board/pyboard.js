@@ -401,10 +401,28 @@ export default class Pyboard {
             _this.enter_friendly_repl_wait(cb)
           })
         })
-        
       })
     })
   }
+
+  // run a line or a block of code using paste mode
+  runblock(codeblock,cb){
+    var _this = this
+    this.stop_running_programs(function(){
+      _this.setStatus(PASTE_MODE)
+
+      var last_command = codeblock.split('/r/n').pop()
+      _this.exec_raw_no_reset(CTRL_E + codeblock+"\r\n" + CTRL_D ,function(){
+        _this.wait_for_blocking(last_command + "\r\n===",function(){
+            cb();
+        })
+      })
+
+      _this.setStatus(FRIENDLY_REPL)
+    })
+  }
+
+
 
   send(mssg,cb){
     if(!this.connection){
