@@ -1,3 +1,31 @@
+<a name="6.2.2"></a>
+## 6.2.2 (2018-07-21)
+
+* fix: npm and git ignore for prebuild ([fb565fd](https://github.com/node-serialport/node-serialport/commit/fb565fd))
+* fix: Remove a new Buffer() call (#1603) ([e21fe7a](https://github.com/node-serialport/node-serialport/commit/e21fe7a)), closes [#1603](https://github.com/node-serialport/node-serialport/issues/1603)
+* Add support for beaglebone serial ports. (#1600) ([384eb37](https://github.com/node-serialport/node-serialport/commit/384eb37)), closes [#1600](https://github.com/node-serialport/node-serialport/issues/1600)
+* put back prebuild binary builders (#1602) ([4160aca](https://github.com/node-serialport/node-serialport/commit/4160aca)), closes [#1602](https://github.com/node-serialport/node-serialport/issues/1602)
+
+
+
+<a name="6.2.1"></a>
+## 6.2.1 (2018-06-28)
+
+Thanks to @shodan8192 for finding and fixing a memory leak on unix systems!
+
+* docs: fix link to parser docs ([f2285d0](https://github.com/node-serialport/node-serialport/commit/f2285d0))
+* docs: regenerate docs ([eb053db](https://github.com/node-serialport/node-serialport/commit/eb053db))
+* chore: change to new parser packages and upgrade (fix builds) (#1562) ([d829ada](https://github.com/node-serialport/node-serialport/commit/d829ada)), closes [#1562](https://github.com/node-serialport/node-serialport/issues/1562)
+* chore: drop node 4 EOL, add node 10 🎉 (#1556) ([e1998b3](https://github.com/node-serialport/node-serialport/commit/e1998b3)), closes [#1556](https://github.com/node-serialport/node-serialport/issues/1556)
+* chore(package): update conventional-changelog-cli to version 2.0.0 (#1571) ([1bf70ae](https://github.com/node-serialport/node-serialport/commit/1bf70ae)), closes [#1571](https://github.com/node-serialport/node-serialport/issues/1571)
+* chore(package): update package specs (#1557) ([4ed5182](https://github.com/node-serialport/node-serialport/commit/4ed5182)), closes [#1557](https://github.com/node-serialport/node-serialport/issues/1557)
+* chore(package): upgrade packages ([46d798d](https://github.com/node-serialport/node-serialport/commit/46d798d))
+* fix: a few warnings and deprecations (#1558) ([a250f09](https://github.com/node-serialport/node-serialport/commit/a250f09)), closes [#1558](https://github.com/node-serialport/node-serialport/issues/1558)
+* fix: build isn't using the right version on 32x (#1564) ([f9953f2](https://github.com/node-serialport/node-serialport/commit/f9953f2)), closes [#1564](https://github.com/node-serialport/node-serialport/issues/1564)
+* fix: memory leak in unix serialport poller (#1572) ([9006bd6](https://github.com/node-serialport/node-serialport/commit/9006bd6)), closes [#1572](https://github.com/node-serialport/node-serialport/issues/1572)
+
+
+
 <a name="6.2.0"></a>
 ## 6.2.0 (2018-04-18)
 
