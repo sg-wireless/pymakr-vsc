@@ -104,7 +104,7 @@
         "command": "pymakr.runselection",
         "key": "ctrl+shift+enter",
         "mac": "cmd+shift+enter"
-      },      
+      },
       {
         "command": "pymakr.globalSettings",
         "key": "ctrl+shift+g",
@@ -131,7 +131,6 @@
           "command": "pymakr.run",
           "group": "pymakr"
         },
-
         {
           "command": "pymakr.upload",
           "group": "pymakr"
@@ -179,6 +178,8 @@
     "promirepl": "^1.0.1",
     "prompt-list": "^3.1.2",
     "safe-buffer": "^5.0.1",
+    "spdx-correct": "^3.0.0",
+    "spdx-exceptions": "^2.1.0",
     "telnet-client": "^0.13.0",
     "typescript": "^2.0.3",
     "utf8": "^3.0.0",
