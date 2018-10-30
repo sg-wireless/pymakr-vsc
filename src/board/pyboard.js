@@ -47,19 +47,23 @@ export default class Pyboard {
     this.address = null
   }
 
-  refreshConfig(){
-    this.settings.refresh()
-    this.params = {
-      port: 23,
-      username: this.settings.username,
-      password:this.settings.password,
-      enpassword:"",
-      timeout: this.settings.timeout,
-      ctrl_c_on_connect: this.settings.ctrl_c_on_connect
-    }
-    if(!this.settings.auto_connect){
-      this.address = this.settings.address
-    }
+  refreshConfig(cb){
+    var _this = this
+    this.settings.refresh(function(){
+      _this.params = {
+        port: 23,
+        username: _this.settings.username,
+        password:_this.settings.password,
+        enpassword:"",
+        timeout: _this.settings.timeout,
+        ctrl_c_on_connect: _this.settings.ctrl_c_on_connect
+      }
+      if(!_this.settings.auto_connect){
+        _this.address = _this.settings.address
+      }
+      if(cb) cb()
+    })
+
   }
 
   setAddress(address){
@@ -73,22 +77,20 @@ export default class Pyboard {
   startPings(interval){
     var _this = this
     this.pingTimer = setInterval(function(){
-      if(_this.connection){
-        _this.connection.sendPing(function(err){
-          if(err){
-            _this.ping_count+=1
-          }else{
-            _this.ping_count = 0
-          }
+      _this.connection.sendPing(function(err){
+        if(err){
+          _this.ping_count+=1
+        }else{
+          _this.ping_count = 0
+        }
 
-          if(_this.ping_count > 1){ // timeout after 2 pings
-            _this.ping_count = 0
-            clearInterval(_this.pingTimer)
-            _this.ontimeout(new Error("Connection lost"))
-            _this.disconnect()
-          }
-        })
-      }
+        if(_this.ping_count > 1){ // timeout after 2 pings
+          _this.ping_count = 0
+          clearInterval(_this.pingTimer)
+          _this.ontimeout(new Error("Connection lost"))
+          _this.disconnect()
+        }
+      })
     },interval*1000)
   }
 
@@ -164,7 +166,7 @@ export default class Pyboard {
     this.logger.info("Safe boot")
     this.send_wait_for(CTRL_F,'Type "help()" for more information.\r\n>>>',function(err){
       _this.logger.info("Safe boot done...")
-      cb(err)
+      if(cb) cb(err)
     },timeout)
 
   }
@@ -195,11 +197,9 @@ export default class Pyboard {
       _this.flush(function(){
         _this.logger.info("Entering raw repl")
         _this.send_wait_for_blocking(CTRL_A,'raw REPL; CTRL-B to exit\r\n>',function(err){
-          console.log("entered raw repl")
           if(!err){
             _this.setStatus(RAW_REPL)
           }
-          console.log("CB:")
           callback(err)
         },5000)
       })
@@ -253,7 +253,6 @@ export default class Pyboard {
             callback(error)
           }else{
             _this._onconnect(callback)
-
           }
         })
       }
@@ -320,6 +319,14 @@ export default class Pyboard {
 
     this.receive_buffer += mssg
     this.receive_buffer_raw = Buffer.concat([this.receive_buffer_raw,raw])
+
+    if(this.receive_buffer.length > 80000){
+      this.receive_buffer = this.receive_buffer.substr(40000)
+    }
+
+    if(this.receive_buffer_raw.length > 80000){
+      this.receive_buffer_raw = this.receive_buffer_raw.slice(40000)
+    }
 
     this.logger.silly('Buffer length now '+this.receive_buffer.length)
 
@@ -404,26 +411,14 @@ export default class Pyboard {
   }
 
   send(mssg,cb){
-    if(!this.connection){
-      cb(new Error("No connection"))
-      return
-    }
     this.connection.send(mssg,cb)
   }
 
   send_with_enter(mssg,cb){
-    if(!this.connection){
-      cb(new Error("No connection"))
-      return
-    }
     this.connection.send(mssg+'\r\n',cb)
   }
 
   send_cmd(cmd,cb){
-    if(!this.connection){
-      cb(new Error("No connection"))
-      return
-    }
     var mssg = '\x1b' + cmd
     var data = new Buffer(mssg,"binary")
     this.connection.send_raw(data,cb)
@@ -523,10 +518,6 @@ export default class Pyboard {
   }
 
   send_raw(mssg,cb){
-    if(!this.connection){
-      cb(new Error("No connection"))
-      return
-    }
     this.connection.send_raw(mssg,cb)
   }
 
@@ -557,10 +548,6 @@ export default class Pyboard {
   }
 
   flush(cb){
-    if(!this.connection){
-      cb(new Error("No connection"))
-      return
-    }
     this.connection.flush(cb)
   }
 
@@ -573,5 +560,4 @@ export default class Pyboard {
     }
     return ""
   }
-
 }

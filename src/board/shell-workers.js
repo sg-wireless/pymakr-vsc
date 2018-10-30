@@ -24,11 +24,6 @@ export default class ShellWorkers {
     var content = value[0]
     var counter = value[1]
 
-    if(!content){
-      callback(new Error("Failed to read file"),null)
-      return
-    }
-
     if(counter*blocksize >= content.length){
       callback(null,content,true)
     }else{
@@ -40,7 +35,7 @@ export default class ShellWorkers {
 
       _this.pyboard.exec_raw("f.write(ubinascii.a2b_base64('"+chunk+"'))\r\n",function(err,data){
         if(data.indexOf("Traceback: ") > -1 || data.indexOf("Error: ") > -1){
-          var err_mssg = data.slice(data.indexOf("Error: ")+7,-3)
+          err_mssg = data.slice(data.indexOf("Error: ")+7,-3)
           err = new Error("Failed to write file: "+err_mssg)
         }
         if(err){
@@ -66,7 +61,7 @@ export default class ShellWorkers {
       names = names.splice(1)
       var is_dir = current_file.indexOf('.') == -1
       if(is_dir){
-        var c = "import ubinascii,sys,uos as os\r\n"
+        var c = "import ubinascii,sys\r\n"
         c += "list = ubinascii.hexlify(str(os.listdir('"+current_file_root + "')))\r\n"
         c += "sys.stdout.write(list)\r\n"
         _this.shell.eval(c,function(err,content){
@@ -100,7 +95,6 @@ export default class ShellWorkers {
 
         file_list.push(file_path)
         callback(null,[root,names,file_list])
-
       }
     }
   }
