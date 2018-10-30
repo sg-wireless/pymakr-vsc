@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{EADD3B4E-FCA1-691A-FB71-5EE4447A7FA8}</ProjectGuid>
+    <ProjectGuid>{FA4E41F6-BECD-F531-1ABE-7458CD8231DC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>serialport</RootNamespace>
     <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
@@ -47,7 +47,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\include\node;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\src;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\openssl\config;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\openssl\openssl\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\uv\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\zlib;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\include\node;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\src;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\openssl\config;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\openssl\openssl\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\uv\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\zlib;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /MP %(AdditionalOptions)</AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -67,7 +67,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\x64\iojs.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\x64\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -82,13 +82,13 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\include\node;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\src;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\openssl\config;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\openssl\openssl\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\uv\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\zlib;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\include\node;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\src;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\openssl\config;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\openssl\openssl\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\uv\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\zlib;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=serialport;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;DEBUG;_DEBUG;V8_ENABLE_CHECKS;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\include\node;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\src;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\openssl\config;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\openssl\openssl\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\uv\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\zlib;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\include\node;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\src;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\openssl\config;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\openssl\openssl\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\uv\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\zlib;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAsWinRT>false</CompileAsWinRT>
@@ -115,7 +115,7 @@
       <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <Link>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\x64\iojs.lib&quot;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;DelayImp.lib;&quot;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\x64\iojs.lib&quot;</AdditionalDependencies>
       <AdditionalOptions>/ignore:4199 %(AdditionalOptions)</AdditionalOptions>
       <AllowIsolation>true</AllowIsolation>
       <DataExecutionPrevention>true</DataExecutionPrevention>
@@ -133,7 +133,7 @@
       <TargetMachine>MachineX64</TargetMachine>
     </Link>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\include\node;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\src;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\openssl\config;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\openssl\openssl\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\uv\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\zlib;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.5\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\include\node;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\src;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\openssl\config;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\openssl\openssl\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\uv\include;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\zlib;C:\Users\Ralph\.electron-gyp\.node-gyp\iojs-2.0.7\deps\v8\include;..\..\nan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NODE_GYP_MODULE_NAME=serialport;USING_UV_SHARED=1;USING_V8_SHARED=1;V8_DEPRECATION_WARNINGS=1;WIN32;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_HAS_EXCEPTIONS=0;BUILDING_NODE_EXTENSION;%(PreprocessorDefinitions);%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
   </ItemDefinitionGroup>
@@ -143,7 +143,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\serialport.cpp"/>
     <ClCompile Include="..\src\serialport_win.cpp"/>
-    <ClCompile Include="D:\Projects\pymakr-vsc-master\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
+    <ClCompile Include="D:\Projects\pymakr-vsc\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>
   <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets"/>

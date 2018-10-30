@@ -1,33 +1,9 @@
 {
-  "_args": [
-    [
-      {
-        "raw": "serialport@^6.2.0",
-        "scope": null,
-        "escapedName": "serialport",
-        "name": "serialport",
-        "rawSpec": "^6.2.0",
-        "spec": ">=6.2.0 <7.0.0",
-        "type": "range"
-      },
-      "D:\\Projects\\pymakr-vsc-master"
-    ]
-  ],
-  "_from": "serialport@>=6.2.0 <7.0.0",
-  "_hasShrinkwrap": false,
+  "_from": "serialport@6.2.2",
   "_id": "serialport@6.2.2",
-  "_inCache": true,
+  "_inBundle": false,
+  "_integrity": "sha512-BQqTR06ZXKwKB6rUjeANm3aIZo0rqNbQsrQX5zKEDcNY4rxiu5dvdcfIOaAGuZkhW7jAKJsgKC5TjeURtLVuOQ==",
   "_location": "/serialport",
-  "_nodeVersion": "8.11.3",
-  "_npmOperationalInternal": {
-    "host": "s3://npm-registry-packages",
-    "tmp": "tmp/serialport_6.2.2_1532147783767_0.23375792991661237"
-  },
-  "_npmUser": {
-    "name": "reconbot",
-    "email": "wizard@roborooter.com"
-  },
-  "_npmVersion": "6.2.0",
   "_phantomChildren": {
     "detect-libc": "1.0.3",
     "expand-template": "1.1.1",
@@ -45,13 +21,14 @@
     "which-pm-runs": "1.0.0"
   },
   "_requested": {
-    "raw": "serialport@^6.2.0",
-    "scope": null,
-    "escapedName": "serialport",
+    "type": "version",
+    "registry": true,
+    "raw": "serialport@6.2.2",
     "name": "serialport",
-    "rawSpec": "^6.2.0",
-    "spec": ">=6.2.0 <7.0.0",
-    "type": "range"
+    "escapedName": "serialport",
+    "rawSpec": "6.2.2",
+    "saveSpec": null,
+    "fetchSpec": "6.2.2"
   },
   "_requiredBy": [
     "#USER",
@@ -59,9 +36,8 @@
   ],
   "_resolved": "https://registry.npmjs.org/serialport/-/serialport-6.2.2.tgz",
   "_shasum": "75532312571578b060eb29cbdf8f2f3e8ba03063",
-  "_shrinkwrap": null,
-  "_spec": "serialport@^6.2.0",
-  "_where": "D:\\Projects\\pymakr-vsc-master",
+  "_spec": "serialport@6.2.2",
+  "_where": "D:\\Projects\\pymakr-vsc",
   "bin": {
     "serialport-list": "./bin/list.js",
     "serialport-repl": "./bin/repl.js",
@@ -70,6 +46,7 @@
   "bugs": {
     "url": "https://github.com/node-serialport/node-serialport/issues"
   },
+  "bundleDependencies": false,
   "cc": {
     "filter": [
       "legal/copyright",
@@ -82,12 +59,12 @@
     "linelength": "120"
   },
   "dependencies": {
-    "@serialport/parser-byte-length": "^1.0.5",
-    "@serialport/parser-cctalk": "^1.0.5",
-    "@serialport/parser-delimiter": "^1.0.5",
-    "@serialport/parser-readline": "^1.0.5",
-    "@serialport/parser-ready": "^1.0.5",
-    "@serialport/parser-regex": "^1.0.5",
+    "parser-byte-length": "^1.0.5",
+    "parser-cctalk": "^1.0.5",
+    "parser-delimiter": "^1.0.5",
+    "parser-readline": "^1.0.5",
+    "parser-ready": "^1.0.5",
+    "parser-regex": "^1.0.5",
     "bindings": "1.3.0",
     "commander": "^2.13.0",
     "debug": "^3.1.0",
@@ -97,6 +74,7 @@
     "prompt-list": "^3.2.0",
     "safe-buffer": "^5.1.2"
   },
+  "deprecated": false,
   "description": "Node.js package to access serial ports. Linux, OSX and Windows. Welcome your robotic JavaScript overlords. Better yet, program them!",
   "devDependencies": {
     "@reconbot/jsdoc-theme": "^1.0.0",
@@ -116,19 +94,9 @@
     "proxyquire": "^2.0.0",
     "sinon": "^6.0.1"
   },
-  "directories": {},
-  "dist": {
-    "integrity": "sha512-BQqTR06ZXKwKB6rUjeANm3aIZo0rqNbQsrQX5zKEDcNY4rxiu5dvdcfIOaAGuZkhW7jAKJsgKC5TjeURtLVuOQ==",
-    "shasum": "75532312571578b060eb29cbdf8f2f3e8ba03063",
-    "tarball": "https://registry.npmjs.org/serialport/-/serialport-6.2.2.tgz",
-    "fileCount": 38,
-    "unpackedSize": 205564,
-    "npm-signature": "-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJbUrhHCRA9TVsSAnZWagAAyNUP/i/fhqDMbVzqlJkIcpeZ\nAfdsgImpaRCdQZk95FWrdECZPS5vJ8clYoomnMtmiaEd7CQw3oWoiuvsXtYK\nwl9+UY9Jqf/ImJHN1q+7KNv68hE10k2AkFqWOai6ZxVMnB3oLbbFDCmpGfuv\no0ss2ApK6JYWWp286gj/jOZKkF6M3eCnojjzTFRbFlbeOv5o53res6vVNfZB\nBucarGxl9ebZO0KTJGIA5a3xZHyJnGxpMV1lHzjK2mzC+Ruy/flqrIRKVCxq\nXJg6SmTbfeyQcDAFLYrgI9f/pNYju3Io5T8tY/H5bEUvRUX/P06P1puo3RPD\ny5CS9KU5oyWUeFIwuWLAyhCYepCnskOTbep6Uw2n1KhX8/jHLhWXLMrPhMnP\nkiPqaAvWvb3FABzqpnm6P5cIZMiIRi2dtly1m7Zo863OWRx30R81LE3zWAZ8\nf1LJYxoOvon17dnWwyXjhGvvvzDWhv/riViVyOLlDcAzFKQk5wJM8p74jdgN\nVRdufgVaLi3Sws6XIUr2I9so747Ji7d7y0rJsij5ttvO3RaO/BsRTwJKpL56\njDB0vqB3fTBi3Mb6xUQExKYVIgo0Lj3cgj+pvGpRXLAfyln8uOqb1dT6qi/M\nIT0Mc9EU1gSRqfNuCTznEA10MdZJjbsT3PeGRGBBZk3mu+8mYekjvjGCnOy3\n+6EI\r\n=5L6K\r\n-----END PGP SIGNATURE-----\r\n"
-  },
   "engines": {
     "node": ">=4.0.0"
   },
-  "gitHead": "eb0b7114d15808273528f05cce21086fcf2d11f7",
   "gypfile": true,
   "homepage": "https://github.com/node-serialport/node-serialport#readme",
   "keywords": [
@@ -156,21 +124,33 @@
   "main": "lib",
   "maintainers": [
     {
-      "name": "jjrosent",
+      "name": "Francis Gulotta",
+      "email": "wizard@roborooter.com",
+      "url": "https://www.roborooter.com"
+    },
+    {
+      "name": "Jacob Rosenthal",
       "email": "jakerosenthal@gmail.com"
     },
     {
-      "name": "reconbot",
-      "email": "wizard@roborooter.com"
+      "name": "Chris Williams",
+      "email": "voodootikigod@gmail.com",
+      "url": "http://www.voodootikigod.com"
     },
     {
-      "name": "voodootikigod",
-      "email": "voodootikigod@gmail.com"
+      "name": "Joe Ferner",
+      "email": "joe.ferner@nearinfinity.com"
+    },
+    {
+      "name": "Jay Beavers",
+      "email": "jay@hikinghomeschoolers.org"
+    },
+    {
+      "name": "Rob Giseburt",
+      "email": "giseburt@gmail.com"
     }
   ],
   "name": "serialport",
-  "optionalDependencies": {},
-  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git://github.com/node-serialport/node-serialport.git"

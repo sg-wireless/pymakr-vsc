@@ -6,10 +6,10 @@ var vtools = require('./functions-versions.js')
 
 var serialport_version = '6.2.2'
 var electron_version = '2.0.7'
-var user_folder = "C:\\Users\\ralph"
+var project_folder = "C:\\Users\\<username>\\Projects\\pymakr-vsc"
 
 var electron_rebuild_path = "$(npm bin)/"
-var electron_rebuild_path_win = user_folder + '\\Projects\\pymakr-vsc\\node_modules\\.bin\\electron-rebuild'
+var electron_rebuild_path_win = project_folder + '\\node_modules\\.bin\\electron-rebuild'
 
 var compile_for_windows = false
 if(process.argv && process.argv.length > 2 && process.argv[2] == 'win'){
