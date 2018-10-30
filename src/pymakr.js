@@ -518,16 +518,21 @@ export default class Pymakr extends EventEmitter {
       return
     }
     if(!this.synchronizing){
-      var code = this.api.getSelected() 
+      
+      this.runner.toggle(function(){
+        _this.setButtonState()
+      })
 
+      // TODO: fix runselection() feature to work stabily before enabling it with the code below
+      // var code = this.api.getSelected() 
       // if user has selected code, run that instead of the file
-      if(code){
-        this.runselection(code)
-      }else{
-        this.runner.toggle(function(){
-          _this.setButtonState()
-        })
-      }
+      // if(code){
+      //   this.runselection(code)
+      // }else{
+        // this.runner.toggle(function(){
+        //   _this.setButtonState()
+        // })
+      // }
       
     }
   }

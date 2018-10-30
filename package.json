@@ -51,10 +51,6 @@
         "title": "Pymakr > Run current file"
       },
       {
-        "command": "pymakr.runselection",
-        "title": "Pymakr > Run current selection"
-      },      
-      {
         "command": "pymakr.projectSettings",
         "title": "Pymakr > Project Settings"
       },
@@ -108,7 +104,8 @@
         "command": "pymakr.runselection",
         "key": "ctrl+shift+enter",
         "mac": "cmd+shift+enter"
-      },      {
+      },      
+      {
         "command": "pymakr.globalSettings",
         "key": "ctrl+shift+g",
         "mac": "cmd+shift+g"
@@ -134,10 +131,7 @@
           "command": "pymakr.run",
           "group": "pymakr"
         },
-        {
-          "command": "pymakr.runselection",
-          "group": "pymakr"
-        },        
+
         {
           "command": "pymakr.upload",
           "group": "pymakr"

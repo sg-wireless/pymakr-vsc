@@ -56,7 +56,7 @@ export default class PanelView extends EventEmitter {
     items.push({ label: "Pymakr > Connect", description: "", cmd: "connect" });
     items.push({ label: "Pymakr > Disconnect", description: "", cmd: "disconnect" });
     items.push({ label: "Pymakr > Run current file", description: "", cmd: "run" });
-    items.push({ label: "Pymakr > Run current line or selection", description: "", cmd: "runselection" });    
+    // items.push({ label: "Pymakr > Run current line or selection", description: "", cmd: "runselection" });    
     items.push({ label: "Pymakr > Upload Project", description: "", cmd: "upload" });
     items.push({ label: "Pymakr > Download Project", description: "", cmd: "download" });
     items.push({ label: "Pymakr > Project Settings", description: "", cmd: "project_settings" });
