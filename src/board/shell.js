@@ -31,7 +31,7 @@ export default class Shell {
   }
 
   getVersion(cb){
-    command =
+    var command =
         "import os\r\n" +
         "v = os.uname().release" +
         "sys.stdout.write(v)\r\n"
@@ -42,7 +42,7 @@ export default class Shell {
   }
 
   getFreeMemory(cb){
-    command =
+    var command =
         "import os\r\n" +
         "m = os.getfree('/flash')" +
         "sys.stdout.write(m)\r\n"
@@ -105,7 +105,7 @@ export default class Shell {
     }
 
     // contents = utf8.encode(contents)
-    get_file_command =
+    var get_file_command =
       "import ubinascii\r\n"+
       "f = open('"+name+"', 'wb')\r\n"
 
@@ -123,7 +123,7 @@ export default class Shell {
       },100)
     }
 
-    command = "import ubinascii,sys\r\n"
+    var command = "import ubinascii,sys\r\n"
     command += "f = open('"+name+"', 'rb')\r\n"
 
     command += "import ubinascii\r\n"
@@ -168,7 +168,7 @@ export default class Shell {
 
   removeFile(name,cb){
     var _this = this
-    command =
+    var command =
         "import os\r\n" +
         "os.remove('"+name+"')\r\n"
 
@@ -176,7 +176,7 @@ export default class Shell {
   }
 
   createDir(name,cb){
-    command =
+    var command =
         "import os\r\n" +
         "os.mkdir('"+name+"')\r\n"
 
@@ -184,7 +184,7 @@ export default class Shell {
   }
 
   removeDir(name,cb){
-    command =
+    var command =
         "import os\r\n" +
         "os.rmdir('"+name+"')\r\n"
 
@@ -193,7 +193,7 @@ export default class Shell {
 
   reset(cb){
     var _this = this
-    command =
+    var command =
         "import machine\r\n" +
         "machine.reset()\r\n"
 
@@ -267,7 +267,7 @@ export default class Shell {
   // evaluates command through REPL and returns the resulting feedback
   eval(c,cb,timeout){
     var _this = this
-    command =
+    var command =
         c+"\r\n"
 
     this.pyboard.exec_raw(command,function(err,content){

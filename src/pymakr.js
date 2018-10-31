@@ -422,67 +422,69 @@ export default class Pymakr extends EventEmitter {
 
   continueConnect(){
     var _this = this
-    this.pyboard.refreshConfig()
-    var address = this.pyboard.address
-    var connect_preamble = ""
-
-    if(address == "" || address == null){
-      if(!this.settings.auto_connect){
-        this.terminal.writeln("Address not configured. Please go to the settings to configure a valid address or comport")
-      }
-    }else{
-      if(this.settings.auto_connect){
-        connect_preamble = "Autoconnect: "
-      }
-      this.terminal.writeln(connect_preamble+"Connecting on "+address+"...");
-
-      var onconnect = function(err){
-        if(err){
-          _this.terminal.writeln("Connection error: "+err)
-        }else{
-          _this.api.setConnectionState(address,true,_this.view.project_name)
-          _this.connection_timer = setInterval(function(){
-            if(_this.pyboard.connected){
-              _this.api.setConnectionState(address,true,_this.view.project_name)
-            }else{
-              clearTimeout(_this.connection_timer)
-            }
-          },10000)
-        }
+    this.pyboard.refreshConfig(function(){
       
-        _this.setButtonState()
-      }
+      var address = _this.pyboard.address
+      var connect_preamble = ""
 
-      var onerror = function(err){
-        var message = _this.pyboard.getErrorMessage(err.message)
-        if(message == ""){
-          message = err.message ? err.message : "Unknown error"
+      if(address == "" || address == null){
+        if(!_this.settings.auto_connect){
+          _this.terminal.writeln("Address not configured. Please go to the settings to configure a valid address or comport")
         }
-        if(_this.pyboard.connected){
-          _this.logger.warning("An error occurred: "+message)
-          if(_this.synchronizing){
-            _this.terminal.writeln("An error occurred: "+message)
-            _this.logger.warning("Synchronizing, stopping sync")
-            _this.syncObj.stop()
+      }else{
+        if(_this.settings.auto_connect){
+          connect_preamble = "Autoconnect: "
+        }
+        _this.terminal.writeln(connect_preamble+"Connecting on "+address+"...");
+
+        var onconnect = function(err){
+          if(err){
+            _this.terminal.writeln("Connection error: "+err)
+          }else{
+            _this.api.setConnectionState(address,true,_this.view.project_name)
+            _this.connection_timer = setInterval(function(){
+              if(_this.pyboard.connected){
+                _this.api.setConnectionState(address,true,_this.view.project_name)
+              }else{
+                clearTimeout(_this.connection_timer)
+              }
+            },10000)
           }
-        }else{
-          _this.terminal.writeln("> Failed to connect ("+message+"). Click here to try again.")
+        
           _this.setButtonState()
         }
-      }
 
-      var ontimeout = function(err){
-        _this.terminal.writeln("> Connection timed out. Click here to try again.")
-        _this.setButtonState()
-      }
-
-      var onmessage = function(mssg){
-        if(!_this.synchronizing){
-          _this.terminal.write(mssg)
+        var onerror = function(err){
+          var message = _this.pyboard.getErrorMessage(err.message)
+          if(message == ""){
+            message = err.message ? err.message : "Unknown error"
+          }
+          if(_this.pyboard.connected){
+            _this.logger.warning("An error occurred: "+message)
+            if(_this.synchronizing){
+              _this.terminal.writeln("An error occurred: "+message)
+              _this.logger.warning("Synchronizing, stopping sync")
+              _this.syncObj.stop()
+            }
+          }else{
+            _this.terminal.writeln("> Failed to connect ("+message+"). Click here to try again.")
+            _this.setButtonState()
+          }
         }
+
+        var ontimeout = function(err){
+          _this.terminal.writeln("> Connection timed out. Click here to try again.")
+          _this.setButtonState()
+        }
+
+        var onmessage = function(mssg){
+          if(!_this.synchronizing){
+            _this.terminal.write(mssg)
+          }
+        }
+        _this.pyboard.connect(address,onconnect,onerror, ontimeout, onmessage)
       }
-      _this.pyboard.connect(address,onconnect,onerror, ontimeout, onmessage)
-    }
+    })
   }
 
   disconnect(cb){

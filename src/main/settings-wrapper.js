@@ -83,7 +83,7 @@ export default class SettingsWrapper extends EventEmitter {
 
   watchConfigFile(file){
     if(!file){
-      file = this.config_file
+      file = this.global_config_file
     }
 
     this.logger.info("Watching config file "+file)
@@ -110,9 +110,11 @@ export default class SettingsWrapper extends EventEmitter {
   }
 
   refresh(cb){
-    this.refreshProjectConfig()
-    this.refreshGlobalConfig(cb)
-    
+    var _this = this
+    this.refreshGlobalConfig(function(){
+      _this.refreshProjectConfig()
+      if(cb) cb()
+    })
 
   }
   refreshGlobalConfig(cb){
