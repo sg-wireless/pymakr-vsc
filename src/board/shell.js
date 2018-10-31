@@ -7,8 +7,6 @@ import Utils from '../helpers/utils.js';
 var binascii = require('binascii');
 var utf8 = require('utf8');
 var crypto = require('crypto');
-var CryptoJS = require("crypto-js");
-var SHA256 = require("crypto-js/sha256");
 
 var EventEmitter = require('events');
 const ee = new EventEmitter();
@@ -54,7 +52,7 @@ export default class Shell {
     })
   }
 
-  writeFile(name,file_path,contents,callback,retries=0){
+  writeFile(name,file_path,contents,compare_hash,callback,retries=0){
     var _this = this
     this.logger.info("Writing file: "+name)
 
@@ -65,23 +63,17 @@ export default class Shell {
     }
 
     var worker = function(content,callback){
-      try{
-        _this.workers.write_file(content,callback)
-      }catch(e){
-        _this.logger.error("Failed to write file:")
-        console.log(e)
-        retry(e)
-      }
+      _this.workers.write_file(content,callback)
     }
 
     var retry = function(err){
       if(retries < _this.RETRIES){
         cb(null,true)
         setTimeout(function(){
-          _this.writeFile(name,file_path,contents,cb,retries+1)
+            _this.writeFile(name,file_path,contents,compare_hash,cb,retries+1)
         },1000)
       }else{
-        _this.logger.silly("No more retries:")
+        console.log("No more retries:")
         cb(err)
       }
     }
@@ -92,14 +84,18 @@ export default class Shell {
           retry(err)
 
         }else if(!err && !close_err){
-          _this.compare_hash(name,file_path,contents,function(match){
-            if(match){
-              cb(null)
-            }else{
-              _this.logger.warning("File hash check didn't match, trying again")
-              retry(new Error("Filecheck failed"))
-            }
-          })
+          if(compare_hash){
+            _this.compare_hash(name,file_path,contents,function(match){
+              if(match){
+                cb(null)
+              }else{
+                _this.logger.warning("File hash check didn't match, trying again")
+                retry(new Error("Filecheck failed"))
+              }
+            })
+          }else{
+            cb(null)
+          }
         }else if(err){
           cb(err)
         }else{
@@ -114,13 +110,7 @@ export default class Shell {
       "f = open('"+name+"', 'wb')\r\n"
 
     this.pyboard.exec_raw_no_reset(get_file_command,function(){
-      try{  
-        _this.utils.doRecursively([contents,0],worker,end)
-      }catch(e){
-        _this.logger.error("Failed to write file:")
-        console.log(e)
-        end(e)
-      }
+      _this.utils.doRecursively([contents,0],worker,end)
     })
   }
 
@@ -239,17 +229,16 @@ export default class Shell {
       })
     }
     // the file you want to get the hash
-    if(file_path){    
+    if(file_path){
       var fd = fs.createReadStream(file_path);
       var hash = crypto.createHash('sha256');
       hash.setEncoding('hex');
-      
+
       fd.on('end', function() {
           hash.end();
           var local_hash = hash.read()
           compare(local_hash)
       });
-
       fd.pipe(hash);
     }else{
       var local_hash = crypto.createHash('sha256').update(content_buffer.toString()).digest('hex');
@@ -271,7 +260,7 @@ export default class Shell {
       _this.logger.silly(err)
       _this.logger.silly(content)
       cb(err,content)
-    },1000)
+    },20000)
   }
 
 

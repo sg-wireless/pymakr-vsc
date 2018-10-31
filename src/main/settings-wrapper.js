@@ -6,11 +6,13 @@ var fs = require('fs');
 var vscode = require('vscode');
 import Config from '../config.js'
 import Utils from '../helpers/utils.js';
+import PySerial from '../connections/pyserial';
 import {workspace} from 'vscode';
+const dns = require('dns');
 
 
 export default class SettingsWrapper extends EventEmitter {
-  constructor() {
+  constructor(cb) {
     super()
     this.config = Config.settings()
     this.project_config = {}
@@ -20,21 +22,29 @@ export default class SettingsWrapper extends EventEmitter {
     this.config_file = this.project_path+"/pymakr.conf"
     this.json_valid = true
     this.logger = new Logger('SettingsWrapper')
+    this.utils = new Utils(this)
     this.project_change_callbacks = []
     this.global_config = {}
     this.watching = {}
     this.file_watcher = {}
     this.change_watcher = {}
     var _this = this
-    
-    this.readConfigFile(this.global_config_file,true,function(contents){
-      _this.global_config = contents
-      _this.readConfigFile(_this.config_file,false,function(contents){
-        _this.project_config = contents
-        _this.refresh()
-        _this.watchProjectChange()
-      })
+
+
+    this.refresh(function(){
+      _this.watchConfigFile()
+      _this.watchProjectChange()
+      cb(_this)
     })
+    
+    // this.readConfigFile(this.global_config_file,true,function(contents){
+    //   _this.global_config = contents
+    //   _this.readConfigFile(_this.config_file,false,function(contents){
+    //     _this.project_config = contents
+    //     _this.refresh()
+    //     _this.watchProjectChange()
+    //   })
+    // })
     
     // this.watchConfigFile(this.config_file)
     
@@ -72,6 +82,10 @@ export default class SettingsWrapper extends EventEmitter {
   }
 
   watchConfigFile(file){
+    if(!file){
+      file = this.global_config_file
+    }
+
     this.logger.info("Watching config file "+file)
     var _this = this
     if(this.file_watcher[file]){
@@ -95,12 +109,16 @@ export default class SettingsWrapper extends EventEmitter {
     })
   }
 
-  refresh(){
-    this.refreshGlobalConfig()
-    this.refreshProjectConfig()
+  refresh(cb){
+    var _this = this
+    this.refreshGlobalConfig(function(){
+      _this.refreshProjectConfig()
+      if(cb) cb()
+    })
 
   }
-  refreshGlobalConfig(){
+  refreshGlobalConfig(cb){
+    var _this = this
 
     this.logger.info("Refreshing global config")
     try{
@@ -137,6 +155,28 @@ export default class SettingsWrapper extends EventEmitter {
     }
     this.statusbar_buttons.push('global_settings')
     this.statusbar_buttons.push('project_settings')
+
+
+    PySerial.isSerialPort(this.address,function(is_serial){
+
+      if(is_serial || _this.utils.isIP(_this.address)){
+        if(cb) cb()
+      }else if(!_this.auto_connect){
+
+        // If content is no IP or com, it might be a domain name
+        // Try to look up the IP and overwrite self.address
+        dns.lookup(_this.api.config('address'), (err, address, family) => {
+          _this.logger.info("Found dns lookup address: "+address)
+          if(address && address.indexOf(".") > -1){
+            _this.address = address
+          }
+          if(cb) cb()
+        })
+      }else{
+        if(cb) cb()
+      }
+    })
+
   }
 
   trigger_global_change_watchers(){
@@ -151,9 +191,12 @@ export default class SettingsWrapper extends EventEmitter {
   }
 
   get_allowed_file_types(){
-    var types = this.sync_file_types.split(',')
-    for(var i = 0; i < types.length; i++) {
-      types[i] = types[i].trim();
+    var types = []
+    if(this.sync_file_types){
+      types = this.sync_file_types.split(',')
+      for(var i = 0; i < types.length; i++) {
+        types[i] = types[i].trim();
+      }
     }
     return types
   }
@@ -353,7 +396,6 @@ export default class SettingsWrapper extends EventEmitter {
     }else{
       _this.api.openFile(filename,cb)
     }
-
   }
 
   createSettingsFile(filename,contents,cb,open=false){

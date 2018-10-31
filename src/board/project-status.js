@@ -28,14 +28,12 @@ export default class ProjectStatus {
 
   read(cb){
     var _this = this
-
     this.shell.readFile('project.pymakr',function(err,content_buffs,content_str){
       if(err){
         cb(err)
         return
       }
 
-      
       while(content_str.slice(content_str.length-2,content_str.length) != "]]"){
         content_str += "]"
       }
@@ -66,7 +64,7 @@ export default class ProjectStatus {
       this.logger.info('Writing project status file to board')
       var board_hash_array = Object.values(this.board_file_hashes)
       var project_file_content = new Buffer(JSON.stringify(board_hash_array))
-      this.shell.writeFile('project.pymakr',null,project_file_content,cb,10) // last param prevents any retries
+      this.shell.writeFile('project.pymakr',null,project_file_content,true,cb,10) // last param prevents any retries
     }else{
       this.logger.info('No changes to file, not writing')
       cb()
@@ -83,7 +81,7 @@ export default class ProjectStatus {
   }
 
   remove(filename){
-    delete this.board_file_hashes[name]
+    delete this.board_file_hashes[filename]
   }
 
   __process_file(){
@@ -113,7 +111,11 @@ export default class ProjectStatus {
       if(filename.length > 0 && filename.substring(0,1) != "."){
         var file_path = this.local_folder + filename
         var stats = fs.lstatSync(file_path)
-        if(stats.isDirectory()){
+        var is_dir = stats.isDirectory()
+        if(stats.isSymbolicLink()){
+          is_dir = filename.indexOf('.') == -1
+        } 
+        if(is_dir){
           var files_from_folder = this.__get_local_files(file_path)
           if(files_from_folder.length > 0){
             var hash = crypto.createHash('sha256').update(filename).digest('hex')
@@ -126,7 +128,7 @@ export default class ProjectStatus {
           this.total_number_of_files += 1
           var contents = fs.readFileSync(file_path)
           var hash = crypto.createHash('sha256').update(contents).digest('hex')
-          file_hashes[filename] = [filename,"f",hash]
+          file_hashes[filename] = [filename,"f",hash,stats.size]
         }
       }
     }
