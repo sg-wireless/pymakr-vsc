@@ -51,6 +51,10 @@
         "title": "Pymakr > Run current file"
       },
       {
+        "command": "pymakr.runselection",
+        "title": "Pymakr > Run current selection"
+      },      
+      {
         "command": "pymakr.projectSettings",
         "title": "Pymakr > Project Settings"
       },
@@ -131,6 +135,10 @@
           "command": "pymakr.run",
           "group": "pymakr"
         },
+        {
+          "command": "pymakr.runselection",
+          "group": "pymakr"
+        },        
         {
           "command": "pymakr.upload",
           "group": "pymakr"

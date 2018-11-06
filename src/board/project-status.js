@@ -114,7 +114,7 @@ export default class ProjectStatus {
         var is_dir = stats.isDirectory()
         if(stats.isSymbolicLink()){
           is_dir = filename.indexOf('.') == -1
-        } 
+        }
         if(is_dir){
           var files_from_folder = this.__get_local_files(file_path)
           if(files_from_folder.length > 0){
