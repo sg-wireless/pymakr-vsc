@@ -114,7 +114,7 @@ export default class Pyboard {
 
   enter_friendly_repl(callback){
     var _this = this
-    _this.send_wait_for_blocking(CTRL_B,'Type "help()" for more information.\r\n>>>',function(err){
+    _this.send_wait_for_blocking(CTRL_B,'\r\n>>>',function(err){
       if(!err){
         _this.setStatus(FRIENDLY_REPL)
       }
@@ -413,6 +413,8 @@ export default class Pyboard {
   }
 
   // run a line or a block of code using paste mode
+  // TODO: has a bug where wait_for_blocking sometimes hangs forever
+  // Function is not currently used anywhere, run() function is used for running selections.
   runblock(codeblock,cb){
     var _this = this
     this.stop_running_programs(function(){

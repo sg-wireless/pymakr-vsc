@@ -103,6 +103,13 @@ If the Pymakr terminal is not opening or giving an error, this might be because 
 
 **Solution:** Install NodeJS. For windows 64 machines, install a 32 bit version of nodejs (for example `nvm install 7.8.0 32` when using nvm).
 
+
+### Cannot connect to Pycom device on Linux
+
+If you're a linux user and can't connect to your board, there might be a permission issue to access the serial port.
+
+**Solution:** Run the following command `sudo usermod -a -G dialout $USER`
+
 ## Developing
 If you want to contribute to this project you can test the app the following way:
 

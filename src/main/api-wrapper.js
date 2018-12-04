@@ -249,7 +249,6 @@ export default class ApiWrapper {
       code = editor.document.lineAt(selection.active.line).text;       
     }
     return code
-    
   }
 
   // restore the focus to the Editor after running a section of code
