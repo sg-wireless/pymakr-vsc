@@ -31,20 +31,23 @@ export default class SettingsWrapper extends EventEmitter {
     var _this = this
 
 
-    this.refresh(function(){
-      _this.watchConfigFile()
-      _this.watchProjectChange()
-      cb(_this)
-    })
-    
-    // this.readConfigFile(this.global_config_file,true,function(contents){
-    //   _this.global_config = contents
-    //   _this.readConfigFile(_this.config_file,false,function(contents){
-    //     _this.project_config = contents
-    //     _this.refresh()
-    //     _this.watchProjectChange()
-    //   })
+    // this.refresh(function(){
+    //   _this.watchConfigFile()
+    //   _this.watchProjectChange()
+    //   cb(_this)
     // })
+    
+    this.readConfigFile(this.global_config_file,true,function(contents){
+      _this.global_config = contents
+      _this.readConfigFile(_this.config_file,false,function(contents){
+        _this.project_config = contents
+        _this.refresh(function(){
+          _this.watchConfigFile()
+          _this.watchProjectChange()
+          cb(_this)
+        })
+      })
+    })
     
     // this.watchConfigFile(this.config_file)
     

@@ -24,7 +24,7 @@ export default class PanelView extends EventEmitter {
     this.statusItems = {}
     this.statusItems['status'] = this.createStatusItem('status',"","pymakr.toggleConnect","Toggle terminal") // name is set using setTitle function
     this.statusItems['run'] = this.createStatusItem('run',"$(triangle-right) Run","pymakr.run","Run current file")
-    //todo: --> this.statusItems['runselection'] = this.createStatusItem('runselection',"$(triangle-right) Run Line","pymakr.runselection","Run current line")
+    this.statusItems['runselection'] = this.createStatusItem('runselection',"$(triangle-right) Run Line","pymakr.runselection","Run current line")
     this.statusItems['upload'] = this.createStatusItem('upload',"$(triangle-up) Upload","pymakr.upload","Upload project to your board")
     this.statusItems['download'] = this.createStatusItem('download',"$(triangle-down) Download","pymakr.download","Download project from your board")
     this.statusItems['disconnect'] = this.createStatusItem('disconnect',"$(x) Disconnect","pymakr.disconnect","Disconnect")
