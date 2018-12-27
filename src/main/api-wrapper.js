@@ -233,7 +233,7 @@ export default class ApiWrapper {
     var selection = editor.selection;
     var codesnip = ""
     if (!selection.isEmpty) {
-      //no active selection , get the current line 
+      //active selection , get the selected code 
       return editor.document.getText(selection); 
     }
     return codesnip
@@ -254,8 +254,9 @@ export default class ApiWrapper {
 
   // restore the focus to the Editor after running a section of code
   editorFocus(){
+    console.log('Reset Focus > Next > Prev ')
+    // a bit of a workaround, switch to Next and back again , as focusActiveEditorGroup does not activate the editor 
+    vscode.commands.executeCommand( 'workbench.action.focusNextGroup') 
     vscode.commands.executeCommand( 'workbench.action.focusPreviousGroup') 
-    // ? "command": "workbench.action.focusActiveEditorGroup",  var disposable = 
   }
-
 }
