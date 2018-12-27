@@ -88,10 +88,10 @@ export default class Runner {
     },onerror)
   }
 
-  //remove excessive identation 
+  //remove excessive indentation 
   __trimcodeblock(codeblock){
-    // regex to split both win and unix style 
-    var lines = codeblock.match(/[^\n]+(?:\r?\n|$)/g);
+    // regex to .split both win and unix style 
+    var lines = codeblock.split(/\r?\n/)
     // count leading spaces in line1 ( Only spaces, not TAB)
     var count = 0 
     while (lines[0].startsWith(' ',count ) ){
@@ -104,13 +104,17 @@ export default class Runner {
         if (lines[i].startsWith(prefix) ) {
           lines[i] = lines[i].slice(count);  
         } else {
-            // funky identation or selection; just trim spaces and add warning
+            // funky indentation or selection; just trim spaces and add warning
             lines[i] = lines[i].trim() + " # <- IndentationError"; 
         }
       }
     }
+    // remove empty last line( todo:lines)
+    if (lines[lines.length-1].length == 0 ) {
+      lines = lines.slice(0, -1); 
+    }
     // glue the lines back together 
-    return( lines.join('')) 
+    return( lines.join('\r\n')) 
   }
 
 }

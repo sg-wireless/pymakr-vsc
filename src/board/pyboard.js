@@ -410,8 +410,8 @@ export default class Pyboard {
     var _this = this
     this.stop_running_programs(function(){
       _this.setStatus(PASTE_MODE)
-
-      var last_command = codeblock.split('/r/n').pop()
+      //get the last line of the codeblock
+      var last_command = codeblock.split('\r\n').pop()
       _this.exec_raw_no_reset(CTRL_E + codeblock+"\r\n" + CTRL_D ,function(){
         _this.wait_for_blocking(last_command + "\r\n===",function(){
             cb();

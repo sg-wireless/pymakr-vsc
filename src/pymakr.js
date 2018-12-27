@@ -548,7 +548,7 @@ export default class Pymakr extends EventEmitter {
       var code = this.api.getSelectedOrLine() 
       _this.runner.selection(code,function(err){
         if(err){
-          _this.logger.error("Failed to send and execute codeblock ")
+          _this.logger.error("Failed to send and execute codeblock.")
         } else {
           //return focus to editor
           _this.api.editorFocus()
