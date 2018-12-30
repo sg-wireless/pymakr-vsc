@@ -62,7 +62,7 @@ export default class Pyboard {
       this.address = this.settings.address
     }
   }
-
+  // store the address (tcp or serial)
   setAddress(address){
     this.address = address
   }
@@ -145,7 +145,8 @@ export default class Pyboard {
       }
     },2000)
   }
-
+  // send : [Ctrl-D][CR][LF] ; wait for prompt ( > or OK ) 
+  // todo: is extra CR/LF needed ?
   soft_reset(cb,timeout){
     if(!timeout){
       timeout = 5000
@@ -154,12 +155,15 @@ export default class Pyboard {
     var wait_for = this.status == RAW_REPL ? ">" : "OK"
     this.send_wait_for_blocking(CTRL_D,wait_for,cb,timeout)
   }
-
+  // send : [Ctrl-D] ;
   soft_reset_no_follow(cb){
     this.logger.info("Soft reset no follow")
+    //todo: , extra parameter not in function definition
     this.send(CTRL_D,cb,5000)
   }
 
+  // send : [Ctrl-F][CR][LF] ; wait for booted prompt 
+  // extra CR/LF is not needed, but has no ill effect 
   safe_boot(cb,timeout){
     var _this = this
     this.logger.info("Safe boot")
@@ -169,21 +173,24 @@ export default class Pyboard {
     },timeout)
 
   }
-
+  // send : [Ctrl-C] [CR][LF]; wait for >>> prompt
+  // todo: extra CR/LF is not needed, results in 2x  >>>
   stop_running_programs(cb){
     this.send_wait_for(CTRL_C,">>>",function(err){
       if(cb) cb(err)
     },5000)
   }
 
+  // send : [Ctrl-C][Ctrl-C] [CR][LF] ; wait for >>> prompt
+  // todo: extra CR/LF is not needed, results in 2x  >>>
   stop_running_programs_double(cb,timeout){
-
     this.send_wait_for(CTRL_C+CTRL_C,">>>",function(err){
       if(cb) cb(err)
     },timeout)
   }
 
-
+  // send [Ctrl-C][CR-LF]
+  // todo: extra CR/LF is not needed, results in 2x  >>>
   stop_running_programs_nofollow(callback){
     this.logger.info("CTRL-C (nofollow)")
     this.send_with_enter(CTRL_C,function(){
@@ -191,6 +198,9 @@ export default class Pyboard {
     })
   }
 
+  // enter Raw Repl 
+  // send [Ctrl-A][CRLF]
+  // todo: extra CR/LF is not needed, may be the cause of the incorrect line numbering in run-file 
   enter_raw_repl_no_reset(callback){
     var _this = this
       _this.flush(function(){
@@ -207,6 +217,9 @@ export default class Pyboard {
     // })
   }
 
+  // enter Raw Repl and soft reset 
+  // send [Ctrl-A][CR-LF] [Ctrl-D][CR-LF]
+  // todo: extra CR/LF sequences are not needed, may be the cause of the incorrect line numbering in run-file 
   enter_raw_repl(callback){
     var _this = this
     this.enter_raw_repl_no_reset(function(err){
@@ -311,7 +324,7 @@ export default class Pyboard {
     this.stopPings()
   }
 
-
+  // receive is called each time data is received from the connected board via serial/socket/telnet 
   receive(mssg,raw){
     this.logger.silly('Received message: '+mssg)
     if(!this.wait_for_block && typeof mssg != 'object'){
@@ -406,6 +419,7 @@ export default class Pyboard {
   }
 
   // run a line or a block of code using paste mode
+  // [Ctrl-E] <codeblock> [CR][LF] ; waitfor <lastline in codeblock>+[CR][LF]+"==="
   runblock(codeblock,cb){
     var _this = this
     this.stop_running_programs(function(){
@@ -422,8 +436,11 @@ export default class Pyboard {
     })
   }
 
+  /* 
+  *   All send methods send messages, transmit data to MCU
+  */ 
 
-
+  // send: <mssg> 
   send(mssg,cb){
     if(!this.connection){
       cb(new Error("No connection"))
@@ -431,7 +448,7 @@ export default class Pyboard {
     }
     this.connection.send(mssg,cb)
   }
-
+  //send: <mssg> [CR][LF]
   send_with_enter(mssg,cb){
     if(!this.connection){
       cb(new Error("No connection"))
@@ -440,6 +457,8 @@ export default class Pyboard {
     this.connection.send(mssg+'\r\n',cb)
   }
 
+  // send: [\x1b] + <cmd[binary]>
+  // todo: the goal of \x1b is unclear, perhaps VT100 / ANSI escape, maybe this is the source of the strange characters ?
   send_cmd(cmd,cb){
     if(!this.connection){
       cb(new Error("No connection"))
@@ -450,6 +469,8 @@ export default class Pyboard {
     this.connection.send_raw(data,cb)
   }
 
+  // // send: [\x1b] + <cmd[binary]> ; read response to rcv buffer, wait for string <wait_for>
+  // // todo: the goal of \x1b is unclear, perhaps VT100 / ANSI Escape , maybe this is the source of the strange characters ?
   send_cmd_read(cmd,wait_for,cb,timeout){
 
     if(typeof wait_for == "string"){
@@ -460,6 +481,8 @@ export default class Pyboard {
     this.send_cmd(cmd)
   }
 
+  // // send: [\x1b] + <cmd[binary]> ; wait for string <wait_for>
+  // // todo: the goal of \x1b is unclear, perhaps VT100 / ANSI Escape , maybe this is the source of the strange characters ?
   send_cmd_wait_for(cmd,wait_for,cb,timeout){
 
     if(typeof wait_for == "string"){
@@ -472,10 +495,10 @@ export default class Pyboard {
     })
   }
 
+  // send: cmd
   send_user_input(mssg,cb){
     this.send(mssg,cb)
   }
-
 
   send_raw_wait_for(mssg,wait_for,cb,timeout){
     this.wait_for(wait_for,cb,timeout)
@@ -492,6 +515,7 @@ export default class Pyboard {
     this.send_with_enter(mssg);
   }
 
+  // clear rcv buffer and wait_for in blocking mode 
   wait_for_blocking(wait_for,cb,timeout,type){
     this.wait_for(wait_for,cb,timeout,type)
     this.wait_for_block = true
@@ -502,10 +526,17 @@ export default class Pyboard {
     this.send_with_enter(mssg)
   }
 
+  // clear rcv buffer and read specified number of bytes into rcv buffer 
   read(number,cb,timeout){
     this.wait_for_blocking(number,cb,timeout,'length')
   }
 
+
+  // wait for the board to return a specific string or length
+  // the checking logic  is part of the receive method   
+  // type = 'string' : start waiting for specified string <wait_for>
+  // type = 'length': start waiting for number of bytes to be received <wait_for>
+  // clear (default true) indicates clearing the receive buffer at this point in time 
   wait_for(wait_for,cb,timeout,type,clear=true){
     if(!type){ type = 'string'}
     this.waiting_for_type = type
@@ -551,6 +582,7 @@ export default class Pyboard {
     this.connection.send_raw(mssg,cb)
   }
 
+  // <code[binary]>
   exec_raw_no_reset(code,cb){
     this.logger.verbose("Executing code:" +code)
     var data = new Buffer(code,"binary")
@@ -560,13 +592,14 @@ export default class Pyboard {
       }
     })
   }
-
+  // delay 50ms, <code[binary]>
   exec_raw_delayed(code,cb,timeout){
     var _this = this
     setTimeout(function(){
       _this.exec_raw(code,cb,timeout)
     },50)
   }
+  // <code[binary]>, soft-reset
   exec_raw(code,cb,timeout){
     var _this = this
     this.exec_raw_no_reset(code,function(){
@@ -574,7 +607,7 @@ export default class Pyboard {
         _this.soft_reset(cb,timeout)
     })
   }
-
+  // CR-LF, <code>, soft-reset 
   exec_(code,cb){
     var _this = this
     this.exec_raw_no_reset("\r\n"+code,function(){
@@ -583,6 +616,7 @@ export default class Pyboard {
     })
   }
 
+  // flush the buffer to the MCU 
   flush(cb){
     if(!this.connection){
       cb(new Error("No connection"))
@@ -590,7 +624,7 @@ export default class Pyboard {
     }
     this.connection.flush(cb)
   }
-
+  // check if the received text contains one of the known error messages (list of 6)  
   getErrorMessage(text){
     var messages = this.config.error_messages
     for(var key in messages){
