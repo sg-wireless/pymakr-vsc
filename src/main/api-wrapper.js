@@ -1,4 +1,5 @@
 'use babel';
+// cSpell:words pymakr
 const EventEmitter = require('events');
 var fs = require('fs');
 var vscode = require('vscode');
@@ -20,7 +21,7 @@ export default class ApiWrapper {
   }
 
   onConfigChange(key,cb){
-   // Unused in vscode (config change callbacks handled in setings-wrapper)
+   // Unused in vscode (config change callbacks handled in settings-wrapper)
   }
 
   config(key){
@@ -81,8 +82,8 @@ export default class ApiWrapper {
       
     }
   }
-
-  writeToCipboard(text){
+  // writeToCipboard changed to writeToClipboard
+  writeToClipboard(text){
     ncp.copy(text,function(){
       // completed
     })
@@ -109,7 +110,7 @@ export default class ApiWrapper {
   }
 
   clipboard(){
-    // no implmenetation needed, terminal supports it by default
+    // no implementation needed, terminal supports it by default
   }
 
   getConnectionState(com){
@@ -156,7 +157,7 @@ export default class ApiWrapper {
   }
 
   writeClipboard(text){
-    // no implmenetation needed, terminal supports it by default
+    // no implementation needed, terminal supports it by default
   }
 
   getProjectPaths(){
@@ -254,9 +255,7 @@ export default class ApiWrapper {
 
   // restore the focus to the Editor after running a section of code
   editorFocus(){
-    console.log('Reset Focus > Next > Prev ')
-    // a bit of a workaround, switch to Next and back again , as focusActiveEditorGroup does not activate the editor 
-    vscode.commands.executeCommand( 'workbench.action.focusNextGroup') 
-    vscode.commands.executeCommand( 'workbench.action.focusPreviousGroup') 
+    console.log('Reset Focus to editor')
+    vscode.window.showTextDocument(vscode.window.activeTextEditor.document)
   }
 }
