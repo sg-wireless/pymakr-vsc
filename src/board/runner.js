@@ -97,7 +97,7 @@ export default class Runner {
     while (lines[0].startsWith(' ',count ) ){
       count ++;
     }
-    // remove from all lines
+    // remove indent (count) from all lines
     if (count > 0){
       var prefix = " ".repeat(count)      
       for (let i = 0; i < lines.length; i++) {
@@ -109,12 +109,11 @@ export default class Runner {
         }
       }
     }
-    // remove empty last line( todo:lines)
-    if (lines[lines.length-1].length == 0 ) {
+    // remove empty last line(s)
+    while (lines[lines.length-1].length == 0 ) {
       lines = lines.slice(0, -1); 
     }
     // glue the lines back together 
     return( lines.join('\r\n')) 
   }
-
 }
