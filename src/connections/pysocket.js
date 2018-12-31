@@ -82,11 +82,11 @@ export default class PySocket {
     }
   }
 
-  send_cmd(cmd,cb){
-    var mssg = '\x1b\x1b' + cmd
-    var data = new Buffer(mssg,"binary")
-    this.send_raw(data,cb)
-  }
+  // send_cmd(cmd,cb){
+  //   var mssg = '\x1b\x1b' + cmd
+  //   var data = new Buffer(mssg,"binary")
+  //   this.send_raw(data,cb)
+  // }
 
   sendPing(cb){
     if(cb) cb(null)

@@ -145,8 +145,7 @@ export default class Pyboard {
       }
     },2000)
   }
-  // send : [Ctrl-D][CR][LF] ; wait for prompt ( > or OK ) 
-  // todo: is extra CR/LF needed ?
+  // send : [Ctrl-D] ; wait for prompt ( > or OK ) 
   soft_reset(cb,timeout){
     if(!timeout){
       timeout = 5000
@@ -162,8 +161,7 @@ export default class Pyboard {
     this.send(CTRL_D,cb,5000)
   }
 
-  // send : [Ctrl-F][CR][LF] ; wait for booted prompt 
-  // extra CR/LF is not needed, but has no ill effect 
+  // send : [Ctrl-F]; wait for booted prompt 
   safe_boot(cb,timeout){
     var _this = this
     this.logger.info("Safe boot")
@@ -173,24 +171,21 @@ export default class Pyboard {
     },timeout)
 
   }
-  // send : [Ctrl-C] [CR][LF]; wait for >>> prompt
-  // todo: extra CR/LF is not needed, results in 2x  >>>
+  // send : [Ctrl-C]; wait for >>> prompt
   stop_running_programs(cb){
     this.send_wait_for(CTRL_C,">>>",function(err){
       if(cb) cb(err)
     },5000)
   }
 
-  // send : [Ctrl-C][Ctrl-C] [CR][LF] ; wait for >>> prompt
-  // todo: extra CR/LF is not needed, results in 2x  >>>
+  // send : [Ctrl-C][Ctrl-C] ; wait for >>> prompt
   stop_running_programs_double(cb,timeout){
     this.send_wait_for(CTRL_C+CTRL_C,">>>",function(err){
       if(cb) cb(err)
     },timeout)
   }
 
-  // send [Ctrl-C][CR-LF]
-  // todo: extra CR/LF is not needed, results in 2x  >>>
+  // send [Ctrl-C]
   stop_running_programs_nofollow(callback){
     this.logger.info("CTRL-C (nofollow)")
     this.send_with_enter(CTRL_C,function(){
@@ -199,8 +194,7 @@ export default class Pyboard {
   }
 
   // enter Raw Repl 
-  // send [Ctrl-A][CRLF]
-  // todo: extra CR/LF is not needed, may be the cause of the incorrect line numbering in run-file 
+  // send [Ctrl-A]
   enter_raw_repl_no_reset(callback){
     var _this = this
       _this.flush(function(){
@@ -218,8 +212,7 @@ export default class Pyboard {
   }
 
   // enter Raw Repl and soft reset 
-  // send [Ctrl-A][CR-LF] [Ctrl-D][CR-LF]
-  // todo: extra CR/LF sequences are not needed, may be the cause of the incorrect line numbering in run-file 
+  // send [Ctrl-A] [Ctrl-D]
   enter_raw_repl(callback){
     var _this = this
     this.enter_raw_repl_no_reset(function(err){
@@ -405,10 +398,8 @@ export default class Pyboard {
       _this.enter_raw_repl_no_reset(function(){
         _this.setStatus(RUNNING_FILE)
 
-        filecontents += "\r\nimport time"
-        filecontents += "\r\ntime.sleep(0.1)"
-
-        // executing code delayed (20ms) to make sure _this.wait_for(">") is executed before execution is complete
+        filecontents += "\r\nimport time;time.sleep(0.1)"
+        // executing code delayed (100ms) to make sure _this.wait_for(">") is executed before execution is complete
         _this.exec_raw(filecontents+"\r\n",function(){
           _this.wait_for(">",function(){
             _this.enter_friendly_repl_wait(cb)
@@ -457,62 +448,72 @@ export default class Pyboard {
     this.connection.send(mssg+'\r\n',cb)
   }
 
-  // send: [\x1b] + <cmd[binary]>
-  // todo: the goal of \x1b is unclear, perhaps VT100 / ANSI escape, maybe this is the source of the strange characters ?
-  send_cmd(cmd,cb){
+  send_raw(mssg,cb){
     if(!this.connection){
       cb(new Error("No connection"))
       return
     }
-    var mssg = '\x1b' + cmd
-    var data = new Buffer(mssg,"binary")
-    this.connection.send_raw(data,cb)
+    this.connection.send_raw(mssg,cb)
   }
+
+  // // send: [\x1b] + <cmd[binary]>
+  // send_cmd(cmd,cb){
+  //   if(!this.connection){
+  //     cb(new Error("No connection"))
+  //     return
+  //   }
+  //   var mssg = '\x1b' + cmd
+  //   var data = new Buffer(mssg,"binary")
+  //   this.connection.send_raw(data,cb)
+  // }
 
   // // send: [\x1b] + <cmd[binary]> ; read response to rcv buffer, wait for string <wait_for>
-  // // todo: the goal of \x1b is unclear, perhaps VT100 / ANSI Escape , maybe this is the source of the strange characters ?
-  send_cmd_read(cmd,wait_for,cb,timeout){
-
-    if(typeof wait_for == "string"){
-      wait_for = "\x1b"+wait_for
-      wait_for = new Buffer(wait_for,"binary")
-    }
-    this.read(wait_for,cb,timeout)
-    this.send_cmd(cmd)
-  }
+  // send_cmd_read(cmd,wait_for,cb,timeout){
+  //   if(typeof wait_for == "string"){
+  //     wait_for = "\x1b"+wait_for
+  //     wait_for = new Buffer(wait_for,"binary")
+  //   }
+  //   this.read(wait_for,cb,timeout)
+  //   this.send_cmd(cmd)
+  // }
 
   // // send: [\x1b] + <cmd[binary]> ; wait for string <wait_for>
-  // // todo: the goal of \x1b is unclear, perhaps VT100 / ANSI Escape , maybe this is the source of the strange characters ?
-  send_cmd_wait_for(cmd,wait_for,cb,timeout){
+  // 
+  // send_cmd_wait_for(cmd,wait_for,cb,timeout){
+  //   if(typeof wait_for == "string"){
+  //     wait_for = "\x1b"+wait_for
+  //     wait_for = new Buffer(wait_for,"binary")
+  //   }
+  //   this.wait_for(wait_for,cb,timeout)
+  //   this.send_cmd(cmd,function(){
 
-    if(typeof wait_for == "string"){
-      wait_for = "\x1b"+wait_for
-      wait_for = new Buffer(wait_for,"binary")
-    }
-    this.wait_for(wait_for,cb,timeout)
-    this.send_cmd(cmd,function(){
-
-    })
-  }
+  //   })
+  // }
 
   // send: cmd
   send_user_input(mssg,cb){
     this.send(mssg,cb)
   }
 
+  // send raw mssg and wait non_blocking for the expected response
+  // do not add CRLF to avoid inserting additional empty lines
   send_raw_wait_for(mssg,wait_for,cb,timeout){
     this.wait_for(wait_for,cb,timeout)
     this.send_raw(mssg);
   }
 
+  // send mssg and wait non_blocking for the expected response
+  // do not add CRLF to avoid inserting additional empty lines
   send_wait_for(mssg,wait_for,cb,timeout){
     this.wait_for(wait_for,cb,timeout)
-    this.send_with_enter(mssg);
+    this.send(mssg);
   }
 
+  // send mssg and wait_blocking for the expected response
+  // do not add CRLF to avoid inserting additional empty lines
   send_wait_for_blocking(mssg,wait_for,cb,timeout){
     this.wait_for_blocking(wait_for,cb,timeout)
-    this.send_with_enter(mssg);
+    this.send(mssg);
   }
 
   // clear rcv buffer and wait_for in blocking mode 
@@ -549,7 +550,6 @@ export default class Pyboard {
       this.receive_buffer_raw = Buffer(0)
     }
 
-
     var _this = this
     clearTimeout(this.waiting_for_timer)
     if(timeout){
@@ -574,13 +574,7 @@ export default class Pyboard {
     cb(null,"")
   }
 
-  send_raw(mssg,cb){
-    if(!this.connection){
-      cb(new Error("No connection"))
-      return
-    }
-    this.connection.send_raw(mssg,cb)
-  }
+
 
   // <code[binary]>
   exec_raw_no_reset(code,cb){
@@ -592,13 +586,16 @@ export default class Pyboard {
       }
     })
   }
-  // delay 50ms, <code[binary]>
-  exec_raw_delayed(code,cb,timeout){
-    var _this = this
-    setTimeout(function(){
-      _this.exec_raw(code,cb,timeout)
-    },50)
-  }
+
+  // unused code 
+  // // delay 50ms, <code[binary]>
+  // exec_raw_delayed(code,cb,timeout){
+  //   var _this = this
+  //   setTimeout(function(){
+  //     _this.exec_raw(code,cb,timeout)
+  //   },50)
+  // }
+
   // <code[binary]>, soft-reset
   exec_raw(code,cb,timeout){
     var _this = this

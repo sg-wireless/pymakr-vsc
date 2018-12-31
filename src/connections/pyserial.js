@@ -120,14 +120,14 @@ export default class PySerial {
     })
   }
 
-  send_cmd(cmd,cb){
-    var mssg = '\x1b\x1b' + cmd
-    var data = new Buffer(mssg,"binary")
-    this.send_raw(data,function(){
-      // setTimeout(cb,400)
-      cb()
-    })
-  }
+  // send_cmd(cmd,cb){
+  //   var mssg = '\x1b\x1b' + cmd
+  //   var data = new Buffer(mssg,"binary")
+  //   this.send_raw(data,function(){
+  //     // setTimeout(cb,400)
+  //     cb()
+  //   })
+  // }
 
   static isSerialPort(name,cb){
     if(name && (name.substr(0,3) == 'COM' || name.indexOf('tty') > -1 || name.indexOf('/dev') > -1)){
