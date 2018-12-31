@@ -1,27 +1,42 @@
 {
-  "_from": "serialport@6.2.0",
-  "_id": "serialport@6.2.0",
+  "_from": "serialport@6.2.2",
+  "_id": "serialport@6.2.2",
   "_inBundle": false,
-  "_integrity": "sha512-y6Bdr+1kazPIMlZQYB1nQhiSbC8xEL8cyuSd79nJ29JwTh7NR0SUxjseoY8DcLRGuta5sifqQhP4CGcI3S/V4Q==",
+  "_integrity": "sha512-BQqTR06ZXKwKB6rUjeANm3aIZo0rqNbQsrQX5zKEDcNY4rxiu5dvdcfIOaAGuZkhW7jAKJsgKC5TjeURtLVuOQ==",
   "_location": "/serialport",
-  "_phantomChildren": {},
+  "_phantomChildren": {
+    "detect-libc": "1.0.3",
+    "expand-template": "1.1.1",
+    "github-from-package": "0.0.0",
+    "mkdirp": "0.5.1",
+    "node-abi": "2.4.3",
+    "noop-logger": "0.1.1",
+    "npmlog": "4.1.2",
+    "os-homedir": "1.0.2",
+    "pump": "2.0.1",
+    "rc": "1.2.8",
+    "simple-get": "2.8.1",
+    "tar-fs": "1.16.3",
+    "tunnel-agent": "0.6.0",
+    "which-pm-runs": "1.0.0"
+  },
   "_requested": {
     "type": "version",
     "registry": true,
-    "raw": "serialport@6.2.0",
+    "raw": "serialport@6.2.2",
     "name": "serialport",
     "escapedName": "serialport",
-    "rawSpec": "6.2.0",
+    "rawSpec": "6.2.2",
     "saveSpec": null,
-    "fetchSpec": "6.2.0"
+    "fetchSpec": "6.2.2"
   },
   "_requiredBy": [
     "#USER",
     "/"
   ],
-  "_resolved": "https://registry.npmjs.org/serialport/-/serialport-6.2.0.tgz",
-  "_shasum": "99413b30b160ff06711563a71324f0959c48a7a0",
-  "_spec": "serialport@6.2.0",
+  "_resolved": "https://registry.npmjs.org/serialport/-/serialport-6.2.2.tgz",
+  "_shasum": "75532312571578b060eb29cbdf8f2f3e8ba03063",
+  "_spec": "serialport@6.2.2",
   "_where": "C:\\Users\\Ralph\\projects\\pymakr-vsc",
   "bin": {
     "serialport-list": "./bin/list.js",
@@ -44,20 +59,20 @@
     "linelength": "120"
   },
   "dependencies": {
+    "parser-byte-length": "^1.0.5",
+    "parser-cctalk": "^1.0.5",
+    "parser-delimiter": "^1.0.5",
+    "parser-readline": "^1.0.5",
+    "parser-ready": "^1.0.5",
+    "parser-regex": "^1.0.5",
     "bindings": "1.3.0",
     "commander": "^2.13.0",
     "debug": "^3.1.0",
     "nan": "^2.9.2",
-    "parser-byte-length": "^1.0.2",
-    "parser-cctalk": "^1.0.2",
-    "parser-delimiter": "^1.0.2",
-    "parser-readline": "^1.0.2",
-    "parser-ready": "^1.0.2",
-    "parser-regex": "^1.0.2",
-    "prebuild-install": "^2.4.1",
+    "prebuild-install": "^4.0.0",
     "promirepl": "^1.0.1",
-    "prompt-list": "^3.1.2",
-    "safe-buffer": "^5.0.1"
+    "prompt-list": "^3.2.0",
+    "safe-buffer": "^5.1.2"
   },
   "deprecated": false,
   "description": "Node.js package to access serial ports. Linux, OSX and Windows. Welcome your robotic JavaScript overlords. Better yet, program them!",
@@ -67,19 +82,17 @@
     "cc": "^1.0.1",
     "chai": "^4.0.2",
     "chai-subset": "^1.5.0",
-    "conventional-changelog-cli": "^1.3.15",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.7.0",
+    "conventional-changelog-cli": "^2.0.0",
+    "eslint": "^5.0.0",
+    "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
+    "eslint-plugin-promise": "^3.8.0",
     "istanbul": "^0.4.4",
     "jsdoc": "^3.5.5",
-    "mocha": "^5.0.0",
-    "prebuild": "^7.4.0",
+    "mocha": "^5.2.0",
+    "prebuild": "github:reconbot/prebuild#reconbot/build_v8_with_gn",
     "proxyquire": "^2.0.0",
-    "sinon": "^5.0.0"
+    "sinon": "^6.0.1"
   },
   "engines": {
     "node": ">=4.0.0"
@@ -96,6 +109,7 @@
     "modem",
     "nodebots",
     "RFID",
+    "robotics",
     "sensor",
     "serial port",
     "serial",
@@ -159,5 +173,5 @@
     "test:watch": "mocha -w",
     "valgrind": "TEST_PORT=$(./bin/find-arduino.js) valgrind --leak-check=full node test/manual-testing/memory-binding.js"
   },
-  "version": "6.2.0"
+  "version": "6.2.2"
 }

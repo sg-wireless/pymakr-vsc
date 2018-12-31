@@ -390,16 +390,17 @@ export default class Pyboard {
     var _this = this
     this.stop_running_programs(function(){
       _this.enter_raw_repl_no_reset(function(){
-      // var contents = filecontents.replace('\n','\n\r')
         _this.setStatus(RUNNING_FILE)
-        var run_delay = _this.type == 'serial' ? 300 : 0
-        setTimeout(function(){
-          _this.exec_raw(filecontents+"\r\n",function(){
-            _this.wait_for(">",function(){
-                _this.enter_friendly_repl_wait(cb)
-            })
+
+        filecontents += "\r\nimport time"
+        filecontents += "\r\ntime.sleep(0.1)"
+
+        // executing code delayed (20ms) to make sure _this.wait_for(">") is executed before execution is complete
+        _this.exec_raw(filecontents+"\r\n",function(){
+          _this.wait_for(">",function(){
+            _this.enter_friendly_repl_wait(cb)
           })
-        },run_delay)
+        })
       })
     })
   }
@@ -409,17 +410,19 @@ export default class Pyboard {
     var _this = this
     this.stop_running_programs(function(){
       _this.setStatus(PASTE_MODE)
-      var run_delay = _this.type == 'serial' ? 300 : 0
-      setTimeout(function(){
-        _this.exec_raw_no_reset(CTRL_E + codeblock+"\r\n" + CTRL_D ,function(){
-          _this.wait_for(">>>",function(){
+
+      var last_command = codeblock.split('/r/n').pop()
+      _this.exec_raw_no_reset(CTRL_E + codeblock+"\r\n" + CTRL_D ,function(){
+        _this.wait_for_blocking(last_command + "\r\n===",function(){
             cb();
-          })
         })
-      },run_delay)
+      })
+
       _this.setStatus(FRIENDLY_REPL)
     })
   }
+
+
 
   send(mssg,cb){
     if(!this.connection){
@@ -558,6 +561,12 @@ export default class Pyboard {
     })
   }
 
+  exec_raw_delayed(code,cb,timeout){
+    var _this = this
+    setTimeout(function(){
+      _this.exec_raw(code,cb,timeout)
+    },50)
+  }
   exec_raw(code,cb,timeout){
     var _this = this
     this.exec_raw_no_reset(code,function(){

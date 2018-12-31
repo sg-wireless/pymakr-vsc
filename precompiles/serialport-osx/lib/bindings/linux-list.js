@@ -1,11 +1,11 @@
 'use strict';
 
 const childProcess = require('child_process');
-const Readline = require('@serialport/parser-readline');
+const Readline = require('parser-readline');
 
 // get only serial port names
 function checkPathOfDevice(path) {
-  return (/(tty(S|ACM|USB|AMA|MFD)|rfcomm)/).test(path) && path;
+  return (/(tty(S|ACM|USB|AMA|MFD|O)|rfcomm)/).test(path) && path;
 }
 
 function propName(name) {

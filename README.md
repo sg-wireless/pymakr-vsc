@@ -111,6 +111,8 @@ If you want to contribute to this project you can test the app the following way
 - Open the folder in VSC
 - Press F1 and execute `Tasks: Run build task` to run the babel builder
 - Press F5 to run the plugin (opens a new VSC window)
+ 
+Note: make sure you have the 'code' terminal command installed. See [code setup for Mac(https://code.visualstudio.com/docs/setup/mac)
 
 ## Create a local package
 - Install the vscode publishing tool by running `npm install -g vsce`
