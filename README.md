@@ -32,6 +32,7 @@ At any time, use the `Pycom Console` button on the left bottom to toggle the ter
 - Help                             : Print this list of commands and settings
 
 Useful keymaps:
+
 - `ctrl-shift-c`     : (Re)connect
 - `ctrl-shift-g`     : Global settings
 - `ctrl-shift-s`     : Synchronize project
@@ -42,7 +43,7 @@ Useful keymaps:
 
 To connect to your board, use the `Global settings` command to go to the extensions settings. Fill in the correct IP address or comport for your device. If you changed your username and password to something else than `micro` and `python`, please update them accordingly if you connect over IP. Username and password are not required when using serial.
 
-If you want to synchronize a subfolder of your project instead of the entire project, enter the name of the subfolder in the 'sync folder' field (for more info, see the Sync chapter below)
+If you want to synchronize a sub-folder of your project instead of the entire project, enter the name of the subfolder in the 'sync folder' field (for more info, see the Sync chapter below)
 
 All possible settings (name : default : description):
 - address           : 192.168.4.1         : IP address or comport for your device
@@ -76,8 +77,8 @@ The `Run Selection` command will run the code on the current line in the active 
 
 This can be used to step though your code on a line-by-line basis, and allows you to inspect and debug your code.
 
-If the selected line of block of code is idented, as is often the case, it will be de-idented based on the first selected line. so if the first selected line is idented with 8 spaces, all lines will have 8 leading spaces removed.
-If you have lines with irregular identing, these lines will be trimmed, and a warning comment added.
+If the selected line of block of code is indented, as is often the case, it will be de-indented based on the first selected line. so if the first selected line is indented with 8 spaces, all lines will have 8 leading spaces removed.
+If you have lines with irregular indenting, these lines will be trimmed, and a warning comment added.
 
 As Paste-Mode is used, you will see both your code , as well as the output in the terminal.
 
@@ -115,6 +116,7 @@ If you want to contribute to this project you can test the app the following way
 Note: make sure you have the 'code' terminal command installed. See [code setup for Mac(https://code.visualstudio.com/docs/setup/mac)
 
 ## Create a local package
+
 - Install the vscode publishing tool by running `npm install -g vsce`
 - Create a .vsix package by running `vsce package`
 - you can then install the .vsix package by running `code --install-extension pymakr-1.x.y.vsix`
@@ -122,24 +124,29 @@ Note: make sure you have the 'code' terminal command installed. See [code setup 
 ## Release Notes
 
 ### 0.1.0 - Initial release
+
 - All basic features working the same as Pymakr Atom v1.0.3
 - Terminal implemented inside existing VSC terminal tab
 - All features accessible as commands as well as status bar buttons
 
 ### 0.1.5
+
 - Added 'download' feature
 - Code up to date with development in Pymakr for Atom
 - Fixed rare infinite loop bug in terminal
 - New precompiled serialport libs for all OS's
 
 ### 1.0.0 - Same codebase as Pymakr for Atom
+
 - Complete rebuild of upload and download feature
 - Autoconnect feature
 - Upload any type of file (also binary files like jpg, mpy or cert files)
 - Several bugfixes and improvements
 
 ### 1.0.1 - Hotfix
+
 - Fixed issue with telnet connection
 
 ### 1.0.2 - Hotfix
+
 - Fixed compatibility with vscode v1.26 and v1.27
