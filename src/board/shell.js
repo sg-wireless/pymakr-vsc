@@ -44,10 +44,16 @@ export default class Shell {
   }
 
   getFreeMemory(cb){
+
+    //Note: not supported in standard micropython
+    // var command =
+    //     "import os\r\n" +
+    //     "m = os.getfree('/flash')" +
+    //     "sys.stdout.write(m)\r\n"
     var command =
         "import os\r\n" +
-        "m = os.getfree('/flash')" +
-        "sys.stdout.write(m)\r\n"
+        "s = os.statvfs('/flash')\r\n" +
+        "sys.stdout.write(s[0]*s[3])\r\n" 
 
     this.pyboard.exec_(command,function(err,content){
       cb(content)
@@ -132,6 +138,7 @@ export default class Shell {
         callback(err,content_buffer,content_str)
       },100)
     }
+<<<<<<< HEAD
 
     var command = "import ubinascii,sys\r\n"
     command += "f = open('"+name+"', 'rb')\r\n"
@@ -144,6 +151,17 @@ export default class Shell {
         "    sys.stdout.write(c)\r\n" +
         "    if not len(c) or c == b'\\n':\r\n" +
         "        break\r\n"
+=======
+    // try to prevent memory exhaustion
+    var command = "from gc import collect; collect()\r\n" + 
+                  "import ubinascii,sys\r\n" +
+                  "with open('"+filename+"', 'rb') as f:\r\n" +
+                  "  while True:\r\n" +
+                  "    c = ubinascii.b2a_base64(f.read("+this.BIN_CHUNK_SIZE+"))\r\n" +
+                  "    sys.stdout.write(c)\r\n" +
+                  "    if not len(c) or c == b'\\n':\r\n" +
+                  "        break\r\n"
+>>>>>>> make getFreeMemory generic
 
     this.pyboard.exec_raw(command,function(err,content){
 
@@ -151,13 +169,22 @@ export default class Shell {
       if(content.indexOf("OK") == 0){
         content = content.slice(2,content.length)
       }
-      var decode_result = _this.utils.base64decode(content)
-      var content_buffer = decode_result[1]
-      var content_str = decode_result[0].toString()
 
-      _this.logger.silly(err)
-      cb(err,content_buffer,content_str)
-    },60000)
+      // todo: should this not include verification of the recieved content of some sort ?
+      if (content.includes("Traceback") ) {
+        // some type of error has been reported
+        _this.logger.error("Error: "+ content)
+        // todo: fill content buffer ?
+        content_str = content // hack 
+        cb(err,null ,content_str)
+      } else { 
+        var decode_result = _this.utils.base64decode(content)
+        var content_buffer = decode_result[1]
+        var content_str = decode_result[0].toString()
+        cb(err,content_buffer,content_str)
+      }
+
+    },60000) // tmo = 60 secs 
   }
 
   list_files(cb){
@@ -171,7 +198,7 @@ export default class Shell {
     var worker = function(params,callback){
       _this.workers.list_files(params,callback)
     }
-
+    // todo: what about the SD card if mounted ?
     this.utils.doRecursively(['/flash',[''],file_list],worker,end)
   }
 
