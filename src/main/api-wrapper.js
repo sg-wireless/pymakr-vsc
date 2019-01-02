@@ -232,24 +232,34 @@ export default class ApiWrapper {
   getSelected(){
     var editor = window.activeTextEditor
     var selection = editor.selection;
-    var codesnip = ""
+    //var codesnip = ""
+    var codesnip =  {code:"", line:"", file:""};
     if (!selection.isEmpty) {
       //active selection , get the selected code 
-      return editor.document.getText(selection); 
+      codesnip.code = editor.document.getText(selection);
+      // get the line number (+1 to adopt from 0 to 1 based) 
+      if (selection.start.line == selection.end.line) {
+        codesnip.line = (selection.start.line +1).toString() 
+      } else {
+        codesnip.line = (selection.start.line+1).toString() + "-" + (selection.end.line +1).toString()
+      }
+      return  codesnip
     }
-    return codesnip
+    return null
   }
 
   getSelectedOrLine(){
-    var code = this.getSelected()
+    var codesnip = this.getSelected()
   
-    if(!code){
+    if(!codesnip){
+      codesnip = { code: "", line: "", file: "" };
       var editor = window.activeTextEditor
       var selection = editor.selection;
       // the Active Selection object gives you the (0 based) line  and character where the cursor is 
-      code = editor.document.lineAt(selection.active.line).text;       
+      codesnip.code = editor.document.lineAt(selection.active.line).text;       
+      codesnip.line = (selection.active.line+1).toString() 
     }
-    return code
+    return codesnip
     
   }
 

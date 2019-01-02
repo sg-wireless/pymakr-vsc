@@ -34,22 +34,20 @@ export default class Runner {
     })
   }
 
-
-  selection(codeblock,cb){
+  // run some code 
+  // - codesnip =  {code:"", line:"", file:""};
+  selection(codesnip,cb){
     var _this = this
-    codeblock = this.__trimcodeblock(codeblock)
-    _this.terminal.writeln("Running selected lines")
+    codesnip.code = this.__trimcodeblock(codesnip.code)
+    _this.terminal.writeln("Running line: " + codesnip.line)
     _this.busy = true
-    _this.pyboard.runblock(codeblock,function(){
+    _this.pyboard.runblock(codesnip.code,function(){
       _this.busy = false
       if(cb) cb()
     },function onerror(err){
       _this.terminal.writeln_and_prompt(err)
     })
   }
-
-  
-
 
   stop(cb){
     var _this = this

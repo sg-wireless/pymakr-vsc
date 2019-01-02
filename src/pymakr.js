@@ -545,8 +545,8 @@ export default class Pymakr extends EventEmitter {
     }
 
     if(!this.synchronizing){
-      var code = this.api.getSelectedOrLine() 
-      _this.runner.selection(code,function(err){
+      var codesnip = this.api.getSelectedOrLine() 
+      _this.runner.selection(codesnip,function(err){
         if(err){
           _this.logger.error("Failed to send and execute codeblock.")
         } else {
