@@ -550,8 +550,8 @@ export default class Pymakr extends EventEmitter {
     }
 
     if(!this.synchronizing){
-      var codesnip = this.api.getSelectedOrLine() 
-      if (codesnip) { 
+      var codesnip = this.api.getSelectedOrLine()
+      if (codesnip) {
         _this.runner.selection(codesnip,function(err){
           if(err){
             _this.logger.error("Failed to send and execute codeblock.")
@@ -559,8 +559,8 @@ export default class Pymakr extends EventEmitter {
             //return focus to editor
             _this.api.editorFocus()
           }
-        }
-      })
+        })
+      }
     }
   }
 
