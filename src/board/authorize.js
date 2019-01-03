@@ -24,7 +24,7 @@ export default class Authorize {
             cb(new Error(err.message))
           }
         }else{
-          pyboard.send_wait_for_blocking(pyboard.params.username,"Password:",function(err,mssg){
+          pyboard.send_wait_for_blocking(pyboard.params.username +'\r\n',"Password:",function(err,mssg){
             if(err && err.message == "timeout"){
               _this._stoppedRunning()
               cb(new Error("Username timed out"))
@@ -32,7 +32,7 @@ export default class Authorize {
               // timeout of 50 ms to be sure the board is ready to receive the password
               // Without this, sometimes connecting via the boards access point fails
               setTimeout(function(){
-                pyboard.send_wait_for_blocking(pyboard.params.password,'Login succeeded!\r\nType "help()" for more information.\r\n',function(err,mssg){
+                pyboard.send_wait_for_blocking(pyboard.params.password +'\r\n','Login succeeded!\r\nType "help()" for more information.\r\n',function(err,mssg){
                   _this._stoppedRunning()
                   if(err && err.message == "timeout"){
                     cb("Password timed out")
