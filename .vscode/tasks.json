@@ -1,15 +1,14 @@
 {
     "version": "0.1.0",
-    "command": "${workspaceRoot}/node_modules/.bin/babel",
+    "command": "npm",
     "isShellCommand": true,
+    "showOutput": "always",
+    "suppressTaskName": true,
     "tasks": [
         {
-            "args": ["src", "--out-dir", "lib","-w"],
-            "taskName": "watch",
-            "suppressTaskName": true,
-            "isBuildCommand": true,
-            "isWatching": true
+            "taskName": "babel-build-watch",
+            "args": [ "run", "babel-build-watch" ],
+            "isBuildCommand": true
         }
-        
     ]
 }
