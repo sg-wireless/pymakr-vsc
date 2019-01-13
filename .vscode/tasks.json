@@ -6,9 +6,12 @@
     "suppressTaskName": true,
     "tasks": [
         {
-            "taskName": "babel-build-watch",
-            "args": [ "run", "babel-build-watch" ],
-            "isBuildCommand": true
+            "type": "npm",
+            "script": "babel-build-dev",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }
