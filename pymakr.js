@@ -82,12 +82,12 @@ function activate(context) {
         });
         context.subscriptions.push(disposable);
     
-        // not used. open/close terminal command is already available. 
-        // Terminal opens automatically when doing a connect, run or sync action.
-        var disposable = vscode.commands.registerCommand('pymakr.toggleREPL', function () {
-            pymakr.toggleVisibility()
-        });
-        context.subscriptions.push(disposable);
+        // // not used. open/close terminal command is already available. 
+        // // Terminal opens automatically when doing a connect, run or sync action.
+        // var disposable = vscode.commands.registerCommand('pymakr.toggleREPL', function () {
+        //     pymakr.toggleVisibility()
+        // });
+        // context.subscriptions.push(disposable);
     
         var disposable = vscode.commands.registerCommand('pymakr.toggleConnect', function () {
             if(!pymakr.pyboard.connected){

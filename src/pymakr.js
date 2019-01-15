@@ -649,9 +649,6 @@ export default class Pymakr extends EventEmitter {
     this.view.clearTerminal ()
   }
 
-  // toggleVisibility(){
-  //   this.view.visible ? this.hidePanel() : this.showPanel();
-  // }
   // VSCode only
   toggleConnect(){
     this.pyboard.connected ? this.disconnect() : this.connect();

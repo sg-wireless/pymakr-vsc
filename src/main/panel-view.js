@@ -105,10 +105,10 @@ export default class PanelView extends EventEmitter {
 
   // refresh button display based on current status
   setButtonState(runner_busy){
-    if (!this.visible) {
-      this.setTitle('not connected')
-    }else if(this.pyboard.connected) {
-    // if(this.pyboard.connected) {
+    // if (!this.visible) {
+    //   this.setTitle('not connected')
+    // }else if(this.pyboard.connected) {
+    if(this.pyboard.connected) {
       if(runner_busy == undefined){
         // do nothing
       }else if(runner_busy){
