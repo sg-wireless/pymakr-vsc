@@ -13,6 +13,7 @@ export default class SettingsWrapper extends EventEmitter {
   constructor() {
     super()
     this.config = Config.settings()
+    this.constants = Config.constants()
     this.project_config = {}
     this.api = new ApiWrapper(this)
     this.project_path = this.api.getProjectPath()
@@ -33,6 +34,7 @@ export default class SettingsWrapper extends EventEmitter {
         _this.project_config = contents
         _this.refresh()
         _this.watchProjectChange()
+        _this.upload_chunk_size = _this.get_upload_chunk_size()
       })
     })
     
@@ -71,16 +73,22 @@ export default class SettingsWrapper extends EventEmitter {
     })
   }
 
+  get_upload_chunk_size(){
+    var size = this.constants.upload_batch_size
+    if(this.fast_upload){
+      size = size * this.constants.fast_upload_batch_multiplier
+    }
+    return size
+  }
+
   watchConfigFile(file){
     this.logger.info("Watching config file "+file)
     var _this = this
     if(this.file_watcher[file]){
-      console.log("Already being watched, close previous")
       this.file_watcher[file].close()
     }
     fs.open(file,'r',function(err,content){
       if(!err){
-        console.log("Now watching config")
         _this.file_watcher[file] = fs.watch(file,null,function(err){
           _this.logger.info("Config file changed, refreshing settings")
           // give it some time to close
@@ -95,10 +103,12 @@ export default class SettingsWrapper extends EventEmitter {
     })
   }
 
-  refresh(){
+  refresh(cb){
     this.refreshGlobalConfig()
     this.refreshProjectConfig()
-
+    if(cb){
+      cb()
+    }
   }
   refreshGlobalConfig(){
 
@@ -128,6 +138,8 @@ export default class SettingsWrapper extends EventEmitter {
     this.reboot_after_upload = this.api.config('reboot_after_upload')
     
     this.auto_connect = this.api.config('auto_connect')
+    this.py_ignore = this.api.config('py_ignore')
+    this.fast_upload = this.api.config('fast_upload')
 
     this.timeout = 15000
     this.setProjectConfig()
@@ -160,7 +172,6 @@ export default class SettingsWrapper extends EventEmitter {
 
 
   checkConfigComplete(path,contents,cb){
-    console.log("Config complete?")
     if(!this.isConfigComplete(contents)){
       contents = this.completeConfig(contents)
       var json_string =
@@ -186,7 +197,6 @@ export default class SettingsWrapper extends EventEmitter {
 
   readConfigFile(path,check_complete,cb){
     var _this = this
-    console.log("Reading config file" +path)
     fs.readFile(path,function(err,contents){
       if(!err){
         try{
@@ -263,6 +273,12 @@ export default class SettingsWrapper extends EventEmitter {
     if('reboot_after_upload' in this.project_config){
       this.reboot_after_upload = this.project_config.reboot_after_upload
     }
+    if('py_ignore' in this.project_config){
+      this.py_ignore = this.project_config.py_ignore
+    }
+    if('fast_upload' in this.project_config){
+      this.fast_upload = this.project_config.fast_upload
+    }
 
   }
 
@@ -298,7 +314,9 @@ export default class SettingsWrapper extends EventEmitter {
         "sync_folder": this.api.config('sync_folder'),
         "open_on_start": this.api.config('open_on_start'),
         "safe_boot_on_upload": this.api.config('safe_boot_on_upload'),
-        "statusbar_buttons": this.api.config('statusbar_buttons')
+        "statusbar_buttons": this.api.config('statusbar_buttons'),
+        "py_ignore": this.api.config('py_ignore'),
+        "fast_upload": this.api.config('fast_upload')
     }
     if(global){
       config.sync_file_types = this.api.config('sync_file_types')

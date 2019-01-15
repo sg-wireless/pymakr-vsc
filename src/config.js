@@ -3,9 +3,11 @@
 export default class Config {
   static constants(){
     return {
-      logging_level: 0, // 4 = error. anything higher than 5 = off. see logger.js
+      logging_level: 1, // 4 = error. anything higher than 5 = off. see logger.js
       max_sync_size: 350000,
       safeboot_version: 1150002, // 1.15.0.b2
+      upload_batch_size: 512,
+      fast_upload_batch_multiplier: 4, // multiplier for upload_batch_size when fast_upload is active
       error_messages: {
         "EHOSTDOWN": "Host down",
         "EHOSTUNREACH": "Host unreachable",
@@ -129,7 +131,24 @@ export default class Config {
             title: 'Reboot after upload',
             description: 'Reboots your pycom board after any upload or download action',
             order: 11
-        }
+        },
+        fast_upload: {
+            type: 'boolean',
+            default: false,
+            title: 'Fast upload (experimental)',
+            description: 'Uses bigger batches and compresses larger (>4kb) files to make uploading faster. Only works on newer devices with 4mb of ram and firmware version >=1.19.x',
+            order: 12
+        },
+        py_ignore: {
+            title: 'Pyignore list',
+            description: 'Comma separated list of files and folders to ignore when uploading (no wildcard or regular expressions supported)',
+            type: 'array',
+            items: {
+              type: 'string'
+            },
+            default: [],
+            order: 7
+        },
     }
   }
 }

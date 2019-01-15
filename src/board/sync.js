@@ -8,11 +8,9 @@ import ApiWrapper from '../main/api-wrapper.js';
 import ProjectStatus from './project-status.js';
 import Utils from '../helpers/utils.js';
 var fs = require('fs');
-var path = require('path');
+
 
 export default class Sync {
-
-
 
   constructor(pyboard,settings,terminal) {
     this.logger = new Logger('Sync')
@@ -20,6 +18,7 @@ export default class Sync {
     this.settings = settings
     this.pyboard = pyboard
     this.terminal = terminal
+    this.shell = null
     this.in_raw_mode = false
     this.total_file_size = 0
     this.total_number_of_files = 0
@@ -32,7 +31,11 @@ export default class Sync {
     this.allowed_file_types = this.settings.get_allowed_file_types()
     this.project_path = this.api.getProjectPath()
     this.isrunning = false
+    this.is_stopping = false
     this.fails = 0
+    this.compression_limit = 5 // minimum file size in kb that will be compressed
+    this.set_paths()
+    this.project_status = new ProjectStatus(this.shell,this.settings,this.py_folder)
   }
 
   isReady(){
@@ -54,7 +57,6 @@ export default class Sync {
   }
 
   progress(text,count){
-    if(this.isrunning){
       if(count){
         this.progress_file_count += 1
         text = "["+this.progress_file_count+"/"+this.number_of_changed_files+"] " + text
@@ -63,7 +65,6 @@ export default class Sync {
       setTimeout(function(){
         _this.terminal.writeln(text)
       },0)
-    }
   }
 
   sync_done(err){
@@ -86,7 +87,12 @@ export default class Sync {
       this.terminal.writePrompt()
     }
 
-    this.oncomplete()
+    if(this.oncomplete){
+      this.oncomplete()
+      this.oncomplete = null
+    }else{
+      this.logger.warning("Oncomplete not set!")
+    }
   }
 
   reset_values(oncomplete,method){
@@ -105,9 +111,14 @@ export default class Sync {
     this.progress_file_count = 0
     this.isrunning = true
     this.in_raw_mode = false
+    this.set_paths()
+  }
+
+  set_paths(){
 
     this.project_path = this.api.getProjectPath()
     if(this.project_path){
+
       this.project_name = this.project_path.split('/').pop()
 
       var dir = this.settings.sync_folder.replace(/^\/|\/$/g, '') // remove first and last slash
@@ -134,20 +145,25 @@ export default class Sync {
     })
   }
 
-  start(oncomplete){
-    this.settings.refresh()
-    this.__start_sync(oncomplete,'send')
+  start(oncomplete,files){
+    var _this = this
+    this.settings.refresh(function(){
+      _this.__start_sync(oncomplete,'send',files)
+    })
   }
 
   start_receive(oncomplete){
-    this.settings.refresh()
-    this.__start_sync(oncomplete,'receive')
+    var _this = this
+    this.settings.refresh(function(){
+      _this.__start_sync(oncomplete,'receive')
+    })
   }
 
-  __start_sync(oncomplete,method){
+  __start_sync(oncomplete,method,files){
     this.logger.info("Start sync method "+method)
     var _this = this
     this.fails = 0
+    this.method = method
 
     var cb = function(err){
       _this.sync_done(err)
@@ -178,6 +194,7 @@ export default class Sync {
       if(err){
         _this.logger.error("Safeboot failed")
         _this.logger.error(err)
+        _this.progress("Safe boot failed, "+_this.method_action.toLowerCase()+" anyway.")
       }else{
         _this.logger.info("Safeboot succesful")
       }
@@ -189,7 +206,11 @@ export default class Sync {
         _this.project_status = new ProjectStatus(_this.shell,_this.settings,_this.py_folder)
         _this.logger.silly("Entered raw mode")
 
-        if(err || !_this.isrunning){
+        if(!_this.isrunning){
+          _this.stoppedByUser(cb)
+          return
+        }
+        if(err){
           _this.logger.error(err)
           _this.throwError(cb,err)
           _this.exit()
@@ -198,7 +219,7 @@ export default class Sync {
           if(_this.method=='receive'){
             _this.__receive(cb,err)
           }else{
-            _this.__send(cb,err)
+            _this.__send(cb,err,files)
           }
         }
       })
@@ -217,7 +238,6 @@ export default class Sync {
     }
 
     this.shell.list_files(function(err,file_list){
-
       if(err){
         _this.progress("Failed to read files from board, canceling file download")
         _this.throwError(cb,err)
@@ -242,6 +262,7 @@ export default class Sync {
       if (new_files.length > 0){
         mssg = "Found "+new_files.length+" new "+_this.utils.plural("file",file_list.length)
       }
+
       if (existing_files.length > 0){
         if(new_files.length == 0){
           mssg = "Found "
@@ -266,9 +287,7 @@ export default class Sync {
       var cancel = function(){
         if(checkTimeout()){
           _this.progress("Canceled")
-          _this.exit(function(){
-            _this.complete(cb)
-          })
+          _this.complete(cb)
         }
       }
 
@@ -280,9 +299,7 @@ export default class Sync {
           _this.receive_files(0,file_list,function(){
             _this.logger.info("All items received")
             _this.progress("All items overritten")
-            _this.exit(function(){
-              _this.complete(cb)
-            })
+            _this.complete(cb)
           })
         }
       }
@@ -295,9 +312,7 @@ export default class Sync {
           _this.receive_files(0,new_files,function(){
             _this.logger.info("All items received")
             _this.progress("All items overritten")
-            _this.exit(function(){
-              _this.complete(cb)
-            })
+            _this.complete(cb)
           })
         }
       }
@@ -311,9 +326,7 @@ export default class Sync {
       setTimeout(function(){
 
         if(file_list.length == 0){
-          _this.exit(function(){
-            _this.complete(cb)
-          })
+          _this.complete(cb)
           return true
         }
 
@@ -325,7 +338,6 @@ export default class Sync {
     })
   }
 
-
   __safe_boot(cb){
     var _this = this
     _this.pyboard.stop_running_programs_double(function(){
@@ -336,9 +348,14 @@ export default class Sync {
         return false
       }
 
-        _this.logger.info("Safe booting...")
-        _this.progress("Safe booting device... (see settings for more info)")
-        _this.pyboard.safe_boot(cb,4000)
+      if(!_this.pyboard.isSerial){
+        cb()
+        return false
+      }
+
+      _this.logger.info("Safe booting...")
+      _this.progress("Safe booting device... (see settings for more info)")
+      _this.pyboard.safe_boot(cb,4000)
     },500)
   }
 
@@ -350,7 +367,7 @@ export default class Sync {
     }
     var filename = list[i]
     _this.progress("Reading "+filename,true)
-    _this.shell.readFile(filename,function(err,content_buffer,content_str){
+    _this.shell.readFile(filename,function(err,content_buffer,content_st){
 
       if(err){
         _this.progress("Failed to download "+filename)
@@ -359,7 +376,7 @@ export default class Sync {
 
       }else{
         var f = _this.py_folder + filename
-        _this.ensureDirectoryExistence(f)
+        _this.utils.ensureFileDirectoryExistence(f)
         try{
           var stream = fs.createWriteStream(f)
           stream.once('open', function(fd) {
@@ -379,36 +396,52 @@ export default class Sync {
     })
   }
 
-  ensureDirectoryExistence(filePath) {
-    var dirname = path.dirname(filePath)
-    if (fs.existsSync(dirname)) {
-      return true
-    }
-    this.ensureDirectoryExistence(dirname)
-    fs.mkdirSync(dirname)
-  }
 
-  __send(cb,err){
+  __send(cb,err,files){
     var _this = this
+
+
     this.progress("Reading file status")
     this.logger.info('Reading pymakr file')
 
     _this.project_status.read(function(err,content){
+
       if(!_this.isrunning){
-        _this.throwError(cb,err)
+        _this.stoppedByUser(cb)
         return
       }
 
-      if(err){
-        _this.progress("Failed to read project status, uploading all files")
-        console.log(err)
+      // if files given, only upload those files
+      if(files){
+
+        if(!Array.isArray(files)){
+          files = _this.project_status.prepare_file(files)
+          files = [files]
+
+          _this.progress("Uploading single file")
+        }else{
+          _this.progress("Uploading "+files.length+" files")
+        }
+        _this.number_of_changed_files = files.length
+        _this.__write_files(cb,files)
+
+
+      // otherwise, write changes based on project status file
+      }else{
+        if(err){
+          _this.progress("Failed to read project status, uploading all files")
+        }
+        _this.__write_changes(cb)
       }
 
-      _this.__write_changes(cb)
+
+
     })
+
   }
 
-  __write_changes(cb){
+
+  __write_changes(cb,files){
     var _this = this
 
     var changes = _this.project_status.get_changes()
@@ -432,39 +465,101 @@ export default class Sync {
     }else{
       _this.logger.info('Removing files')
       _this.removeFilesRecursive(deletes,function(){
-
+        if(!_this.isrunning){
+          _this.stoppedByUser(cb)
+          return
+        }
         if(deletes.length > 0){
           _this.logger.info("Updating project-status file")
         }
         _this.project_status.write(function(){
+          _this.__write_files(cb,changed_files_folders)
 
-          _this.logger.info('Writing changed folders')
-          _this.writeFilesRecursive(changed_files_folders,function(err){
-            if(err || !_this.isrunning){
-              _this.throwError(cb,err)
-              return
-            }
-            setTimeout(function(){
-              _this.logger.info('Writing project file')
-              _this.project_status.write(function(err){
-                if(err || !_this.isrunning){
-                  _this.throwError(cb,err)
-                  return
-                }
-                _this.logger.info('Exiting...')
-                _this.complete(cb)
-              })
-            },300)
-          })
         })
       })
     }
   }
 
-  stop(){
-    this.logger.info("stopped sync")
+  __write_files(cb,files_and_folders){
+    var _this = this
+    _this.logger.info('Writing changed folders')
+    _this.writeFilesRecursive(files_and_folders,function(err){
+      if(!_this.isrunning){
+        _this.stoppedByUser(cb)
+        return
+      }
+
+      if(err){
+        _this.throwError(cb,err)
+        return
+      }
+
+      setTimeout(function(){
+        _this.logger.info('Writing project file')
+        _this.project_status.write(function(err){
+          if(!_this.isrunning){
+            _this.stoppedByUser(cb)
+            return
+          }
+          if(err){
+            _this.throwError(cb,err)
+            return
+          }
+          _this.logger.info('Exiting...')
+          _this.complete(cb)
+        })
+      },300)
+    })
+  }
+
+  stopSilent(){
+    this.logger.info("Stopping sync")
     this.isrunning = false
   }
+
+  stop(cb){
+    var _this = this
+    this.stopSilent()
+
+    if(!this.shell){
+      _this.isrunning = false
+      cb()
+      return
+    }
+    this.shell.stop_working(function(){
+      _this.isrunning = false
+      _this.project_status.write(function(err){
+        _this.complete(function(){
+          _this.pyboard.stopWaitingForSilent()
+          cb()
+        })
+      })
+    })
+  }
+
+  stoppedByUser(cb){
+    var _this = this
+    this.logger.warning("Sync canceled")
+    if(!this.is_stopping){
+      this.is_stopping = true
+        //
+        // _this.project_status.write(function(err){
+        //
+        //   _this.pyboard.stopWaitingForSilent()
+        //
+        //   _this.stop(false,function(){
+        //     _this.is_stopping = false
+        //     // _this.sync_done()
+        //     if(cb){
+        //       cb()
+        //     }
+        //     // do nothing, this might work or not based on what went wrong when synchronizing.
+        //   })
+        // })
+    }
+  }
+
+
 
   throwError(cb,err){
     var _this = this
@@ -488,10 +583,30 @@ export default class Sync {
     })
   }
 
+
   complete(cb){
-    this.exit(function(){
-      cb()
-    })
+    var _this = this
+    var lcb = function(){
+      _this.exit(function(){
+        if(_this.oncomplete){
+          _this.oncomplete()
+          _this.logger.warning("Oncomplete executed, setting to null")
+          _this.oncomplete = null
+        }
+        if(cb){
+          cb()
+        }
+      })
+    }
+    try{
+      _this.utils.rmdir(this.project_path+"/py_compressed",function(){
+        lcb()
+      })
+    }catch(e){
+      _this.logger.info("Removing py_compressed folder failed, likely it didn't exist")
+      _this.logger.info(e)
+      lcb()
+    }
   }
 
   removeFilesRecursive(files,cb,depth){
@@ -506,10 +621,17 @@ export default class Sync {
       if(type == "d"){
         _this.progress("Removing dir "+filename)
         _this.shell.removeDir(filename,function(err){
+
+
           if(err){
             _this.progress("Failed to remove dir "+filename)
           }
           _this.project_status.update(filename)
+
+          if(!_this.isrunning){
+            _this.stoppedByUser(cb)
+            return
+          }
 
           files.splice(0,1)
           _this.removeFilesRecursive(files,cb,depth+1)
@@ -517,10 +639,17 @@ export default class Sync {
       }else{
         _this.progress("Removing file "+filename)
         _this.shell.removeFile(filename,function(err){
+
+
           if(err){
             _this.progress("Failed to remove file "+filename)
           }
           _this.project_status.update(filename)
+
+          if(!_this.isrunning){
+            _this.stoppedByUser(cb)
+            return
+          }
 
           files.splice(0,1)
           _this.removeFilesRecursive(files,cb,depth+1)
@@ -540,18 +669,36 @@ export default class Sync {
         var file = files[0]
         var filename = file[0]
         var type = file[1]
+        var size = file[3] ? Math.round(file[3]/1000) : 0
+        var check_hash = size < 500
         if(type == "f"){
           try{
             var file_path = _this.py_folder + filename
             var contents = fs.readFileSync(file_path)
 
-            _this.progress("Writing file "+filename,true)
-            _this.shell.writeFile(filename,file_path,contents,function(err,retry){
+
+            var message = "Writing file "+filename+" ("+size+"kb)"
+            var compress = false
+            if(_this.settings.fast_upload && size >= _this.compression_limit){
+              compress = true
+              message += " with compression"
+            }
+
+            _this.progress(message,true)
+            var start_time = new Date().getTime()
+            _this.shell.writeFile(filename,file_path,contents,check_hash,compress,function(err,retry){
+
               if(retry){
                 _this.progress("Failed to write file, trying again...")
                 // shell.writeFile automatically starts a re-try and executes the callback again
                 // no other actions needed
               }else{
+                var end_time = new Date().getTime()
+                var duration = (end_time - start_time)/ 1000
+                _this.progress("Completed in "+duration+" seconds")
+                if(!check_hash){
+                  _this.progress("Hashcheck not performed, file is > 500kb")
+                }
                 if(err){
                   _this.fails += 1
                   if(_this.fails > _this.max_failures){
@@ -562,6 +709,11 @@ export default class Sync {
                   }
                 }else{
                   _this.project_status.update(filename)
+                }
+
+                if(!_this.isrunning){
+                  _this.stoppedByUser(cb)
+                  return
                 }
                 files.splice(0,1)
                 _this.writeFilesRecursive(files,cb,depth+1)
@@ -618,6 +770,8 @@ export default class Sync {
   }
 
   exit(cb){
-    this.shell.exit(cb)
+    this.shell.exit(function(err){
+      cb(err)
+    })
   }
 }

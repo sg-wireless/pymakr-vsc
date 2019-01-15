@@ -1,20 +1,15 @@
 'use babel';
-var fs = require('fs');
 import Logger from '../helpers/logger.js'
-import ApiWrapper from '../main/api-wrapper.js';
 var binascii = require('binascii');
-
-var EventEmitter = require('events');
-const ee = new EventEmitter();
 
 export default class ShellWorkers {
 
 
   constructor(shell,pyboard,settings){
-    this.BIN_CHUNK_SIZE = 512
     this.shell = shell
-    this.pyboard = pyboard
     this.settings = settings
+    this.BIN_CHUNK_SIZE = this.settings.upload_chunk_size
+    this.pyboard = pyboard
     this.logger = new Logger('ShellWorkers')
   }
 
@@ -24,18 +19,12 @@ export default class ShellWorkers {
     var content = value[0]
     var counter = value[1]
 
-    if(!content){
-      callback(new Error("Failed to read file"),null)
-      return
-    }
-
     if(counter*blocksize >= content.length){
       callback(null,content,true)
     }else{
       var start = counter*blocksize
       var end = Math.min((counter+1)*blocksize,content.length)
       var chunk = content.base64Slice(start,end)
-      
       // c = binascii.b2a_base64(chunk)
 
       _this.pyboard.exec_raw("f.write(ubinascii.a2b_base64('"+chunk+"'))\r\n",function(err,data){
@@ -66,7 +55,7 @@ export default class ShellWorkers {
       names = names.splice(1)
       var is_dir = current_file.indexOf('.') == -1
       if(is_dir){
-        var c = "import ubinascii,sys,uos as os\r\n"
+        var c = "import ubinascii,sys\r\n"
         c += "list = ubinascii.hexlify(str(os.listdir('"+current_file_root + "')))\r\n"
         c += "sys.stdout.write(list)\r\n"
         _this.shell.eval(c,function(err,content){
@@ -100,7 +89,6 @@ export default class ShellWorkers {
 
         file_list.push(file_path)
         callback(null,[root,names,file_list])
-
       }
     }
   }
