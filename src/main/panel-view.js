@@ -22,7 +22,7 @@ export default class PanelView extends EventEmitter {
     this.logger = new Logger('PanelView')
 
     this.statusItems = {}
-    this.statusItems['status'] = this.createStatusItem('status',"","pymakr.toggleConnect","Toggle terminal") // name is set using setTitle function
+    this.statusItems['status'] = this.createStatusItem('status',"","pymakr.toggleConnect","Toggle board connection") // name is set using setTitle function
     this.statusItems['run'] = this.createStatusItem('run',"$(triangle-right) Run","pymakr.run","Run current file")
     this.statusItems['runselection'] = this.createStatusItem('runselection',"$(triangle-right) Run Line","pymakr.runselection","Run current line")
     this.statusItems['upload'] = this.createStatusItem('upload',"$(triangle-up) Upload","pymakr.upload","Upload project to your board")
@@ -108,6 +108,7 @@ export default class PanelView extends EventEmitter {
     if (!this.visible) {
       this.setTitle('not connected')
     }else if(this.pyboard.connected) {
+    // if(this.pyboard.connected) {
       if(runner_busy == undefined){
         // do nothing
       }else if(runner_busy){

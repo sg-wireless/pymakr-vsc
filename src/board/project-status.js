@@ -2,14 +2,7 @@
 var fs = require('fs');
 var crypto = require('crypto');
 import Logger from '../helpers/logger.js'
-import ShellWorkers from './shell-workers.js'
-import ApiWrapper from '../main/api-wrapper.js';
 import Utils from '../helpers/utils.js';
-var binascii = require('binascii');
-var utf8 = require('utf8');
-
-var EventEmitter = require('events');
-const ee = new EventEmitter();
 
 export default class ProjectStatus {
 
@@ -19,9 +12,11 @@ export default class ProjectStatus {
     this.utils = new Utils(settings)
     this.local_folder = local_folder
     this.settings = settings
+    console.log("Getting allowed file types")
     this.allowed_file_types = this.settings.get_allowed_file_types()
     this.content = []
     this.board_file_hashes = {}
+    console.log("Getting local hashes")
     this.local_file_hashes = this.__get_local_files_hashed()
     this.changed = false
   }
@@ -60,11 +55,15 @@ export default class ProjectStatus {
   }
 
   write(cb){
+    var _this = this
     if(this.changed){
       this.logger.info('Writing project status file to board')
       var board_hash_array = Object.values(this.board_file_hashes)
       var project_file_content = new Buffer(JSON.stringify(board_hash_array))
-      this.shell.writeFile('project.pymakr',null,project_file_content,true,cb,10) // last param prevents any retries
+      this.shell.writeFile('project.pymakr',null,project_file_content,true,false,function(err){
+        _this.changed = false
+        cb(err)
+      },10) // last param prevents any retries
     }else{
       this.logger.info('No changes to file, not writing')
       cb()
@@ -72,12 +71,14 @@ export default class ProjectStatus {
   }
 
   update(name){
+    console.log("updating")
     this.changed = true
     if(!this.local_file_hashes[name]){
       delete this.board_file_hashes[name]
     }else{
       this.board_file_hashes[name] = this.local_file_hashes[name]
     }
+    console.log("Done")
   }
 
   remove(filename){
@@ -96,6 +97,8 @@ export default class ProjectStatus {
   }
 
   __get_local_files_hashed(files,path){
+    console.log(files)
+    console.log(path)
     if(!files){
       files = this.__get_local_files(this.local_folder)
     }
@@ -104,11 +107,15 @@ export default class ProjectStatus {
     }
     var file_hashes = {}
 
+    console.log("ignore filter")
+    console.log(files)
     files = this.utils.ignore_filter(files)
 
+    console.log("Looping now")
     for(var i=0;i<files.length;i++){
       var filename = path + files[i]
       if(filename.length > 0 && filename.substring(0,1) != "."){
+        console.log(filename)
         var file_path = this.local_folder + filename
         var stats = fs.lstatSync(file_path)
         var is_dir = stats.isDirectory()
@@ -124,6 +131,7 @@ export default class ProjectStatus {
             file_hashes = Object.assign(file_hashes,hashes_in_folder)
           }
         }else{
+          console.log("set as file")
           this.total_file_size += stats.size
           this.total_number_of_files += 1
           var contents = fs.readFileSync(file_path)
@@ -132,7 +140,15 @@ export default class ProjectStatus {
         }
       }
     }
+    console.log(file_hashes)
     return file_hashes
+  }
+
+  prepare_file(file_path){
+    var contents = fs.readFileSync(file_path)
+    var stats = fs.lstatSync(file_path)
+    var hash = crypto.createHash('sha256').update(contents).digest('hex')
+    return [file_path.split('/').slice(-1)[0],"f",hash,stats.size]
   }
 
   get_changes(){

@@ -1,18 +1,12 @@
 'use babel';
 
-import Pyboard from './board/pyboard';
 import Sync from './board/sync';
 import Runner from './board/runner';
-import Term from './main/terminal';
 import PySerial from './connections/pyserial';
 import ApiWrapper from './main/api-wrapper.js';
 import Logger from './helpers/logger.js'
-import PanelView from './main/panel-view.js'
 import Config from './config.js'
 var EventEmitter = require('events');
-
-var fs = require('fs');
-var ElementResize = require("element-resize-detector");
 
 export default class Pymakr extends EventEmitter {
 
@@ -237,7 +231,9 @@ export default class Pymakr extends EventEmitter {
       }else if(address && address != _this.autoconnect_address){
         _this.terminal.writeln("Autoconnect: Found a PyCom board on USB")
         emitted_addr = address
+        _this.autoconnect_address = address
         _this.emit('auto_connect',address)
+        
       }else if(_this.autoconnect_address && !address){
         _this.autoconnect_address = null
         _this.disconnect()
@@ -263,7 +259,7 @@ export default class Pymakr extends EventEmitter {
       this.getPycomBoard(function(name,manu,list){
         var current_address = _this.pyboard.address
         if(name){
-          var text = name + " (" + manu+ ")"
+          // var text = name + " (" + manu+ ")"
           if(!_this.pyboard.connected){
             cb(name)
           }else{
@@ -603,8 +599,6 @@ export default class Pymakr extends EventEmitter {
 
 
   writeHelpText(){
-    var lines = []
-
     this.terminal.enter()
     this.terminal.write(this.config.help_text)
 
@@ -655,9 +649,9 @@ export default class Pymakr extends EventEmitter {
     this.view.clearTerminal ()
   }
 
-  toggleVisibility(){
-    this.view.visible ? this.hidePanel() : this.showPanel();
-  }
+  // toggleVisibility(){
+  //   this.view.visible ? this.hidePanel() : this.showPanel();
+  // }
   // VSCode only
   toggleConnect(){
     this.pyboard.connected ? this.disconnect() : this.connect();

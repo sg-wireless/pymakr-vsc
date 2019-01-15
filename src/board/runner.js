@@ -7,7 +7,7 @@ export default class Runner {
     this.pyboard = pyboard
     this.terminal = terminal
     this.pymakr = pymakr
-    this.api = this.api = new ApiWrapper()
+    this.api = new ApiWrapper()
     this.busy = false
   }
 
@@ -61,7 +61,6 @@ export default class Runner {
     }
   }
 
-
   _getCurrentFile(cb,onerror){
     this.api.getOpenFile(function(file,name){
       if(!file){
@@ -82,29 +81,33 @@ export default class Runner {
     },onerror)
   }
 
-  //remove excessive identation 
+  //remove excessive identation
   __trimcodeblock(codeblock){
-    // regex to split both win and unix style 
+    // regex to split both win and unix style
     var lines = codeblock.match(/[^\n]+(?:\r?\n|$)/g);
     // count leading spaces in line1 ( Only spaces, not TAB)
-    var count = 0 
-    while (lines[0].startsWith(' ',count ) ){
-      count ++;
-    }
-    // remove from all lines
-    if (count > 0){
-      var prefix = " ".repeat(count)      
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith(prefix) ) {
-          lines[i] = lines[i].slice(count);  
-        } else {
-            // funky identation or selection; just trim spaces and add warning
-            lines[i] = lines[i].trim() + " # <- IndentationError"; 
+    var count = 0
+    if(lines){
+      while (lines[0].startsWith(' ',count ) ){
+        count ++;
+      }
+
+      // remove from all lines
+      if (count > 0){
+        var prefix = " ".repeat(count)
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].startsWith(prefix) ) {
+            lines[i] = lines[i].slice(count);
+          } else {
+              // funky identation or selection; just trim spaces and add warning
+              lines[i] = lines[i].trim() + " # <- IndentationError";
+          }
         }
       }
+      // glue the lines back together
+      return( lines.join(''))
     }
-    // glue the lines back together 
-    return( lines.join('')) 
+    return codeblock
   }
 
 }

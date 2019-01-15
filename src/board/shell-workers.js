@@ -1,20 +1,15 @@
 'use babel';
-var fs = require('fs');
 import Logger from '../helpers/logger.js'
-import ApiWrapper from '../main/api-wrapper.js';
 var binascii = require('binascii');
-
-var EventEmitter = require('events');
-const ee = new EventEmitter();
 
 export default class ShellWorkers {
 
 
   constructor(shell,pyboard,settings){
-    this.BIN_CHUNK_SIZE = 512
     this.shell = shell
-    this.pyboard = pyboard
     this.settings = settings
+    this.BIN_CHUNK_SIZE = this.settings.upload_chunk_size
+    this.pyboard = pyboard
     this.logger = new Logger('ShellWorkers')
   }
 
@@ -30,7 +25,6 @@ export default class ShellWorkers {
       var start = counter*blocksize
       var end = Math.min((counter+1)*blocksize,content.length)
       var chunk = content.base64Slice(start,end)
-      
       // c = binascii.b2a_base64(chunk)
 
       _this.pyboard.exec_raw("f.write(ubinascii.a2b_base64('"+chunk+"'))\r\n",function(err,data){

@@ -258,7 +258,6 @@ export default class Pyboard {
         })
       }
 
-
       _this.connection.connect(function(){
           _this.connection.registerListener(function(mssg,raw){
             _this.receive(mssg,raw)
@@ -534,8 +533,6 @@ export default class Pyboard {
   }
 
   follow(cb){
-    var _this = this
-    var data_err,data = ""
     this.logger.verbose("Following up...")
     cb(null,"")
   }
