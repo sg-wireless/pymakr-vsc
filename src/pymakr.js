@@ -108,6 +108,12 @@ export default class Pymakr extends EventEmitter {
       }
     })
 
+    this.view.on('upload_file',function(){
+      if(!_this.synchronizing){
+        _this.uploadFile()
+      }
+    })
+
     this.view.on('sync_receive',function(){
       if(!_this.synchronizing){
         _this.download()
@@ -559,11 +565,27 @@ export default class Pymakr extends EventEmitter {
     this.sync()
   }
 
+  uploadFile(){
+    var _this = this
+    this.api.getOpenFile(function(contents,path){
+      if(!path){
+        _this.api.warning("No file open to upload")
+      }else{
+        console.log("Uploading single file")
+        _this.logger.info(path)
+
+        _this.sync('send',path)
+      }
+    })
+  }
+
+  
+
   download(){
     this.sync('receive')
   }
 
-  sync(type){
+  sync(type,files){
     this.logger.info("Sync")
     this.logger.info(type)
     var _this = this
@@ -589,7 +611,7 @@ export default class Pymakr extends EventEmitter {
         this.syncObj.start_receive(cb)
       }else{
         try{
-          this.syncObj.start(cb)
+          this.syncObj.start(cb,files)
         }catch(e){
           console.log(e)
         }

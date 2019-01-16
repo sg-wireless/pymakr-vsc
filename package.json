@@ -43,6 +43,10 @@
         "title": "Pymakr > Upload project"
       },
       {
+        "command": "pymakr.uploadFile",
+        "title": "Pymakr > Upload current file only"
+      },
+      {
         "command": "pymakr.download",
         "title": "Pymakr > Download project"
       },
@@ -98,6 +102,11 @@
         "command": "pymakr.upload",
         "key": "ctrl+shift+s",
         "mac": "cmd+shift+s"
+      },
+      {
+        "command": "pymakr.uploadFile",
+        "key": "ctrl+shift+s",
+        "mac": "ctrl+shift+s"
       },
       {
         "command": "pymakr.run",

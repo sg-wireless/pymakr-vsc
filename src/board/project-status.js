@@ -12,11 +12,9 @@ export default class ProjectStatus {
     this.utils = new Utils(settings)
     this.local_folder = local_folder
     this.settings = settings
-    console.log("Getting allowed file types")
     this.allowed_file_types = this.settings.get_allowed_file_types()
     this.content = []
     this.board_file_hashes = {}
-    console.log("Getting local hashes")
     this.local_file_hashes = this.__get_local_files_hashed()
     this.changed = false
   }
@@ -27,10 +25,6 @@ export default class ProjectStatus {
       if(err){
         cb(err)
         return
-      }
-
-      while(content_str.slice(content_str.length-2,content_str.length) != "]]"){
-        content_str += "]"
       }
 
       var json_content = []
@@ -71,14 +65,12 @@ export default class ProjectStatus {
   }
 
   update(name){
-    console.log("updating")
     this.changed = true
     if(!this.local_file_hashes[name]){
       delete this.board_file_hashes[name]
     }else{
       this.board_file_hashes[name] = this.local_file_hashes[name]
     }
-    console.log("Done")
   }
 
   remove(filename){
@@ -97,8 +89,6 @@ export default class ProjectStatus {
   }
 
   __get_local_files_hashed(files,path){
-    console.log(files)
-    console.log(path)
     if(!files){
       files = this.__get_local_files(this.local_folder)
     }
@@ -107,15 +97,11 @@ export default class ProjectStatus {
     }
     var file_hashes = {}
 
-    console.log("ignore filter")
-    console.log(files)
     files = this.utils.ignore_filter(files)
 
-    console.log("Looping now")
     for(var i=0;i<files.length;i++){
       var filename = path + files[i]
       if(filename.length > 0 && filename.substring(0,1) != "."){
-        console.log(filename)
         var file_path = this.local_folder + filename
         var stats = fs.lstatSync(file_path)
         var is_dir = stats.isDirectory()
@@ -131,7 +117,6 @@ export default class ProjectStatus {
             file_hashes = Object.assign(file_hashes,hashes_in_folder)
           }
         }else{
-          console.log("set as file")
           this.total_file_size += stats.size
           this.total_number_of_files += 1
           var contents = fs.readFileSync(file_path)
@@ -140,7 +125,6 @@ export default class ProjectStatus {
         }
       }
     }
-    console.log(file_hashes)
     return file_hashes
   }
 

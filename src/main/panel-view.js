@@ -26,6 +26,7 @@ export default class PanelView extends EventEmitter {
     this.statusItems['run'] = this.createStatusItem('run',"$(triangle-right) Run","pymakr.run","Run current file")
     this.statusItems['runselection'] = this.createStatusItem('runselection',"$(triangle-right) Run Line","pymakr.runselection","Run current line")
     this.statusItems['upload'] = this.createStatusItem('upload',"$(triangle-up) Upload","pymakr.upload","Upload project to your board")
+    this.statusItems['upload_file'] = this.createStatusItem('upload',"$(triangle-up) Upload file","pymakr.uploadFile","Upload current file to your board")
     this.statusItems['download'] = this.createStatusItem('download',"$(triangle-down) Download","pymakr.download","Download project from your board")
     this.statusItems['disconnect'] = this.createStatusItem('disconnect',"$(x) Disconnect","pymakr.disconnect","Disconnect")
     this.statusItems['settings'] = this.createStatusItem('settings',"$(gear) Settings","pymakr.globalSettings","Global Pymakr settings")
@@ -58,6 +59,7 @@ export default class PanelView extends EventEmitter {
     items.push({ label: "Pymakr > Run current file", description: "", cmd: "run" });
     items.push({ label: "Pymakr > Run current line or selection", description: "", cmd: "runselection" });    
     items.push({ label: "Pymakr > Upload Project", description: "", cmd: "upload" });
+    items.push({ label: "Pymakr > Upload current file only", description: "", cmd: "upload_file" });
     items.push({ label: "Pymakr > Download Project", description: "", cmd: "download" });
     items.push({ label: "Pymakr > Project Settings", description: "", cmd: "project_settings" });
     items.push({ label: "Pymakr > Global Setting", description: "", cmd: "global_settings" });
