@@ -8,6 +8,7 @@ export default class Config {
       safeboot_version: 1150002, // 1.15.0.b2
       upload_batch_size: 512,
       fast_upload_batch_multiplier: 4, // multiplier for upload_batch_size when fast_upload is active
+      compressed_files_folder: "py_compressed", // dynamically generated and removed again after upload
       error_messages: {
         "EHOSTDOWN": "Host down",
         "EHOSTUNREACH": "Host unreachable",

@@ -583,7 +583,7 @@ export default class Sync {
       })
     }
     try{
-      _this.utils.rmdir(this.project_path+"/py_compressed",function(){
+      _this.utils.rmdir(this.project_path + "/" + _this.settings.config.compressed_files_folder,function(){
         lcb()
       })
     }catch(e){
@@ -605,7 +605,6 @@ export default class Sync {
       if(type == "d"){
         _this.progress("Removing dir "+filename)
         _this.shell.removeDir(filename,function(err){
-
 
           if(err){
             _this.progress("Failed to remove dir "+filename)
