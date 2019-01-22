@@ -678,7 +678,7 @@ export default class Sync {
               }else{
                 var end_time = new Date().getTime()
                 var duration = (end_time - start_time)/ 1000
-                _this.progress("Completed in "+duration+" seconds")
+                _this.logger.info("Completed in "+duration+" seconds")
                 if(!check_hash){
                   _this.progress("Hashcheck not performed, file is > 500kb")
                 }

@@ -51,7 +51,7 @@ export default class Pymakr extends EventEmitter {
         _this.hidePanel()
       }else{
         if(_this.settings.auto_connect){
-          _this.startAutoConnect()
+          _this.startAutoConnect(null,true)
         }else{
           _this.logger.verbose("No auto connect enabled, connecting normally:")
           _this.connect()
@@ -199,12 +199,14 @@ export default class Pymakr extends EventEmitter {
     })
   }
 
-  startAutoConnect(cb){
+  startAutoConnect(cb,wait){
     if(this.view.visible){
       var _this = this
       this.logger.info("Starting autoconnect interval...")
       this.stopAutoConnect()
-      this.setAutoconnectAddress(cb)
+      if(!wait){
+        this.setAutoconnectAddress(cb)
+      }
       this.autoconnect_timer = setInterval(function(){
         _this.setAutoconnectAddress()
       },2500)
@@ -237,7 +239,6 @@ export default class Pymakr extends EventEmitter {
       }else if(address && address != _this.autoconnect_address){
         _this.terminal.writeln("Autoconnect: Found a PyCom board on USB")
         emitted_addr = address
-        _this.autoconnect_address = address
         _this.emit('auto_connect',address)
         
       }else if(_this.autoconnect_address && !address){
@@ -490,6 +491,7 @@ export default class Pymakr extends EventEmitter {
             _this.terminal.write(mssg)
           }
         }
+
         _this.pyboard.connect(address,onconnect,onerror, ontimeout, onmessage)
       }
     })
@@ -571,7 +573,6 @@ export default class Pymakr extends EventEmitter {
       if(!path){
         _this.api.warning("No file open to upload")
       }else{
-        console.log("Uploading single file")
         _this.logger.info(path)
 
         _this.sync('send',path)

@@ -46,7 +46,10 @@ export default class SettingsWrapper extends EventEmitter {
           _this.watchConfigFile()
           _this.watchProjectChange()
           _this.upload_chunk_size = _this.get_upload_chunk_size()
-          cb(_this)
+          if(cb){
+            cb(_this)
+            cb = null
+          }
         })
 
       })
@@ -129,7 +132,7 @@ export default class SettingsWrapper extends EventEmitter {
     })
 
   }
-  refreshGlobalConfig(cb){
+  refreshGlobalConfig(cbg){
     var _this = this
 
     this.logger.info("Refreshing global config")
@@ -139,6 +142,8 @@ export default class SettingsWrapper extends EventEmitter {
     }catch(e){
       this.emit('format_error')
       console.log(e)
+      cbg(e)
+      cbg = null
       return
     }
 
@@ -174,7 +179,7 @@ export default class SettingsWrapper extends EventEmitter {
     PySerial.isSerialPort(this.address,function(is_serial){
 
       if(is_serial || _this.utils.isIP(_this.address)){
-        if(cb) cb()
+        if(cbg) cbg()
       }else if(!_this.auto_connect){
 
         // If content is no IP or com, it might be a domain name
@@ -184,10 +189,10 @@ export default class SettingsWrapper extends EventEmitter {
           if(address && address.indexOf(".") > -1){
             _this.address = address
           }
-          if(cb) cb()
+          if(cbg) cbg()
         })
       }else{
-        if(cb) cb()
+        if(cbg) cbg()
       }
     })
 
@@ -260,8 +265,11 @@ export default class SettingsWrapper extends EventEmitter {
           
         }catch(e){
           console.log(e)
+          cb(e)
           // config file not properly formatted. TODO: throw error?
         }
+      }else{
+        cb(err)
       }
     })
   }
