@@ -63,6 +63,7 @@ Using the REPL is easy and works the same way as your command line based telnet 
 - `CTRL-C`: Stop any running code
 - `CTRL-D`: Soft reset
 - `CTRL-E`: Paste mode
+- `CTRL-F`: Safe boot
 
 Ctrl-C and Ctrl-V (or cmd-c/cmd-v on mac) can also be used to copy and paste in the console.
 
