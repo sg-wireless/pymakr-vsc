@@ -582,7 +582,7 @@ export default class Sync {
       })
     }
     try{
-      _this.utils.rmdir(this.project_path + "/" + _this.settings.config.compressed_files_folder,function(){
+      _this.utils.rmdir(this.project_path + "/" + _this.config.compressed_files_folder,function(){
         lcb()
       })
     }catch(e){
