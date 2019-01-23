@@ -3,6 +3,7 @@
 import Sync from './board/sync';
 import Runner from './board/runner';
 import PySerial from './connections/pyserial';
+import Utils from './helpers/utils';
 import ApiWrapper from './main/api-wrapper.js';
 import Logger from './helpers/logger.js'
 import Config from './config.js'
@@ -24,6 +25,9 @@ export default class Pymakr extends EventEmitter {
     this.autoconnect_timer = null
     this.autoconnect_address = undefined
     this.connection_timer = null
+    
+    this.utils = new Utils(settings)
+    this.utils.setIgnoreFilter()
 
     this.first_time_start = !this.api.settingsExist()
 

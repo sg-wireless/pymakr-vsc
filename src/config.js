@@ -3,12 +3,13 @@
 export default class Config {
   static constants(){
     return {
-      logging_level: 1, // 4 = error. anything higher than 5 = off. see logger.js
+      logging_level: 3, // 3 = warning, 4 = error. anything higher than 5 = off. see logger.js for all levels
       max_sync_size: 350000,
       safeboot_version: 1150002, // 1.15.0.b2
       upload_batch_size: 512,
       fast_upload_batch_multiplier: 4, // multiplier for upload_batch_size when fast_upload is active
       compressed_files_folder: "py_compressed", // dynamically generated and removed again after upload
+      hash_check_max_size: 200, // in kb
       error_messages: {
         "EHOSTDOWN": "Host down",
         "EHOSTUNREACH": "Host unreachable",
@@ -38,6 +39,7 @@ export default class Config {
             +  "- open_on_start           : true                : Weather to open the terminal and connect to the board when starting vsc\r\n"
             +  "- safe_boot_before_upload : true                : Safe-boots the board before uploading code, to prevent running out of RAM while uploading.\r\n"
             +  "- reboot_after_upload     : true                : Reboots the board after each upload.\r\n"
+            +  "- fast_upload             : false               : Experimental feature. Uses bigger batches and compresses larger (>4kb) files to make uploading faster. Only works on newer devices with 4mb of ram and firmware version >=1.20.0.\r\n"
             +  "Any of these can be used inside the Project config to override the global config\r\n"
             +  "\r\n"
             +  "For more information, check github.com/pycom/pymakr-atom or docs.pycom.io\r\n"

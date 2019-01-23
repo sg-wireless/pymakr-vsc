@@ -113,19 +113,22 @@ export default class Utils {
 
   }
 
+  setIgnoreFilter(){
+    var ignore_list = this.settings.py_ignore
+    var py_comp_folder = this.settings.constants.compressed_files_folder
+    if(ignore_list.indexOf(py_comp_folder) == -1){
+      ignore_list.push(py_comp_folder)
+    }
+    return ignore_list
+  }
+
   ignore_filter(file_list){
     var _this = this
-    console.log(this.settings)
-    console.log(this.settings.py_ignore)
-    var ignore_list = this.settings.py_ignore
-    ignore_list.push('zipped')
+    this.setIgnoreFilter()
     var new_list = []
-    console.log(file_list)
-    console.log(ignore_list)
     for(var i=0;i<file_list.length;i++){
       var file = file_list[i]
       var filename = file.split('/').pop()
-      console.log(filename)
       if(file && file != "" && file.length > 0 && file.substring(0,1) != "."){
         if(file.indexOf(".") == -1 || this.settings.sync_all_file_types || this.allowed_file_types.indexOf(file.split('.').pop()) > -1){
           if(this.settings.py_ignore.indexOf(file) == -1 && this.settings.py_ignore.indexOf(filename) == -1){
