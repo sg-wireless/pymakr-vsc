@@ -1,18 +1,12 @@
 'use babel';
 
-import Pyboard from './board/pyboard';
 import Sync from './board/sync';
 import Runner from './board/runner';
-import Term from './main/terminal';
 import PySerial from './connections/pyserial';
 import ApiWrapper from './main/api-wrapper.js';
 import Logger from './helpers/logger.js'
-import PanelView from './main/panel-view.js'
 import Config from './config.js'
 var EventEmitter = require('events');
-
-var fs = require('fs');
-var ElementResize = require("element-resize-detector");
 
 export default class Pymakr extends EventEmitter {
 
@@ -21,6 +15,7 @@ export default class Pymakr extends EventEmitter {
     var _this = this
     this.pyboard = pyboard
     this.synchronizing = false
+    this.synchronize_type = ""
     this.settings = settings
     this.api = new ApiWrapper(settings)
     this.logger = new Logger('Pymakr')
@@ -57,7 +52,7 @@ export default class Pymakr extends EventEmitter {
         _this.hidePanel()
       }else{
         if(_this.settings.auto_connect){
-          _this.startAutoConnect()
+          _this.startAutoConnect(null,true)
         }else{
           _this.logger.verbose("No auto connect enabled, connecting normally:")
           _this.connect()
@@ -111,13 +106,35 @@ export default class Pymakr extends EventEmitter {
     this.view.on('sync',function(){
       if(!_this.synchronizing){
         _this.upload()
+      }else{
+        _this.stopSync(function(){
+          _this.setButtonState()
+        })
       }
+      _this.setButtonState()
+
+    })
+
+    this.view.on('upload_current_file',function(){
+      if(!_this.synchronizing){
+        _this.uploadFile()
+      }else{
+        _this.stopSync(function(){
+          _this.setButtonState()
+        })
+      }
+      _this.setButtonState()
     })
 
     this.view.on('sync_receive',function(){
       if(!_this.synchronizing){
         _this.download()
+      }else{
+        _this.stopSync(function(){
+          _this.setButtonState()
+        })
       }
+      _this.setButtonState()
     })
 
     this.view.on('global_settings',function(){
@@ -199,12 +216,14 @@ export default class Pymakr extends EventEmitter {
     })
   }
 
-  startAutoConnect(cb){
+  startAutoConnect(cb,wait){
     if(this.view.visible){
       var _this = this
       this.logger.info("Starting autoconnect interval...")
       this.stopAutoConnect()
-      this.setAutoconnectAddress(cb)
+      if(!wait){
+        this.setAutoconnectAddress(cb)
+      }
       this.autoconnect_timer = setInterval(function(){
         _this.setAutoconnectAddress()
       },2500)
@@ -238,6 +257,7 @@ export default class Pymakr extends EventEmitter {
         _this.terminal.writeln("Autoconnect: Found a PyCom board on USB")
         emitted_addr = address
         _this.emit('auto_connect',address)
+        
       }else if(_this.autoconnect_address && !address){
         _this.autoconnect_address = null
         _this.disconnect()
@@ -263,7 +283,7 @@ export default class Pymakr extends EventEmitter {
       this.getPycomBoard(function(name,manu,list){
         var current_address = _this.pyboard.address
         if(name){
-          var text = name + " (" + manu+ ")"
+          // var text = name + " (" + manu+ ")"
           if(!_this.pyboard.connected){
             cb(name)
           }else{
@@ -371,7 +391,7 @@ export default class Pymakr extends EventEmitter {
 
   // refresh button display based on current status
   setButtonState(){
-    this.view.setButtonState(this.runner.busy)
+    this.view.setButtonState(this.runner.busy,this.synchronizing,this.synchronize_type)
   }
 
   setTitle(status){
@@ -428,67 +448,70 @@ export default class Pymakr extends EventEmitter {
 
   continueConnect(){
     var _this = this
-    this.pyboard.refreshConfig()
-    var address = this.pyboard.address
-    var connect_preamble = ""
-
-    if(address == "" || address == null){
-      if(!this.settings.auto_connect){
-        this.terminal.writeln("Address not configured. Please go to the settings to configure a valid address or comport")
-      }
-    }else{
-      if(this.settings.auto_connect){
-        connect_preamble = "Autoconnect: "
-      }
-      this.terminal.writeln(connect_preamble+"Connecting on "+address+"...");
-
-      var onconnect = function(err){
-        if(err){
-          _this.terminal.writeln("Connection error: "+err)
-        }else{
-          _this.api.setConnectionState(address,true,_this.view.project_name)
-          _this.connection_timer = setInterval(function(){
-            if(_this.pyboard.connected){
-              _this.api.setConnectionState(address,true,_this.view.project_name)
-            }else{
-              clearTimeout(_this.connection_timer)
-            }
-          },10000)
-        }
+    this.pyboard.refreshConfig(function(){
       
-        _this.setButtonState()
-      }
+      var address = _this.pyboard.address
+      var connect_preamble = ""
 
-      var onerror = function(err){
-        var message = _this.pyboard.getErrorMessage(err.message)
-        if(message == ""){
-          message = err.message ? err.message : "Unknown error"
+      if(address == "" || address == null){
+        if(!_this.settings.auto_connect){
+          _this.terminal.writeln("Address not configured. Please go to the settings to configure a valid address or comport")
         }
-        if(_this.pyboard.connected){
-          _this.logger.warning("An error occurred: "+message)
-          if(_this.synchronizing){
-            _this.terminal.writeln("An error occurred: "+message)
-            _this.logger.warning("Synchronizing, stopping sync")
-            _this.syncObj.stop()
+      }else{
+        if(_this.settings.auto_connect){
+          connect_preamble = "Autoconnect: "
+        }
+        _this.terminal.writeln(connect_preamble+"Connecting on "+address+"...");
+
+        var onconnect = function(err){
+          if(err){
+            _this.terminal.writeln("Connection error: "+err)
+          }else{
+            _this.api.setConnectionState(address,true,_this.view.project_name)
+            _this.connection_timer = setInterval(function(){
+              if(_this.pyboard.connected){
+                _this.api.setConnectionState(address,true,_this.view.project_name)
+              }else{
+                clearTimeout(_this.connection_timer)
+              }
+            },10000)
           }
-        }else{
-          _this.terminal.writeln("> Failed to connect ("+message+"). Click here to try again.")
+        
           _this.setButtonState()
         }
-      }
 
-      var ontimeout = function(err){
-        _this.terminal.writeln("> Connection timed out. Click here to try again.")
-        _this.setButtonState()
-      }
-
-      var onmessage = function(mssg){
-        if(!_this.synchronizing){
-          _this.terminal.write(mssg)
+        var onerror = function(err){
+          var message = _this.pyboard.getErrorMessage(err.message)
+          if(message == ""){
+            message = err.message ? err.message : "Unknown error"
+          }
+          if(_this.pyboard.connected){
+            _this.logger.warning("An error occurred: "+message)
+            if(_this.synchronizing){
+              _this.terminal.writeln("An error occurred: "+message)
+              _this.logger.warning("Synchronizing, stopping sync")
+              _this.syncObj.stop()
+            }
+          }else{
+            _this.terminal.writeln("> Failed to connect ("+message+"). Click here to try again.")
+            _this.setButtonState()
+          }
         }
+
+        var ontimeout = function(err){
+          _this.terminal.writeln("> Connection timed out. Click here to try again.")
+          _this.setButtonState()
+        }
+
+        var onmessage = function(mssg){
+          if(!_this.synchronizing){
+            _this.terminal.write(mssg)
+          }
+        }
+
+        _this.pyboard.connect(address,onconnect,onerror, ontimeout, onmessage)
       }
-      _this.pyboard.connect(address,onconnect,onerror, ontimeout, onmessage)
-    }
+    })
   }
 
   disconnect(cb){
@@ -519,20 +542,20 @@ export default class Pymakr extends EventEmitter {
     }
     if(!this.synchronizing){
       
-      this.runner.toggle(function(){
-        _this.setButtonState()
-      })
+      // this.runner.toggle(function(){
+      //   _this.setButtonState()
+      // })
 
       // TODO: fix runselection() feature to work stabily before enabling it with the code below
-      // var code = this.api.getSelected() 
+      var code = this.api.getSelected() 
       // if user has selected code, run that instead of the file
-      // if(code){
-      //   this.runselection(code)
-      // }else{
-        // this.runner.toggle(function(){
-        //   _this.setButtonState()
-        // })
-      // }
+      if(code){
+        this.runselection(code)
+      }else{
+        this.runner.toggle(function(){
+          _this.setButtonState()
+        })
+      }
       
     }
   }
@@ -558,14 +581,36 @@ export default class Pymakr extends EventEmitter {
   }
 
   upload(){
-    this.sync()
+    if(!this.synchronizing){
+      this.sync()
+    }else{
+      this.stopSync(function(){
+        this.setButtonState()
+      })
+    }
+    this.setButtonState()
   }
+
+  uploadFile(){
+    var _this = this
+    this.api.getOpenFile(function(contents,path){
+      if(!path){
+        _this.api.warning("No file open to upload")
+      }else{
+        _this.logger.info(path)
+
+        _this.sync('send',path)
+      }
+    })
+  }
+
+  
 
   download(){
     this.sync('receive')
   }
 
-  sync(type){
+  sync(type,files){
     this.logger.info("Sync")
     this.logger.info(type)
     var _this = this
@@ -576,6 +621,8 @@ export default class Pymakr extends EventEmitter {
     if(!this.synchronizing){
       this.syncObj = new Sync(this.pyboard,this.settings,this.terminal)
       this.synchronizing = true
+      this.synchronize_type = type
+      this.setButtonState()
       var cb = function(err){
 
         _this.synchronizing = false
@@ -591,7 +638,7 @@ export default class Pymakr extends EventEmitter {
         this.syncObj.start_receive(cb)
       }else{
         try{
-          this.syncObj.start(cb)
+          this.syncObj.start(cb,files)
         }catch(e){
           console.log(e)
         }
@@ -599,10 +646,20 @@ export default class Pymakr extends EventEmitter {
     }
   }
 
+  stopSync(cb){
+    var _this = this
+    _this.logger.info("Stopping upload/download now...")
+    if(this.synchronizing){
+      this.syncObj.stop(function(){
+        _this.synchronizing = false
+        cb()
+      })
+      var type = this.synchronize_type == 'receive' ? 'download' : 'upload'
+      this.terminal.writeln("Stopping "+type+"....")
+    }
+  }
 
   writeHelpText(){
-    var lines = []
-
     this.terminal.enter()
     this.terminal.write(this.config.help_text)
 
@@ -653,9 +710,6 @@ export default class Pymakr extends EventEmitter {
     this.view.clearTerminal ()
   }
 
-  toggleVisibility(){
-    this.view.visible ? this.hidePanel() : this.showPanel();
-  }
   // VSCode only
   toggleConnect(){
     this.pyboard.connected ? this.disconnect() : this.connect();

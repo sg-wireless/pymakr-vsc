@@ -1,8 +1,6 @@
 'use babel';
 var vscode = require('vscode');
-let Terminal = require('xterm')
 import Logger from '../helpers/logger.js'
-import Config from '../config.js'
 import ApiWrapper from '../main/api-wrapper.js';
 
 var Socket = require('net').Socket;

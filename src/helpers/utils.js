@@ -1,7 +1,8 @@
 'use babel';
-import Config from '../config.js'
-var vscode = require('vscode');
+
 var path = require('path');
+var rimraf = require('rimraf');
+var fs = require('fs');
 var os = require('os');
 var homeDir = os.homedir();
 
@@ -15,12 +16,10 @@ var homeDir = os.homedir();
 
 export default class Utils {
 
-
   constructor(settings){
     this.settings = settings
 
     // TODO: grab from a .pyignore file or setting
-    this.ignore_list = ["project.pymakr"]
     this.allowed_file_types = this.settings.get_allowed_file_types()
   }
 
@@ -38,7 +37,9 @@ export default class Utils {
           }else if(done){
             end(null,value_processed)
           }else{
-            _this.doRecursively(value_processed,worker,end)
+            setTimeout(function(){
+              _this.doRecursively(value_processed,worker,end)
+            },20)
           }
       })
     }catch(e){
@@ -50,44 +51,35 @@ export default class Utils {
 
   // vscode
   static getConfigPath(filename){
-    var folder = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.platform == 'linux' ? Utils.joinPath(homeDir, '.config') : '/var/local');
+    var plf = process.platform
+    var folder = process.env.APPDATA || (plf == 'darwin' ? process.env.HOME + '/Library/Application Support' : plf == 'linux' ? Utils.joinPath(homeDir, '.config') : '/var/local');
     if(/^[A-Z]\:[/\\]/.test(folder)) folder = folder.substring(0, 1).toLowerCase() + folder.substring(1);
     return Utils.joinPath(folder, "/Code/User/", filename ? filename : "");
-  }
-
-  static joinPath(){        
-    var p = "";
-    for(var i=0; i<arguments.length; i++){
-        p = path.join(p, arguments[i]);
-    }
-    return Utils.normalize(p);
-  }
-
-  static normalize(p){
-    return path.normalize(p).replace(/\\/g, '/')
   }
 
   base64decode(b64str){
     var content = ""
     var buffer_list = []
     var b64str_arr = b64str.split('=')
+
     for(var i=0;i<b64str_arr.length;i++){
       var chunk = b64str_arr[i]
       if(chunk.length > 0){
+
+        // Add == to only the last chunk
+        // Ignore last 2 items, becuase the original string contains '==' + some extra chars
         if(i == b64str_arr.length-3){
           chunk += '=='
         }else{
           chunk += '='
         }
         var bc = Buffer.from(chunk, 'base64')
-        var bc_str = bc.toString()
         buffer_list.push(bc)
-        content += bc_str
+        content += bc.toString()
       }
     }
     return [content,buffer_list]
   }
-
 
   plural(text,number){
     return text + (number == 1 ? "" : "s")
@@ -102,6 +94,52 @@ export default class Utils {
     }
   }
 
+
+  ensureFileDirectoryExistence(filePath) {
+    var dirname = path.dirname(filePath)
+    this.ensureDirectoryExistence(dirname)
+  }
+
+
+  ensureDirectoryExistence(dirname) {
+    console.log(dirname)
+    if (fs.existsSync(dirname)) {
+      return true
+    }
+    // console.log(dirname)
+    // this.ensureDirectoryExistence(dirname)
+    console.log(dirname)
+    console.log(fs.mkdirSync(dirname))
+
+  }
+
+  ignore_filter(file_list){
+    var _this = this
+    console.log(this.settings)
+    console.log(this.settings.py_ignore)
+    var ignore_list = this.settings.py_ignore
+    ignore_list.push('zipped')
+    var new_list = []
+    console.log(file_list)
+    console.log(ignore_list)
+    for(var i=0;i<file_list.length;i++){
+      var file = file_list[i]
+      var filename = file.split('/').pop()
+      console.log(filename)
+      if(file && file != "" && file.length > 0 && file.substring(0,1) != "."){
+        if(file.indexOf(".") == -1 || this.settings.sync_all_file_types || this.allowed_file_types.indexOf(file.split('.').pop()) > -1){
+          if(this.settings.py_ignore.indexOf(file) == -1 && this.settings.py_ignore.indexOf(filename) == -1){
+            new_list.push(file)
+          }
+        }
+      }
+    }
+    return new_list
+  }
+
+  rmdir(path,cb){
+    rimraf(path, function () { cb() });
+  }
 
   calculate_int_version(version){
     var known_types = ['a', 'b', 'rc', 'r']
@@ -133,19 +171,57 @@ export default class Utils {
     return parseInt(version_string)
   }
 
-  ignore_filter(file_list){
-    var _this = this
-    var new_list = []
-    for(var i=0;i<file_list.length;i++){
-      var file = file_list[i]
-      if(file && file != "" && file.length > 0 && file.substring(0,1) != "."){
-        if(file.indexOf(".") == -1 || this.settings.sync_all_file_types || this.allowed_file_types.indexOf(file.split('.').pop()) > -1){
-          if(this.ignore_list.indexOf(file) == -1){
-            new_list.push(file)
-          }
-        }
-      }
+  // vscode
+  static getConfigPath(filename){
+    var folder = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.platform == 'linux' ? Utils.joinPath(homeDir, '.config') : '/var/local');
+    if(/^[A-Z]\:[/\\]/.test(folder)) folder = folder.substring(0, 1).toLowerCase() + folder.substring(1);
+    return Utils.joinPath(folder, "/Code/User/", filename ? filename : "");
+  }
+
+  static joinPath(){        
+    var p = "";
+    for(var i=0; i<arguments.length; i++){
+        p = path.join(p, arguments[i]);
     }
-    return new_list
+    return Utils.normalize(p);
+  }
+
+  static normalize(p){
+    return path.normalize(p).replace(/\\/g, '/')
+  }
+
+
+
+  _was_file_not_existing(exception){
+   var error_list = ['ENOENT', 'ENODEV', 'EINVAL', 'OSError:']
+   var stre = exception.message
+   for(var i=0;i<error_list.length;i++){
+     if(stre.indexOf(error_list[i]) > -1){
+       return true
+     }
+   }
+   return false
+  }
+
+  int_16(int){
+    var b = new Buffer(2)
+    b.writeUInt16BE(int)
+    return b
+  }
+
+  int_32(int){
+    var b = new Buffer(4)
+    b.writeUInt32BE(int)
+    return b
+  }
+
+  isIP(address){
+    var r = RegExp('^http[s]?:\/\/((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])')
+    return r.test(address)
+  }
+
+  isIP(address){
+    var r = RegExp('^http[s]?:\/\/((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])')
+    return r.test(address)
   }
 }

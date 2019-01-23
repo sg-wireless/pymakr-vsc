@@ -63,6 +63,7 @@ Using the REPL is easy and works the same way as your command line based telnet 
 - `CTRL-C`: Stop any running code
 - `CTRL-D`: Soft reset
 - `CTRL-E`: Paste mode
+- `CTRL-F`: Safe boot
 
 Ctrl-C and Ctrl-V (or cmd-c/cmd-v on mac) can also be used to copy and paste in the console.
 
@@ -102,6 +103,13 @@ Synchronizing takes a bit of memory, so this error can occur when code running o
 If the Pymakr terminal is not opening or giving an error, this might be because NodeJS is not installed on your system. This is because the terminal process is running separate from VSCode and depends on your systems NodeJS install.
 
 **Solution:** Install NodeJS. For windows 64 machines, install a 32 bit version of nodejs (for example `nvm install 7.8.0 32` when using nvm).
+
+
+### Cannot connect to Pycom device on Linux
+
+If you're a linux user and can't connect to your board, there might be a permission issue to access the serial port.
+
+**Solution:** Run the following command `sudo usermod -a -G dialout $USER`
 
 ## Developing
 If you want to contribute to this project you can test the app the following way:

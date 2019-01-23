@@ -7,7 +7,7 @@ export default class Runner {
     this.pyboard = pyboard
     this.terminal = terminal
     this.pymakr = pymakr
-    this.api = this.api = new ApiWrapper()
+    this.api = new ApiWrapper()
     this.busy = false
   }
 
@@ -34,22 +34,18 @@ export default class Runner {
     })
   }
 
-
   selection(codeblock,cb){
     var _this = this
     codeblock = this.__trimcodeblock(codeblock)
     _this.terminal.writeln("Running selected lines")
     _this.busy = true
-    _this.pyboard.runblock(codeblock,function(){
+    _this.pyboard.run(codeblock,function(){
       _this.busy = false
       if(cb) cb()
     },function onerror(err){
       _this.terminal.writeln_and_prompt(err)
     })
   }
-
-  
-
 
   stop(cb){
     var _this = this
@@ -65,7 +61,6 @@ export default class Runner {
     }
   }
 
-
   _getCurrentFile(cb,onerror){
     this.api.getOpenFile(function(file,name){
       if(!file){
@@ -76,41 +71,43 @@ export default class Runner {
       var filename = "untitled file"
       if(name){
         filename = name.split('/').pop(-1)
-        if(filename.indexOf('.') > -1){
-          var filetype = filename.split('.').pop(-1)
-          if(filetype.toLowerCase() != 'py'){
-            onerror("Can't run "+filetype+" files, please run only python files")
-            return
-          }
+        var filetype = filename.split('.').pop(-1)
+        if(filetype.toLowerCase() != 'py'){
+          onerror("Can't run "+filetype+" files, please run only python files")
+          return
         }
       }
       cb(file,filename)
     },onerror)
   }
 
-  //remove excessive identation 
+  //remove excessive identation
   __trimcodeblock(codeblock){
-    // regex to split both win and unix style 
+    // regex to split both win and unix style
     var lines = codeblock.match(/[^\n]+(?:\r?\n|$)/g);
     // count leading spaces in line1 ( Only spaces, not TAB)
-    var count = 0 
-    while (lines[0].startsWith(' ',count ) ){
-      count ++;
-    }
-    // remove from all lines
-    if (count > 0){
-      var prefix = " ".repeat(count)      
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith(prefix) ) {
-          lines[i] = lines[i].slice(count);  
-        } else {
-            // funky identation or selection; just trim spaces and add warning
-            lines[i] = lines[i].trim() + " # <- IndentationError"; 
+    var count = 0
+    if(lines){
+      while (lines[0].startsWith(' ',count ) ){
+        count ++;
+      }
+
+      // remove from all lines
+      if (count > 0){
+        var prefix = " ".repeat(count)
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].startsWith(prefix) ) {
+            lines[i] = lines[i].slice(count);
+          } else {
+              // funky identation or selection; just trim spaces and add warning
+              lines[i] = lines[i].trim() + " # <- IndentationError";
+          }
         }
       }
+      // glue the lines back together
+      return( lines.join(''))
     }
-    // glue the lines back together 
-    return( lines.join('')) 
+    return codeblock
   }
 
 }
