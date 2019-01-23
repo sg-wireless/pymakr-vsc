@@ -657,7 +657,7 @@ export default class Sync {
         var filename = file[0]
         var type = file[1]
         var size = file[3] ? Math.round(file[3]/1000) : 0
-        var check_hash = size < 500
+        var check_hash = size < _this.config.hash_check_max_size
         if(type == "f"){
           try{
             var file_path = _this.py_folder + filename

@@ -9,6 +9,7 @@ export default class Config {
       upload_batch_size: 512,
       fast_upload_batch_multiplier: 4, // multiplier for upload_batch_size when fast_upload is active
       compressed_files_folder: "py_compressed", // dynamically generated and removed again after upload
+      hash_check_max_size: 200, // in kb
       error_messages: {
         "EHOSTDOWN": "Host down",
         "EHOSTUNREACH": "Host unreachable",
