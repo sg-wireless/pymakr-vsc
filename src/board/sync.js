@@ -185,8 +185,13 @@ export default class Sync {
 
     // make sure next messages will be written on a new line
     this.terminal.enter()
-
-    this.terminal.write(this.method_action+" project ("+this.folder_name+")...\r\n")
+    if(files){
+      // TODO: make compatible with future usecase where files contains more than one file
+      var filename = files.split('/').pop()
+      this.terminal.write(this.method_action+" current file ("+filename+")...\r\n")
+    }else{
+      this.terminal.write(this.method_action+" project ("+this.folder_name+")...\r\n")
+    }
 
     _this.__safe_boot(function(err){
 
