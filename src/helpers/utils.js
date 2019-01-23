@@ -1,6 +1,5 @@
 'use babel';
-import Config from '../config.js'
-var vscode = require('vscode');
+
 var path = require('path');
 var rimraf = require('rimraf');
 var fs = require('fs');

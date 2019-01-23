@@ -1,10 +1,9 @@
 'use babel';
-const EventEmitter = require('events');
 var fs = require('fs');
 var vscode = require('vscode');
 var ncp = require('copy-paste')
 import Utils from '../helpers/utils.js';
-import {window, commands, Disposable, ExtensionContext, StatusBarAlignment, StatusBarItem, TextDocument, workspace, extension} from 'vscode';
+import {window, workspace} from 'vscode';
 import Config from '../config.js';
 
 export default class ApiWrapper {

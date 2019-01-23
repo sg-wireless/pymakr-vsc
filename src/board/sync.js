@@ -1,6 +1,5 @@
 'use babel';
 
-var crypto = require('crypto');
 import Shell from './shell.js'
 import Config from '../config.js'
 import Logger from '../helpers/logger.js'
