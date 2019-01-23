@@ -79,7 +79,7 @@ export default class Shell {
   compress(filepath,name,cb){
 
     var name_only = name.substr(name.lastIndexOf('/') + 1)
-    var zipped_path = filepath.replace(name,this.settings.config.compressed_files_folder + "/")
+    var zipped_path = filepath.replace(name,this.config.compressed_files_folder + "/")
     var zipped_filepath = zipped_path+name_only+'.gz'
 
     this.utils.ensureDirectoryExistence(zipped_path)

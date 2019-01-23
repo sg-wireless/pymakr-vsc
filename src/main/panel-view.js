@@ -106,7 +106,7 @@ export default class PanelView extends EventEmitter {
   }
 
   // refresh button display based on current status
-  setButtonState(runner_busy){
+  setButtonState(runner_busy,synchronizing,synchronize_type){
     // if (!this.visible) {
     //   this.setTitle('not connected')
     // }else if(this.pyboard.connected) {
@@ -117,6 +117,16 @@ export default class PanelView extends EventEmitter {
         this.setButton('run','primitive-square','Stop')
       }else{
         this.setButton('run','triangle-right','Run')
+      }
+      if(synchronizing){
+        if(synchronize_type == 'receive'){
+          this.setButton('download','primitive-square','Cancel')
+        }else{
+          this.setButton('upload','primitive-square','Cancel')
+        }
+      }else{
+        this.setButton('upload','triangle-up','Upload')
+        this.setButton('download','triangle-down','Download')
       }
 
       this.setTitle('connected')

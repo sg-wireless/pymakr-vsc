@@ -15,6 +15,7 @@ export default class Pymakr extends EventEmitter {
     var _this = this
     this.pyboard = pyboard
     this.synchronizing = false
+    this.synchronize_type = ""
     this.settings = settings
     this.api = new ApiWrapper(settings)
     this.logger = new Logger('Pymakr')
@@ -105,19 +106,35 @@ export default class Pymakr extends EventEmitter {
     this.view.on('sync',function(){
       if(!_this.synchronizing){
         _this.upload()
+      }else{
+        _this.stopSync(function(){
+          _this.setButtonState()
+        })
       }
+      _this.setButtonState()
+
     })
 
-    this.view.on('upload_file',function(){
+    this.view.on('upload_current_file',function(){
       if(!_this.synchronizing){
         _this.uploadFile()
+      }else{
+        _this.stopSync(function(){
+          _this.setButtonState()
+        })
       }
+      _this.setButtonState()
     })
 
     this.view.on('sync_receive',function(){
       if(!_this.synchronizing){
         _this.download()
+      }else{
+        _this.stopSync(function(){
+          _this.setButtonState()
+        })
       }
+      _this.setButtonState()
     })
 
     this.view.on('global_settings',function(){
@@ -374,7 +391,7 @@ export default class Pymakr extends EventEmitter {
 
   // refresh button display based on current status
   setButtonState(){
-    this.view.setButtonState(this.runner.busy)
+    this.view.setButtonState(this.runner.busy,this.synchronizing,this.synchronize_type)
   }
 
   setTitle(status){
@@ -564,7 +581,14 @@ export default class Pymakr extends EventEmitter {
   }
 
   upload(){
-    this.sync()
+    if(!this.synchronizing){
+      this.sync()
+    }else{
+      this.stopSync(function(){
+        this.setButtonState()
+      })
+    }
+    this.setButtonState()
   }
 
   uploadFile(){
@@ -597,6 +621,8 @@ export default class Pymakr extends EventEmitter {
     if(!this.synchronizing){
       this.syncObj = new Sync(this.pyboard,this.settings,this.terminal)
       this.synchronizing = true
+      this.synchronize_type = type
+      this.setButtonState()
       var cb = function(err){
 
         _this.synchronizing = false
@@ -620,6 +646,18 @@ export default class Pymakr extends EventEmitter {
     }
   }
 
+  stopSync(cb){
+    var _this = this
+    _this.logger.info("Stopping upload/download now...")
+    if(this.synchronizing){
+      this.syncObj.stop(function(){
+        _this.synchronizing = false
+        cb()
+      })
+      var type = this.synchronize_type == 'receive' ? 'download' : 'upload'
+      this.terminal.writeln("Stopping "+type+"....")
+    }
+  }
 
   writeHelpText(){
     this.terminal.enter()
