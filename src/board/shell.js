@@ -117,8 +117,8 @@ export default class Shell {
       if(retries < _this.RETRIES){
         cb(err,true)
 
-        // if retrying for memory issues, do a safe-boot before retrying
-        if(err.message.indexOf("Not enough memory") > -1){
+        // if retrying for memory or OS issues (like hash checks gone wrong), do a safe-boot before retrying
+        if(err.message.indexOf("Not enough memory") > -1 || err.message.indexOf("OSError:") > -1){
           _this.logger.info("Safe booting...")
           _this.safeboot_restart(function(){
             _this.writeFile(name,file_path,contents,compare_hash,compress,cb,retries+1)
@@ -161,17 +161,19 @@ export default class Shell {
               return
             }
             if(compare_hash){
-              _this.compare_hash(name,file_path,contents,function(match,err){
-                _this.board_ready(function(){
-                  if(match){
-                    cb(null)
-                  }else if(err){
-                    _this.logger.warning("Error during file hash check: "+err.message)
-                    retry(new Error("Filecheck failed: "+err.message))
-                  }else{
-                    _this.logger.warning("File hash check didn't match, trying again")
-                    retry(new Error("Filecheck failed"))
-                  }
+              _this.board_ready(function(){
+                _this.compare_hash(name,file_path,contents,function(match,err){
+                  _this.board_ready(function(){
+                    if(match){
+                      cb(null)
+                    }else if(err){
+                      _this.logger.warning("Error during file hash check: "+err.message)
+                      retry(new Error("Filecheck failed: "+err.message))
+                    }else{
+                      _this.logger.warning("File hash check didn't match, trying again")
+                      retry(new Error("Filecheck failed"))
+                    }
+                  })
                 })
               })
             }else{
@@ -244,7 +246,10 @@ export default class Shell {
       var content_buffer = decode_result[1]
       var content_str = decode_result[0].toString()
 
-      _this.logger.silly(err)
+      if(err){
+        _this.logger.silly("Error after executing read")
+        _this.logger.silly(err)
+      }
       cb(err,content_buffer,content_str)
     },60000)
   }
@@ -344,6 +349,9 @@ export default class Shell {
 
     var compare = function(local_hash){
       _this.get_hash(filename,function(err,remote_hash){
+        _this.logger.silly("Comparing local hash to remote hash")
+        _this.logger.silly("local: "+local_hash)
+        _this.logger.silly("remote: "+remote_hash)
         cb(local_hash == remote_hash,err)
       })
     }
@@ -381,10 +389,14 @@ export default class Shell {
 
     this.eval(command,function(err,content){
       content = content.slice(2,-3).replace('>','')
-      _this.logger.silly(err)
+      if(err){
+        _this.logger.silly("Error after reading hash:")
+        _this.logger.silly(err)
+      }
+      _this.logger.silly("Returned content from hash:")
       _this.logger.silly(content)
       cb(err,content)
-    },20000)
+    },40000)
   }
 
 
