@@ -25,11 +25,9 @@ export default class Pymakr extends EventEmitter {
     this.autoconnect_timer = null
     this.autoconnect_address = undefined
     this.connection_timer = null
-    
     this.utils = new Utils(settings)
-    this.utils.setIgnoreFilter()
 
-    this.first_time_start = !this.api.settingsExist()
+    
 
     this.terminal = this.view.terminal
     this.runner = new Runner(pyboard,this.terminal,this)
@@ -48,6 +46,13 @@ export default class Pymakr extends EventEmitter {
         _this.api.error("Unable to start the terminal")
       }
       _this.logger.info("Connected trigger from view")
+
+      this.first_time_start = !this.api.settingsExist()
+      if(this.first_time_start){
+        this.first_time_start = false
+        _this.api.openSettings()
+        _this.writeGetStartedText()
+      }
 
      // hide panel if it was hidden after last shutdown of atom
       var close_terminal = serializedState && 'visible' in serializedState && !serializedState.visible
@@ -407,12 +412,6 @@ export default class Pymakr extends EventEmitter {
     this.logger.info("Connecting...")
     this.logger.info(address)
 
-    if(this.first_time_start){
-      this.first_time_start = false
-      _this.api.openSettings()
-      _this.writeGetStartedText()
-    }
-
     if(!address && this.autoconnect_address){
       address = this.autoconnect_address
       this.logger.info("Using autoconnect address: "+address)
@@ -678,16 +677,17 @@ export default class Pymakr extends EventEmitter {
     var _this = this
     this.terminal.enter()
     this.terminal.write(this.config.start_text)
+    this.terminal.writeln("")
 
-    PySerial.list(function(list){
-      if(list.length > 0){
-        _this.terminal.writeln("Here are the devices you've connected to the serial port at the moment:")
-        _this.getSerial()
-      }else if(this.pyboard.connected){
-        this.terminal.writeln()
-        this.terminal.writePrompt()
-      }
-    })
+    // PySerial.list(function(list){
+    //   if(list.length > 0){
+    //     _this.terminal.writeln("Here are the devices you've connected to the serial port at the moment:")
+    //     _this.getSerial()
+    //   }else if(this.pyboard.connected){
+    //     this.terminal.writeln()
+    //     this.terminal.writePrompt()
+    //   }
+    // })
 
 
   }

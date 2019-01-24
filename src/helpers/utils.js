@@ -113,18 +113,9 @@ export default class Utils {
 
   }
 
-  setIgnoreFilter(){
-    var ignore_list = this.settings.py_ignore
-    var py_comp_folder = this.settings.constants.compressed_files_folder
-    if(ignore_list.indexOf(py_comp_folder) == -1){
-      ignore_list.push(py_comp_folder)
-    }
-    return ignore_list
-  }
 
   ignore_filter(file_list){
     var _this = this
-    this.setIgnoreFilter()
     var new_list = []
     for(var i=0;i<file_list.length;i++){
       var file = file_list[i]

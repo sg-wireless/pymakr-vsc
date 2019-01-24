@@ -175,6 +175,12 @@ export default class SettingsWrapper extends EventEmitter {
     this.statusbar_buttons.push('global_settings')
     this.statusbar_buttons.push('project_settings')
 
+    if(!this.py_ignore){
+      this.py_ignore = []
+      this.py_ignore.push(this.constants.compressed_files_folder)
+    }
+    
+
 
     PySerial.isSerialPort(this.address,function(is_serial){
 
@@ -239,9 +245,13 @@ export default class SettingsWrapper extends EventEmitter {
   }
   
   readConfigFileSync(path){
-    var contents = fs.readFileSync(path,{encoding: 'utf-8'})
-    contents = JSON.parse(contents)
-    
+    var contents = {}
+    try{
+      contents = fs.readFileSync(path,{encoding: 'utf-8'})
+      contents = JSON.parse(contents)
+    }catch(e){
+      this.logger.warning("Config file doesn't exist")
+    }
     return contents
   }
 
