@@ -1,4 +1,10 @@
 {
+  "_args": [
+    [
+      "serialport@6.2.2",
+      "D:\\projects\\pymakr-vsc"
+    ]
+  ],
   "_from": "serialport@6.2.2",
   "_id": "serialport@6.2.2",
   "_inBundle": false,
@@ -31,13 +37,11 @@
     "fetchSpec": "6.2.2"
   },
   "_requiredBy": [
-    "#USER",
     "/"
   ],
   "_resolved": "https://registry.npmjs.org/serialport/-/serialport-6.2.2.tgz",
-  "_shasum": "75532312571578b060eb29cbdf8f2f3e8ba03063",
-  "_spec": "serialport@6.2.2",
-  "_where": "D:\\Projects\\pymakr-vsc",
+  "_spec": "6.2.2",
+  "_where": "D:\\projects\\pymakr-vsc",
   "bin": {
     "serialport-list": "./bin/list.js",
     "serialport-repl": "./bin/repl.js",
@@ -46,7 +50,6 @@
   "bugs": {
     "url": "https://github.com/node-serialport/node-serialport/issues"
   },
-  "bundleDependencies": false,
   "cc": {
     "filter": [
       "legal/copyright",
@@ -74,7 +77,6 @@
     "prompt-list": "^3.2.0",
     "safe-buffer": "^5.1.2"
   },
-  "deprecated": false,
   "description": "Node.js package to access serial ports. Linux, OSX and Windows. Welcome your robotic JavaScript overlords. Better yet, program them!",
   "devDependencies": {
     "@reconbot/jsdoc-theme": "^1.0.0",
