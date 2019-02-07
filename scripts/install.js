@@ -5,7 +5,7 @@ var fs = require('fs')
 var vtools = require('./functions-versions.js')
 
 var serialport_version = '6.2.2'
-var electron_version = '2.0.7'
+var electron_version = '3.1.2'
 var project_folder = "C:\\Users\\<username>\\Projects\\pymakr-vsc"
 
 var electron_rebuild_path = "$(npm bin)/"
