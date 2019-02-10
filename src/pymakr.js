@@ -170,7 +170,7 @@ export default class Pymakr extends EventEmitter {
     })
 
     this.view.on('terminal_click',function(){
-      this.logger.verbose("Terminal click emitted")
+      _this.logger.verbose("Terminal click emitted")
       if(!_this.pyboard.connected && !_this.pyboard.connecting) {
         _this.logger.verbose("Connecting because of terminal click")
         _this.connect()
@@ -178,9 +178,8 @@ export default class Pymakr extends EventEmitter {
     })
 
     this.view.on('user_input',function(input){
-      var _this = this
       // this.terminal.write('\r\n')
-      this.pyboard.send_user_input(input,function(err){
+      _this.pyboard.send_user_input(input,function(err){
         if(err && err.message == 'timeout'){
           _this.logger.warning("User input timeout, disconnecting")
           _this.logger.warning(err)
