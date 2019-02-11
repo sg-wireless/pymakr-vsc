@@ -433,7 +433,9 @@ export default class Pyboard {
 
 
   send(mssg,cb){
-    this.connection.send(mssg,cb)
+    if(this.connection){
+      this.connection.send(mssg,cb)
+    }
   }
 
   send_with_enter(mssg,cb){

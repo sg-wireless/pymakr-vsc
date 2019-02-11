@@ -1,3 +1,7 @@
+## 1.0.6
+- Fixed compatibility with VSCode v1.31
+- Small bugfix for error that occurred when typing while plugin is loading
+
 ## 1.0.5
 - Feature identical to Pymakr for Atom v1.4.9
 - Added experimental 'fast upload' option, using zlib compression

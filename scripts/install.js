@@ -47,9 +47,7 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
       console.log("Copied both files")
     })
   })
-
 }
-
 
 // Don't preform on windows, since it almost always fails there. Automatically defaults to precompiled version in /precompiles folder
 if (process.platform != 'win32' || compile_for_windows) {
