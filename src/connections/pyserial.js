@@ -47,10 +47,8 @@ export default class PySerial {
   }
 
   static COMPORT_MANUFACTURERS(){
-    return ['Pycom','Pycom Ltd.','FTDI']
+    return ['Pycom','Pycom Ltd.','FTDI','Microsoft','Microchip Technology, Inc.']
   }
-
-
 
   connect(onconnect,onerror,ontimeout){
 
