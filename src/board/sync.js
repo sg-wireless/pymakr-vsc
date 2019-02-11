@@ -44,15 +44,16 @@ export default class Sync {
       return new Error("No project open")
     }
     // check if project exists
-    if(!this.exists(this.settings.sync_folder)){
-        return new Error("Unable to find folder '"+this.settings.sync_folder+"'. Please add the correct folder in your settings")
+    if(!this.exists(this.py_folder)){
+      console.log("Py folder doesn't exist")
+        return new Error("Unable to find folder '"+this.settings.sync_folder+"' in your project. Please add the correct folder in your settings")
     }
 
     return true
   }
 
   exists(dir){
-    return fs.existsSync(this.project_path + "/" + dir)
+    return fs.existsSync(dir)
   }
 
   progress(text,count){
@@ -758,7 +759,9 @@ export default class Sync {
 
   exit(cb){
     this.shell.exit(function(err){
-      cb(err)
+      if(cb){
+        cb(err) 
+      }
     })
   }
 }

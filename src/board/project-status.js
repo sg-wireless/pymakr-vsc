@@ -90,7 +90,12 @@ export default class ProjectStatus {
 
   __get_local_files_hashed(files,path){
     if(!files){
-      files = this.__get_local_files(this.local_folder)
+      try{
+        files = this.__get_local_files(this.local_folder)
+      }catch(e){
+        this.logger.error("Couldn't locate file folder to upload")
+        return false
+      }
     }
     if(!path){
       path = ""
