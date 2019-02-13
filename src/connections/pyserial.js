@@ -7,7 +7,6 @@ var fs = require('fs');
 var SerialPort = null
 try {
   SerialPort = require("serialport");
-  
 } catch (e) {
   // include the precompiled version of serialport
   var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
@@ -19,8 +18,7 @@ try {
     }
 
     SerialPort = require("../../precompiles/serialport-" + plf);
-    // var DarwinBinding = require("../../precompiles/serialport-" + plf + "/lib/serialport/lib/bindings/darwin");
-    // SerialPort.Binding = DarwinBinding//require("../../precompiles/serialport-" + plf + "/lib/serialport/lib/bindings/darwin");
+
   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
     throw e;
   }
@@ -28,7 +26,10 @@ try {
 
 export default class PySerial {
 
-  constructor(address,params){
+// 'Microsoft' and 'Microchip Technology, Inc.' manufacturers show on boards with a PIC on windows
+
+
+  constructor(address,params,settings){
     this.type = "serial"
     this.params = params
     this.address = address
@@ -41,14 +42,14 @@ export default class PySerial {
       // not implemented
     });
 
+    this.comport_manufacturers = settings.autoconnect_comport_manufacturers
+
     var dtr_support = ['darwin']
 
-    this.dtr_supported = dtr_support.indexOf(process.platform) > -1  
+    this.dtr_supported = dtr_support.indexOf(process.platform) > -1
   }
 
-  static COMPORT_MANUFACTURERS(){
-    return ['Pycom','Pycom Ltd.','FTDI','Microsoft','Microchip Technology, Inc.']
-  }
+
 
   connect(onconnect,onerror,ontimeout){
 
@@ -141,14 +142,16 @@ export default class PySerial {
     }
   }
 
-  static listPycom(cb){
+  static listPycom(settings,cb){
     var pycom_list = []
     var pycom_manus = []
-    PySerial.list(function(names,manus){
+    settings.refresh()
+    var comport_manufacturers = settings.autoconnect_comport_manufacturers
+    PySerial.list(settings,function(names,manus){
       for(var i=0;i<names.length;i++){
         var name = names[i]
         var manu = manus[i]
-        if(PySerial.COMPORT_MANUFACTURERS().indexOf(manu) > -1){
+        if(comport_manufacturers.indexOf(manu) > -1){
           pycom_list.push(name)
           pycom_manus.push(manu)
         }
@@ -157,7 +160,8 @@ export default class PySerial {
     })
   }
 
-  static list(cb){
+  static list(settings,cb){
+    var comport_manufacturers = settings.autoconnect_comport_manufacturers
     SerialPort.list(function(err,ports){
       var portnames = []
       var other_portnames = []
@@ -168,11 +172,11 @@ export default class PySerial {
 
         if(name.indexOf('Bluetooth') == -1){
           var manu = ports[i].manufacturer ? ports[i].manufacturer : "Unknown manufacturer"
-          var pycom_manu_index = PySerial.COMPORT_MANUFACTURERS().indexOf(manu)
+          var pycom_manu_index = comport_manufacturers.indexOf(manu)
           if(pycom_manu_index > -1){
             var j;
             for(j=0;j<manufacturers.length;j++){
-              if(pycom_manu_index < PySerial.COMPORT_MANUFACTURERS().indexOf(manufacturers[j])){
+              if(pycom_manu_index < comport_manufacturers.indexOf(manufacturers[j])){
                 break
               }
             }

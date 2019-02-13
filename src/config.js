@@ -153,6 +153,16 @@ export default class Config {
             default: [],
             order: 7
         },
+        autoconnect_comport_manufacturers: {
+            title: 'Autoconnect comport manufacturers',
+            description: 'Comma separated list of all the comport manufacturers supported for the autoconnect feature. Defaults to all possible manufacturers that pycom boards can return.',
+            type: 'array',
+            items: {
+              type: 'string'
+            },
+            default: ['Pycom','Pycom Ltd.','FTDI','Microsoft','Microchip Technology, Inc.'],
+            order: 13
+        },
     }
   }
 }

@@ -165,6 +165,7 @@ export default class SettingsWrapper extends EventEmitter {
     this.auto_connect = this.api.config('auto_connect')
     this.py_ignore = this.api.config('py_ignore')
     this.fast_upload = this.api.config('fast_upload')
+    this.autoconnect_comport_manufacturers = this.api.config('autoconnect_comport_manufacturers')
 
     this.timeout = 15000
     this.setProjectConfig()
@@ -342,7 +343,6 @@ export default class SettingsWrapper extends EventEmitter {
     if('fast_upload' in this.project_config){
       this.fast_upload = this.project_config.fast_upload
     }
-
   }
 
   isConfigComplete(settings_object){
@@ -386,6 +386,8 @@ export default class SettingsWrapper extends EventEmitter {
       config.ctrl_c_on_connect = this.api.config('ctrl_c_on_connect')
       config.sync_all_file_types = this.api.config('sync_all_file_types')
       config.auto_connect = this.api.config('auto_connect')
+      config.autoconnect_comport_manufacturers = this.api.config('autoconnect_comport_manufacturers')
+      
     }
     return config
   }

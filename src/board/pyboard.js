@@ -239,7 +239,7 @@ export default class Pyboard {
     Pyserial.isSerialPort(this.address,function(res){
       _this.isSerial = res
       if(res){
-        _this.connection = new Pyserial(_this.address,_this.params)
+        _this.connection = new Pyserial(_this.address,_this.params,_this.settings)
       }else if (raw){
         _this.connection = new Pysocket(_this.address,_this.params)
       }else{
