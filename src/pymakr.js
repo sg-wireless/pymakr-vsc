@@ -229,6 +229,8 @@ export default class Pymakr extends EventEmitter {
       var _this = this
       this.logger.info("Starting autoconnect interval...")
       this.stopAutoConnect()
+      this.terminal.writeln("AutoConnect enabled (see Global Settings)")
+      this.terminal.writeln("Searching for PyCom boards on serial...")
       if(!wait){
         this.setAutoconnectAddress(cb)
       }
@@ -257,24 +259,33 @@ export default class Pymakr extends EventEmitter {
   setAutoconnectAddress(cb){
     var _this = this
     var emitted_addr = null
+    var failed = false
     this.getAutoconnectAddress(function(address){
       _this.logger.silly("Found address: "+address)
       if(_this.autoconnect_address === undefined && !address){ // undefined means first time use
-        _this.terminal.writeln("Autoconnect: No PyCom boards found on USB")
+        _this.terminal.writeln("No PyCom boards found on USB")
+        failed = true
+        emitted_addr = _this.settings.address
       }else if(address && address != _this.autoconnect_address){
-        _this.terminal.writeln("Autoconnect: Found a PyCom board on USB")
+        _this.logger.silly("Found a PyCom board on USB: "+address)
         emitted_addr = address
         _this.emit('auto_connect',address)
-        
       }else if(_this.autoconnect_address && !address){
         _this.autoconnect_address = null
         _this.disconnect()
-        _this.terminal.writeln("Autoconnect: Previous board is not available anymore")
-        _this.logger.silly("Autoconnect: Previous board is not available anymore")
+        _this.terminal.writeln("Previous board is not available anymore")
+        _this.logger.silly("Previous board is not available anymore")
+        failed = true
       }else if(!address){
         _this.logger.silly("No address found")
       }else{
         _this.logger.silly("Ignoring address "+address+" for now")
+      }
+
+      if(failed){
+        _this.terminal.writeln("Trying configured address "+_this.settings.address)
+        _this.emit('auto_connect',_this.settings.address)
+        emitted_addr = _this.settings.address
       }
       if(cb){
         cb(emitted_addr)
@@ -460,10 +471,7 @@ export default class Pymakr extends EventEmitter {
           _this.terminal.writeln("Address not configured. Please go to the settings to configure a valid address or comport")
         }
       }else{
-        if(_this.settings.auto_connect){
-          connect_preamble = "Autoconnect: "
-        }
-        _this.terminal.writeln(connect_preamble+"Connecting on "+address+"...");
+        _this.terminal.writeln(connect_preamble+"Connecting to "+address+"...");
 
         var onconnect = function(err){
           if(err){

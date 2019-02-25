@@ -202,7 +202,6 @@ export default class SettingsWrapper extends EventEmitter {
         if(cbg) cbg()
       }
     })
-
   }
 
   trigger_global_change_watchers(){
@@ -210,10 +209,11 @@ export default class SettingsWrapper extends EventEmitter {
     for(var i=0;i<keys.length;i++){
       var k = keys[i]
       if(this.api.config(k) != this[k] && this.change_watcher[k]){
-        this.change_watcher[k](this[k],this.api.config(k))
+        var old = this[k]
+        this[k] = this.api.config(k)
+        this.change_watcher[k](old,this.api.config(k))
       }
     }
-    
   }
 
   get_allowed_file_types(){
