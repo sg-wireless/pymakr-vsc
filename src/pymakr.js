@@ -71,7 +71,7 @@ export default class Pymakr extends EventEmitter {
 
     this.view.on('connect',function(){
       this.logger.verbose("Connect emitted")
-      _this.connect()
+      _this.connect(null,true)
       _this.setButtonState()
     })
 
@@ -229,7 +229,7 @@ export default class Pymakr extends EventEmitter {
       var _this = this
       this.logger.info("Starting autoconnect interval...")
       this.stopAutoConnect()
-      this.terminal.writeln("AutoConnect enabled (see Global Settings)")
+      this.terminal.writeln("AutoConnect enabled, ignoring 'address' setting (see Global Settings)")
       this.terminal.writeln("Searching for PyCom boards on serial...")
       if(!wait){
         this.setAutoconnectAddress(cb)
@@ -265,7 +265,7 @@ export default class Pymakr extends EventEmitter {
       if(_this.autoconnect_address === undefined && !address){ // undefined means first time use
         _this.terminal.writeln("No PyCom boards found on USB")
         failed = true
-        emitted_addr = _this.settings.address
+        // emitted_addr = _this.settings.address
       }else if(address && address != _this.autoconnect_address){
         _this.logger.silly("Found a PyCom board on USB: "+address)
         emitted_addr = address
@@ -282,11 +282,11 @@ export default class Pymakr extends EventEmitter {
         _this.logger.silly("Ignoring address "+address+" for now")
       }
 
-      if(failed){
-        _this.terminal.writeln("Trying configured address "+_this.settings.address)
-        _this.emit('auto_connect',_this.settings.address)
-        emitted_addr = _this.settings.address
-      }
+      // if(failed){
+      //   _this.terminal.writeln("Trying configured address "+_this.settings.address)
+      //   _this.emit('auto_connect',_this.settings.address)
+      //   emitted_addr = _this.settings.address
+      // }
       if(cb){
         cb(emitted_addr)
       }
@@ -417,14 +417,19 @@ export default class Pymakr extends EventEmitter {
 	  this.view.setTitle()
   }
 
-  connect(address){
+  connect(address,clickaction){
     var _this = this
     this.logger.info("Connecting...")
     this.logger.info(address)
 
-    if(!address && this.autoconnect_address){
-      address = this.autoconnect_address
-      this.logger.info("Using autoconnect address: "+address)
+    if(this.autoconnect_address){
+      if(!address){
+        address = this.autoconnect_address
+        this.logger.info("Using autoconnect address: "+address)
+      }
+    }
+    if(this.settings.auto_connect && !address && clickaction){
+      this.terminal.writeln("AutoConnect: No device available")
     }
 
     var state = this.api.getConnectionState(address)
