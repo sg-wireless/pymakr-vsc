@@ -1,3 +1,9 @@
+## 1.0.7 - minor improvements
+- Fixed issue with error handling when sync_folder is not set correctly
+- Improved user feedback for autoconnect feature
+- Fixed autoconnect compatibility for expansionboard 3.1 on windows
+- Added comport list for autoconnect to config file
+
 ## 1.0.6
 - Fixed compatibility with VSCode v1.31
 - Small bugfix for error that occurred when typing while plugin is loading
