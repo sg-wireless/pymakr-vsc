@@ -604,7 +604,7 @@ export default class Pymakr extends EventEmitter {
         _this.setButtonState()
       })
     }
-    _this.setButtonState()
+    this.setButtonState()
   }
 
   uploadFile(){
