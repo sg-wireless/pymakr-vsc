@@ -596,14 +596,15 @@ export default class Pymakr extends EventEmitter {
   }
 
   upload(){
+    var _this = this;
     if(!this.synchronizing){
       this.sync()
     }else{
       this.stopSync(function(){
-        this.setButtonState()
+        _this.setButtonState()
       })
     }
-    this.setButtonState()
+    _this.setButtonState()
   }
 
   uploadFile(){
