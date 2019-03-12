@@ -30,7 +30,7 @@ export default class ShellWorkers {
 
       _this.pyboard.exec_raw("f.write(ubinascii.a2b_base64('"+chunk+"'))\r\n",function(err,data){
         if(data.indexOf("Traceback: ") > -1 || data.indexOf("Error: ") > -1){
-          var err_mssg = data.slice(data.indexOf("Error: ")+7,-3)
+          err_mssg = data.slice(data.indexOf("Error: ")+7,-3)
           err = new Error("Failed to write file: "+err_mssg)
         }
         if(err){
