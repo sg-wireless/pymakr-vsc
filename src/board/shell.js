@@ -63,12 +63,11 @@ export default class Shell {
     var command =
         "import uzlib\r\n" +
         "def decompress(name):\r\n" +
-        "  d = open(name,'r+')\r\n" +
-        "  c = uzlib.decompress(d.read())\r\n" +
-        "  d.close()\r\n" +
-        "  d = open(name,'w')\r\n" +
-        "  d.write(c)\r\n" +
-        "  d.close()\r\n" +
+        "  with open(name,'r+') as d:\r\n" +
+        "    c = uzlib.decompress(d.read())\r\n" +
+        "  with open(name,'w') as d:\r\n" +
+        "      d.write(c)\r\n" +
+        "  del(c)\r\n" +
         "decompress('"+name+"')\r\n"
 
     this.pyboard.exec_(command,function(err,content){
@@ -235,8 +234,8 @@ export default class Shell {
         "    sys.stdout.write(c)\r\n" +
         "    if not len(c) or c == b'\\n':\r\n" +
         "        break\r\n"
-
-    this.pyboard.exec_raw(command,function(err,content){
+    
+        this.pyboard.exec_raw(command,function(err,content){
 
       // Workaround for the "OK" return of soft reset, which is sometimes returned with the content
       if(content.indexOf("OK") == 0){
@@ -379,12 +378,12 @@ export default class Shell {
     var command =
         "import uhashlib,ubinascii,sys\r\n" +
         "hash = uhashlib.sha256()\r\n" +
-        "f = open('"+filename+"', 'rb')\r\n"+
-        "while True:\r\n"+
-        '    c = f.read('+this.BIN_CHUNK_SIZE+')\r\n'+
-        '    if not c:\r\n'+
-        '        break\r\n'+
-        '    hash.update(c)\r\n'+
+        "with open('"+filename+"', 'rb') as f:\r\n"+
+        "  while True:\r\n"+
+        "    c = f.read("+this.BIN_CHUNK_SIZE+")\r\n"+
+        "    if not c:\r\n"+
+        "       break\r\n"+
+        "    hash.update(c)\r\n"+
         "sys.stdout.write(ubinascii.hexlify(hash.digest()))\r\n"
 
     this.eval(command,function(err,content){
