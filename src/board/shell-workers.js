@@ -18,6 +18,7 @@ export default class ShellWorkers {
     var blocksize = _this.BIN_CHUNK_SIZE
     var content = value[0]
     var counter = value[1]
+    var err_mssg = ""
 
     if(counter*blocksize >= content.length){
       callback(null,content,true)
