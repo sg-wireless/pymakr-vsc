@@ -303,8 +303,10 @@ export default class Sync {
           _this.number_of_changed_files = file_list.length
           _this.receive_files(0,file_list,function(){
             _this.logger.info("All items received")
-            _this.progress("All items overritten")
-            _this.complete(cb)
+            _this.progress("All items overwritten")
+            _this.exit(function(){
+              _this.complete(cb)
+            })
           })
         }
       }
@@ -316,8 +318,10 @@ export default class Sync {
           _this.number_of_changed_files = new_files.length
           _this.receive_files(0,new_files,function(){
             _this.logger.info("All items received")
-            _this.progress("All items overritten")
-            _this.complete(cb)
+            _this.progress("All items overwritten")
+            _this.exit(function(){
+              _this.complete(cb)
+            })
           })
         }
       }
