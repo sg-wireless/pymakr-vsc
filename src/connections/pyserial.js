@@ -4,25 +4,25 @@ import Logger from '../helpers/logger.js'
 var fs = require('fs');
 
 
-var SerialPort = null
-try {
-  SerialPort = require("serialport");
-} catch (e) {
-  // include the precompiled version of serialport
-  var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
-  if(process.platform in precompiles) { // always returns win32 on windows, even on 64bit
+// var SerialPort = null
+// try {
+var SerialPort = require("serialport");
+// } catch (e) {
+//   // include the precompiled version of serialport
+//   var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
+//   if(process.platform in precompiles) { // always returns win32 on windows, even on 64bit
 
-    var plf = precompiles[process.platform]
-    if(plf == 'win' && process.arch == 'ia32'){
-      plf = 'win32'
-    }
+//     var plf = precompiles[process.platform]
+//     if(plf == 'win' && process.arch == 'ia32'){
+//       plf = 'win32'
+//     }
 
-    SerialPort = require("../../precompiles/serialport-" + plf);
+//     SerialPort = require("../../precompiles/serialport-" + plf);
 
-  }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
-    throw e;
-  }
-}
+//   }else{ // when platform returns sunos, openbsd or freebsd (or 'android' in some experimental software)
+//     throw e;
+//   }
+// }
 
 export default class PySerial {
 
