@@ -25,9 +25,31 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   bindings_source = bindings_source.replace('<os>',os)
 
   console.log("Copy bindings file")
-  copyFile(bindings_source,bindings_target,function(){
-
-    console.log("Copy done")
+  copyFile(bindings_source,bindings_target,function(error){
+    console.log(error)
+    console.log("Installing electron rebuild")
+    exec('npm install electron-rebuild',
+      function(error,stdout,stderr){
+        if(error){
+          console.log(error)
+        }else{
+            console.log("Rebuilding for electron "+electron_version+"...")
+            var path = electron_rebuild_path
+            if(process.platform == 'win32'){
+              path = electron_rebuild_path_win
+            }
+            exec(path + 'electron-rebuild -f -w serialport -v '+electron_version,
+              function(error,stout,stderr){
+                if(error){
+                  console.log(error)
+                }
+                console.log("done")
+              }
+            )
+        }
+      }
+    )
+  
   })
 }
 
@@ -36,49 +58,34 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
 
 
 
-console.log("Installing electron rebuild")
-exec('npm install electron-rebuild',
-  function(error,stdout,stderr){
-    if(error){
-      console.log(error)
-    }else{
-        console.log("Rebuilding for electron "+electron_version+"...")
-        var path = electron_rebuild_path
-        if(process.platform == 'win32'){
-          path = electron_rebuild_path_win
-        }
-        exec(path + 'electron-rebuild -f -w serialport -v '+electron_version,
-          function(error,stout,stderr){
-            if(error){
-              console.log(error)
-            }
-            console.log("Done!")
-          }
-        )
-    }
-  }
-)
 
 function copyFile(source, target, cb) {
-  var cbCalled = false;
-
-  var rd = fs.createReadStream(source);
-  rd.on("error", function(err) {
-    done(err);
-  });
-  var wr = fs.createWriteStream(target);
-  wr.on("error", function(err) {
-    done(err);
-  });
-  wr.on("close", function(ex) {
-    done();
-  });
-  rd.pipe(wr);
-
+  
   function done(err) {
     if (!cbCalled) {
       cb(err);
       cbCalled = true;
     }
   }
+
+  if(fs.existsSync(source)){
+
+    var cbCalled = false;
+
+    var rd = fs.createReadStream(source);
+    rd.on("error", function(err) {
+      done(err);
+    });
+    var wr = fs.createWriteStream(target);
+    wr.on("error", function(err) {
+      done(err);
+    });
+    wr.on("close", function(ex) {
+      done();
+    });
+    rd.pipe(wr);
+  }else{
+    done(new Error("File "+source+" doesn't exist"))
+  }
+
 }
