@@ -3,15 +3,15 @@
 var exec = require('child_process').exec
 var fs = require('fs')
 
-// bindings params
+// bindings params 
+// FIXME: Source / target Swap ?
 var bindings_target = 'node_modules/@serialport/bindings/build/Release/bindings.node'
 var bindings_source = 'precompiles/serialport-<os>/bindings.node'
 
 // electron rebuild params
 var electron_version = '3.1.6'
-var project_folder = "C:\\Users\\<username>\\Projects\\pymakr-vsc"
 var electron_rebuild_path = "$(npm bin)/"
-var electron_rebuild_path_win = project_folder + '\\node_modules\\.bin\\electron-rebuild'
+var electron_rebuild_path_win = '.\\node_modules\\.bin\\' // assuming current directory = project folder
 
 // copy precompiled bindings.node file for correct OS
 var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
@@ -23,7 +23,7 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   }
 
   bindings_source = bindings_source.replace('<os>',os)
-
+  // FIXME: only copies on the 2nd run ( Copy before rebuild ?)
   console.log("Copy bindings file")
   copyFile(bindings_source,bindings_target,function(error){
     console.log(error)
@@ -38,6 +38,7 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
             if(process.platform == 'win32'){
               path = electron_rebuild_path_win
             }
+            // -f force -v electron version
             exec(path + 'electron-rebuild -f -w serialport -v '+electron_version,
               function(error,stout,stderr){
                 if(error){
@@ -53,14 +54,10 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   })
 }
 
-// Try to run electron rebuild anyway (ust in case we're installing on a newer version of vscode)
+// Try to run electron rebuild anyway (just in case we're installing on a newer version of vscode)
 
+function copyFile( target, source, cb) {
 
-
-
-
-function copyFile(source, target, cb) {
-  
   function done(err) {
     if (!cbCalled) {
       cb(err);
@@ -82,6 +79,7 @@ function copyFile(source, target, cb) {
     });
     wr.on("close", function(ex) {
       done();
+      console.log("Copy completed")
     });
     rd.pipe(wr);
   }else{
