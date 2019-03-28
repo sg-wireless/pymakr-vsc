@@ -36,8 +36,7 @@ export default class Shell {
   getVersion(cb){
     var command =
         "import os,sys\r\n" +
-        "v = os.uname().release" +
-        "sys.stdout.write(v)\r\n"
+        "sys.stdout.write(os.uname().release)\r\n"
 
     this.pyboard.exec_(command,function(err,content){
       cb(content)
@@ -47,10 +46,9 @@ export default class Shell {
   getFreeMemory(cb){
       var command =
           "import os, sys\r\n" +
-          "m = os.getfree('/flash')" +
-          "sys.stdout.write(m)\r\n"
-          "s = os.statvfs('/flash')\r\n" +
-          "sys.stdout.write(s[0]*s[3])\r\n" 
+          "_s = os.statvfs('/flash')\r\n" +
+          "sys.stdout.write(str(s[0]*s[3])\r\n" +
+          "del(_s)\r\n"
 
     this.pyboard.exec_(command,function(err,content){
       cb(content)
