@@ -214,6 +214,7 @@ export default class Shell {
 
   readFile(name,callback){
     var _this = this
+
     _this.working = true
 
     var cb = function(err,content_buffer,content_str){
@@ -222,18 +223,15 @@ export default class Shell {
         callback(err,content_buffer,content_str)
       },100)
     }
-
-    var command = "import ubinascii,sys\r\n"
-    command += "f = open('"+name+"', 'rb')\r\n"
-
-    command += "import ubinascii\r\n"
-
-    command +=
-        "while True:\r\n" +
-        "    c = ubinascii.b2a_base64(f.read("+this.BIN_CHUNK_SIZE+"))\r\n" +
-        "    sys.stdout.write(c)\r\n" +
-        "    if not len(c) or c == b'\\n':\r\n" +
-        "        break\r\n"
+    // avoid leaking file handles 
+    var command
+    command = "import ubinascii,sys" + "\r\n" + 
+              "with open('"+name+"', 'rb') as f:" + "\r\n" + 
+              "  while True:" + "\r\n" + 
+              "    c = ubinascii.b2a_base64(f.read("+this.BIN_CHUNK_SIZE+"))" + "\r\n" + 
+              "    sys.stdout.write(c)" + "\r\n" + 
+              "    if not len(c) or c == b'\\n':" + "\r\n" + 
+              "        break\r\n"
     
         this.pyboard.exec_raw(command,function(err,content){
 
@@ -258,6 +256,7 @@ export default class Shell {
     var file_list = ['']
 
     var end = function(err,file_list_2){
+      // return no error, and the retrieved file_list
       cb(undefined,file_list)
     }
 
@@ -269,7 +268,7 @@ export default class Shell {
       _this.workers.list_files(params,callback)
     }
 
-    this.utils.doRecursively(['/flash',[''],file_list],worker,end)
+    this.utils.doRecursively(['/flash',[''],file_list], worker ,end)
   }
 
 
