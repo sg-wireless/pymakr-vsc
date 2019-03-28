@@ -251,7 +251,7 @@ export default class SettingsWrapper extends EventEmitter {
       contents = fs.readFileSync(path,{encoding: 'utf-8'})
       contents = JSON.parse(contents)
     }catch(e){
-      this.logger.warning("Config file doesn't exist")
+      this.logger.warning("Error processing Config file:" + path )
     }
     return contents
   }
