@@ -233,12 +233,21 @@ export default class Shell {
               "    if not len(c) or c == b'\\n':" + "\r\n" + 
               "        break\r\n"
     
-        this.pyboard.exec_raw(command,function(err,content){
+      this.pyboard.exec_raw(command,function(err,content){
 
       // Workaround for the "OK" return of soft reset, which is sometimes returned with the content
       if(content.indexOf("OK") == 0){
         content = content.slice(2,content.length)
       }
+      // Did an error occur 
+      if (content.includes("Traceback (")) {
+        // some type of error
+        _this.logger.silly("Traceback error reading file contents: "+ content)
+        // pass the error back
+        cb(content,null ,null)
+        return
+      }
+
       var decode_result = _this.utils.base64decode(content)
       var content_buffer = decode_result[1]
       var content_str = decode_result[0].toString()
