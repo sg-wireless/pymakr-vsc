@@ -45,10 +45,12 @@ export default class Shell {
   }
 
   getFreeMemory(cb){
-    var command =
-        "import os,sys\r\n" +
-        "m = os.getfree('/flash')" +
-        "sys.stdout.write(m)\r\n"
+      var command =
+          "import os, sys\r\n" +
+          "m = os.getfree('/flash')" +
+          "sys.stdout.write(m)\r\n"
+          "s = os.statvfs('/flash')\r\n" +
+          "sys.stdout.write(s[0]*s[3])\r\n" 
 
     this.pyboard.exec_(command,function(err,content){
       cb(content)
