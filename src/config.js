@@ -150,7 +150,7 @@ export default class Config {
             items: {
               type: 'string'
             },
-            default: [],
+            default: ["pymakr.conf",".vscode",".gitignore",".git","project.pymakr"],
             order: 7
         },
         autoconnect_comport_manufacturers: {
