@@ -4,7 +4,6 @@ var binascii = require('binascii');
 
 export default class ShellWorkers {
 
-
   constructor(shell,pyboard,settings){
     this.shell = shell
     this.settings = settings
@@ -52,13 +51,19 @@ export default class ShellWorkers {
       callback(null,file_list,true)
     }else{
       var current_file = names[0]
-      var current_file_root = root + "/" + current_file
+      var current_file_root 
+      if ( root.slice(-1) == '/') {
+        current_file_root = root + current_file
+      } else { 
+        current_file_root = root + "/" + current_file
+      }
       names = names.splice(1)
-      var is_dir = current_file.indexOf('.') == -1
+      var is_dir = current_file.indexOf('.') == -1 //fixme: document: this does not allow folder names containing a .
       if(is_dir){
         var c = "import ubinascii, sys, os\r\n"
         c += "list = ubinascii.hexlify(str(os.listdir('"+current_file_root + "')))\r\n"
         c += "sys.stdout.write(list)\r\n"
+        _this.logger.info("os.listdir: "+current_file_root )
         _this.shell.eval(c,function(err,content){
             if(content){
               var data = binascii.unhexlify(content)
@@ -72,6 +77,7 @@ export default class ShellWorkers {
                 callback(null,[root,names,file_list])
               }catch(e){
                 _this.logger.error("Evaluation of content went wrong")
+                _this.logger.error(data) // log the data recieved 
                 _this.logger.error(e)
                 callback(e,[root,names,file_list])
               }
@@ -84,7 +90,7 @@ export default class ShellWorkers {
         if(file_path[0] == "/"){
           file_path = file_path.substring(1)
         }
-
+        // todo: use this.mcu_root_folder rather than hardcoded
         file_path = file_path.replace('/flash/','')
         file_path = file_path.replace('flash/','')
 
@@ -95,6 +101,7 @@ export default class ShellWorkers {
   }
 
   get_file_with_path(root,file){
+    // todo: use this.mcu_root_folder rather than hardcoded
     var root_cleaned = root.replace('/flash/','')
     root_cleaned = root_cleaned.replace('flash/','')
 

@@ -25,6 +25,7 @@ export default class Shell {
     this.utils = new Utils(settings)
     this.lib_folder = this.api.getPackageSrcPath()
     this.package_folder = this.api.getPackagePath()
+    this.mcu_root_folder = settings.mcu_root_folder // todo: automatically determine '/' or '/flash'
     this.working = false
     this.interrupt_cb = null
     this.interrupted = false
@@ -46,7 +47,7 @@ export default class Shell {
   getFreeMemory(cb){
       var command =
           "import os, sys\r\n" +
-          "_s = os.statvfs('/flash')\r\n" +
+          "_s = os.statvfs('"+ this.mcu_root_folder +"')\r\n" +
           "sys.stdout.write(str(s[0]*s[3])\r\n" +
           "del(_s)\r\n"
 
@@ -259,7 +260,7 @@ export default class Shell {
       cb(err,content_buffer,content_str)
     },60000)
   }
-
+  // list files on MCU 
   list_files(cb){
     var _this = this
     var file_list = ['']
@@ -276,8 +277,8 @@ export default class Shell {
       }
       _this.workers.list_files(params,callback)
     }
-
-    this.utils.doRecursively(['/flash',[''],file_list], worker ,end)
+    // need to determine what the root folder of the board is
+    this.utils.doRecursively([this.mcu_root_folder,[''],file_list], worker ,end)
   }
 
 
