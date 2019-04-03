@@ -27,6 +27,8 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   console.log("Copy bindings file")
   copyFile(bindings_source,bindings_target,function(error){
     console.log(error)
+    
+    // Try to run electron rebuild anyway (just in case we're installing on a newer version of vsc with updated electron)
     console.log("Installing electron rebuild")
     exec('npm install electron-rebuild',
       function(error,stdout,stderr){
@@ -52,8 +54,6 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   
   })
 }
-
-// Try to run electron rebuild anyway (ust in case we're installing on a newer version of vscode)
 
 
 
