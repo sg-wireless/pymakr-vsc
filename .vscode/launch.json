@@ -3,6 +3,25 @@
     "version": "0.1.0",
     "configurations": [
         {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch install",
+            "program": "${workspaceFolder}/scripts/install.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch current",
+            "program": "${file}"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug current script",
+            "program": "${file}"
+        },
+
+        {
             "name": "Launch Extension",
             "type": "extensionHost",
             "request": "launch",

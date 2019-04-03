@@ -176,6 +176,8 @@ export default class SettingsWrapper extends EventEmitter {
     this.statusbar_buttons.push('global_settings')
     this.statusbar_buttons.push('project_settings')
 
+    this.mcu_root_folder =  this.api.config('mcu_root_folder') 
+
     if(!this.py_ignore){
       this.py_ignore = []
       this.py_ignore.push(this.constants.compressed_files_folder)
@@ -251,7 +253,7 @@ export default class SettingsWrapper extends EventEmitter {
       contents = fs.readFileSync(path,{encoding: 'utf-8'})
       contents = JSON.parse(contents)
     }catch(e){
-      this.logger.warning("Config file doesn't exist")
+      this.logger.warning("Error processing Config file:" + path )
     }
     return contents
   }
@@ -307,6 +309,7 @@ export default class SettingsWrapper extends EventEmitter {
   }
 
   setProjectConfig(){
+    // these projects settings override the global settings 
     if('address' in this.project_config){
       this.address = this.project_config.address
     }
@@ -342,6 +345,9 @@ export default class SettingsWrapper extends EventEmitter {
     }
     if('fast_upload' in this.project_config){
       this.fast_upload = this.project_config.fast_upload
+    }
+    if('mcu_root_folder' in this.project_config){
+      this.mcu_root_folder = this.project_config.mcu_root_folder
     }
   }
 
@@ -387,7 +393,7 @@ export default class SettingsWrapper extends EventEmitter {
       config.sync_all_file_types = this.api.config('sync_all_file_types')
       config.auto_connect = this.api.config('auto_connect')
       config.autoconnect_comport_manufacturers = this.api.config('autoconnect_comport_manufacturers')
-      
+      config.mcu_root_folder = this.api.config('mcu_root_folder')
     }
     return config
   }

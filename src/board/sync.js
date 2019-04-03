@@ -241,14 +241,14 @@ export default class Sync {
       this.throwError(cb,err)
       return
     }
-
+    // list files from board --> file_list 
     this.shell.list_files(function(err,file_list){
       if(err){
         _this.progress("Failed to read files from board, canceling file download")
         _this.throwError(cb,err)
         return
       }
-      _this.files = _this._getFilesRecursive("")
+      _this.files = _this._getFilesRecursive("") // files on PC
       var new_files = []
       var existing_files = []
       file_list = _this.utils.ignore_filter(file_list)
@@ -740,7 +740,7 @@ export default class Sync {
   _getFiles(dir){
     return fs.readdirSync(dir)
   }
-
+  // read (project) folder on PC
   _getFilesRecursive(dir){
     var files = fs.readdirSync(this.py_folder+dir)
     var list = []

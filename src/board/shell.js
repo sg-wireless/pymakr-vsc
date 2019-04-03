@@ -25,6 +25,7 @@ export default class Shell {
     this.utils = new Utils(settings)
     this.lib_folder = this.api.getPackageSrcPath()
     this.package_folder = this.api.getPackagePath()
+    this.mcu_root_folder = settings.mcu_root_folder // todo: automatically determine '/' or '/flash'
     this.working = false
     this.interrupt_cb = null
     this.interrupted = false
@@ -36,8 +37,7 @@ export default class Shell {
   getVersion(cb){
     var command =
         "import os,sys\r\n" +
-        "v = os.uname().release" +
-        "sys.stdout.write(v)\r\n"
+        "sys.stdout.write(os.uname().release)\r\n"
 
     this.pyboard.exec_(command,function(err,content){
       cb(content)
@@ -45,10 +45,11 @@ export default class Shell {
   }
 
   getFreeMemory(cb){
-    var command =
-        "import os,sys\r\n" +
-        "m = os.getfree('/flash')" +
-        "sys.stdout.write(m)\r\n"
+      var command =
+          "import os, sys\r\n" +
+          "_s = os.statvfs('"+ this.mcu_root_folder +"')\r\n" +
+          "sys.stdout.write(str(s[0]*s[3])\r\n" +
+          "del(_s)\r\n"
 
     this.pyboard.exec_(command,function(err,content){
       cb(content)
@@ -214,6 +215,7 @@ export default class Shell {
 
   readFile(name,callback){
     var _this = this
+
     _this.working = true
 
     var cb = function(err,content_buffer,content_str){
@@ -222,25 +224,31 @@ export default class Shell {
         callback(err,content_buffer,content_str)
       },100)
     }
-
-    var command = "import ubinascii,sys\r\n"
-    command += "f = open('"+name+"', 'rb')\r\n"
-
-    command += "import ubinascii\r\n"
-
-    command +=
-        "while True:\r\n" +
-        "    c = ubinascii.b2a_base64(f.read("+this.BIN_CHUNK_SIZE+"))\r\n" +
-        "    sys.stdout.write(c)\r\n" +
-        "    if not len(c) or c == b'\\n':\r\n" +
-        "        break\r\n"
+    // avoid leaking file handles 
+    var command
+    command = "import ubinascii,sys" + "\r\n" + 
+              "with open('"+name+"', 'rb') as f:" + "\r\n" + 
+              "  while True:" + "\r\n" + 
+              "    c = ubinascii.b2a_base64(f.read("+this.BIN_CHUNK_SIZE+"))" + "\r\n" + 
+              "    sys.stdout.write(c)" + "\r\n" + 
+              "    if not len(c) or c == b'\\n':" + "\r\n" + 
+              "        break\r\n"
     
-        this.pyboard.exec_raw(command,function(err,content){
+      this.pyboard.exec_raw(command,function(err,content){
 
       // Workaround for the "OK" return of soft reset, which is sometimes returned with the content
       if(content.indexOf("OK") == 0){
         content = content.slice(2,content.length)
       }
+      // Did an error occur 
+      if (content.includes("Traceback (")) {
+        // some type of error
+        _this.logger.silly("Traceback error reading file contents: "+ content)
+        // pass the error back
+        cb(content,null ,null)
+        return
+      }
+
       var decode_result = _this.utils.base64decode(content)
       var content_buffer = decode_result[1]
       var content_str = decode_result[0].toString()
@@ -252,12 +260,13 @@ export default class Shell {
       cb(err,content_buffer,content_str)
     },60000)
   }
-
+  // list files on MCU 
   list_files(cb){
     var _this = this
     var file_list = ['']
 
     var end = function(err,file_list_2){
+      // return no error, and the retrieved file_list
       cb(undefined,file_list)
     }
 
@@ -268,8 +277,8 @@ export default class Shell {
       }
       _this.workers.list_files(params,callback)
     }
-
-    this.utils.doRecursively(['/flash',[''],file_list],worker,end)
+    // need to determine what the root folder of the board is
+    this.utils.doRecursively([this.mcu_root_folder,[''],file_list], worker ,end)
   }
 
 

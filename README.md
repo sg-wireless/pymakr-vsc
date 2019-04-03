@@ -44,17 +44,7 @@ To connect to your board, use the `Global settings` command to go to the extensi
 
 If you want to synchronize a subfolder of your project instead of the entire project, enter the name of the subfolder in the 'sync folder' field (for more info, see the Sync chapter below)
 
-All possible settings (name : default : description):
-- address           : 192.168.4.1         : IP address or comport for your device
-- username          : micro               : Board username, only for telnet
-- password          : python              : Board password, only for telnet
-- sync_folder       : <empty>             : Folder to synchronize. Empty to sync projects main folder
-- sync_file_types   : py,txt,log,json,xml : Type of files to be synchronized
-- ctrl_c_on_connect : false               : If true, executes a ctrl-c on connect to stop running programs
-- open_on_start     : true                : Weather to open the terminal and connect to the board when starting vsc
-- statusbar_buttons : []                  : Which quick-access buttons to show in the statusbar. Options are:
-    - ['status', 'run', 'upload', 'download', 'disconnect', 'listserial', 'settings', 'projectsettings', 'getversion', 'getssid']
-Any of these can be used inside the Project config to override the global config
+Please refer to [Settings](settings.md) for a list of all the settings.
 
 ## REPL
 
@@ -63,7 +53,7 @@ Using the REPL is easy and works the same way as your command line based telnet 
 - `CTRL-C`: Stop any running code
 - `CTRL-D`: Soft reset
 - `CTRL-E`: Paste mode
-- `CTRL-F`: Safe boot
+- `CTRL-F`: Safe boot (on supported pycom boards) 
 
 Ctrl-C and Ctrl-V (or cmd-c/cmd-v on mac) can also be used to copy and paste in the console.
 
@@ -110,6 +100,30 @@ If the Pymakr terminal is not opening or giving an error, this might be because 
 If you're a linux user and can't connect to your board, there might be a permission issue to access the serial port.
 
 **Solution:** Run the following command `sudo usermod -a -G dialout $USER`
+
+### My board is not autodetected.
+
+This may be the case if your board is a generic micropython board. 
+
+**Solution:**
+1) check if the serial port of your board is detected by running 'pymakr > Extra > List Serial ports'
+2) if it is detected, note the serial port manufactures , ie 'Silicon Labs'
+3) Add the manufacturmanufacturer to the `autoconnect_comport_manufacturers` names in you project or global config.
+3) re-run 'pymakr > Extra > List Serial ports'
+4) is the board is not detected as the first , you may need to move it to the front of the list.
+
+## I cannot opload or download files from a bord using a standard micropython fimrware.
+
+This may be caused by a difference in the way theat the file system is exposed on different firmwares.
+Some micropython firmwares expose the  root of the filesystem at the `/` folder rather than as `/flash`. 
+if this is the case yo may find that you can upload , but not download files from the micropython board.
+
+This is currently not autodetected by pymakr.
+
+**Solution:** 
+
+In the Project or Global settings : 
+- change the mcu_folder setting to : `mcu_root_folder = '/'`
 
 ## Developing
 If you want to contribute to this project you can test the app the following way:
