@@ -165,7 +165,7 @@ export default class Shell {
               if(compare_hash){
                 _this.board_ready(function(){
                   _this.compare_hash(name,file_path,contents,function(match,err){
-                    _this.resetMcuRoot(function(){
+                    _this.resetSyncRoot(function(){
                       _this.board_ready(function(){
                         if(match){
                           cb(null)
@@ -196,7 +196,7 @@ export default class Shell {
 
     var start = function(){
       // contents = utf8.encode(contents)
-      _this.setMcuRoot(function(){
+      _this.setSyncRoot(function(){
 
         var get_file_command =
           "import ubinascii\r\n"+
@@ -226,14 +226,14 @@ export default class Shell {
     _this.working = true
 
     var cb = function(err,content_buffer,content_str){
-      _this.resetMcuRoot(function(){
+      _this.resetSyncRoot(function(){
         setTimeout(function(){
           _this.working = false
           callback(err,content_buffer,content_str)
         },100)
       })
     }
-    this.setMcuRoot(function(){
+    this.setSyncRoot(function(){
     // avoid leaking file handles 
       var command
       command = "import ubinascii,sys" + "\r\n" + 
@@ -274,12 +274,12 @@ export default class Shell {
   // list files on MCU 
   list_files(cb){
     var _this = this
-    this.setMcuRoot(function(){
+    this.setSyncRoot(function(){
       var file_list = ['']
 
       var end = function(err,file_list_2){
         // return no error, and the retrieved file_list
-        _this.resetMcuRoot(function(){
+        _this.resetSyncRoot(function(){
           cb(undefined,file_list)
         })
       }
@@ -311,9 +311,9 @@ export default class Shell {
     var command =
         "import os\r\n" +
         "os.remove('"+name+"')\r\n"
-    this.setMcuRoot(function(){
+    this.setSyncRoot(function(){
       _this.eval(command,function(err,content){
-        _this.resetMcuRoot(function(){
+        _this.resetSyncRoot(function(){
           cb(err,content)
         })
       })
@@ -325,9 +325,9 @@ export default class Shell {
     var command =
         "import os\r\n" +
         "os.mkdir('"+name+"')\r\n"
-    this.setMcuRoot(function(){
+    this.setSyncRoot(function(){
       _this.eval(command,function(err,content){
-        _this.resetMcuRoot(function(){
+        _this.resetSyncRoot(function(){
           cb(err,content)
         })
       })
@@ -339,9 +339,9 @@ export default class Shell {
     var command =
         "import os\r\n" +
         "os.rmdir('"+name+"')\r\n"
-    this.setMcuRoot(function(){
+    this.setSyncRoot(function(){
       _this.eval(command,function(err,content){
-        _this.resetMcuRoot(function(){
+        _this.resetSyncRoot(function(){
           cb(err,content)
         })
       })
@@ -439,25 +439,27 @@ export default class Shell {
     },40000)
   }
 
+  resetSyncRoot(cb){
+    cb()
+    // TODO: Activate whenever setSyncRoot is impleneted correctly, to reset to mcu_root after each read/write action
+    // var folder = this.settings.mcu_root_folder
+    // var command = 
+    //   "import os\r\n" +
+    //   "os.chdir('"+folder+"')\r\n"
 
-  resetMcuRoot(cb){
-    var command = 
-      "import os\r\n" +
-      "os.chdir('/flash')\r\n"
-
-    this.eval(command,cb)
+    // this.eval(command,cb)
   }
 
-  setMcuRoot(cb){
-    
-    var folder = this.settings.mcu_root_folder
-    var command = 
-      "import os\r\n" +
-      "os.chdir('"+folder+"')\r\n"
+  setSyncRoot(cb){
+    cb()
+    // TODO: create a setting / switch / button in UI for 'upload to /sd' or other base folder
+    // var folder = this.settings.upload_base_folder
+    // var command = 
+    //   "import os\r\n" +
+    //   "os.chdir('"+folder+"')\r\n"
       
-    this.eval(command,cb)
+    // this.eval(command,cb)
   }
-
 
   // evaluates command through REPL and returns the resulting feedback
   eval(c,cb,timeout){

@@ -103,10 +103,6 @@ export default class ShellWorkers {
     var root_cleaned = root.replace(this.settings.mcu_root_folder + '/','')
     root_cleaned = root_cleaned.replace(this.settings.mcu_root_folder.replace(/^\//, '') + '/','')
 
-
-    var root_cleaned = root.replace('/flash/','')
-    root_cleaned = root_cleaned.replace('flash/','')
-
     if(root_cleaned != ""){
        root_cleaned += "/"
     }

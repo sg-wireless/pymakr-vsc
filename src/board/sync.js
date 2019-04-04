@@ -194,6 +194,8 @@ export default class Sync {
       // TODO: make compatible with future usecase where files contains more than one file
       var filename = files.split('/').pop()
       this.terminal.write(this.method_action+" current file ("+filename+") "+direction+" "+this.settings.mcu_root_folder+"...\r\n")
+      // TODO: Add notification about the upload target folder when this feature is implemented
+      // this.terminal.write(this.method_action+" current file ("+filename+") "+direction+" "+this.settings.mcu_root_folder+"...\r\n")
     }else{
       this.terminal.write(this.method_action+" project ("+this.folder_name+") "+direction+" "+this.settings.mcu_root_folder+"...\r\n")
     }
