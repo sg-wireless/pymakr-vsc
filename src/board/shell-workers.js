@@ -90,9 +90,8 @@ export default class ShellWorkers {
         if(file_path[0] == "/"){
           file_path = file_path.substring(1)
         }
-        // todo: use this.mcu_root_folder rather than hardcoded
-        file_path = file_path.replace('/flash/','')
-        file_path = file_path.replace('flash/','')
+        file_path = file_path.replace(this.settings.mcu_root_folder + '/','')
+        file_path = file_path.replace(this.settings.mcu_root_folder.replace(/^\//, '') + '/','')
 
         file_list.push(file_path)
         callback(null,[root,names,file_list])
@@ -101,7 +100,10 @@ export default class ShellWorkers {
   }
 
   get_file_with_path(root,file){
-    // todo: use this.mcu_root_folder rather than hardcoded
+    var root_cleaned = root.replace(this.settings.mcu_root_folder + '/','')
+    root_cleaned = root_cleaned.replace(this.settings.mcu_root_folder.replace(/^\//, '') + '/','')
+
+
     var root_cleaned = root.replace('/flash/','')
     root_cleaned = root_cleaned.replace('flash/','')
 
