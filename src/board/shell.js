@@ -91,6 +91,7 @@ export default class Shell {
     )
   }
 
+
   writeFile(name,file_path,contents,compare_hash,compress,callback,retries=0){
     var _this = this
     this.working = true
@@ -118,7 +119,7 @@ export default class Shell {
         cb(err,true)
 
         // if retrying for memory or OS issues (like hash checks gone wrong), do a safe-boot before retrying
-        if(err.message.indexOf("Not enough memory") > -1 || err.message.indexOf("OSError:") > -1){
+        if(err && (err.message.indexOf("Not enough memory") > -1 || err.message.indexOf("OSError:") > -1)){
           _this.logger.info("Safe booting...")
           _this.safeboot_restart(function(){
             _this.writeFile(name,file_path,contents,compare_hash,compress,cb,retries+1)
@@ -138,66 +139,72 @@ export default class Shell {
     }
 
     var end = function(err,value_processed){
-      if(_this.interrupted){
-        _this.interrupt_cb()
-        return
-      }
-      _this.eval("f.close()\r\n",function(close_err){
-        if((err || close_err) && retries < _this.RETRIES){
-          retry(err)
+      
+        if(_this.interrupted){
+          _this.interrupt_cb()
+          return
+        }
+        _this.eval("f.close()\r\n",function(close_err){
+          if((err || close_err) && retries < _this.RETRIES){
+            retry(err)
 
-        }else if(!err && !close_err){
-          if(compress){
-            try{
-              fs.unlinkSync(compressed_path)
-            }catch(e){
-              _this.logger.info("Removing compressed file failed, likely because it never existed. Otherwise, it'll be removed with the py_compiles folder after upload")
+          }else if(!err && !close_err){
+            if(compress){
+              try{
+                fs.unlinkSync(compressed_path)
+              }catch(e){
+                _this.logger.info("Removing compressed file failed, likely because it never existed. Otherwise, it'll be removed with the py_compiles folder after upload")
+              }
             }
-          }
 
-          _this.decompress(name,compress,function(){
-            if(_this.interrupted){
-              _this.interrupt_cb()
-              return
-            }
-            if(compare_hash){
-              _this.board_ready(function(){
-                _this.compare_hash(name,file_path,contents,function(match,err){
-                  _this.board_ready(function(){
-                    if(match){
-                      cb(null)
-                    }else if(err){
-                      _this.logger.warning("Error during file hash check: "+err.message)
-                      retry(new Error("Filecheck failed: "+err.message))
-                    }else{
-                      _this.logger.warning("File hash check didn't match, trying again")
-                      retry(new Error("Filecheck failed"))
-                    }
+            _this.decompress(name,compress,function(){
+              if(_this.interrupted){
+                _this.interrupt_cb()
+                return
+              }
+              if(compare_hash){
+                _this.board_ready(function(){
+                  _this.compare_hash(name,file_path,contents,function(match,err){
+                    _this.resetMcuRoot(function(){
+                      _this.board_ready(function(){
+                        if(match){
+                          cb(null)
+                        }else if(err){
+                          _this.logger.warning("Error during file hash check: "+err.message)
+                          retry(new Error("Filecheck failed: "+err.message))
+                        }else{
+                          _this.logger.warning("File hash check didn't match, trying again")
+                          retry(new Error("Filecheck failed"))
+                        }
+                      })
+                    })
                   })
                 })
-              })
-            }else{
-              _this.board_ready(function(){
-                cb(null)
-              })
-            }
-          })
-        }else if(err){
-          cb(err)
-        }else{
-          cb(close_err)
-        }
-      })
+              }else{
+                _this.board_ready(function(){
+                  cb(null)
+                })
+              }
+            })
+          }else if(err){
+            cb(err)
+          }else{
+            cb(close_err)
+          }
+        })
     }
 
     var start = function(){
       // contents = utf8.encode(contents)
-      var get_file_command =
-        "import ubinascii\r\n"+
-        "f = open('"+name+"', 'wb')\r\n"
+      _this.setMcuRoot(function(){
 
-      _this.pyboard.exec_raw_no_reset(get_file_command,function(){
-        _this.utils.doRecursively([contents,0],worker,end)
+        var get_file_command =
+          "import ubinascii\r\n"+
+          "f = open('"+name+"', 'wb')\r\n"
+
+        _this.pyboard.exec_raw_no_reset(get_file_command,function(){
+          _this.utils.doRecursively([contents,0],worker,end)
+        })
       })
     }
 
@@ -219,66 +226,74 @@ export default class Shell {
     _this.working = true
 
     var cb = function(err,content_buffer,content_str){
-      setTimeout(function(){
-        _this.working = false
-        callback(err,content_buffer,content_str)
-      },100)
+      _this.resetMcuRoot(function(){
+        setTimeout(function(){
+          _this.working = false
+          callback(err,content_buffer,content_str)
+        },100)
+      })
     }
+    this.setMcuRoot(function(){
     // avoid leaking file handles 
-    var command
-    command = "import ubinascii,sys" + "\r\n" + 
+      var command
+      command = "import ubinascii,sys" + "\r\n" + 
               "with open('"+name+"', 'rb') as f:" + "\r\n" + 
               "  while True:" + "\r\n" + 
-              "    c = ubinascii.b2a_base64(f.read("+this.BIN_CHUNK_SIZE+"))" + "\r\n" + 
+              "    c = ubinascii.b2a_base64(f.read("+_this.BIN_CHUNK_SIZE+"))" + "\r\n" + 
               "    sys.stdout.write(c)" + "\r\n" + 
               "    if not len(c) or c == b'\\n':" + "\r\n" + 
               "        break\r\n"
     
-      this.pyboard.exec_raw(command,function(err,content){
+              _this.pyboard.exec_raw(command,function(err,content){
 
-      // Workaround for the "OK" return of soft reset, which is sometimes returned with the content
-      if(content.indexOf("OK") == 0){
-        content = content.slice(2,content.length)
-      }
-      // Did an error occur 
-      if (content.includes("Traceback (")) {
-        // some type of error
-        _this.logger.silly("Traceback error reading file contents: "+ content)
-        // pass the error back
-        cb(content,null ,null)
-        return
-      }
+        // Workaround for the "OK" return of soft reset, which is sometimes returned with the content
+        if(content.indexOf("OK") == 0){
+          content = content.slice(2,content.length)
+        }
+        // Did an error occur 
+        if (content.includes("Traceback (")) {
+          // some type of error
+          _this.logger.silly("Traceback error reading file contents: "+ content)
+          // pass the error back
+          cb(content,null ,null)
+          return
+        }
 
-      var decode_result = _this.utils.base64decode(content)
-      var content_buffer = decode_result[1]
-      var content_str = decode_result[0].toString()
+        var decode_result = _this.utils.base64decode(content)
+        var content_buffer = decode_result[1]
+        var content_str = decode_result[0].toString()
 
-      if(err){
-        _this.logger.silly("Error after executing read")
-        _this.logger.silly(err)
-      }
-      cb(err,content_buffer,content_str)
-    },60000)
+        if(err){
+          _this.logger.silly("Error after executing read")
+          _this.logger.silly(err)
+        }
+        cb(err,content_buffer,content_str)
+      },60000)
+    })
   }
   // list files on MCU 
   list_files(cb){
     var _this = this
-    var file_list = ['']
+    this.setMcuRoot(function(){
+      var file_list = ['']
 
-    var end = function(err,file_list_2){
-      // return no error, and the retrieved file_list
-      cb(undefined,file_list)
-    }
-
-    var worker = function(params,callback){
-      if(_this.interrupted){
-        _this.interrupt_cb()
-        return
+      var end = function(err,file_list_2){
+        // return no error, and the retrieved file_list
+        _this.resetMcuRoot(function(){
+          cb(undefined,file_list)
+        })
       }
-      _this.workers.list_files(params,callback)
-    }
-    // need to determine what the root folder of the board is
-    this.utils.doRecursively([this.mcu_root_folder,[''],file_list], worker ,end)
+
+      var worker = function(params,callback){
+        if(_this.interrupted){
+          _this.interrupt_cb()
+          return
+        }
+        _this.workers.list_files(params,callback)
+      }
+      // need to determine what the root folder of the board is
+      _this.utils.doRecursively([_this.mcu_root_folder,[''],file_list], worker ,end)
+    })
   }
 
 
@@ -296,24 +311,41 @@ export default class Shell {
     var command =
         "import os\r\n" +
         "os.remove('"+name+"')\r\n"
-
-    this.eval(command,cb)
+    this.setMcuRoot(function(){
+      _this.eval(command,function(err,content){
+        _this.resetMcuRoot(function(){
+          cb(err,content)
+        })
+      })
+    })
   }
 
   createDir(name,cb){
+    var _this = this
     var command =
         "import os\r\n" +
         "os.mkdir('"+name+"')\r\n"
-
-    this.eval(command,cb)
+    this.setMcuRoot(function(){
+      _this.eval(command,function(err,content){
+        _this.resetMcuRoot(function(){
+          cb(err,content)
+        })
+      })
+    })
   }
 
   removeDir(name,cb){
+    var _this = this
     var command =
         "import os\r\n" +
         "os.rmdir('"+name+"')\r\n"
-
-    this.eval(command,cb)
+    this.setMcuRoot(function(){
+      _this.eval(command,function(err,content){
+        _this.resetMcuRoot(function(){
+          cb(err,content)
+        })
+      })
+    })
   }
 
   reset(cb){
@@ -321,7 +353,7 @@ export default class Shell {
     var command =
         "import machine\r\n" +
         "machine.reset()\r\n"
-
+    
     this.pyboard.exec_raw_no_reset(command,function(err){
       // don't wait for soft reset to be done, because device will be resetting
       _this.pyboard.soft_reset_no_follow(cb)
@@ -405,6 +437,25 @@ export default class Shell {
       _this.logger.silly(content)
       cb(err,content)
     },40000)
+  }
+
+
+  resetMcuRoot(cb){
+    var command = 
+      "import os\r\n" +
+      "os.chdir('/flash')\r\n"
+
+    this.eval(command,cb)
+  }
+
+  setMcuRoot(cb){
+    
+    var folder = this.settings.mcu_root_folder
+    var command = 
+      "import os\r\n" +
+      "os.chdir('"+folder+"')\r\n"
+      
+    this.eval(command,cb)
   }
 
 
