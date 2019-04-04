@@ -186,12 +186,16 @@ export default class Sync {
 
     // make sure next messages will be written on a new line
     this.terminal.enter()
+    var direction = "to"
+    if(this.method_action == "download"){
+      direction = "from"
+    }
     if(files){
       // TODO: make compatible with future usecase where files contains more than one file
       var filename = files.split('/').pop()
-      this.terminal.write(this.method_action+" current file ("+filename+")...\r\n")
+      this.terminal.write(this.method_action+" current file ("+filename+") "+direction+" "+this.settings.mcu_root_folder+"...\r\n")
     }else{
-      this.terminal.write(this.method_action+" project ("+this.folder_name+")...\r\n")
+      this.terminal.write(this.method_action+" project ("+this.folder_name+") "+direction+" "+this.settings.mcu_root_folder+"...\r\n")
     }
 
     _this.__safe_boot(function(err){
@@ -369,7 +373,7 @@ export default class Sync {
     if(i >= list.length){
       cb()
       return
-    }
+    } 
     var filename = list[i]
     _this.progress("Reading "+filename,true)
     _this.shell.readFile(filename,function(err,content_buffer,content_st){
