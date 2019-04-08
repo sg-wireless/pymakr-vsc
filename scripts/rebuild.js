@@ -1,3 +1,4 @@
+// this script is used to create a new precompile for the serialport library
 var exec = require('child_process').exec
 var fs = require('fs')
 var ncp = require('ncp').ncp;

@@ -26,7 +26,9 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   // FIXME: only copies on the 2nd run ( Copy before rebuild ?)
   console.log("Copy bindings file")
   copyFile(bindings_source,bindings_target,function(error){
-    console.log(error)
+    if(error){
+      console.log(error)
+    }
     
     // Try to run electron rebuild anyway (just in case we're installing on a newer version of vsc with updated electron)
     console.log("Installing electron rebuild")
@@ -35,29 +37,28 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
         if(error){
           console.log(error)
         }else{
-            console.log("Rebuilding for electron "+electron_version+"...")
-            var path = electron_rebuild_path
-            if(process.platform == 'win32'){
-              path = electron_rebuild_path_win
-            }
-            // -f force -v electron version
-            exec(path + 'electron-rebuild -f -w serialport -v '+electron_version,
-              function(error,stout,stderr){
-                if(error){
-                  console.log(error)
-                }
-                console.log("done")
+          console.log("Rebuilding for electron "+electron_version+"...")
+          var path = electron_rebuild_path
+          if(process.platform == 'win32'){
+            path = electron_rebuild_path_win
+          }
+          // -f force -v electron version
+          exec(path + 'electron-rebuild -f -w serialport -v '+electron_version,
+            function(error,stout,stderr){
+              if(error){
+                console.log(error)
               }
-            )
+              console.log("done")
+            }
+          )
         }
       }
-    )
-  
+    )  
   })
 }
 
 
-function copyFile( target, source, cb) {
+function copyFile( source, target, cb) {
 
   function done(err) {
     if (!cbCalled) {
