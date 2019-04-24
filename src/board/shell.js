@@ -13,6 +13,7 @@ var fs = require('fs')
 export default class Shell {
 
   constructor(pyboard,cb,method,settings){
+    var _this = this
     this.config = Config.constants()
     this.settings = settings
     this.BIN_CHUNK_SIZE = this.settings.upload_chunk_size
@@ -25,13 +26,23 @@ export default class Shell {
     this.utils = new Utils(settings)
     this.lib_folder = this.api.getPackageSrcPath()
     this.package_folder = this.api.getPackagePath()
-    this.mcu_root_folder = settings.mcu_root_folder // todo: automatically determine '/' or '/flash'
+    this.mcu_root_folder = '/flash' // overwritten by getRootFolder below
     this.working = false
     this.interrupt_cb = null
     this.interrupted = false
 
     this.logger.silly("Try to enter raw mode")
-    this.pyboard.enter_raw_repl_no_reset(cb)
+    this.pyboard.enter_raw_repl_no_reset(function(err){
+      if(err){
+        cb(err)
+      }else{
+        _this.getRootFolder(function(folder){
+          _this.mcu_root_folder = folder
+          cb(err)
+        })
+      }
+
+    })
   }
 
   getVersion(cb){
@@ -55,6 +66,26 @@ export default class Shell {
       cb(content)
     })
   }
+
+  getRootFolder(cb){
+
+    var command =
+        "import os, errno\r\n" +
+        "try:\r\n" +
+        "    r = \"/flash\"\r\n" +
+        "    _ = os.stat(r)\r\n" +
+        "except OSError as e:\r\n" +
+        "    if e.args[0] == errno.ENOENT:\r\n" +
+        "        r = os.getcwd()\r\n" +
+        "finally:\r\n" +
+        "    print(\"'{}'\".format(r))\r\n"
+
+    this.pyboard.exec_(command,function(err,content){
+      content = content.replace('OK','').replace(/'/g,'').replace(/>/g,'').replace(/\n/g, '').replace(/\r/g, '').trim()
+      cb(content)
+    })
+  }
+
 
   decompress(name,execute,cb){
     if(!execute){
@@ -442,7 +473,7 @@ export default class Shell {
   resetSyncRoot(cb){
     cb()
     // TODO: Activate whenever setSyncRoot is impleneted correctly, to reset to mcu_root after each read/write action
-    // var folder = this.settings.mcu_root_folder
+    // var folder = this.mcu_root_folder
     // var command = 
     //   "import os\r\n" +
     //   "os.chdir('"+folder+"')\r\n"

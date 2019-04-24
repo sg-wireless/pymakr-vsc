@@ -112,19 +112,6 @@ This may be the case if your board is a generic micropython board.
 3) re-run 'pymakr > Extra > List Serial ports'
 4) is the board is not detected as the first , you may need to move it to the front of the list.
 
-## I cannot opload or download files from a bord using a standard micropython fimrware.
-
-This may be caused by a difference in the way theat the file system is exposed on different firmwares.
-Some micropython firmwares expose the  root of the filesystem at the `/` folder rather than as `/flash`. 
-if this is the case yo may find that you can upload , but not download files from the micropython board.
-
-This is currently not autodetected by pymakr.
-
-**Solution:** 
-
-In the Project or Global settings : 
-- change the mcu_folder setting to : `mcu_root_folder = '/'`
-
 ## Developing
 If you want to contribute to this project you can test the app the following way:
 

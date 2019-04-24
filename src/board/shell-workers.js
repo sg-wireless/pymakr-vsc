@@ -90,8 +90,8 @@ export default class ShellWorkers {
         if(file_path[0] == "/"){
           file_path = file_path.substring(1)
         }
-        file_path = file_path.replace(this.settings.mcu_root_folder + '/','')
-        file_path = file_path.replace(this.settings.mcu_root_folder.replace(/^\//, '') + '/','')
+        file_path = file_path.replace(this.shell.mcu_root_folder + '/','')
+        file_path = file_path.replace(this.shell.mcu_root_folder.replace(/^\//, '') + '/','')
 
         file_list.push(file_path)
         callback(null,[root,names,file_list])
@@ -100,8 +100,8 @@ export default class ShellWorkers {
   }
 
   get_file_with_path(root,file){
-    var root_cleaned = root.replace(this.settings.mcu_root_folder + '/','')
-    root_cleaned = root_cleaned.replace(this.settings.mcu_root_folder.replace(/^\//, '') + '/','')
+    var root_cleaned = root.replace(this.shell.mcu_root_folder + '/','')
+    root_cleaned = root_cleaned.replace(this.shell.mcu_root_folder.replace(/^\//, '') + '/','')
 
     if(root_cleaned != ""){
        root_cleaned += "/"

@@ -163,13 +163,6 @@ export default class Config {
             default: ['Pycom','Pycom Ltd.','FTDI','Microsoft','Microchip Technology, Inc.'],
             order: 13
         },
-        mcu_root_folder: {
-            title: 'root filesystem folder',
-            description: 'Pycom board or mcu root filesystem folder , defaults to /flash, use / for stock MicroPython' ,
-            type: 'string',
-            default:'/flash',
-            order: 14
-        },
     }
   }
 }
