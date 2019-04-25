@@ -212,7 +212,7 @@ export default class Sync {
         _this.in_raw_mode = true
 
         var direction = "to"
-        if(_this.method_action == "download"){
+        if(_this.method_action.toLowerCase() == "downloading"){
           direction = "from"
         }
         _this.terminal.write(_this.method_action+" "+direction+" "+_this.shell.mcu_root_folder+"...\r\n")

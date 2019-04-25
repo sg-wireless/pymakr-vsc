@@ -81,7 +81,9 @@ export default class Shell {
         "    print(\"'{}'\".format(r))\r\n"
 
     this.pyboard.exec_(command,function(err,content){
-      content = content.replace('OK','').replace(/'/g,'').replace(/>/g,'').replace(/\n/g, '').replace(/\r/g, '').trim()
+      // Remove OK, > , singe-quote, CR/LF and 0x004 chars
+      content = content.replace('OK','').trim()
+      content = content.replace(/[\u0004\r\n'>]/g,'')
       cb(content)
     })
   }
