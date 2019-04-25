@@ -1,3 +1,12 @@
+## 1.1.0 - Improvements
+- Multiple download and upload stability improvements and bugfixes [@josverl]
+- Multiple bugfixes in UI and other code [@josverl]
+- Smaller package size by improving the way the precompiled serialport library is stored 
+- Detecting root folder of the board to fix compatibility with non-pycom boards [@josverl]
+- Made Nodejs version check blocking
+- Compability fix with atom project settings
+- Dependancy vulnerability fix
+
 ## 1.0.7 - minor improvements
 - Fixed issue with error handling when sync_folder is not set correctly
 - Improved user feedback for autoconnect feature
