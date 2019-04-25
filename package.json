@@ -186,6 +186,7 @@
     "nan": "2.10.0",
     "ncp": "^2.0.0",
     "object.assign": "^4.0.3",
+    "ora": "^3.2.0",
     "prebuild-install": "^2.4.1",
     "promirepl": "^1.0.1",
     "prompt-list": "^3.1.2",
