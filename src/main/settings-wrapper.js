@@ -220,7 +220,10 @@ export default class SettingsWrapper extends EventEmitter {
   get_allowed_file_types(){
     var types = []
     if(this.sync_file_types){
-      types = this.sync_file_types.split(',')
+      types = this.sync_file_types
+      if(typeof types === 'string'){
+        types = types.split(',')
+      }
       for(var i = 0; i < types.length; i++) {
         types[i] = types[i].trim();
       }
