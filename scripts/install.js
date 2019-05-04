@@ -17,7 +17,7 @@ var electron_rebuild_path_win = '.\\node_modules\\.bin\\' // assuming current di
 var precompiles = {'win32': 'win', 'darwin': 'osx', 'linux': 'linux', 'aix': 'linux'}
 if(process.platform in precompiles) { // always returns win32 on windows, even on 64bit
   var os = precompiles[process.platform]
-  
+  var is_windows = os == 'win'
   if(os == 'win' && process.arch == 'ia32'){
     os = 'win32'
   }
@@ -30,30 +30,32 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
       console.log(error)
     }
     
-    // Try to run electron rebuild anyway (just in case we're installing on a newer version of vsc with updated electron)
-    console.log("Installing electron rebuild")
-    exec('npm install electron-rebuild',
-      function(error,stdout,stderr){
-        if(error){
-          console.log(error)
-        }else{
-          console.log("Rebuilding for electron "+electron_version+"...")
-          var path = electron_rebuild_path
-          if(process.platform == 'win32'){
-            path = electron_rebuild_path_win
-          }
-          // -f force -v electron version
-          exec(path + 'electron-rebuild -f -w serialport -v '+electron_version,
-            function(error,stout,stderr){
-              if(error){
-                console.log(error)
-              }
-              console.log("done")
+    if(!is_windows){
+      // Try to run electron rebuild anyway (just in case we're installing on a newer version of vsc with updated electron)
+      console.log("Installing electron rebuild")
+      exec('npm install electron-rebuild',
+        function(error,stdout,stderr){
+          if(error){
+            console.log(error)
+          }else{
+            console.log("Rebuilding for electron "+electron_version+"...")
+            var path = electron_rebuild_path
+            if(process.platform == 'win32'){
+              path = electron_rebuild_path_win
             }
-          )
+            // -f force -v electron version
+            exec(path + 'electron-rebuild -f -w serialport -v '+electron_version,
+              function(error,stout,stderr){
+                if(error){
+                  console.log(error)
+                }
+                console.log("done")
+              }
+            )
+          }
         }
-      }
-    )  
+      )  
+    }
   })
 }
 
