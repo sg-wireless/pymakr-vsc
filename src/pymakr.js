@@ -39,7 +39,15 @@ export default class Pymakr extends EventEmitter {
       }
     })
 
+    this.settings.on('format_error.project',function(){
+      _this.terminal.writeln("JSON format error in pymakr.conf project file")
+      if(_this.pyboard.connected){
+        _this.terminal.writePrompt()
+      }
+    })
+
     this.view.on('term-connected',function(err){
+      _this.settings.setFileChangedGlobal()
       if(err){
         _this.logger.error("Error from terminal connect:")
         _this.logger.error(err)
