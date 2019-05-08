@@ -29,7 +29,10 @@ export default class SettingsWrapper extends EventEmitter {
     this.watching = {}
     this.file_watcher = {}
     this.change_watcher = {}
+    this.file_changed = {}
+    this.setFileChangedGlobal()
     var _this = this
+    
 
 
     // this.refresh(function(){
@@ -44,6 +47,7 @@ export default class SettingsWrapper extends EventEmitter {
         _this.project_config = contents
         _this.refresh(function(){
           _this.watchConfigFile()
+          _this.watchConfigFile(_this.config_file)
           _this.watchProjectChange()
           _this.upload_chunk_size = _this.get_upload_chunk_size()
           if(cb){
@@ -55,10 +59,15 @@ export default class SettingsWrapper extends EventEmitter {
       })
     })
     
-    // this.watchConfigFile(this.config_file)
+    
     
   }
 
+  setFileChangedGlobal(){
+    
+    this.file_changed[this.config_file] = true
+    this.file_changed[this.global_config_file] = true
+  }
   onChange(key,cb){
     this.change_watcher[key] = cb
   }
@@ -112,6 +121,7 @@ export default class SettingsWrapper extends EventEmitter {
       if(!err){
         _this.file_watcher[file] = fs.watch(file,null,function(err){
           _this.logger.info("Config file changed, refreshing settings")
+          _this.file_changed[file] = true
           // give it some time to close
           setTimeout(function(){
             _this.refresh()
@@ -141,10 +151,9 @@ export default class SettingsWrapper extends EventEmitter {
       this.global_config = contents
     }catch(e){
       this.emit('format_error')
-      console.log(e)
       cbg(e)
       cbg = null
-      return
+      return 
     }
 
     this.trigger_global_change_watchers()
@@ -256,6 +265,11 @@ export default class SettingsWrapper extends EventEmitter {
       contents = JSON.parse(contents)
     }catch(e){
       this.logger.warning("Error processing Config file:" + path )
+      if (e instanceof SyntaxError && this.file_changed[path]) {
+        this.emit('format_error.project')
+        this.file_changed[path] = false
+      }
+      contents = {}
     }
     return contents
   }
@@ -280,11 +294,11 @@ export default class SettingsWrapper extends EventEmitter {
           
         }catch(e){
           console.log(e)
-          cb(e)
+          cb({})
           // config file not properly formatted. TODO: throw error?
         }
       }else{
-        cb(err)
+        cb({})
       }
     })
   }
