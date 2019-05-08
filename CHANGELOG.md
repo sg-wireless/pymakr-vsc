@@ -1,3 +1,7 @@
+## 1.1.1 - Bugfixes
+- Preventing electron-rebuild on install on windows, which made serialport library malfunction. Fixes issue #42
+- Handling format errors in project config file. Fixes issue #43
+
 ## 1.1.0 - Improvements
 - Multiple download and upload stability improvements and bugfixes [@josverl]
 - Multiple bugfixes in UI and other code [@josverl]
