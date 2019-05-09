@@ -5,6 +5,7 @@ var fs = require('fs');
 
 
 var SerialPort = require("serialport");
+console.log("Serialport included without issues")
 
 export default class PySerial {
 
@@ -17,10 +18,13 @@ export default class PySerial {
     this.address = address
     this.ayt_pending = false
     this.logger = new Logger('PySerial')
+    var _this = this
     this.stream = new SerialPort(address, {
       baudRate: 115200,
       autoOpen: false
     },function(err){
+      _this.logger.warning("Failed to connect to SerialPort")
+      _this.logger.warning(err)
       // not implemented
     });
 
@@ -47,6 +51,7 @@ export default class PySerial {
     })
 
     var timeout = null
+    console.log("Trying to open stream")
     this.stream.open(function(){
       _this.sendPing(function(err){
         if(!err){

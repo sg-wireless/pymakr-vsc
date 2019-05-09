@@ -1,12 +1,21 @@
+// normal execution: 'node scripts/install.js'
+// without electron rebuild command: 'node scripts/install.js no_rebuild'
 // installing and re-compiling serialport
 // executed automatically from package.json on install
 var exec = require('child_process').exec
 var fs = require('fs')
 
+var do_rebuild = true
+if(process.argv.length == 3){
+  if(process.argv[2] == "no_rebuild"){
+    do_rebuild = false
+  }
+}
 // bindings params 
 // FIXME: Source / target Swap ?
-var bindings_target = 'node_modules/@serialport/bindings/build/Release/bindings.node'
-var bindings_source = 'precompiles/serialport-<os>/bindings.node'
+var dir = __dirname.replace('/scripts','').replace('\\scripts','')
+var bindings_target = dir + '/node_modules/@serialport/bindings/build/Release/bindings.node'
+var bindings_source = dir + '/precompiles/serialport-<os>/bindings.node'
 
 // electron rebuild params
 var electron_version = '3.1.6'
@@ -20,6 +29,9 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   var is_windows = os == 'win'
   if(os == 'win' && process.arch == 'ia32'){
     os = 'win32'
+  }
+  if(is_windows){
+    do_rebuild = false
   }
 
   bindings_source = bindings_source.replace('<os>',os)
@@ -41,7 +53,7 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   
     
     
-    if(!is_windows){
+    if(do_rebuild){
       // Try to run electron rebuild anyway (just in case we're installing on a newer version of vsc with updated electron)
       console.log("Installing electron rebuild")
       exec('npm install electron-rebuild',
