@@ -166,7 +166,6 @@
     }
   },
   "scripts": {
-    "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "node ./node_modules/vscode/bin/test",
     "babel-watch": "babel src --out-dir lib",
     "babel-build-dev": "babel src --out-dir lib --source-maps --watch",

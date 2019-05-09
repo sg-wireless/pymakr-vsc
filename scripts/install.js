@@ -27,8 +27,19 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
   console.log("Copy bindings file")
   copyFile(bindings_source,bindings_target,function(error){
     if(error){
+      console.log("Failed to copy bindings file, pymakr won't work")
       console.log(error)
+      fs.writeFile("C:/Users/Pycom/.vscode-insiders/extensions/errorlog.txt",error,function(err){
+        if(err) console.log("err");
+        if(err) throw err;
+        console.log('File is created successfully.');
+      })
+    }else{
+      console.log("Bindings file in place")
     }
+
+  
+    
     
     if(!is_windows){
       // Try to run electron rebuild anyway (just in case we're installing on a newer version of vsc with updated electron)
@@ -82,8 +93,9 @@ function copyFile( source, target, cb) {
       done(err);
     });
     wr.on("close", function(ex) {
-      done();
       console.log("Copy completed")
+      done();
+      
     });
     rd.pipe(wr);
   }else{
