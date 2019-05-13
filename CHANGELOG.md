@@ -1,3 +1,9 @@
+## 1.1.2 - Bugfixes
+- Solving major issue with new serialport precompiles. Bindings.node is now moved to the correct folder on first start
+- Bugfix for reading local files wihout extension (when doing upload or download). 
+- Added 'env' and 'venv' folders to default ignore list
+- Added missing rxjs dependancy
+
 ## 1.1.1 - Bugfixes
 - Preventing electron-rebuild on install on windows, which made serialport library malfunction. Fixes issue #42
 - Handling format errors in project config file. Fixes issue #43
