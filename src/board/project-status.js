@@ -93,7 +93,7 @@ export default class ProjectStatus {
       try{
         files = this.__get_local_files(this.local_folder)
       }catch(e){
-        this.logger.error("Couldn't locate file folder to upload")
+        this.logger.error("Couldn't locate file folder")
         return false
       }
     }
@@ -114,12 +114,17 @@ export default class ProjectStatus {
           is_dir = filename.indexOf('.') == -1
         }
         if(is_dir){
-          var files_from_folder = this.__get_local_files(file_path)
-          if(files_from_folder.length > 0){
-            var hash = crypto.createHash('sha256').update(filename).digest('hex')
-            file_hashes[filename] = [filename,"d",hash]
-            var hashes_in_folder = this.__get_local_files_hashed(files_from_folder,filename+"/")
-            file_hashes = Object.assign(file_hashes,hashes_in_folder)
+          try {
+            var files_from_folder = this.__get_local_files(file_path)
+            if(files_from_folder.length > 0){
+              var hash = crypto.createHash('sha256').update(filename).digest('hex')
+              file_hashes[filename] = [filename,"d",hash]
+              var hashes_in_folder = this.__get_local_files_hashed(files_from_folder,filename+"/")
+              file_hashes = Object.assign(file_hashes,hashes_in_folder)
+            }
+          }catch(e){
+           this.logger.info("Unable to read from dir "+file_path)
+           console.log(e) 
           }
         }else{
           this.total_file_size += stats.size
