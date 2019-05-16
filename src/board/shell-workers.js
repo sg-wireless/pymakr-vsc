@@ -93,11 +93,10 @@ export default class ShellWorkers {
         })
       }else{
         var file_path = current_file_root
-        if(file_path[0] == "/"){
+        file_path = file_path.slice(this.shell.mcu_root_folder.length)
+        if (file_path[0] == "/") {
           file_path = file_path.substring(1)
         }
-        file_path = file_path.replace(this.shell.mcu_root_folder + '/','')
-        file_path = file_path.replace(this.shell.mcu_root_folder.replace(/^\//, '') + '/','')
 
         file_list.push(file_path)
         callback(null,[root,names,file_list])
