@@ -94,7 +94,7 @@ export default class ShellWorkers {
       }else{
         var file_path = current_file_root
         file_path = file_path.slice(this.shell.mcu_root_folder.length)
-        if (file_path[0] == "/") {
+        if (file_path.startsWith('/')) {
           file_path = file_path.substring(1)
         }
 
