@@ -97,20 +97,22 @@ export default class Utils {
 
   ensureFileDirectoryExistence(filePath) {
     var dirname = path.dirname(filePath)
-    this.ensureDirectoryExistence(dirname)
+    return this.ensureDirectoryExistence(dirname)
   }
 
 
   ensureDirectoryExistence(dirname) {
-    console.log(dirname)
-    if (fs.existsSync(dirname)) {
-      return true
+    if (!fs.existsSync(dirname)) {
+      this.mkDirRecursive(dirname)
     }
-    // console.log(dirname)
-    // this.ensureDirectoryExistence(dirname)
-    console.log(dirname)
-    console.log(fs.mkdirSync(dirname))
+    return true
+  }
 
+  mkDirRecursive(directory) {
+    if (!path.isAbsolute(directory)) return;
+    let parent = path.join(directory, "..");
+    if (parent !== path.join("/") && !fs.existsSync(parent)) this.mkDirRecursive(parent);
+    if (!fs.existsSync(directory)) fs.mkdirSync(directory);
   }
 
 
