@@ -70,6 +70,12 @@ export default class ShellWorkers {
               data = data.slice(1,-2)
               try{
                 var list = eval(data)
+                // Filter bad results
+                list = list.filter(function (item) {
+                  if (!item.includes(`\x00`)) {
+                    return item
+                  }
+                })
                 for(var i=0;i<list.length;i++){
                   var item = list[i]
                   names.push(_this.get_file_with_path(current_file_root,item))
@@ -87,11 +93,10 @@ export default class ShellWorkers {
         })
       }else{
         var file_path = current_file_root
-        if(file_path[0] == "/"){
+        file_path = file_path.slice(this.shell.mcu_root_folder.length)
+        if (file_path.startsWith('/')) {
           file_path = file_path.substring(1)
         }
-        file_path = file_path.replace(this.shell.mcu_root_folder + '/','')
-        file_path = file_path.replace(this.shell.mcu_root_folder.replace(/^\//, '') + '/','')
 
         file_list.push(file_path)
         callback(null,[root,names,file_list])
