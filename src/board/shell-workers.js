@@ -70,6 +70,12 @@ export default class ShellWorkers {
               data = data.slice(1,-2)
               try{
                 var list = eval(data)
+                // Filter bad results
+                list = list.filter(function (item) {
+                  if (!item.includes(`\x00`)) {
+                    return item
+                  }
+                })
                 for(var i=0;i<list.length;i++){
                   var item = list[i]
                   names.push(_this.get_file_with_path(current_file_root,item))
