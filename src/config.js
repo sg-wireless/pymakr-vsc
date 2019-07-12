@@ -40,6 +40,7 @@ export default class Config {
             +  "- safe_boot_before_upload : true                : Safe-boots the board before uploading code, to prevent running out of RAM while uploading.\r\n"
             +  "- reboot_after_upload     : true                : Reboots the board after each upload.\r\n"
             +  "- fast_upload             : false               : Experimental feature. Uses bigger batches and compresses larger (>4kb) files to make uploading faster. Only works on newer devices with 4mb of ram and firmware version >=1.20.0.\r\n"
+            +  "- auto_connect            : true                : *Global settings only* If enabled, connects to USB automatically. Disable to use the 'address' field for connecting over WiFi\r\n"
             +  "Any of these can be used inside the Project config to override the global config\r\n"
             +  "\r\n"
             +  "For more information, check github.com/pycom/pymakr-atom or docs.pycom.io\r\n"

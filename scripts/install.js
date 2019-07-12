@@ -11,14 +11,14 @@ if(process.argv.length == 3){
     do_rebuild = false
   }
 }
-// bindings params 
+// bindings params
 // FIXME: Source / target Swap ?
 var dir = __dirname.replace('/scripts','').replace('\\scripts','')
 var bindings_target = dir + '/node_modules/@serialport/bindings/build/Release/bindings.node'
 var bindings_source = dir + '/precompiles/serialport-<os>/bindings.node'
 
 // electron rebuild params
-var electron_version = '3.1.6'
+var electron_version = '4.2.5'
 var electron_rebuild_path = "$(npm bin)/"
 var electron_rebuild_path_win = '.\\node_modules\\.bin\\' // assuming current directory = project folder
 
@@ -41,18 +41,10 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
     if(error){
       console.log("Failed to copy bindings file, pymakr won't work")
       console.log(error)
-      fs.writeFile("C:/Users/Pycom/.vscode-insiders/extensions/errorlog.txt",error,function(err){
-        if(err) console.log("err");
-        if(err) throw err;
-        console.log('File is created successfully.');
-      })
     }else{
       console.log("Bindings file in place")
     }
 
-  
-    
-    
     if(do_rebuild){
       // Try to run electron rebuild anyway (just in case we're installing on a newer version of vsc with updated electron)
       console.log("Installing electron rebuild")
@@ -77,7 +69,9 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
             )
           }
         }
-      )  
+      )
+    }else{
+      console.log("Not rebuilding serialport lib")
     }
   })
 }
@@ -107,7 +101,7 @@ function copyFile( source, target, cb) {
     wr.on("close", function(ex) {
       console.log("Copy completed")
       done();
-      
+
     });
     rd.pipe(wr);
   }else{
