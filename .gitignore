@@ -1,3 +1,9 @@
+# no  node_modules 
 node_modules
+# no transpiled 
 /lib
+# no packages 
 *.vsix
+
+# ignore the vscode instance used in testing 
+.vscode-test/*
