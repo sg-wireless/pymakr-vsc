@@ -18,7 +18,7 @@ var bindings_target = dir + '/node_modules/@serialport/bindings/build/Release/bi
 var bindings_source = dir + '/precompiles/serialport-<os>/bindings.node'
 
 // electron rebuild params
-var electron_version = '3.1.6'
+var electron_version = '4.2.5'
 var electron_rebuild_path = "$(npm bin)/"
 var electron_rebuild_path_win = '.\\node_modules\\.bin\\' // assuming current directory = project folder
 
@@ -31,7 +31,7 @@ if(process.platform in precompiles) { // always returns win32 on windows, even o
     os = 'win32'
   }
   if(is_windows){
-    do_rebuild = false
+    //do_rebuild = false
   }
 
   bindings_source = bindings_source.replace('<os>',os)
