@@ -11,6 +11,7 @@ export default class Term {
       this.port = parseInt(Math.random()*1000 + 1337)
       this.host = "127.0.0.1"
       this.term_buffer = ""
+      this.terminal_name = "Pycom Console"
       this.shellprompt = '>>> ';
       this.pyboard = pyboard
       this.logger = new Logger('Term')
@@ -32,9 +33,10 @@ export default class Term {
       this.create()
 
       this.connect(cb)
+      var _this = this
 
-      vscode.window.onDidCloseTerminal(function(){
-        if(!_this.create_failed){
+      vscode.window.onDidCloseTerminal(function(event){
+        if(!_this.create_failed && event._name == _this.terminal_name){
           _this.create()
         }
       })
@@ -66,7 +68,7 @@ export default class Term {
       try{
         var termpath = this.api.getPackagePath() + "terminalExec.js"
         var shellpath = this.is_windows ? "node.exe" : "node"
-        this.terminal = vscode.window.createTerminal({name: "Pycom Console", shellPath: shellpath, shellArgs: [termpath,this.port.toString()]} )
+        this.terminal = vscode.window.createTerminal({name: this.terminal_name, shellPath: shellpath, shellArgs: [termpath,this.port.toString()]} )
         if(this.settings.open_on_start){
             this.show()
         }
