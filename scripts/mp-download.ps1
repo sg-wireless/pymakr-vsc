@@ -1,7 +1,8 @@
 #!/usr/bin/env pwsh
 #Requires -Version 6
 <# 
-download multiple versions of the native bindings of the serialport library 
+download multiple versions of the native bindings of the serialport library
+    to a folder named "abi<ABI_ver>-<platform>-<arch>" 
 to allow for dynamic binding of the serialport module on multiple platforms
 
 by downloading additional (future) versions fo the bindings andincluding them in the distribution,
@@ -20,7 +21,7 @@ there is nourantee as this does depend on
 npm upgrade node-abi 
 
 $ElectronVersions = "3.1.8","4.2.5","6.0.0-beta.0" | Sort 
-$platforms = "win32","darwin","linux"
+$platforms = "win32","darwin","linux","aix"
 $architectures = "x64","ia32"
 
 # todo: read default from github, and sliit on newline
