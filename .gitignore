@@ -1,3 +1,12 @@
-node_modules
+# Ignore node modules 
+# but explicitly keep the precompiled serialport binding sub-modules 
+node_modules/*
+!node_modules/@serialport/
+node_modules/@serialport/*
+!node_modules/@serialport/bindings/
+node_modules/@serialport/bindings/*
+!node_modules/@serialport/bindings/compiled/
+!node_modules/@serialport/bindings/compiled/*
+
 /lib
 *.vsix
