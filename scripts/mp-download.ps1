@@ -4,27 +4,43 @@ param (
     # project root path
     $folder_root = $PWD ,
     #where to store the precompiled bindings
-    [string][ValidateSet('binding','ABI','prebuildify')]
-    $pathpattern = 'binding',
+    [string][ValidateSet('binding','node-pre-gyp','prebuildify')]
+    $pathpattern = 'node-pre-gyp',
     # Use ABI version for paths rather than electron version
     [switch]$ABI_Paths,
-    $RuntimeVersions = @( "3.1.8","4.2.5","6.0.0-beta.0" | Sort-Object ) ,
+    $RuntimeVersions = @( "3.1.8","4.2.5" | Sort-Object ) ,
     $platforms = @("win32","darwin","linux") ,
     $architectures = @("x64","ia32"),
     $runtime = 'electron'
 ) 
 # the (sub module = @serialport/bindings)
 
+# todo: 
+# - TEST IN ELECTRON 
+# - download node and electron in a single run 
+# - cleanup documentation on structure / remove unneeded structure 
+# - make sure it runs on linux 
+# - add ref to how to install pwsh on linux 
+# - Add automated tests for loading serialport
+#   > in NODE 
+#   > in electron with same build as VSCode current / future 
+# - add doc how to include build & add additional native modules ( arch linux ...) 
+
 $module_folder = Join-Path $folder_root -ChildPath 'node_modules/@serialport/bindings'
 ## bindings precomiled in : node_modules\@serialport\bindings\compiled
 $module_folder = Join-Path $folder_root -ChildPath 'node_modules/@serialport/bindings'
-
 <# 
 
     supported by ('binding')('serialport')
     <root>/node_modules/@serialport/bindings/compiled/<electron_ver>/<platform>/<arch>/binding.node
 
     ? possible alternative structures
+
+    The node-pre-gyp docs have the binary go into `./lib/binding/{node_abi}-{platform}-{arch}`
+    https://github.com/TooTallNate/node-bindings/commit/68dae5707e5a2c9b831ccdce2720b15edc6e0475#diff-508e6e4b3a3d5225ee7d1e61cdd1adb9
+    binding v1.5.0
+
+
     <root>/node_modules/@serialport/bindings/bin/win32-x64-69/binding.node
     <root>/node_modules/@serialport/bindings/bin/<platform>-<arch>-<ABI>/binding.node
     
@@ -68,6 +84,7 @@ if (-not( (Test-Path './package.json') -and (Test-Path './node_modules'))){
 
 # todo: read default from github, and split on newline
 try {
+    #             "https://raw.githubusercontent.com/microsoft/vscode/1.36.1/.yarnrc" 
     $master_url = "https://raw.githubusercontent.com/microsoft/vscode/master/.yarnrc"
     $yaml = Invoke-WebRequest $master_url | Select-Object -Expand Content 
     $yaml = $yaml.Split("`n")
@@ -92,7 +109,7 @@ switch ($pathpattern) {
     'binding' {     
                     $docs_file = Join-Path $module_folder -ChildPath "compiled/included runtimes.md"
     }
-    'ABI' {         # use the ABIversion for the path (uses less space, better compat)
+    'node-pre-gyp' {         # use the ABIversion for the path (uses less space, better compat)
                     $docs_file = Join-Path $module_folder -ChildPath "compiled/included runtimes.md"
     }
     'prebuildify' { # https://github.com/prebuild/node-gyp-build 
@@ -137,6 +154,10 @@ param(
     # CPU architecture x64 /ia32 
     [string] $arch    
 )
+    if ($platform -ieq 'darwin' -and $arch -ieq 'ia32'){
+        # mac = only 64 bit 
+        return $false
+    }
     # assume in project root : todo: Check 
     $folder_root = $PWD
     # move into bindings folder to download
@@ -179,18 +200,23 @@ foreach ($runtime_ver in $RuntimeVersions) {
                                         # Note: runtime is not used in path 
                                         $dest_file = Join-Path $module_folder -ChildPath "compiled/$runtime_ver/$platform/$arch/bindings.node"
                         }
-                        'ABI' {         # use the ABIversion for the path (uses less space, better compat)
-                                        $dest_file = Join-Path $module_folder -ChildPath "compiled/$abi_ver/$platform/$arch/bindings.node" 
+                        'node-pre-gyp'{# use the ABIversion for the path (uses less space, better compat)
+                                        # ./lib/binding/{node_abi}-{platform}-{arch}`
+                                        # \node_modules\@serialport\bindings\lib\binding\node-v64-win32-x64\bindings.node
+                                        $dest_file = Join-Path $module_folder -ChildPath "lib/binding/$runtime-$abi_ver-$platform-$arch/bindings.node" 
                         }
                         'prebuildify' { # https://github.com/prebuild/node-gyp-build 
                                         # <root>/node_modules/@serialport/bindings/prebuilds/<platform>-<arch>\<runtime>abi<abi>.node
                                         #todo : file dest copy 
                                         $dest_file = Join-Path $module_folder -ChildPath "prebuilds/$platform-$arch/($runtime)abi$abi_ver.node"  }
+                        default {
+                            Write-Warning 'unknown path pattern'
+                        }
                     }
 
                     # make sure the containing folder exists
                     new-item (split-Path $dest_file -Parent) -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
-                    $_ = Copy-Item '.\node_modules\@serialport\bindings\build\Release\bindings.node' $dest_file -Force
+                    $_ = Copy-Item '.\node_modules\@serialport\bindings\build\Release\bindings.node' $dest_file -Force 
                     # add to documentation
                     "   - $platform, $arch , $dest_file" | Out-File -FilePath $docs_file -Append
                 } catch {
@@ -204,31 +230,8 @@ foreach ($runtime_ver in $RuntimeVersions) {
     }
 } 
 
-if ($restore) {
-    write-host "Restore to something that works today on this machine "
-    # detect os/bitness
-    if ($IsLinux) {
-        $platform =  "linux"
-    }
-    elseif ($IsMacOS) {
-        $platform =  "darwin"
-    }
-    elseif ($IsWindows) {
-        $platform =  "win32"
-    }
+#Clean release folder to prevent False positives 
+Remove-Item "$module_folder/build/release" -Recurse -Force
+write-host "Cleaned the release folder, to prevent including and loading the wrong platform"
 
-    if ([System.IntPtr]::Size -eq 4) {
-        $arch = 'ia32'
-    } else {
-        $arch = 'x64' 
-    }
-    #todo : Actul version in VSCode may be different from the master branch in github 
-    $currentversion = "3.1.8"
-    $_ = DownloadPrebuild -version $currentversion -platform $platform -arch $arch 
-} else {
-    Remove-Item "$module_folder/build/release" -Recurse -Force
-    write-host "Cleaned the release folder, to prevent including and loading the wrong platform"
-}
-
-
-
+Write-Host "all platform bindings are located in $(Split-Path $docs_file -Parent )"
