@@ -110,7 +110,7 @@ switch ($pathpattern) {
                     $docs_file = Join-Path $module_folder -ChildPath "compiled/included runtimes.md"
     }
     'node-pre-gyp' {         # use the ABIversion for the path (uses less space, better compat)
-                    $docs_file = Join-Path $module_folder -ChildPath "compiled/included runtimes.md"
+                    $docs_file = Join-Path $module_folder -ChildPath "lib/included runtimes.md"
     }
     'prebuildify' { # https://github.com/prebuild/node-gyp-build 
                     $docs_file = Join-Path $module_folder -ChildPath "prebuilds/included runtimes.md"
@@ -203,7 +203,7 @@ foreach ($runtime_ver in $RuntimeVersions) {
                         'node-pre-gyp'{# use the ABIversion for the path (uses less space, better compat)
                                         # ./lib/binding/{node_abi}-{platform}-{arch}`
                                         # \node_modules\@serialport\bindings\lib\binding\node-v64-win32-x64\bindings.node
-                                        $dest_file = Join-Path $module_folder -ChildPath "lib/binding/$runtime-$abi_ver-$platform-$arch/bindings.node" 
+                                        $dest_file = Join-Path $module_folder -ChildPath "lib/binding/$runtime-v$abi_ver-$platform-$arch/bindings.node" 
                         }
                         'prebuildify' { # https://github.com/prebuild/node-gyp-build 
                                         # <root>/node_modules/@serialport/bindings/prebuilds/<platform>-<arch>\<runtime>abi<abi>.node
