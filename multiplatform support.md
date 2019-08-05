@@ -42,6 +42,15 @@ notice that the different versions of node do use the same ABI (v64)
 In order to make sure a good version of the bindings module is used upgrade it to at least 1.5.0 by running:  
 `npm install bindings@1.5.0 --save` or `npm install bindings@latest --save`
 
+# To research 
+The path used when loading native bindings in a VSCode extension uses 'node' rather than electron as the runtime.
+Not sure why this is ....
+
+`c:\develop\pymakr-vsc\node_modules\@serialport\bindings\lib\binding\node-v69-win32-x64\bindings.node`
+
+temp workaround : Manual copy 
+
+
 ## file structure
 
 ```
@@ -64,7 +73,7 @@ folder structure in <project>/node_modules/@serialport/bindings
         +---node-v64-win32-ia32
         \---node-v64-win32-x64
 ``` 
-the folder naming convetion is `<native-module>/lib/binding/{runtime}-v{abi}-{platform}-{arch}`
+the folder naming convention is `<native-module>/lib/binding/{runtime}-v{abi}-{platform}-{arch}`
 each folder contains one file named `bindings.node` which is compiled for that 
 
 # Other approaches 
