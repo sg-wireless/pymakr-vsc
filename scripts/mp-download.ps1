@@ -2,35 +2,39 @@
 #Requires -Version 6
 param (
     # project root path
-    $folder_root = $PWD ,
+    $root_folder = $PWD ,
     #where to store the precompiled bindings
     [string][ValidateSet('binding','node-pre-gyp','prebuildify')]
     $pathpattern = 'node-pre-gyp',
     # Use ABI version for paths rather than electron version
     [switch]$ABI_Paths,
-    $RuntimeVersions = @( "3.1.8","4.2.5" | Sort-Object ) ,
+    [string[]]$ElectronVersions = @( "3.1.8","4.2.5" | Sort-Object ) ,
+    [string[]]$NodeVersions = @('10.15.1') ,
     $platforms = @("win32","darwin","linux") ,
-    $architectures = @("x64","ia32"),
-    $runtime = 'electron'
+    $architectures = @("x64","ia32")
+    #$runtime = 'electron'
 ) 
+#Check if script is started in project root folder
+
+if (-not( (Test-Path './package.json') -and (Test-Path './node_modules'))){
+    Write-Error 'Please start in root of project. (package.json and node_modules were not found)'
+}
+# get bot sets of versions into a single list {runtime}-{version}
+$VersionList = @()
+foreach ($v in $ElectronVersions) {
+    $VersionList=$VersionList + "electron-$v"
+}
+foreach ($v in $NodeVersions) {
+    $VersionList=$VersionList + "node-$v"
+}
+$VersionList= $VersionList | Sort-Object
 # the (sub module = @serialport/bindings)
 
-# todo: 
-# - TEST IN ELECTRON 
-# - download node and electron in a single run 
-# - cleanup documentation on structure / remove unneeded structure 
-# - make sure it runs on linux 
-# - add ref to how to install pwsh on linux 
-# - Add automated tests for loading serialport
-#   > in NODE 
-#   > in electron with same build as VSCode current / future 
-# - add doc how to include build & add additional native modules ( arch linux ...) 
 
-$module_folder = Join-Path $folder_root -ChildPath 'node_modules/@serialport/bindings'
-## bindings precomiled in : node_modules\@serialport\bindings\compiled
-$module_folder = Join-Path $folder_root -ChildPath 'node_modules/@serialport/bindings'
+$module_folder = Join-Path $root_folder -ChildPath 'node_modules/@serialport/bindings'
+
+$module_folder = Join-Path $root_folder -ChildPath 'node_modules/@serialport/bindings'
 <# 
-
     supported by ('binding')('serialport')
     <root>/node_modules/@serialport/bindings/compiled/<electron_ver>/<platform>/<arch>/binding.node
 
@@ -75,11 +79,6 @@ there is nourantee as this does depend on
 #> 
 # npm upgrade node-abi 
 
-#Check if script is started in project root folder
-
-if (-not( (Test-Path './package.json') -and (Test-Path './node_modules'))){
-    Write-Error 'Please start in root of project. (package.json and node_modules were not found)'
-}
 
 
 # todo: read default from github, and split on newline
@@ -94,31 +93,21 @@ try {
             Where-Object Name -ieq 'targetversion' |
             Select-Object -ExpandProperty Value
 
-    if ($currentversion -in $RuntimeVersions ) {
-        Write-Host -F Green "VSCode master branch uses a known version of Electron: $currentversion"
+    if ( "electron-$currentversion" -in $VersionList ) {
+        Write-Host -F Green "VSCode Insider(master branch) uses a known version of Electron: $currentversion"
     }else {
         Write-Host -F Yellow "The VSCode master branch uses a new/unknown version of Electron: $currentversion, that will be used/ added to the prebuilt versions to download"
-        $RuntimeVersions  = $RuntimeVersions + ($currentversion) | Sort-Object 
+        $VersionList=$VersionList + "electron-$currentversion" | Sort-Object 
     } 
 } catch {
     Write-warning "Unable to determine the Electron version used by VSCode from GitHub"
 }
 
-# Store doc in same folder 
-switch ($pathpattern) {
-    'binding' {     
-                    $docs_file = Join-Path $module_folder -ChildPath "compiled/included runtimes.md"
-    }
-    'node-pre-gyp' {         # use the ABIversion for the path (uses less space, better compat)
-                    $docs_file = Join-Path $module_folder -ChildPath "lib/included runtimes.md"
-    }
-    'prebuildify' { # https://github.com/prebuild/node-gyp-build 
-                    $docs_file = Join-Path $module_folder -ChildPath "prebuilds/included runtimes.md"
-    }
-}
+# Store doc in same module folder 
+$docs_file = Join-Path $root_folder -ChildPath "included_runtimes.md"
 
 # ensure directory exists
-new-item (Split-Path $docs_file -Parent) -ItemType Directory -ErrorAction SilentlyContinue 
+# new-item (Split-Path $docs_file -Parent) -ItemType Directory -ErrorAction SilentlyContinue 
 
 # empty the previous prebuilds : TODO:adjust to new structure 
 Write-Host -f Yellow 'todo: improve cleanup'
@@ -126,22 +115,12 @@ Write-Host -f Yellow 'todo: improve cleanup'
 
 # generate / append Document for electron-abi versions
 if (Test-Path $docs_file){
-    "Includes support for $runtime versions:" | Out-File -filepath $docs_file -Append
+    "Includes support for electron/node versions:" | Out-File -filepath $docs_file -Append
 } else {
-    "Includes support for $runtime versions:" | Out-File -filepath $docs_file 
+    "Includes support for electron/node versions:" | Out-File -filepath $docs_file 
 }
 
 
-foreach ($runtime_ver in $RuntimeVersions) {
-    #fixme : node / node.exe 
-    $cmd = "var getAbi = require('node-abi').getAbi;getAbi('$runtime_ver','$runtime')"
-    if ($IsWindows) {
-        $ABI_ver = &node.exe --print $cmd
-    } else {
-        $ABI_ver = &node --print $cmd
-    }
-    Write-Host -F Blue "$runtime $runtime_ver uses ABI $ABI_ver"
-}
 
 function DownloadPrebuild {
 param( 
@@ -159,9 +138,9 @@ param(
         return $false
     }
     # assume in project root : todo: Check 
-    $folder_root = $PWD
+    $root_folder = $PWD
     # move into bindings folder to download
-    #todo: only if not yet set  $module_folder = Join-Path $folder_root -ChildPath 'node_modules\@serialport\bindings' 
+    #todo: only if not yet set  $module_folder = Join-Path $root_folder -ChildPath 'node_modules\@serialport\bindings' 
     Set-Location $module_folder
     if ($IsWindows) {
         .\node_modules\.bin\prebuild-install.cmd --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix @serialport/bindings@ 
@@ -169,18 +148,39 @@ param(
         # linux / mac : same command , slightly different path
         node_modules/.bin/prebuild-install --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix @serialport/bindings@
     }
-    Set-Location $folder_root
+    Set-Location $root_folder
     #true for success 
     return $LASTEXITCODE -eq 0
 }
 
-&node.exe --print "process.versions.node"
+# show initial listing 
+foreach ($item in $VersionList) {
+    #split runtime-version 
+    $runtime, $runtime_ver = $item.split('-')
 
-foreach ($runtime_ver in $RuntimeVersions) {
+    #fixme: node / node.exe 
+    $cmd = "var getAbi = require('node-abi').getAbi;getAbi('$runtime_ver','$runtime')"
+    if ($IsWindows) {
+        $ABI_ver = &node.exe --print $cmd
+    } else {
+        $ABI_ver = &node --print $cmd
+    }
+    Write-Host -F Blue "$runtime $runtime_ver uses ABI $ABI_ver"
+}
+
+#now the processing 
+foreach ($item in $VersionList) {
+    #split runtime-version 
+    $runtime, $runtime_ver = $item.split('-')
+
     # Get the ABI version for node/electron version x.y.z 
-    # getAbi('5.0.0', 'electron')
-    $ABI_ver = &node.exe --print "var getAbi = require('node-abi').getAbi;getAbi('$runtime_ver','$runtime')"
-    # Write-Host -F Blue "Electron $runtime_ver uses ABI $ABI_ver"
+    $cmd = "var getAbi = require('node-abi').getAbi;getAbi('$runtime_ver','$runtime')"
+    if ($IsWindows) {
+        $ABI_ver = &node.exe --print $cmd
+    } else {
+        $ABI_ver = &node --print $cmd
+    }
+
     # add to documentation
     "* $runtime $runtime_ver uses ABI $ABI_ver" | Out-File -FilePath $docs_file -Append 
     foreach ($platform in $platforms){
@@ -193,17 +193,18 @@ foreach ($runtime_ver in $RuntimeVersions) {
                     # from : \@serialport\bindings\build\Release\bindings.node
                     # to a folder per "abi<ABI_ver>-<platform>-<arch>"
                     #$dest_folder = Join-Path $module_folder -ChildPath "abi$ABI_ver-$platform-$arch"
-                    switch ($pathpattern) {
-                        'binding' {     # use the Electron version for the path ( implemended by binding) 
+                    switch ($runtime) {
+                        'node' {        # use the node version for the path ( implemended by binding) 
                                         # supported by ('binding')('serialport')
-                                        # <root>/node_modules/@serialport/bindings/compiled/<electron_ver>/<platform>/<arch>/binding.node
+                                        # <root>/node_modules/@serialport/bindings/compiled/<version>/<platform>/<arch>/binding.node
                                         # Note: runtime is not used in path 
                                         $dest_file = Join-Path $module_folder -ChildPath "compiled/$runtime_ver/$platform/$arch/bindings.node"
                         }
-                        'node-pre-gyp'{# use the ABIversion for the path (uses less space, better compat)
+                        'electron' {# node-pre-gyp - use the ABIversion for the path (uses less space, better compat)
                                         # ./lib/binding/{node_abi}-{platform}-{arch}`
                                         # \node_modules\@serialport\bindings\lib\binding\node-v64-win32-x64\bindings.node
-                                        $dest_file = Join-Path $module_folder -ChildPath "lib/binding/$runtime-v$abi_ver-$platform-$arch/bindings.node" 
+                                        # Note: runtime is hardcoded as 'node' in path
+                                        $dest_file = Join-Path $module_folder -ChildPath "lib/binding/node-v$abi_ver-$platform-$arch/bindings.node" 
                         }
                         'prebuildify' { # https://github.com/prebuild/node-gyp-build 
                                         # <root>/node_modules/@serialport/bindings/prebuilds/<platform>-<arch>\<runtime>abi<abi>.node
@@ -218,7 +219,9 @@ foreach ($runtime_ver in $RuntimeVersions) {
                     new-item (split-Path $dest_file -Parent) -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
                     $_ = Copy-Item '.\node_modules\@serialport\bindings\build\Release\bindings.node' $dest_file -Force 
                     # add to documentation
-                    "   - $platform, $arch , $dest_file" | Out-File -FilePath $docs_file -Append
+                    $Msg = "   - $platform, $arch , $dest_file" 
+                    Write-Host $Msg
+                    Out-File -InputObject $Msg -FilePath $docs_file -Append 
                 } catch {
                     Write-Warning "Error while copying prebuild bindings for runtime $runtime : $runtime_ver, abi: $abi_ver, $platform, $arch"
                 } 
@@ -234,4 +237,5 @@ foreach ($runtime_ver in $RuntimeVersions) {
 Remove-Item "$module_folder/build/release" -Recurse -Force
 write-host "Cleaned the release folder, to prevent including and loading the wrong platform"
 
-Write-Host "all platform bindings are located in $(Split-Path $docs_file -Parent )"
+Write-Host "Platform bindings are listed in, $docs_file"
+

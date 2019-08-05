@@ -11,14 +11,15 @@ node_modules/@serialport/bindings/*
 !node_modules/@serialport/bindings/compiled/
 node_modules/@serialport/bindings/compiled/*
 
-!node_modules/@serialport/bindings/compiled/
-node_modules/@serialport/bindings/compiled/*
+!node_modules/@serialport/bindings/compiled/**
 
 !node_modules/@serialport/bindings/lib/
 node_modules/@serialport/bindings/lib/*
 
-!node_modules/@serialport/bindings/lib/binding
+!node_modules/@serialport/bindings/lib/binding/**
 
+
+node_modules/@serialport/bindings/compiled/10.15.1/linux/x64/bindings.node
 
 /lib
 *.vsix
