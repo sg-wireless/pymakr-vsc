@@ -34,13 +34,31 @@ The implemented solution :
   - [ ] ubuntu-x64 
   - [ ] mac 
   - [ ] others
-- [ ] cleanup documentation on structure / remove unneeded structure 
+
+
+- [ ] cleanup mp-download script 
+    - [ ] documentation on structure 
+    - [ ] remove unneeded structure 
+    - [ ] get & add electron version for given VSCode versions 
+    - [ ] get & add installed node version to allow simpler debugging / testing (replace current hardcoded version)
+
+- [ ] pymakr
+    - [ ] simplify serialport loading 
+
 - [ ] ask for upstream fix (bindings) on hardcoded runtime (how to detect runtime electron/node ?) 
 - [ ] Save native modules to project folder (prebuilds) to (better) allow check-in & avoid removal by `npm ci`
 - [ ] integrate into / replace install.js 
+    - [?] only trigger rebuild when serialport cannot be loaded  
+    - [?] translate PS1 script into javascript ? ( lots of effort )
+    - [?] call PS1 script from install.js (https://github.com/IonicaBizau/powershell)
 
-- [ ] make sure mp-download.ps1  runs on linux 
-- [ ] add documentation  to how to install pwsh on linux 
+- [x] make sure mp-download.ps1 runs (on PowerShell core ) 
+    - [x] on windows 
+    - [x] on linux 
+    - [ ] on mac
+
+- [ ] add documentation to how to install pwsh on linux / mac
+
 - [ ]  Add automated tests for loading serialport
   - [ ]  in NODE 
   - [ ]  in electron with same build as VSCode current / future 
@@ -120,15 +138,11 @@ The resulting folder structure is :
                                                       \---x64
 ``` 
 
-
 ## Packaging 
 
 >> Delete your node_modules folder, clean your npm cache with npm cache clean --force, and rerun npm install.
 - clean node_modules 
-    * Delete your node_modules
-    * `npm cache clean --force`
-- get node modules  
-    * `npm install`
+    * `npm ci`
 - download/refresh the binary bindings
     * `.\scripts\mp-download.ps1`
     * make sure there is no bindings.node in the default location
