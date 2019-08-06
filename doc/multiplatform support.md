@@ -39,18 +39,26 @@ The implemented solution :
 - [ ] cleanup mp-download script 
     - [ ] documentation on structure 
     - [ ] remove unneeded structure 
-    - [ ] get & add electron version for given VSCode versions 
+    - [x] get & add electron version for given VSCode versions 
     - [ ] get & add installed node version to allow simpler debugging / testing (replace current hardcoded version)
 
 - [ ] pymakr
     - [ ] simplify serialport loading 
 
 - [ ] ask for upstream fix (bindings) on hardcoded runtime (how to detect runtime electron/node ?) 
-- [ ] Save native modules to project folder (prebuilds) to (better) allow check-in & avoid removal by `npm ci`
-- [ ] integrate into / replace install.js 
-    - [?] only trigger rebuild when serialport cannot be loaded  
-    - [?] translate PS1 script into javascript ? ( lots of effort )
-    - [?] call PS1 script from install.js (https://github.com/IonicaBizau/powershell)
+- [x] Save native modules to project folder (native_modules) to (better) allow check-in & avoid permanent removal by `npm ci`
+
+- [ ]project build 
+    - [ ] copy native_modules as a pre-package tasks 
+            ```
+              "scripts": {
+                            "vscode:prepublish": "copy native_modules node_modules /s /q"
+                }
+            ```
+    - [ ] integrate into / replace install.js 
+        - [?] only trigger rebuild when serialport cannot be loaded  
+        - [?] translate PS1 script into javascript ? ( lots of effort )
+        - [?] call PS1 script from install.js (https://github.com/IonicaBizau/powershell)
 
 - [x] make sure mp-download.ps1 runs (on PowerShell core ) 
     - [x] on windows 
@@ -109,11 +117,15 @@ For electron / node-pre-gyp the folder naming convention is:
 For node the folder naming convention is:  
 - `<native-module>/compiled/{version}/{platform}/{arch}/binding.node`
 
-each folder contains one file named `bindings.node` which is compiled for that platform.
+Each folder contains one file named `bindings.node` which is compiled for that platform.
+
+The files are stored in a native_modules folder to allow them to be checked in to source control
+in addition the files are also copied to the node_modules folder 
+
 
 The resulting folder structure is :
 ```
-<project>/node_modules/@serialport/bindings
+ <root>/native_modules/@serialport/bindings
                                           +---lib
                                           |   \---binding                         (contains the electron bindings per ABI )
                                           |       +---node-v64-darwin-x64

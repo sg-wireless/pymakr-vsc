@@ -1,25 +1,6 @@
-# Ignore node modules 
-# but explicitly keep the precompiled serialport binding sub-modules 
-node_modules/*
-
-!node_modules/@serialport/
-node_modules/@serialport/*
-
-!node_modules/@serialport/bindings/
-node_modules/@serialport/bindings/*
-
-!node_modules/@serialport/bindings/compiled/
-node_modules/@serialport/bindings/compiled/*
-
-!node_modules/@serialport/bindings/compiled/**
-
-!node_modules/@serialport/bindings/lib/
-node_modules/@serialport/bindings/lib/*
-
-!node_modules/@serialport/bindings/lib/binding/**
-
-
-node_modules/@serialport/bindings/compiled/10.15.1/linux/x64/bindings.node
-
+# no  node_modules 
+node_modules
+# no transpiled 
 /lib
+# no packages 
 *.vsix
