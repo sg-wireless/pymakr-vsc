@@ -1,27 +1,32 @@
 #!/usr/bin/env pwsh
 #Requires -Version 6
+
+
 param (
     # project root path
-    $root_folder = $PWD,
-    #the versions of vscode to glean the electron versions from 
-    [string[]]$VSCodeVersions = @('1.36.1','master'),
+    [string]$root_folder = $PWD,
+    #the versions of vscode to support; Defaults to 'master'
+    [string[]]$VSCodeVersions = @('master'),
     #the base Electron versions to get natives for 
-    [string[]]$ElectronVersions = @( "3.1.8","4.2.5" ) ,
-    #the base Node versions to get natives form 
-    [string[]]$NodeVersions = @('10.15.1') ,
+    [string[]]$ElectronVersions = @() ,
+    #the base Node version(s) to get natives form 
+    [string[]]$NodeVersions = @() ,
     # the platforms 
-    $platforms = @("win32","darwin","linux") ,
+    [string[]]$platforms = @("win32","darwin","linux") ,
     #the processor architectures 
-    $architectures = @("x64","ia32"),
+    [string[]]$architectures = @("x64","ia32"),
     # clean native_modules folder 
-    [switch] $clean,
+    [switch] $Clean,
     # do not copy,
-    [switch] $nocopy
+    [switch] $NoCopy,
+    #do not detect the version of node running on this workstation
+    [switch] $IgnoreNodeVersion
 ) 
 #Check if script is started in project root folder
 if (-not( (Test-Path './package.json') -and (Test-Path './node_modules'))){
     Write-Error 'Please start in root of project. (package.json and node_modules were not found)'
 }
+
 # get both sets of versions into a single list {runtime}-{version}
 $VersionList = @()
 foreach ($v in $ElectronVersions) {
@@ -30,66 +35,31 @@ foreach ($v in $ElectronVersions) {
 foreach ($v in $NodeVersions) {
     $VersionList=$VersionList + "node-$v"
 }
-$VersionList= $VersionList | Sort-Object
-# the (sub module = @serialport/bindings)
 
-#this is where our (sub) module lives
-$module_folder = Join-Path $root_folder -ChildPath 'node_modules/@serialport/bindings'
+# the (sub module = @serialport/bindings)
+$module_name = '@serialport/bindings'
+# this is where our (sub) module lives
+$module_folder = Join-Path $root_folder -ChildPath "node_modules/$module_name"
 #this is the repo storage location for the native modules
 $native_modules = Join-Path $root_folder -ChildPath 'native_modules'
-$native_folder = Join-Path $native_modules -ChildPath '@serialport/bindings'
+$native_folder = Join-Path $native_modules -ChildPath $module_name
 
-<# 
-    supported by ('binding')('serialport')
-    <root>/node_modules/@serialport/bindings/compiled/<electron_ver>/<platform>/<arch>/binding.node
-
-    ? possible alternative structures
-
-    The node-pre-gyp docs have the binary go into `./lib/binding/{node_abi}-{platform}-{arch}`
-    https://github.com/TooTallNate/node-bindings/commit/68dae5707e5a2c9b831ccdce2720b15edc6e0475#diff-508e6e4b3a3d5225ee7d1e61cdd1adb9
-    binding v1.5.0
-
-
-    <root>/node_modules/@serialport/bindings/bin/win32-x64-69/binding.node
-    <root>/node_modules/@serialport/bindings/bin/<platform>-<arch>-<ABI>/binding.node
-    
-    #<root>/node_modules/@serialport/bindings/compiled/<ABI_ver>/<platform>/<arch>/binding.node
-
-    # https://github.com/prebuild/prebuildify 
-    # https://github.com/prebuild/node-gyp-build 
-    <root>/node_modules/@serialport/bindings/prebuilds/<platfrom>-<arch>\<runtime>abi<abi>.node
-
-        \develop\pymakr-vsc\node_modules\@serialport\bindings\prebuilds\darwin-x64
-        -a----          4-8-2019    16:29         194048 electron.abi48.node
-        -a----          4-8-2019    16:28         198656 node.abi47.node
-        -a----          4-8-2019    16:28         198656 node.abi48.node
-
-
-download multiple versions of the native bindings of the serialport library
-    to a folder named "abi<ABI_ver>-<platform>-<arch>" 
-to allow for dynamic binding of the serialport module on multiple platforms
-
-by downloading additional (future) versions for the bindings and including them in the distribution,
-this reduceces the likelyhood of bugs when vscode updates the version of electron.
-
-there isno absolute guarantee as this does depend on:
-- the prebuilds to be avaiable at the time of packaging 
-- some prior knowledge of the future electron ( or ABI) version
-
-# dependencies 
-    npm install @serialport 
-    npm install node-abi
+<#
+# NodeJS dependencies 
+    npm install @serialport --save
+    npm install node-abi --save || --save-dev
+    npm install node-abi@1.5.0 --save
 # dev only (unless runtime download needed )
-    npm install prebuild-install -d
+    npm install prebuild-install --save-dev
 #> 
-# npm upgrade node-abi 
 
 function ReadVsCodeElectronVersion {
     param ( [string]$GitTag = 'master' )
+# Read the electron version from the .yarnrc file in the VSCode Repo
+# For unauthenticated requests, the rate limit allows for up to 60 requests per hour, which is OK
     try {
-        #          "https://raw.githubusercontent.com/microsoft/vscode/1.36.1/.yarnrc" 
         $git_url = "https://raw.githubusercontent.com/microsoft/vscode/$GitTag/.yarnrc"
-        $yaml = Invoke-WebRequest $git_url | Select-Object -Expand Content 
+        $yaml = Invoke-WebRequest $git_url -UserAgent 'josverl mp-download'| Select-Object -Expand Content 
         $yaml = $yaml.Split("`n")
         $version = $yaml | Select-String -Pattern '^target +"(?<targetversion>[0-9.]*)"' -AllMatches | 
                 Foreach-Object {$_.Matches} | 
@@ -98,13 +68,92 @@ function ReadVsCodeElectronVersion {
                 Select-Object -ExpandProperty Value
         return $version
     } catch {
-        Write-warning "Unable to determine the Electron version used by VSCode from GitHub"
+        Write-warning "Unable to find the Electron version used by VSCode [$GitTag]. Does it exist ?"
         return $null
     }
 }
 
+function RecentVSCodeVersions ($Last = 3) {
+    try {
+        $output = &git ls-remote --tags https://github.com/microsoft/vscode.git 
+        $VersionTags = foreach( $line in $output) {
+            $tag = $line.Split('refs/tags/')[1]
+            try{ 
+                $_ = [version]$tag
+                Write-Output $tag
+            } catch { 
+                #not a tag
+            }
+        } 
+        $Recent = $VersionTags | Sort-Object {[version]$_ } | 
+                    Group-Object {([version]$_).Major + " " + ([version]$_).Minor } |
+                    Select-Object -Property Group -Last $Last |
+                    ForEach-Object{ write-output $_.Group[0]}  
+        return $Recent
+    } catch {
+        return $null
+    }
+}
+
+function runNodeCommand ([string]$cmd) {
+    # run a simple command in Node and get the printed outout
+    try { 
+        if ($IsWindows) {
+            $result = &node.exe --print $cmd 
+        } else {
+            $result = &node --print $cmd
+        }
+        return $result
+    } catch {
+        Write-Error "Unable to run NodeJS command"
+        return $null
+    }
+}
+
+function getABI([string]$runtime = "", [string]$version = "") {
+    # get the abi version 
+    # requires: npm install node-abi [...]
+    $cmd = "var getAbi = require('node-abi').getAbi;getAbi('$version','$runtime')"
+    $ABI_ver = runNodeCommand $cmd
+    return $ABI_ver
+}
+
+function DownloadPrebuild {
+
+    param( 
+        # Runtime (node/electron)     
+        [string] $runtime = 'electron', 
+        # Electron version     
+        [string] $version, 
+        # Platform win32/darwin/linux
+        [string] $platform, 
+        # CPU architecture x64 /ia32 
+        [string] $arch,
+        [string] $prefix = "$module_name@"
+        # $module_folder  #todo: add param for more flexibility  
+    )
+    if ($platform -ieq 'darwin' -and $arch -ieq 'ia32'){
+        # mac = only 64 bit 
+        return $false
+    }
+
+    # move into bindings folder to download
+    # todo: add error chcking to set-location 
+    Set-Location $module_folder
+    if ($IsWindows) {
+        .\node_modules\.bin\prebuild-install.cmd --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
+    } else {
+        # linux / mac : same command , slightly different path
+        node_modules/.bin/prebuild-install --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
+    }
+    Set-Location $root_folder
+    #true for success 
+    return $LASTEXITCODE -eq 0
+}
+
+
 # -Clean : empty the previous prebuilds 
-if ($clean -or $true){
+if ($Clean ){
     
     Write-Host -f Yellow 'Cleanup the native_modules folder'
     remove-item $native_modules -Recurse -ErrorAction SilentlyContinue 
@@ -122,66 +171,59 @@ if (Test-Path $docs_file){
     "Includes support for electron/node versions:" | Out-File -filepath $docs_file 
 }
 
-# get electron versions for all relevant vscode versions 
-foreach ($tag in $VSCodeVersions ){
-    $version = ReadVsCodeElectronVersion -GitTag $tag
-    # Add to documentation
-    "* VSCode [$tag] uses Electron $version"| Out-File -filepath $docs_file -Append
-
-    if ( "electron-$version" -in $VersionList ) {
-        Write-Host -F Green "VSCode [$tag] uses a known version of Electron: $version"
-    }else {
-        Write-Host -F Yellow "VSCode [$tag] uses an additional version of Electron: $version, that will be used/ added to the prebuilt versions to download"
-        $VersionList=$VersionList + "electron-$version" | Sort-Object 
-    } 
+# Read target vscode version 
+$package = Get-Content '.\package.json' | ConvertFrom-Json
+$version = $package.engines.vscode.Replace('^','')
+if ($version -notin $VSCodeVersions) {
+    Write-Host -F Blue "Add VSCode [$version] version from package.json"
+    $VSCodeVersions = $VSCodeVersions + $version
+    
 }
 
-function DownloadPrebuild {
+#Add support for all newer vscode versions based on date ?
+foreach($version in (RecentVSCodeVersions -Last 3) ){
+    if ($version -notin $VSCodeVersions) {
+        Write-Host -F Blue "Add recent VSCode [$version] version"
+        $VSCodeVersions = $VSCodeVersions + $version
+    }
+}
 
-    param( 
-        # Runtime (node/electron)     
-        [string] $runtime = 'electron', 
-        # Electron version     
-        [string] $version, 
-        # Platform win32/darwin/linux
-        [string] $platform, 
-        # CPU architecture x64 /ia32 
-        [string] $arch,
-        [string] $prefix = '@serialport/bindings@'
-        # $module_folder  #todo: add param for more flexibility  
-    )
-    if ($platform -ieq 'darwin' -and $arch -ieq 'ia32'){
-        # mac = only 64 bit 
-        return $false
+# get/add electron versions for all relevant vscode versions 
+foreach ($tag in $VSCodeVersions ){
+    $version = ReadVsCodeElectronVersion -GitTag $tag
+    if ($version) {
+        # Add to documentation
+        $ABI_ver = getABI 'electron' $version
+        "* VSCode [$tag] uses Electron $version , ABI: $ABI_ver"| Out-File -filepath $docs_file -Append
+
+        if ( "electron-$version" -in $VersionList ) {
+            Write-Host -F Green "VSCode [$tag] uses a known version of Electron: $version , ABI: $ABI_ver"
+        }else {
+            Write-Host -F Blue "VSCode [$tag] uses an additional version of Electron: $version ABI: $ABI_ver, that will be used/added to the prebuild versions to download"
+            $VersionList=$VersionList + "electron-$version" 
+        } 
     }
-    # assume in project root todo: check
-    $root_folder = $PWD
-    # move into bindings folder to download
-    # todo: add error chcking to set-location 
-    Set-Location $module_folder
-    if ($IsWindows) {
-        .\node_modules\.bin\prebuild-install.cmd --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
-    } else {
-        # linux / mac : same command , slightly different path
-        node_modules/.bin/prebuild-install --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
+}
+# sort the list 
+if ($VersionList.Count){
+    $VersionList= $VersionList | Sort-Object
+}
+# -DetectNodeVersion : add this workstations node version if  specified 
+if ( -not $IgnoreNodeVersion) {
+    $version = runNodeCommand 'process.versions.node'
+    if ( "node-$version" -notin $VersionList ) {
+        $VersionList=$VersionList + "node-$version" | Sort-Object
+        Write-Host -F Blue "Detected and added NodeJS version $version"
     }
-    Set-Location $root_folder
-    #true for success 
-    return $LASTEXITCODE -eq 0
 }
 
 # show initial listing 
 foreach ($item in $VersionList) {
     #split runtime-version 
-    $runtime, $runtime_ver = $item.split('-')
+    $runtime, $version = $item.split('-')
     # handle platforms
-    $cmd = "var getAbi = require('node-abi').getAbi;getAbi('$runtime_ver','$runtime')"
-    if ($IsWindows) {
-        $ABI_ver = &node.exe --print $cmd
-    } else {
-        $ABI_ver = &node --print $cmd
-    }
-    Write-Host -F Blue "$runtime $runtime_ver uses ABI $ABI_ver"
+    $ABI_ver = getABI $runtime $version
+    Write-Host -F Blue "$runtime $version uses ABI $ABI_ver"
 }
 
 #now the processing 
@@ -190,12 +232,7 @@ foreach ($item in $VersionList) {
     $runtime, $runtime_ver = $item.split('-')
 
     # Get the ABI version for node/electron version x.y.z 
-    $cmd = "var getAbi = require('node-abi').getAbi;getAbi('$runtime_ver','$runtime')"
-    if ($IsWindows) {
-        $ABI_ver = &node.exe --print $cmd
-    } else {
-        $ABI_ver = &node --print $cmd
-    }
+    $ABI_ver = getABI $runtime $runtime_ver
 
     # add to documentation
     "* $runtime $runtime_ver uses ABI $ABI_ver" | Out-File -FilePath $docs_file -Append 
@@ -232,7 +269,8 @@ foreach ($item in $VersionList) {
                     }
                     # make sure the containing folder exists
                     new-item (split-Path $dest_file -Parent) -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
-                    $_ = Copy-Item '.\node_modules\@serialport\bindings\build\Release\bindings.node' $dest_file -Force 
+                    # cope all *.node native bindings
+                    $_ = Copy-Item ".\node_modules\$module_name\build\Release\*.node" $dest_file -Force 
                     Write-Host " -> $dest_file"
                     # add to documentation.md
                     $msg = "   - {0,-8}, {1,-4}, {2}" -f $platform, $arch , ($dest_file.Replace($root_folder,'.'))
@@ -258,5 +296,5 @@ if (-not $NoCopy) {
     Copy-Item -Path $native_modules -Destination (Join-Path $root_folder 'node_modules')  -Force -Recurse 
 }
 
-Write-Host -ForegroundColor blue "Platform bindings are listed in, $docs_file"
+Write-Host -ForegroundColor blue "Platform bindings are listed in: $docs_file"
 
