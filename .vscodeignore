@@ -1,8 +1,25 @@
+# No settings & config files
 .vscode/**
-.vscode-test/**
-test/**
+.eslintrc.json
 .gitignore
 jsconfig.json
-vsc-extension-quickstart.md
-.eslintrc.json
+
+# DOCUMENTATION 
+#No github templates
+.github/*
+doc/*
+
+# TEST Artefacts 
+.vscode-test/**
+#no tests
+test/**
+
+# BUILD Artefacts 
+# do not include the map files 
 **/*.map
+# native modules have been added to the node_modules
+native_modules
+
+# DEV DEPENDENCIES 
+# do not include pwsh install module
+node_modules/pwsh

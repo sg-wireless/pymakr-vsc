@@ -122,6 +122,9 @@ It requires the following NodeJS modules to be installed :
 - Dev dependencies:
     - `npm install prebuild-install --save-dev`
 
+Note: As the module is written in PowerShell it also requires PowerShell Core to be installed.
+This is ensure by adding the npm package : `pwsh` as a dev-dependency
+
 #### bindings module - v1.5.0 or newer 
 The bindings module is used by the serialport module. from version 1.5.0 (Feb 2019) and newer, it supports  to locate and load modules based on a pattern that includes the ABI, which allows us to package for future updates , without the need to include binaries for each and every possible minor version of electron. 
 
@@ -199,11 +202,23 @@ The resulting folder structure is :
 ``` 
 
 ## PowerShell core 6
-The script has been written in powershell 6 core, which allows it to run on the majority of relevant platforms.
+The script has been written in PowerShell 6 core, which allows it to run on the majority of relevant platforms.
 While the same logic could be implemented in a NodeJS module, while testing and prototyping, I personally found it simpler and quicker to write the logic in PowerShell.
-Also the script only needs to be run on a developer workstatiopn
+Also the script only needs to be run on a developer workstation
 
-### Installation : 
+As the module is written in PowerShell it requires PowerShell Core (pwsh) to be installed.
+This is ensured by adding the NPM package : `pwsh` as a dev-dependency: [see on NPM](https://www.npmjs.com/package/pwsh)  
+This will automatically take care of the installation.
+
+This allows the script to be uses just as any other NPM script by adding it to the script section of package.json
+``` json  
+  "scripts": {
+    // ...
+    "get-binaries": "pwsh --noprofile scripts/mp-download.ps1",
+  }
+
+If you prefer to install it manually that can also be ne:
+please 
 - [Windows](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-windows?view=powershell-6)
 - [MacOS](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-macos?view=powershell-6)
 - [Linux](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell-core-on-linux?view=powershell-6)
@@ -216,8 +231,10 @@ Also the script only needs to be run on a developer workstatiopn
     * [additional platforms]
         - (cross) compile 
         - only store in native_modules
+
 - clean node_modules 
     * `npm ci`
+        - postinstall will automatically copy the native_modules
 - [remove/ignore the dev-dependencies from node_modules]  
     * `npm prune --production`
 - copy the binary bindings into the node_modules folder] 
@@ -266,27 +283,33 @@ https://github.com/Microsoft/vscode/issues/658
 - [ ] ask for upstream fix (bindings) on hardcoded runtime (how to detect runtime electron/node ?) 
 
 - [ ]project build 
-    - [ ] copy native_modules as a pre-package tasks 
+    - [x] Add MP-download.ps1 as a npm script.
+          this includes adding powershell core as a dev dependency [pwsh](https://www.npmjs.com/package/pwsh)
+          which takes care of the installation of powershell core.
+    - [x] copy native_modules as a post-install task
             ``` json
               "scripts": {
-                            "vscode:prepublish": "copy native_modules node_modules /s /q"
-                }
+                            "postinstall": "pwsh --noprofile scripts/copy-native.ps1",
+                            "get-binaries": "pwsh --noprofile scripts/mp-download.ps1",
+                        }
             ```
-        - [ ] remove dev-dependencies before packaging `npm ci` & `npm prune --production`
+    - [x] prevent packaging of  pwsh dev-dependency by explicit exclude in `.vscodeignore`
+
+    - [ ] remove dev-dependencies before packaging `npm ci` & `npm prune --production`
 
 - [ ]  Add automated tests for loading serialport
   - [ ]  in NODE 
   - [ ]  in electron with same build as VSCode current / future 
-- [ ]  add doc how to include build & add additional native modules ( arch linux ...) 
 
 
-- [ ] integrate into / replace install.js 
+- [x] integrate into / replace install.js 
     - [x] re-Test with //empty `install.js`  
     - [?] call PS1 script from install.js (https://github.com/IonicaBizau/powershell)
 
 - [ ] strech goals 
         - [?] only trigger rebuild when serialport cannot be loaded  ( Arch Linux) 
         - [?] translate PS1 script into javascript ? ( lots of effort )
+        - [ ]  add doc how to include build & add additional native modules ( arch linux ...) 
 
 
 

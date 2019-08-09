@@ -1,7 +1,6 @@
 #!/usr/bin/env pwsh
 #Requires -Version 6
 
-
 param (
     # project root path
     [string]$root_folder = $PWD,
@@ -25,6 +24,23 @@ param (
 #Check if script is started in project root folder
 if (-not( (Test-Path './package.json') -and (Test-Path './node_modules'))){
     Write-Error 'Please start in root of project. (package.json and node_modules were not found)'
+    return -1
+}
+
+$package = Get-Content '.\package.json' | ConvertFrom-Json
+# check if the npm dependencies are install
+# NodeJS dependencies 
+#    npm install @serialport --save
+#    npm install node-abi --save || --save-dev
+#    npm install node-abi@1.5.0 --save
+# dev only (unless runtime download needed )
+#    npm install prebuild-install --save-dev
+
+foreach ($mod in "node-abi","prebuild-install","serialport" ){
+    if(-not ( $package.devDependencies."$mod" -or $package.dependencies."$mod") ) {
+        Write-Error "Missing npm dependency: $mod. Please run 'npm install $mod --save-dev'" 
+        return   
+    }
 }
 
 # get both sets of versions into a single list {runtime}-{version}
@@ -43,15 +59,6 @@ $module_folder = Join-Path $root_folder -ChildPath "node_modules/$module_name"
 #this is the repo storage location for the native modules
 $native_modules = Join-Path $root_folder -ChildPath 'native_modules'
 $native_folder = Join-Path $native_modules -ChildPath $module_name
-
-<#
-# NodeJS dependencies 
-    npm install @serialport --save
-    npm install node-abi --save || --save-dev
-    npm install node-abi@1.5.0 --save
-# dev only (unless runtime download needed )
-    npm install prebuild-install --save-dev
-#> 
 
 function ReadVsCodeElectronVersion {
     param ( [string]$GitTag = 'master' )
@@ -140,11 +147,17 @@ function DownloadPrebuild {
     # move into bindings folder to download
     # todo: add error chcking to set-location 
     Set-Location $module_folder
-    if ($IsWindows) {
-        .\node_modules\.bin\prebuild-install.cmd --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
-    } else {
-        # linux / mac : same command , slightly different path
-        node_modules/.bin/prebuild-install --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
+    try {
+        if ($IsWindows) {
+            # &".\node_modules\.bin\prebuild-install.cmd" --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
+            &"$root_folder\node_modules\.bin\prebuild-install.cmd" --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
+        } else {
+            # linux / mac : same command , slightly different path
+            node_modules/.bin/prebuild-install --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
+            &"$root_folder/node_modules/.bin/prebuild-install" --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
+        }
+    }  catch {
+        Write-Error "Unable to run prebuild-install. Did you run 'npm add prebuild-install --save-dev ?'" 
     }
     Set-Location $root_folder
     #true for success 
@@ -172,12 +185,16 @@ if (Test-Path $docs_file){
 }
 
 # Read target vscode version 
-$package = Get-Content '.\package.json' | ConvertFrom-Json
-$version = $package.engines.vscode.Replace('^','')
-if ($version -notin $VSCodeVersions) {
-    Write-Host -F Blue "Add VSCode [$version] version from package.json"
-    $VSCodeVersions = $VSCodeVersions + $version
-    
+
+try {
+    $version = $package.engines.vscode.Replace('^','')
+    if ($version -notin $VSCodeVersions) {
+        Write-Host -F Blue "Add VSCode [$version] version from package.json"
+        $VSCodeVersions = $VSCodeVersions + $version
+        
+    }
+} catch {
+    Write-Warning 'No vscode engine version found'
 }
 
 #Add support for all newer vscode versions based on date ?
@@ -293,7 +310,8 @@ write-host -ForegroundColor Green  "`nCleaned the '$module_folder/build/release'
 # -NoCopy : to avoid copying 
 if (-not $NoCopy) {
     write-host -ForegroundColor Green "Copy all /native_modules into the /node_modules for cross platform packaging "
-    Copy-Item -Path $native_modules -Destination (Join-Path $root_folder 'node_modules')  -Force -Recurse 
+    Copy-Item -Path (join-path $native_modules '*')-Destination (Join-Path $root_folder 'node_modules')  -Force -Recurse -PassThru | 
+        Where-Object {!$_.PSIsContainer} | ForEach-Object{$_.DirectoryName}
 }
 
 Write-Host -ForegroundColor blue "Platform bindings are listed in: $docs_file"
