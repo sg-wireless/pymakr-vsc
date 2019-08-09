@@ -4,3 +4,6 @@ node_modules
 /lib
 # no packages 
 *.vsix
+
+# ignore the vscode instance used n testing 
+.vscode-test/*
