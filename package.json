@@ -170,6 +170,7 @@
     "babel-watch": "babel src --out-dir lib",
     "babel-build-dev": "babel src --out-dir lib --source-maps --watch",
     "install": "node scripts/install.js",
+    "mp-download": "pwsh --noprofile scripts/mp-download.ps1",
     "rebuild": "node scripts/rebuild.js"
   },
   "dependencies": {
@@ -208,6 +209,7 @@
     "eslint": "^3.6.0",
     "mocha": "^5.2.0",
     "prebuild-install": "^2.5.3",
+    "pwsh": "^0.2.0",
     "vscode": "^1.1.35"
   }
 }
