@@ -14,10 +14,10 @@ strategy:
       imageName: 'macos-10.13'
     mac-Mojave:
       imageName: 'macos-10.14'
-    win-2019:
-       imageName: 'windows-2019'
-    Windows-core:
-       imagename: 'win1803'
+    # win-2019:
+    #    imageName: 'windows-2019'
+    # Windows-core:
+    #    imagename: 'win1803'
 
 # images/agents : https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops
 
