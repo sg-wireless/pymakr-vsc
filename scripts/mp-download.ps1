@@ -35,6 +35,8 @@ $package = Get-Content '.\package.json' | ConvertFrom-Json
 #    npm install node-abi@1.5.0 --save
 # dev only (unless runtime download needed )
 #    npm install prebuild-install --save-dev
+# (c) jos_verlinde@hotmail.com
+# licence MIT
 
 foreach ($mod in "node-abi","prebuild-install","serialport" ){
     if(-not ( $package.devDependencies."$mod" -or $package.dependencies."$mod") ) {

@@ -13,12 +13,6 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch install",
-            "program": "${workspaceFolder}/scripts/install.js"
-        },
-        {
-            "type": "node",
-            "request": "launch",
             "name": "Launch current",
             "program": "${file}"
         },

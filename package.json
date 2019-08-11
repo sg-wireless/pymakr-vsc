@@ -166,11 +166,18 @@
     }
   },
   "scripts": {
-    "babel-watch": "babel src --out-dir lib",
     "babel-build-dev": "babel src --out-dir lib --source-maps --watch",
-    "postinstall": "pwsh --noprofile scripts/copy-native.ps1",
-    "get-binaries": "pwsh --noprofile scripts/mp-download.ps1",
-    "test": "node ./node_modules/vscode/bin/test"
+    "get-binaries": "pwsh scripts/mp-download.ps1",
+    "postinstall": "pwsh scripts/copy-native.ps1",
+    "build": "babel src --out-dir lib --source-maps",
+    "test": "mocha -R xunit 2>&1 | tee test/TEST-report.xml ",
+    "package-prep": "npm install vsce -g",
+    "package": "vsce package",
+    "vscode:prepublish": "npm ci && npm prune"
+  },
+  "old-scripts": {
+    "babel-watch": "babel src --out-dir lib",
+    "power": "pwsh -command {write-host -f green Hoi}"
   },
   "dependencies": {
     "binascii": "0.0.2",
