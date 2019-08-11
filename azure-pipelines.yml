@@ -13,13 +13,19 @@ trigger:
 
 strategy:
   matrix:
-    linux:
+    ubuntu:
       imageName: 'ubuntu-16.04'
-    mac:
+    mac-High-Sierra:
       imageName: 'macos-10.13'
+    mac-Mojave:
+      imageName: 'macos-10.14'
+    win-2019:
+       imageName: 'windows-2019'
+    indows-core:
+       imagename: 'win1803'
 
-    # windows:
-    #   imageName: 'vs2017-win2016'
+# images/agents : https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/hosted?view=azure-devops
+
 
 pool:
   vmImage: $(imageName)
