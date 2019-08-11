@@ -170,7 +170,7 @@
     "get-binaries": "pwsh -ep remotesigned -nop -f ./scripts/mp-download.ps1",
     "postinstall": "pwsh -ep remotesigned -nop -f ./scripts/copy-native.ps1",
     "build": "babel src --out-dir lib --source-maps",
-    "test": "mocha -R mocha-junit-reporter",
+    "test": "mocha -R xunit 2>&1 | tee test/TEST-report.xml ",
     "package-prep": "npm install vsce -g",
     "package": "vsce package",
     "vscode:prepublish": "npm ci && npm prune",
