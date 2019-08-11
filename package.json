@@ -173,7 +173,8 @@
     "test": "mocha -R xunit 2>&1 | tee test/TEST-report.xml ",
     "package-prep": "npm install vsce -g",
     "package": "vsce package",
-    "vscode:prepublish": "npm ci && npm prune"
+    "vscode:prepublish": "npm ci && npm prune",
+    "EP": "pwsh -Command \"&{get-executionpolicy }\""
   },
   "old-scripts": {
     "babel-watch": "babel src --out-dir lib",

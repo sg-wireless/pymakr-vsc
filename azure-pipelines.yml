@@ -3,11 +3,6 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
 - fix/SerialMultiPlatform
 
@@ -39,6 +34,10 @@ steps:
 - script: |
     npm install
   displayName: 'npm install'
+
+- script: |
+    npm run EP
+  displayName: 'get execuion policy'
 
 - script: |
     npm run build
