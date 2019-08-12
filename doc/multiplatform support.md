@@ -247,8 +247,6 @@ please
 
 * Electron - Using Native Node Modules
 https://github.com/electron/electron/blob/master/docs/tutorial/using-native-node-modules.md
-
-
 https://github.com/Microsoft/vscode/issues/658
 
 
@@ -276,9 +274,13 @@ https://github.com/Microsoft/vscode/issues/658
         - [x] on linux 
         - [ ] on mac
         - [ ] others
+    [ ] deal with updates to node-abi to properly detect newer version 
+            `npm install node-abi@latest`
+    [ ] optionally include/hardcode known/next (ABI) versions of electron ?
 
 - [ ] pymakr
-    - [ ] simplify serialport loading 
+    - [ ] simplify serialport loading and errorhandling 
+    - [ ] add logic ( code / npm script) to compile on demand ?
 
 - [ ] ask for upstream fix (bindings) on hardcoded runtime (how to detect runtime electron/node ?) 
 
@@ -295,11 +297,17 @@ https://github.com/Microsoft/vscode/issues/658
             ```
     - [x] prevent packaging of  pwsh dev-dependency by explicit exclude in `.vscodeignore`
 
-    - [ ] remove dev-dependencies before packaging `npm ci` & `npm prune --production`
+    - [x] remove dev-dependencies before packaging `npm ci` & `npm prune --production`
 
 - [ ]  Add automated tests for loading serialport
-  - [ ]  in NODE 
-  - [ ]  in electron with same build as VSCode current / future 
+  - [ ] build pipeline in Azure Devops / Azure Pipelines
+        - [x] linux 
+        - [x] windows
+        - [x] mac
+    - [x] create test in mocha/chai 
+        - [/] in NODE (partial) 
+    - [ ] vscode spectron tests 
+        - [ ] in electron with same build as VSCode current / future 
 
 
 - [x] integrate into / replace install.js 
