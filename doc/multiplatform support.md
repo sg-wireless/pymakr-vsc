@@ -11,6 +11,18 @@ While the ABI interface does not change for each version of electron/node, it do
 So over time , as VSCode is updates and moves to a newer version of electron, at some point in time the required ABI version will change, and unless a *correct* binding is available, pymakr will not be able to communicate to the serial port.store functionality
 Over the last year this has occurred several times, and each time it required considerable time and manual effort to restore functionality.
 
+
+
+**Current State:**  
+
+Overall  | [![Build Status](https://dev.azure.com/josverl/JosVerlinde/_apis/build/status/Josverl.pymakr-vsc?branchName=fix/SerialMultiPlatform)](https://dev.azure.com/josverl/JosVerlinde/_build/latest?definitionId=3&branchName=fix/SerialMultiPlatform)
+---------|----------
+Linux   | [![Build Status](https://dev.azure.com/josverl/JosVerlinde/_apis/build/status/Josverl.pymakr-vsc?branchName=fix/SerialMultiPlatform&jobName=Job&configuration=Job%20ubuntu)](https://dev.azure.com/josverl/JosVerlinde/_build/latest?definitionId=3&branchName=fix/SerialMultiPlatform) 
+Mac     | [![Build Status](https://dev.azure.com/josverl/JosVerlinde/_apis/build/status/Josverl.pymakr-vsc?branchName=fix/SerialMultiPlatform&jobName=Job&configuration=Job%20mac-High-Sierra)](https://dev.azure.com/josverl/JosVerlinde/_build/latest?definitionId=3&branchName=fix/SerialMultiPlatform)
+Win     | [![Build Status](https://dev.azure.com/josverl/JosVerlinde/_apis/build/status/Josverl.pymakr-vsc?branchName=fix/SerialMultiPlatform&jobName=Job&configuration=Job%20Windows-core)](https://dev.azure.com/josverl/JosVerlinde/_build/latest?definitionId=3&branchName=fix/SerialMultiPlatform) 
+
+
+
 ## Solution: Include native modules for multiple platforms, and future versions 
 
 The implemented solution :
@@ -274,6 +286,7 @@ https://github.com/Microsoft/vscode/issues/658
         - [x] on linux 
         - [ ] on mac
         - [ ] others
+    - [x] merge copy script / download script  ( -onlyCopy )
     [ ] deal with updates to node-abi to properly detect newer version 
             `npm install node-abi@latest`
     [ ] optionally include/hardcode known/next (ABI) versions of electron ?
@@ -286,8 +299,11 @@ https://github.com/Microsoft/vscode/issues/658
 
 - [ ]project build 
     - [x] Add MP-download.ps1 as a npm script.
-          this includes adding powershell core as a dev dependency [pwsh](https://www.npmjs.com/package/pwsh)
-          which takes care of the installation of powershell core.
+       
+    - [ ] PowerShell core is a MANUAL prerequisite - ( dev dependcy creates issues on azure pipeline )
+            this includes adding powershell core as a dev dependency [pwsh](https://www.npmjs.com/package/pwsh)
+            which takes care of the installation of powershell core.
+
     - [x] copy native_modules as a post-install task
             ``` json
               "scripts": {
@@ -306,9 +322,12 @@ https://github.com/Microsoft/vscode/issues/658
         - [x] mac
     - [x] create test in mocha/chai 
         - [/] in NODE (partial) 
+        - [ ] export test results in re-usable format to Azure Pipelines 
+        - [ ] report / alert on failed tests 
+
     - [ ] vscode spectron tests 
         - [ ] in electron with same build as VSCode current / future 
-
+    - [ ] run automated tests against insiders version 
 
 - [x] integrate into / replace install.js 
     - [x] re-Test with //empty `install.js`  
