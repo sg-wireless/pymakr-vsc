@@ -3,6 +3,16 @@
     "version": "0.1.0",
     "configurations": [
         {
+            "name": "PowerShell Launch Current File w/Args Prompt",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${file}",
+            "args": [
+                "${command:SpecifyScriptArgs}"
+            ],
+            "cwd": "${workspacefolder}"
+        },
+        {
             "name": "PowerShell Launch Current File",
             "type": "PowerShell",
             "request": "launch",
