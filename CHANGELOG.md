@@ -1,3 +1,12 @@
+## 1.1.4 - Electron Multiplatform 
+- Provide improved stability by including serialport native modules for current and future electron versions. Fixes multiple serialport issues
+
+## 1.1.3 - Compatibility vscode 1.36
+- Windows64 and mac compatibility with vscode 1.36 (serialport compile to match electron version)
+- Double pymakr terminal issue solved (#47)
+- Spelling mistake (#52)
+- Added help text for auto_connect
+
 ## 1.1.2 - Bugfixes
 - Solving major issue with new serialport precompiles. Bindings.node is now moved to the correct folder on first start
 - Bugfix for reading local files wihout extension (when doing upload or download). 
