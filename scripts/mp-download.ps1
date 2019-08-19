@@ -45,13 +45,13 @@ param (
     [switch] $IgnoreNodeVersion
 ) 
 # #########################################################################################################
-#  parameter fixup,  expect array , convert from string passed by npm
+#  parameter fixup,  expect array @('x.x.x'), convert from string passed by npm
 # #########################################################################################################
-if ( $ElectronVersions.Count -eq 1){ $ElectronVersions = Invoke-Expression $ElectronVersions[0] } 
-if ( $NodeVersions.Count     -eq 1){ $NodeVersions     = Invoke-Expression $NodeVersions[0]     } 
-if ( $VSCodeVersions.Count   -eq 1){ $VSCodeVersions   = Invoke-Expression $VSCodeVersions[0]   } 
-if ( $platforms.Count        -eq 1){ $platforms        = Invoke-Expression $platforms[0]        } 
-if ( $architectures.Count    -eq 1){ $architectures    = Invoke-Expression $architectures[0]    } 
+if ( $ElectronVersions.Count -eq 1 -and $ElectronVersions[0][0] -eq '@'){ $ElectronVersions = Invoke-Expression $ElectronVersions[0] } 
+if ( $NodeVersions.Count     -eq 1 -and $NodeVersions[0][0]     -eq '@'){ $NodeVersions     = Invoke-Expression $NodeVersions[0]     } 
+if ( $VSCodeVersions.Count   -eq 1 -and $VSCodeVersions[0][0]   -eq '@'){ $VSCodeVersions   = Invoke-Expression $VSCodeVersions[0]   } 
+if ( $platforms.Count        -eq 1 -and $platforms[0][0]        -eq '@'){ $platforms        = Invoke-Expression $platforms[0]        } 
+if ( $architectures.Count    -eq 1 -and $architectures[0][0]    -eq '@'){ $architectures    = Invoke-Expression $architectures[0]    } 
 
 # #########################################################################################################
 #  functions
