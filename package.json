@@ -167,16 +167,16 @@
   },
   "scripts": {
     "babel-build-dev": "babel src --out-dir lib --source-maps --watch",
-    "download": "pwsh -nop -f ./scripts/mp-download.ps1",
+    "download": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions @('4.2.5','5.0.0')",
     "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
     "build": "babel src --out-dir lib --source-maps",
-    "test": "mocha -R xunit 2>&1 | tee test/TEST-report.xml ",
     "package-prep": "npm install vsce -g",
     "package": "vsce package",
-    "vscode:prepublish": "npm ci && npm prune",
-    "EP": "pwsh -Command \"&{get-executionpolicy }\""
+    "vscode:prepublish": "npm ci && npm prune"
   },
   "old-scripts": {
+    "test": "mocha ",
+    "test-ci": "mocha -R xunit 2>&1 | tee test/TEST-report.xml",
     "babel-watch": "babel src --out-dir lib",
     "power": "pwsh -command {write-host -f green Hoi}"
   },
@@ -216,7 +216,6 @@
     "eslint": "^3.6.0",
     "mocha": "^5.2.0",
     "prebuild-install": "^5.3.0",
-    "pwsh": "file:test/pwsh-0.2.1.tgz",
     "vscode": "^1.1.35"
   }
 }

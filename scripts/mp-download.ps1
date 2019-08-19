@@ -16,7 +16,7 @@ param (
     [Parameter(ParameterSetName='download')]
     [string[]]$VSCodeVersions = @('master'),
 
-    #the base Electron versions to get natives for 
+    #the current (& future) Electron versions to get natives for 
     [Parameter(ParameterSetName='download')]
     [string[]]$ElectronVersions = @() ,
 
@@ -44,6 +44,14 @@ param (
     [Parameter(ParameterSetName='download')]
     [switch] $IgnoreNodeVersion
 ) 
+# #########################################################################################################
+#  parameter fixup,  expect array , convert from string passed by npm
+# #########################################################################################################
+if ( $ElectronVersions.Count -eq 1){ $ElectronVersions = Invoke-Expression $ElectronVersions[0] } 
+if ( $NodeVersions.Count     -eq 1){ $NodeVersions     = Invoke-Expression $NodeVersions[0]     } 
+if ( $VSCodeVersions.Count   -eq 1){ $VSCodeVersions   = Invoke-Expression $VSCodeVersions[0]   } 
+if ( $platforms.Count        -eq 1){ $platforms        = Invoke-Expression $platforms[0]        } 
+if ( $architectures.Count    -eq 1){ $architectures    = Invoke-Expression $architectures[0]    } 
 
 # #########################################################################################################
 #  functions
@@ -130,7 +138,6 @@ function DownloadPrebuild {
         # CPU architecture x64 /ia32 
         [string] $arch,
         [string] $prefix = "$module_name@"
-        # $module_folder  #todo: add param for more flexibility  
     )
     if ($platform -ieq 'darwin' -and $arch -ieq 'ia32'){
         # mac = only 64 bit 

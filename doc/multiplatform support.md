@@ -333,6 +333,10 @@ https://github.com/Microsoft/vscode/issues/658
     - [x] re-Test with //empty `install.js`  
     - [?] call PS1 script from install.js (https://github.com/IonicaBizau/powershell)
 
+    -[ ]pymakr.js // FIXME: install.js has been removed 
+        exec('node '+ __dirname+'/scripts/install.js no_rebuild',function(error, stdout, stderr){
+
+
 - [ ] strech goals 
         - [?] only trigger rebuild when serialport cannot be loaded  ( Arch Linux) 
         - [?] translate PS1 script into javascript ? ( lots of effort )
