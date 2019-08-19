@@ -300,10 +300,10 @@ https://github.com/Microsoft/vscode/issues/658
 - [ ]project build 
     - [x] Add MP-download.ps1 as a npm script.
        
-    - [ ] PowerShell core is a MANUAL prerequisite - ( dev dependcy creates issues on azure pipeline )
+    - [x] PowerShell core is a MANUAL prerequisite - ( dev dependcy creates issues on azure pipeline )
             this includes adding powershell core as a dev dependency [pwsh](https://www.npmjs.com/package/pwsh)
             which takes care of the installation of powershell core.
-
+        Note: needed to avoid pwsh module as a npm dev dependency due to a [know bug in pwsh/cmd-shim ](https://github.com/cspotcode/npm-pwsh/issues/18)
     - [x] copy native_modules as a post-install task
             ``` json
               "scripts": {
@@ -318,8 +318,9 @@ https://github.com/Microsoft/vscode/issues/658
 - [ ]  Add automated tests for loading serialport
   - [ ] build pipeline in Azure Devops / Azure Pipelines
         - [x] linux 
-        - [x] windows
+        - [x] windows 
         - [x] mac
+
     - [x] create test in mocha/chai 
         - [/] in NODE (partial) 
         - [ ] export test results in re-usable format to Azure Pipelines 
@@ -331,10 +332,12 @@ https://github.com/Microsoft/vscode/issues/658
 
 - [x] integrate into / replace install.js 
     - [x] re-Test with //empty `install.js`  
-    - [?] call PS1 script from install.js (https://github.com/IonicaBizau/powershell)
+    - [-] call PS1 script from install.js (https://github.com/IonicaBizau/powershell)
+          instead the -copy script is run as a post-install 
 
-    -[ ]pymakr.js // FIXME: install.js has been removed 
+    -[/]pymakr.js // FIXME: install.js has been removed 
         exec('node '+ __dirname+'/scripts/install.js no_rebuild',function(error, stdout, stderr){
+        removed / commended the code as IMHO there was nothing left to do o9ther than try to recomplile in-place ( ie for Arch Linux) 
 
 
 - [ ] strech goals 

@@ -2,7 +2,7 @@
   "name": "pymakr",
   "displayName": "Pymakr",
   "description": "Adds a REPL console to the terminal that connects to your Pycom board. Run single files or synchronize your project files to your board.",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "publisher": "pycom",
   "repository": "https://github.com/pycom/pymakr-vsc",
   "icon": "images/logo.png",
@@ -167,7 +167,7 @@
   },
   "scripts": {
     "babel-build-dev": "babel src --out-dir lib --source-maps --watch",
-    "download": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions @('4.2.5','5.0.0')",
+    "download-native": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions @('4.2.5','5.0.0')",
     "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
     "build": "babel src --out-dir lib --source-maps",
     "package-prep": "npm install vsce -g",
