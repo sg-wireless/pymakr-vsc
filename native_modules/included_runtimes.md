@@ -36,7 +36,10 @@ Includes support for electron/node versions:
    - linux   , ia32, .\native_modules\@serialport\bindings\lib\binding\node-v69-linux-ia32\bindings.node
 * electron 5.0.0 uses ABI 70
    - win32   , x64 , .\native_modules\@serialport\bindings\lib\binding\node-v70-win32-x64\bindings.node
+   - win32   , ia32, .\native_modules\@serialport\bindings\lib\binding\node-v70-win32-ia32\bindings.node
+
    - linux   , x64 , .\native_modules\@serialport\bindings\lib\binding\node-v70-linux-x64\bindings.node
+
 * node 10.15.1 uses ABI 64
    - win32   , x64 , .\native_modules\@serialport\bindings\compiled\10.15.1\win32\x64\bindings.node
    - win32   , ia32, .\native_modules\@serialport\bindings\compiled\10.15.1\win32\ia32\bindings.node
@@ -54,8 +57,14 @@ Validation on Windows x64
     ABI 69 <- native_modules\@serialport\bindings\lib\binding\node-v69-win32-x64\bindings.node
     ABI 70 <- native_modules\@serialport\bindings\lib\binding\node-v70-win32-x64\bindings.node
 
+Validation on Windows (using Node 32 bit)
+    ABI 70 <- native_modules\@serialport\bindings\bin\win32-ia32-70\bindings.node
+    ABI 64 <- native_modules\@serialport\bindings\compiled\10.15.1\win32\ia32\bindings.node
+    ABI 64 <- native_modules\@serialport\bindings\lib\binding\node-v64-win32-ia32\bindings.node
+    ABI 69 <- native_modules\@serialport\bindings\lib\binding\node-v69-win32-ia32\bindings.node
+    ABI 70 <- native_modules\@serialport\bindings\lib\binding\node-v70-win32-ia32\bindings.node
+
 Validation on Ubuntu x64
-    scanning folder  native_modules
     ABI 70 <- native_modules/@serialport/bindings/bin/linux-x64-70/bindings.node
     ABI 64 <- native_modules/@serialport/bindings/compiled/10.15.1/linux/x64/bindings.node    
     ABI 64 <- native_modules/@serialport/bindings/lib/binding/node-v64-linux-x64/bindings.node
