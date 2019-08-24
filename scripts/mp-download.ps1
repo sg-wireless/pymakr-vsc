@@ -32,10 +32,6 @@ param (
     [Parameter(ParameterSetName='download')]
     [string[]]$architectures = @("x64","ia32"),
 
-    # clean native_modules folder 
-    [Parameter(ParameterSetName='download')]
-    [switch] $Clean,
-
     # do not copy,
     [Parameter(ParameterSetName='download')]
     [switch] $NoCopy,
@@ -235,13 +231,6 @@ if ( $copyonly ) {
     }
     foreach ($v in $NodeVersions) {
         $VersionList=$VersionList + "node-$v"
-    }
-
-    # -Clean : empty the previous prebuilds 
-    if ($Clean ){
-        
-        Write-Host -f Yellow 'Cleanup the native_modules folder'
-        remove-item $native_modules -Recurse -ErrorAction SilentlyContinue 
     }
 
     # ensure native_modules directory exists
