@@ -2,6 +2,14 @@
 {
     "version": "0.1.0",
     "configurations": [
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "Electron-Test Index",
+        "runtimeExecutable": "C:\\develop\\pymakr-vsc\\test\\test-electron\\node_modules\\electron\\dist\\electron.exe",
+        
+        "program": "C:\\develop\\pymakr-vsc\\test\\test-electron\\index.js"
+    },
         {
             "name": "PowerShell Launch Current File w/Args Prompt",
             "type": "PowerShell",

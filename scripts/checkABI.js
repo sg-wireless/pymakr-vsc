@@ -2,6 +2,8 @@
 // Copyright (c) 2019 Jos Verlinde - jos_verlinde@hotmail.com
 // License : MIT
 
+// todo: repeat the process under electron as some ()of the electron prebuilts are not loading under electron 3.1.9
+// @serialport\bindings\lib\binding\node-v64-win32-x64\bindings.node > Error: A dynamic link library (DLL) initialization routine failed.
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
