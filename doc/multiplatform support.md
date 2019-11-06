@@ -285,6 +285,11 @@ https://github.com/Microsoft/vscode/issues/658
         - [x] on windows 
         - [x] on linux 
         - [ ] on mac
+            [ ] fix Issue with parameters / quotes `pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions @\"('4.2.10')\""`
+            [ ] npm ci is problematic on Mac due to some write rights issue, I had to add sudo before some commands in mp-downloads.ps1)
+            [ ] pswh scripts/mp-download.ps1 -Clear is not working ( and therfore does not clear the bindings.node form the default location ?)
+
+instead of running pswh scripts/mp-download.ps1 without any parameters (-Clear, for some reason, is not working). So I performed the other steps normally and I also got the same runtime error (MODULE_NOT_FOUND).
         - [ ] others
     - [x] merge copy script / download script  ( -onlyCopy )
     [ ] deal with updates to node-abi to properly detect newer version 
@@ -342,8 +347,9 @@ https://github.com/Microsoft/vscode/issues/658
 
 - [ ] strech goals 
         - [?] only trigger rebuild when serialport cannot be loaded  ( Arch Linux) 
-        - [?] translate PS1 script into javascript ? ( lots of effort )
         - [ ]  add doc how to include build & add additional native modules ( arch linux ...) 
+        - [nope] translate PS1 script into javascript ? ( lots of effort )  
+
 
 
 
