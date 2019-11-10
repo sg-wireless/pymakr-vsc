@@ -14,6 +14,4 @@ electron-serialport
 electron@5.10 
 npx electron-rebuild 
 
-# Check ABI
-ABI 70 <- node_modules\@serialport\bindings\bin\win32-x64-70\bindings.node
-ABI 70 <- node_modules\@serialport\bindings\build\Release\bindings.node
+
