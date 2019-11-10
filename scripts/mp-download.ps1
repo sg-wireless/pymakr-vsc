@@ -5,7 +5,7 @@
 )]
 param (
     # Copy 
-    [Parameter(ParameterSetName='copy')]
+    [Parameter(ParameterSetName='copyonly')]
     [switch]$copyonly,
 
     # project root path
