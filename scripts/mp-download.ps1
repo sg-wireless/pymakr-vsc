@@ -8,6 +8,7 @@ param (
     [Parameter(ParameterSetName='copyonly')]
     [switch]$copyonly,
 
+    # ........................................................
     # project root path
     [Parameter(ParameterSetName='download')]
     [string]$root_folder = $PWD,
@@ -26,12 +27,10 @@ param (
 
     # the platforms
     [Parameter(ParameterSetName='download')]
-    [Parameter(ParameterSetName='harvest')]    
     [string[]]$platforms = @("win32","darwin","linux") ,
 
     #the processor architectures 
     [Parameter(ParameterSetName='download')]
-    [Parameter(ParameterSetName='harvest')]    
     [string[]]$architectures = @("x64","ia32"),
 
     # do not copy,
@@ -42,13 +41,38 @@ param (
     [Parameter(ParameterSetName='download')]
     [switch] $IgnoreNodeVersion,
 
+    # ........................................................
     #Harvest/Collect/copy
     [Parameter(ParameterSetName='harvest')]
     [switch] $Harvest,
-    
+
+    [Parameter(ParameterSetName='harvest',HelpMessage="windows, linux , or darwin (MacOS)")]
+    [ValidateSet("win32","linux","darwin")]
+    [string]$platform = $(if ($IsWindows) {'win32'} if ($IsLinux) { 'linux'} if ($IsMacOS) { 'darwin'}) ,
+
+    [Parameter(ParameterSetName='harvest',HelpMessage="The CPU architecture")]
+    [ValidateSet("x64","ia32")]
+    [Alias("CPU","arch")]
+    [string]$architecture = $( if ([Environment]::Is64BitProcess) {'x64'} else {'ia32'}) ,
+
+    [Parameter(ParameterSetName='harvest',HelpMessage="Usually 'electron'")]
+    [ValidateSet("electron","node")]
+    [string]$runtime = 'electron', 
+
+    [Parameter(ParameterSetName='harvest',Mandatory=$true,HelpMessage="the electron version")]
+    [ValidatePattern("^[0-9]+\.[0-9]+\.[0-9]+$")] # X.Y.Z
+    [Alias("version")]
+    [string]$runtime_version,
+
+    [Parameter(ParameterSetName='harvest',HelpMessage="Storage pattern to use for loading different architectures")]
+        [ValidateSet("electron","node","prebuildify")]
+    [string]$loadmethod = $runtime,
+
+    # ........................................................
     #just clean  
     [Parameter(ParameterSetName='clean')]
     [switch] $clean
+
 
 ) 
 
@@ -192,6 +216,13 @@ param(
     if( -not $abi_ver) {
         $abi_ver = getABI -runtime $runtime -version $runtime_ver
     }
+    # is there anything to copy in the first place ?
+    $src_folder = "./node_modules/$module_name/build/Release"
+    $natives = Get-ChildItem $src_folder -Filter "*.node" -ErrorAction SilentlyContinue
+    if ($natives.count -eq 0){
+        Write-Warning "No native bindings could be found in: $src_folder"
+        return
+    }
     try {
         #OK , now copy the platform folder 
         # from : \@serialport\bindings\build\Release\bindings.node
@@ -207,10 +238,10 @@ param(
                             $dest_folder = (split-Path $dest_file -Parent)
                             new-item dest_folder -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
                             # copy all *.node native bindings
-                            gci "./node_modules/$module_name/build/Release" -Filter "*.node"       | Copy-Item -Destination $dest_folder -Force -Container
+                            Get-ChildItem $src_folder -Filter "*.node"       | Copy-Item -Destination $dest_folder -Container
                             # additional files to help identify the binary in the future 
-                            gci "./node_modules/$module_name/build/Release" -Filter "*.forge-meta" | Copy-Item -Destination $dest_folder -Force -Container
-                            gci "./node_modules/$module_name/build" -Filter "*config.gypi"         | Copy-Item -Destination $dest_folder -Force -Container                           
+                            Get-ChildItem $src_folder -Filter "*.forge-meta" | Copy-Item -Destination $dest_folder -Container
+                            gci "./node_modules/$module_name/build" -Filter "*config.gypi"         | Copy-Item -Destination $dest_folder -Container                           
                             Write-Host "electron lib in node location -> $dest_file"
             }
             'electron' {# node-pre-gyp - use the ABIversion for the path (uses less space, better compat)
@@ -222,10 +253,10 @@ param(
                             $dest_folder = (split-Path $dest_file -Parent)
                             new-item $dest_folder -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
                             # copy all *.node native bindings
-                            gci "./node_modules/$module_name/build/Release" -Filter "*.node"       | Copy-Item -Destination $dest_folder -Force -Container
+                            Get-ChildItem $src_folder -Filter "*.node"       | Copy-Item -Destination $dest_folder -Container
                             # additional files to help identify the binary in the future 
-                            gci "./node_modules/$module_name/build/Release" -Filter "*.forge-meta" | Copy-Item -Destination $dest_folder -Force -Container
-                            gci "./node_modules/$module_name/build" -Filter "*config.gypi"         | Copy-Item -Destination $dest_folder -Force -Container                           
+                            Get-ChildItem $src_folder -Filter "*.forge-meta" | Copy-Item -Destination $dest_folder -Container
+                            gci "./node_modules/$module_name/build" -Filter "*config.gypi"         | Copy-Item -Destination $dest_folder -Container                           
                             Write-Host "electron lib in node location -> $dest_file"
             }
             'prebuildify' { # https://github.com/prebuild/node-gyp-build 
@@ -237,7 +268,7 @@ param(
                             $dest_folder = (split-Path $dest_file -Parent)
                             new-item dest_folder -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
                             #copy single file 
-                            $_ = Copy-Item "./node_modules/$module_name/build/Release/*.node" $dest_file -Force
+                            $_ = Copy-Item "./node_modules/$module_name/build/Release/*.node" $dest_file -Force:$Force
                             Write-Host "prebuilify location: -> $dest_file" 
             }                                                        
             default {
@@ -269,13 +300,15 @@ function CleanReleaseFolder ($module_folder){
 # copy from native_modules --> node_modules
 function CopyNativeModules{
     param(  $native_modules, $node_modules  )
+    # todo: only copy the .node files ?
 
-    write-host -ForegroundColor Green "Copy all /native_modules into the /node_modules for cross platform packaging "
+    write-host -ForegroundColor Green "Copy all /native_modules into the /node_modules for cross platform packaging"
     Copy-Item -Path (join-path $native_modules '*')-Destination $node_modules -Force -Recurse -PassThru | 
         Where-Object {!$_.PSIsContainer} | ForEach-Object{$_.DirectoryName}
-
 }
 
+# #########################################################################################################
+# create basic documentation on the module bindings platform and architecture 
 function CreateOriginDoc{
     param(
         $filename, 
@@ -300,7 +333,7 @@ function CreateOriginDoc{
     abi         : {6}
 "@
     $template -f $module_name, $module_ver, $runtime , $runtime_ver , $platform , $arch, $abi_ver | 
-        Out-File -FilePath $filename -Encoding utf8 -Force
+        Out-File -FilePath $filename -Encoding utf8 -Force:$Force
 }
 # #########################################################################################################
 #  main code 
@@ -337,23 +370,10 @@ switch ($PSCmdlet.ParameterSetName)
         CleanReleaseFolder $module_folder
      }
      'harvest' {
-        if ($platforms.Count -gt 0){
-            $platform = $platforms[0]
-        } else {
-        if ($IsWindows) { $platform = 'win32'} 
-        if ($IsLinux)   { $platform = 'linux'} 
-        if ($IsMacOS)   { $platform = 'darwin'}
-        }
-        if ($architectures.Count -gt 0 ){
-            $arch = $architectures[0]
-        } else { 
-        if ( [Environment]::Is64BitProcess) {$arch = 'x64' }  else {$arch = 'ia32'}
-        }
-        $runtime = 'electron' 
-        $runtime_ver = '6.1.2'
-
-        $abi_ver =  getABI $runtime $runtime_ver
-        HarvestNativeBinding -platform $platform -arch $arch -runtime $runtime -runtime_ver $runtime_ver -module_name $module_name -abi_ver $abi_ver 
+         # get the abi version 
+         # note input uses $runtime_version ( not .._ver) 
+        $abi_ver =  getABI $runtime $runtime_version
+        HarvestNativeBinding -platform $platform -arch $arch -runtime $runtime -runtime_ver $runtime_version -module_name $module_name -abi_ver $abi_ver 
     }
 
     'download' {
