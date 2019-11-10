@@ -42,10 +42,13 @@ param (
     [Parameter(ParameterSetName='download')]
     [switch] $IgnoreNodeVersion,
 
-    #Collect 
+    #Harvest/Collect/copy
     [Parameter(ParameterSetName='harvest')]
-    [switch] $Harvest
+    [switch] $Harvest,
     
+    #just clean  
+    [Parameter(ParameterSetName='clean')]
+    [switch] $clean
 
 ) 
 
@@ -259,7 +262,7 @@ param(
 function CleanReleaseFolder ($module_folder){
     # Always Clean module release folder to prevent the wrong runtime from being blocking other platforms  
     Remove-Item "$module_folder/build/release" -Recurse -Force -ErrorAction SilentlyContinue
-    write-host -ForegroundColor Green  "`nCleaned the '$module_folder/build/release' folder, to prevent including and break cross-platform portability."
+    write-host -ForegroundColor Green  "`nCleaned the '$module_folder/build/release' folder,`nto prevent including native modules in the default location and breaking cross-platform portability."
 
 }
 # #########################################################################################################
@@ -329,6 +332,9 @@ switch ($PSCmdlet.ParameterSetName)
         } else {
             Write-Warning "$native_modules folder was not found, use pwsh ./scripts/mp-download.ps1"
         }   
+     }
+     'clean'{
+        CleanReleaseFolder $module_folder
      }
      'harvest' {
         if ($platforms.Count -gt 0){
