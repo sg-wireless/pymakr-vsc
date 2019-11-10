@@ -46,7 +46,7 @@ Includes support for electron/node versions:
 
 * electron 6.1.2 uses ABI 73
    - win32   , x64 , .\native_modules\@serialport\bindings\lib\binding\node-v73-win32-x64\bindings.node
-   - win32   , ia32, <Missing>
+   - win32   , ia32, .\native_modules\@serialport\bindings\lib\binding\node-v73-linux-ia32\bindings.node
    - darwin  , x64 , <Missing>
    - linux   , x64 , .\native_modules\@serialport\bindings\lib\binding\node-v73-linux-x64\bindings.node
    - linux   , ia32, <Missing>
