@@ -149,6 +149,7 @@ function prepareSerialPort(cb){
         cb()
     }catch(e){
         console.log("Error while loading serialport library")
+        console.log(e)
         // FIXME: install.js has been removed, the below just treid to re-copy 
         // var exec = require('child_process').exec
         // 

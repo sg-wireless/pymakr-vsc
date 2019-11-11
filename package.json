@@ -168,11 +168,9 @@
   "scripts": {
     "babel-build-dev": "babel src --out-dir lib --source-maps --watch",
     "download-native": "pwsh -nop -f ./scripts/mp-download.ps1",
-    "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
     "build": "babel src --out-dir lib --source-maps",
     "package-prep": "npm install vsce -g",
-    "package": "vsce package",
-    "vscode:prepublish": "npm ci && npm prune"
+    "package": "vsce package"
   },
   "old-scripts": {
     "test": "mocha test/*-test.js",
@@ -200,7 +198,7 @@
     "prompt-list": "^3.1.2",
     "rxjs": "^6.5.3",
     "safe-buffer": "^5.2.0",
-    "serialport": "^7.1.5",
+    "serialport": "^8.0.5",
     "spdx-correct": "^3.0.0",
     "spdx-exceptions": "^2.1.0",
     "telnet-client": "^0.13.0",
