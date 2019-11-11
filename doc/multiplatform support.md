@@ -135,7 +135,9 @@ It requires the following NodeJS modules to be installed :
     - `npm install prebuild-install --save-dev`
 
 Note: As the module is written in PowerShell it also requires PowerShell Core to be installed.
-This is ensure by adding the npm package : `pwsh` as a dev-dependency
+This is ensure by adding the npm package : `pwsh` as a dev-dependency,
+or installing powershell by running `npm install pwsh --global`
+
 
 #### bindings module - v1.5.0 or newer 
 The bindings module is used by the serialport module. from version 1.5.0 (Feb 2019) and newer, it supports  to locate and load modules based on a pattern that includes the ABI, which allows us to package for future updates , without the need to include binaries for each and every possible minor version of electron. 
