@@ -168,7 +168,6 @@
   "scripts": {
     "babel-build-dev": "babel src --out-dir lib --source-maps --watch",
     "download-native": "pwsh -nop -f ./scripts/mp-download.ps1",
-    "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
     "build": "babel src --out-dir lib --source-maps",
     "package-prep": "npm install vsce -g",
     "package": "vsce package"
