@@ -323,10 +323,16 @@ instead of running pswh scripts/mp-download.ps1 without any parameters (-Clear, 
     - [x] remove dev-dependencies before packaging `npm ci` & `npm prune --production`
 
 - [ ]  Add automated tests for loading serialport
-  - [ ] build pipeline in Azure Devops / Azure Pipelines
-        - [x] linux 
-        - [x] windows 
-        - [x] mac
+    - [ ] run (periodic) automated tests against insiders version - aka vscode master branch 
+    - [ ] build pipeline Github Actions 
+            - [ ] linux 
+            - [ ] windows 
+            - [ ] mac
+
+    - [abandoned ...] build pipeline in Azure Devops / Azure Pipelines / Github Actions 
+            - [x] linux 
+            - [x] windows 
+            - [x] mac
 
     - [x] create test in mocha/chai 
         - [/] in NODE (partial) 
@@ -335,7 +341,6 @@ instead of running pswh scripts/mp-download.ps1 without any parameters (-Clear, 
 
     - [ ] vscode spectron tests 
         - [ ] in electron with same build as VSCode current / future 
-    - [ ] run automated tests against insiders version 
 
 - [x] integrate into / replace install.js 
     - [x] re-Test with //empty `install.js`  
