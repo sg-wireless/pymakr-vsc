@@ -171,8 +171,7 @@
     "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
     "build": "babel src --out-dir lib --source-maps",
     "package-prep": "npm install vsce -g",
-    "package": "vsce package",
-    "vscode:prepublish": "npm ci && npm prune"
+    "package": "vsce package"
   },
   "old-scripts": {
     "test": "mocha test/*-test.js",
