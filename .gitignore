@@ -7,3 +7,6 @@ node_modules
 
 # ignore the vscode instance used in testing 
 .vscode-test/*
+
+# ignore pymakr workspace files
+connection_state.json

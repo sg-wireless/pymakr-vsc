@@ -135,7 +135,9 @@ It requires the following NodeJS modules to be installed :
     - `npm install prebuild-install --save-dev`
 
 Note: As the module is written in PowerShell it also requires PowerShell Core to be installed.
-This is ensure by adding the npm package : `pwsh` as a dev-dependency
+This is ensure by adding the npm package : `pwsh` as a dev-dependency,
+or installing powershell by running `npm install pwsh --global`
+
 
 #### bindings module - v1.5.0 or newer 
 The bindings module is used by the serialport module. from version 1.5.0 (Feb 2019) and newer, it supports  to locate and load modules based on a pattern that includes the ABI, which allows us to package for future updates , without the need to include binaries for each and every possible minor version of electron. 
@@ -321,10 +323,16 @@ instead of running pswh scripts/mp-download.ps1 without any parameters (-Clear, 
     - [x] remove dev-dependencies before packaging `npm ci` & `npm prune --production`
 
 - [ ]  Add automated tests for loading serialport
-  - [ ] build pipeline in Azure Devops / Azure Pipelines
-        - [x] linux 
-        - [x] windows 
-        - [x] mac
+    - [ ] run (periodic) automated tests against insiders version - aka vscode master branch 
+    - [ ] build pipeline Github Actions 
+            - [ ] linux 
+            - [ ] windows 
+            - [ ] mac
+
+    - [abandoned ...] build pipeline in Azure Devops / Azure Pipelines / Github Actions 
+            - [x] linux 
+            - [x] windows 
+            - [x] mac
 
     - [x] create test in mocha/chai 
         - [/] in NODE (partial) 
@@ -333,7 +341,6 @@ instead of running pswh scripts/mp-download.ps1 without any parameters (-Clear, 
 
     - [ ] vscode spectron tests 
         - [ ] in electron with same build as VSCode current / future 
-    - [ ] run automated tests against insiders version 
 
 - [x] integrate into / replace install.js 
     - [x] re-Test with //empty `install.js`  

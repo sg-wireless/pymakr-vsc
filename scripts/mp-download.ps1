@@ -242,7 +242,9 @@ param(
                             # additional files to help identify the binary in the future 
                             Get-ChildItem $src_folder -Filter "*.forge-meta" | Copy-Item -Destination $dest_folder -Container
                             gci "./node_modules/$module_name/build" -Filter "*config.gypi"         | Copy-Item -Destination $dest_folder -Container                           
-                            Write-Host "electron lib in node location -> $dest_file"
+                            #show 
+                            Write-Host "electron lib in node location -> $dest_folder"
+                            gci $dest_folder | ft Name, Length , CreationTime| Out-Host
             }
             'electron' {# node-pre-gyp - use the ABIversion for the path (uses less space, better compat)
                             # ./lib/binding/{node_abi}-{platform}-{arch}`
@@ -257,7 +259,9 @@ param(
                             # additional files to help identify the binary in the future 
                             Get-ChildItem $src_folder -Filter "*.forge-meta" | Copy-Item -Destination $dest_folder -Container
                             gci "./node_modules/$module_name/build" -Filter "*config.gypi"         | Copy-Item -Destination $dest_folder -Container                           
-                            Write-Host "electron lib in node location -> $dest_file"
+                            #show 
+                            Write-Host "electron lib in node location -> $dest_folder"
+                            gci $dest_folder | ft Name, Length, CreationTime | Out-Host
             }
             'prebuildify' { # https://github.com/prebuild/node-gyp-build 
                             # <root>/node_modules/@serialport/bindings/prebuilds/<platform>-<arch>\<runtime>abi<abi>.node
@@ -269,7 +273,10 @@ param(
                             new-item dest_folder -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
                             #copy single file 
                             $_ = Copy-Item "./node_modules/$module_name/build/Release/*.node" $dest_file -Force:$Force
+                            #show 
                             Write-Host "prebuilify location: -> $dest_file" 
+                            gci $dest_file | ft Name, Length, CreationTime | Out-Host
+
             }                                                        
             default {
                 Write-Warning 'unknown path pattern'
