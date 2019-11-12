@@ -1,10 +1,14 @@
-name: Compile Native Modules
+name: Build Pymakr
 
-on: [push]
+on:
+  pull_request: ~
+  push: ~
+  schedule:
+    - cron: "* * 1 * *"
 
 jobs:
   build:
-    name: Compile ${{ matrix.os }}
+    name: Build ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -17,24 +21,49 @@ jobs:
         with:
           node-version: "12"
 
-      - name: Install Windows Build Tools
-        if: matrix.os == 'windows-latest'
-        run: |
-          # installl windows toolchain 
-          npm install -g --production windows-build-tools
-          npm install -g node-gyp
-
       - name: Install Dependencies
         shell: bash
         run: |
-          npm install --ignore-scripts --no-audit
-          npm install serialport node-abi --no-audit
-          npm install npx --no-audit
+          npm install npx
+          npm add prebuild-install --save-dev
+          npm install --no-audit
 
-      - name: Rebuild Bindings
-        uses: ./.github/actions/compile-modules-action
+      - name: Update Native Modules
+        run: npm run download-native
+
+      # TODO
+      # - name: Test Bindings
+
+      # No tests written :(
+      # - name: Run Tests
+      #   run: npm run test
+
+      - name: Package Extension
+        run: npx vsce package -o pymakr-${{ github.sha }}.vsix
+
+      - name: Upload VSIX
+        if: github.event_name == 'schedule'
+        uses: actions/upload-artifact@master
         with:
-          git-token: ${{ secrets.GITHUB_TOKEN }}
+          name: pymakr-nightly.vsix
+          path: ./pymakr-${{ github.sha }}.vsix
 
-      - name: Report Git Status
-        run: git status -vv
+  deploy:
+    name: Publish
+    needs: build
+    # if current branch name contains release and is not a PR
+    if: contains(github.ref, 'release') && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install Production Dependencies
+        run: |
+          npm ci
+          npm prune --production
+
+      - name: Package Extension
+        run: npx vsce package
+
+      - name: Publish Extension
+        run: npx vsce publish --pat ${{ secrets.VSCE_TOKEN }}
