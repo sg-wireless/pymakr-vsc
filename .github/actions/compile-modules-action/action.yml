@@ -1,0 +1,12 @@
+name: "Compile Native Modules"
+description: "Compiles Native Modules for XPlatform Support"
+inputs:
+  git-token:
+    description: "Github Authentication Token"
+    required: true
+outputs:
+  compiled:
+    description: "List of compiled modules"
+runs:
+  using: "node12"
+  main: "dist/index.js"
