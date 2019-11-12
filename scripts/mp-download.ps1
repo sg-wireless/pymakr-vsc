@@ -4,6 +4,12 @@
     DefaultParameterSetName='download'
 )]
 param (
+
+    # ToDo: read module version from package.json 
+    # the (sub module = @serialport/bindings@8.0.4)
+    $module_name = '@serialport/bindings',
+    $module_ver  = '8.0.4'
+
     # Copy 
     [Parameter(ParameterSetName='copyonly')]
     [switch]$copyonly,
@@ -345,9 +351,6 @@ if (-not( (Test-Path './package.json') -and (Test-Path './node_modules'))){
     return -1
 }
 
-# the (sub module = @serialport/bindings)
-$module_name = '@serialport/bindings'
-$module_ver  = '2.0.8'
 # this is where our (sub) module lives
 $module_folder = Join-Path $root_folder -ChildPath "node_modules/$module_name"
 #this is the repo storage location for the native modules
@@ -493,7 +496,7 @@ switch ($PSCmdlet.ParameterSetName)
                         # now copy the bindins to native_modules
                         HarvestNativeBinding -platform $platform -arch $arch -runtime $runtime -runtime_ver $runtime_ver -module_name $module_name -abi_ver $abi_ver 
                         # add to documentation.md
-                        $msg = "   - {0,-8}, {1,-4}, {2}" -f $platform, $arch , ($dest_file.Replace($root_folder,'.'))
+                        $msg = "   - {0,-8}, {1,-4} " -f $platform, $arch
                         Out-File -InputObject $msg -FilePath $docs_file -Append 
     
                     } else { # no need to show multiple warnings 
