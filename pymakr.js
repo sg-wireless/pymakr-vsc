@@ -152,7 +152,17 @@ function prepareSerialPort(cb){
         console.log(e)
         // FIXME: install.js has been removed, the below just treid to re-copy 
         // var exec = require('child_process').exec
-        // 
+        // var cmd = 'npx electron-rebuild --force --version '+ process.versions['electron'];
+        // exec(cmd,function(error, stdout, stderr){
+        //         try {
+        //             require("serialport");
+        //             cb()
+        //         }catch(e){
+        //             cb(e)
+        //         }
+        //     });
+
+        // FIXME: install.js has been removed, the below just tried to re-copy 
         // exec('node '+ __dirname+'/scripts/install.js no_rebuild',function(error, stdout, stderr){
         //         try {
         //             require("serialport");

@@ -276,6 +276,8 @@ param(
                             #copy single file 
                             $_ = Copy-Item "./node_modules/$module_name/build/Release/*.node" $dest_file -Force:$Force
                             Write-Host "prebuilify location: -> $dest_file" 
+                            gci $dest_file | ft Name, Length, CreationTime | Out-Host
+
             }                                                        
             default {
                 Write-Warning 'unknown path pattern'

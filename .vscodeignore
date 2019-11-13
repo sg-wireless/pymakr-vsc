@@ -17,8 +17,13 @@ test/**
 # BUILD Artefacts 
 # do not include the map files 
 **/*.map
-# native modules have been added to the node_modules
+
+# No native_modules; they have been added to the node_modules folder
 native_modules
+
+# no achive/zip or locally built .vsix files in to root
+*.vsix
+*.zip
 
 # DEV DEPENDENCIES 
 # do not include pwsh install module
