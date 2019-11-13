@@ -8,18 +8,25 @@ There are different implementation standards to implement the interface between 
 The `serialport` module uses an ABI based interface to implement the low-level interface, and uses the ('bindings')[https://github.com/TooTallNate/node-bindings]  module to locate and load the `@serialport\bindings` sub-module  
 
 While the ABI interface does not change for each version of electron/node, it does change over time , and the bad news is that is it not backward compatible.
-So over time , as VSCode is updates and moves to a newer version of electron, at some point in time the required ABI version will change, and unless a *correct* binding is available, pymakr will not be able to communicate to the serial port.store functionality
+So over time , as VSCode is updated and moves to a newer version of electron, at some point in time the required ABI version will change, and unless a *correct* binding is available, pymakr will not be able to communicate to the serial port.store functionality
 Over the last year this has occurred several times, and each time it required considerable time and manual effort to restore functionality.
 
 
 
 **Current State:**  
 
-Overall  | [![Build Status](https://dev.azure.com/josverl/JosVerlinde/_apis/build/status/Josverl.pymakr-vsc?branchName=fix/SerialMultiPlatform)](https://dev.azure.com/josverl/JosVerlinde/_build/latest?definitionId=3&branchName=fix/SerialMultiPlatform)
----------|----------
-Linux   | [![Build Status](https://dev.azure.com/josverl/JosVerlinde/_apis/build/status/Josverl.pymakr-vsc?branchName=fix/SerialMultiPlatform&jobName=Job&configuration=Job%20ubuntu)](https://dev.azure.com/josverl/JosVerlinde/_build/latest?definitionId=3&branchName=fix/SerialMultiPlatform) 
-Mac     | [![Build Status](https://dev.azure.com/josverl/JosVerlinde/_apis/build/status/Josverl.pymakr-vsc?branchName=fix/SerialMultiPlatform&jobName=Job&configuration=Job%20mac-High-Sierra)](https://dev.azure.com/josverl/JosVerlinde/_build/latest?definitionId=3&branchName=fix/SerialMultiPlatform)
-Win     | [![Build Status](https://dev.azure.com/josverl/JosVerlinde/_apis/build/status/Josverl.pymakr-vsc?branchName=fix/SerialMultiPlatform&jobName=Job&configuration=Job%20Windows-core)](https://dev.azure.com/josverl/JosVerlinde/_build/latest?definitionId=3&branchName=fix/SerialMultiPlatform) 
+Branch | OS | Build  | Electron Test
+--------|-|--------|--
+main | |![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main)
+ " | Windows | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20windows-latest )
+  " | Linux | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20ubuntu-latest )
+ "| MacOS | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20macos-latest )
+ ||
+fix/Serialport_804 || ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804 )
+ " | Windows | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20windows-latest )
+  " | Linux | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20ubuntu-latest )
+ "| MacOS | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20macos-latest )
+
 
 
 
@@ -41,6 +48,9 @@ As the downloading and placement of the native modules is a precise but cumberso
 ```@Powershell 
 .\scripts\mp-download.ps1 -Clean
 ```
+
+
+
 ![screencapture of a download native modules](mp-download.gif)
 
 Result:
