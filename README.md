@@ -12,10 +12,10 @@ More info and documentation can be found on [docs.pycom.io](https://docs.pycom.i
 
 Branch | OS | Build  | Electron Test
 --------|-|--------|--
-main | |![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main)
- " | Windows | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20windows-latest )
-  " | Linux | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20ubuntu-latest )
- "| MacOS | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20macos-latest )
+master | |![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=master)
+ " | Windows | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=master&jobName=Build%20windows-latest )
+  " | Linux | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=master&jobName=Build%20ubuntu-latest )
+ "| MacOS | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=master&jobName=Build%20macos-latest )
  ||
 fix/Serialport_804 || ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804 )
  " | Windows | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20windows-latest )
