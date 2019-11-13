@@ -2,7 +2,7 @@
   "name": "pymakr",
   "displayName": "Pymakr",
   "description": "Adds a REPL console to the terminal that connects to your Pycom board. Run single files or synchronize your project files to your board.",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "publisher": "pycom",
   "repository": "https://github.com/pycom/pymakr-vsc",
   "icon": "images/logo.png",
@@ -166,17 +166,21 @@
     }
   },
   "scripts": {
-    "babel-build-dev": "babel src --out-dir lib --source-maps --watch",
-    "download-native": "pwsh -nop -f ./scripts/mp-download.ps1",
-    "build": "babel src --out-dir lib --source-maps",
+    "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
+    "download-native": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions 7.1.1 -IgnoreNodeVersion",
+    "build":     "babel src --out-dir lib --source-maps",
+    "build-dev": "babel src --out-dir lib --source-maps --watch",
     "package-prep": "npm install vsce -g",
-    "package": "vsce package"
+    "package": "vsce package",
+    "vscode:prepublish": "npm ci && npm prune"
+  },
+  "backup-required-to-include-binaries": {
+    "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
+    "vscode:prepublish": "npm ci && npm prune"
   },
   "old-scripts": {
     "test": "mocha test/*-test.js",
-    "test-ci": "mocha test/*-test.js -R xunit 2>&1 | tee test/TEST-report.xml",
-    "babel-watch": "babel src --out-dir lib",
-    "power": "pwsh -command {write-host -f green Hoi}"
+    "test-ci": "mocha test/*-test.js -R xunit 2>&1 | tee test/TEST-report.xml"
   },
   "dependencies": {
     "binascii": "0.0.2",
