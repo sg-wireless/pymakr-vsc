@@ -7,3 +7,6 @@ node_modules
 
 # ignore the vscode instance used in testing 
 .vscode-test/*
+
+# ignore the test package lock ( but not the package file) 
+test-electron/package-lock.json
