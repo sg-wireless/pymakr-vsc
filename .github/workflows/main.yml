@@ -36,8 +36,14 @@ jobs:
       # - name: Test Bindings
 
       # generic all up electron test
-      - name: Test Bindings
-        run: npx xvfb-maybe -e /dev/stdout -a npm run test-electron -- ${{ matrix.electron-ver }}
+      - name: Test Bindings (macOS/Windows)
+        if: matrix.os != 'ubuntu-latest'
+        run: npm run test-electron -- ${{ matrix.electron-ver }}
+
+      # electron tests with virtual x server
+      - name: Test Bindings (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: xvfb-run -e /dev/stdout -a npm run test-electron -- ${{ matrix.electron-ver }}
 
       # No tests written :(
       # - name: Run Tests
