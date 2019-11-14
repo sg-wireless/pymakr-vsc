@@ -12,7 +12,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        electron-ver: [6.1.2, 7.1.1]
     steps:
       - uses: actions/checkout@v1
 
@@ -33,6 +34,10 @@ jobs:
 
       # TODO
       # - name: Test Bindings
+
+      # generic all up electron test
+      - name: Test Bindings
+        run: npx xvfb-maybe -e /dev/stdout -a npm run test-electron -- ${{ matrix.electron-ver }}
 
       # No tests written :(
       # - name: Run Tests
