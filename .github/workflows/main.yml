@@ -11,6 +11,8 @@ jobs:
     name: Build ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      # run all os/electron tests even if one fails
+      fail-fast: false
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
         electron-ver: [6.1.2, 7.1.1]
