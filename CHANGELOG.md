@@ -1,12 +1,13 @@
 
-## 1.1.6-beta - Stability improvments 
-- update to serialport 8.0.5 
-- add automated tests for serialport & multiple electron versions 
+## 1.4.1 - Stability improvments 
+- Add automated tests for serialport & multiple electron versions 
+- Allign version number to Semver Major.Minor.Patch and with Pymakr-Atom versions
+- Update to serialport 8.0.5 
+- Update many other dependencies for sucurity and compatibility 
 
 ## 1.1.5 - Compatibility vscode 1.40
 - Windows (x64/ia32) and MacOS and Linx (x64) compatibility with vscode 1.40
 - Long term fix that should also prevent issues with future updates 
-
 
 ## 1.1.4 - Electron Multiplatform 
 - Provide improved stability by including serialport native modules for current and future electron versions. Fixes multiple serialport issues
