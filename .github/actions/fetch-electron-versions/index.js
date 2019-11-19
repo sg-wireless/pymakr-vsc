@@ -82,6 +82,7 @@ const run = async () => {
     );
     core.info("Resolved versions:", versions);
     core.setOutput("versions", versions);
+    core.exportVariable("ELECTRON_VERSIONS", versions);
   } catch (error) {
     core.setFailed(error.message);
   }
