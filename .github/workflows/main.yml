@@ -8,11 +8,14 @@ on:
 
 jobs:
   build:
-    name: Build ${{ matrix.os }}
+    name: Build ${{ matrix.os }} against ${{matrix.electron-ver}}
     runs-on: ${{ matrix.os }}
     strategy:
+      # run all os/electron tests even if one fails
+      fail-fast: false
       matrix:
-        os: [windows-latest ]# , ubuntu-latest, macos-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        electron-ver: [6.1.2, 7.1.1]
     steps:
       - uses: actions/checkout@v1
 
@@ -31,8 +34,18 @@ jobs:
       - name: Update Native Modules
         run: npm run download-native
 
-      # TODO
-      # - name: Test Bindings
+      - name: Build pymakr-vsc
+        run: npm run build
+
+      # generic all up electron test
+      - name: Test Bindings (macOS/Windows)
+        if: matrix.os != 'ubuntu-latest'
+        run: npm run test-electron -- ${{ matrix.electron-ver }}
+
+      # electron tests with virtual x server
+      - name: Test Bindings (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: xvfb-run -e /dev/stdout -a npm run test-electron -- ${{ matrix.electron-ver }}
 
       # No tests written :(
       # - name: Run Tests

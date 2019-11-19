@@ -11,24 +11,24 @@ While the ABI interface does not change for each version of electron/node, it do
 So over time , as VSCode is updated and moves to a newer version of electron, at some point in time the required ABI version will change, and unless a *correct* binding is available, pymakr will not be able to communicate to the serial port.store functionality
 Over the last year this has occurred several times, and each time it required considerable time and manual effort to restore functionality.
 
-
-
 **Current State:**  
 
-Branch | OS | Build  | Electron Test
---------|-|--------|--
-master | |![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=master)
- " | Windows | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=master&jobName=Build%20windows-latest )
-  " | Linux | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=master&jobName=Build%20ubuntu-latest )
- "| MacOS | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=master&jobName=Build%20macos-latest )
+Branch | OS |CPU| Build  & Electron Test | Unit Testing
+--------|-|-|-------|--
+main | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main) |
+ " | Windows | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20windows-latest )
+ " | Linux | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20ubuntu-latest )
+ "| MacOS | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=main&jobName=Build%20macos-latest )
  ||
-fix/Serialport_804 || ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804 )
- " | Windows | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20windows-latest )
-  " | Linux | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20ubuntu-latest )
- "| MacOS | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20macos-latest )
-
-
-
+develop | ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=develop ) |
+ " | Windows | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=develop&jobName=Build%20windows-latest )
+ " | Linux | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=develop&jobName=Build%20ubuntu-latest )
+ "| MacOS | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=develop&jobName=Build%20macos-latest )
+ ||
+fix/Serialport_804 |![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804 )|
+ " | Windows | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20windows-latest )
+ " | Linux | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20ubuntu-latest )
+ "| MacOS | x64| ![Build Status](https://github.com/Josverl/pymakr-vsc/workflows/Build%20Pymakr/badge.svg?branch=fix/SerialMultiPlatform_804&jobName=Build%20macos-latest )
 
 ## Solution: Include native modules for multiple platforms, and future versions 
 
