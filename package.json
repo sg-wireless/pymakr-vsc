@@ -209,7 +209,7 @@
     "telnet-client": "^0.13.0",
     "typescript": "^2.0.3",
     "utf8": "^3.0.0",
-    "xterm": "^2.9.2"
+    "xterm": "^3.8.1"
   },
   "devDependencies": {
     "@types/mocha": "^2.2.32",
