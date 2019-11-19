@@ -31,8 +31,9 @@ jobs:
           npm add prebuild-install --save-dev
           npm install --no-audit
 
-      - name: Update Native Modules
-        run: npm run download-native
+#      todo: fix errors in running prebuild-install in Action runners 
+#      - name: Update Native Modules
+#        run: npm run download-native
 
       - name: Build pymakr-vsc
         run: npm run build
