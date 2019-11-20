@@ -40,6 +40,8 @@ jobs:
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
         run: echo "$STEPS_CONTEXT"
+      - name: Dump ELECTRON_VERSIONS
+        run: echo "$ELECTRON_VERSIONS"
       - name: Dump runner context
         env:
           RUNNER_CONTEXT: ${{ toJson(runner) }}

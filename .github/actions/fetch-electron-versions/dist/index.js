@@ -551,7 +551,7 @@ const resolveElectronVersion = async tag => {
   let content = atob(response.data.content).split("\n");
   let version = content[1].split("target ")[1];
   version = version.substring(1, version.length - 1);
-  core.info("Found electron tag: ", version);
+  core.info(`Found electron tag: ${version}`);
   return {
     tag: tag,
     runtime_version: version
@@ -586,7 +586,7 @@ const getVSCodeTags = async (count = 3) => {
   });
   // Take 'count' most recent versions
   valid_tags = Array.from(valid_tags.slice(0, count - 1), i => i.name);
-  core.debug("Valid tags:", valid_tags);
+  core.debug(`Valid tags: ${valid_tags}`);
 
   // Prepend master tag
   const tags = ["master", ...valid_tags];
@@ -598,13 +598,13 @@ const run = async () => {
     // Fetch git tags from VSCode Repo
     const numVersions = core.getInput("max-count") || 3;
     const tags = await getVSCodeTags(numVersions);
-    core.info("Found VSCode Tags:", tags);
+    core.info(`Found VSCode Tags: ${tags}`);
     // Resolve Electron Versions
-    const versions = await Promise.all(
-      tags.map(i => resolveElectronVersion(i))
-    );
-    core.info("Resolved versions:", versions);
+    let versions = await Promise.all(tags.map(i => resolveElectronVersion(i)));
+    versions = JSON.stringify(versions);
+    core.info(`Results: ${versions}`);
     core.setOutput("versions", versions);
+    core.exportVariable("ELECTRON_VERSIONS", versions);
   } catch (error) {
     core.setFailed(error.message);
   }
