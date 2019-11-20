@@ -49,12 +49,14 @@ jobs:
       # generic all up electron test
       - name: Test Bindings (macOS/Windows)
         if: matrix.os != 'ubuntu-latest'
-        run: npm run test-electron -- "-electron_version ${{ steps.electron.outputs.versions }}"
+        shell: pwsh -nop -f {0}
+        run: ./test-electron/runtest.ps1 -electron_version ${{ steps.electron.outputs.versions }}
 
       # electron tests with virtual x server
       - name: Test Bindings (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: xvfb-run -e /dev/stdout -a npm run test-electron -- "-electron_version ${{ steps.electron.outputs.versions }}"
+        shell: pwsh -nop -f {0}
+        run: xvfb-run -e /dev/stdout -a ./test-electron/runtest.ps1 -electron_version ${{ steps.electron.outputs.versions }}
 
       # No tests written :(
       # - name: Run Tests

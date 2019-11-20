@@ -12,6 +12,18 @@ $root_folder = Join-Path $PSScriptRoot -ChildPath '..'
 $test_folder = $PSScriptRoot
 cd $root_folder
 
+# Ensure electron_version is a list
+if (!$electron_version.GetType().isArray) {
+    $electron_version = $electron_version -split ','
+}
+
+
+function ActionFail ($msg) {
+    # Fails Github Action and reports error message
+    # Useful for Github Action failure annotations
+    Write-Host "::error::$msg"
+    exit(1)
+}
 
 
 foreach ($version in $electron_version) { 
@@ -59,13 +71,12 @@ foreach ($version in $electron_version) {
     # &npx electron test/index.js
     #npm run test
     npx electron ./index.js
-    if ($LASTEXITCODE -ne 0 ){
-        Write-Warning "serial port cannot be loaded, try to re-build"
-
+    if ($LASTEXITCODE -ne 0 ) {
         #--- Root Project 
         cd $root_folder
-        exit(-1)
-    } else {
+        ActionFail "serial port cannot be loaded, try to re-build"
+    }
+    else {
         #--- Root Project 
         cd $root_folder
     }
