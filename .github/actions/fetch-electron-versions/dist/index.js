@@ -600,11 +600,10 @@ const run = async () => {
     const tags = await getVSCodeTags(numVersions);
     core.info(`Found VSCode Tags: ${tags}`);
     // Resolve Electron Versions
-    let versions = await Promise.all(tags.map(i => resolveElectronVersion(i)));
-    versions = JSON.stringify(versions);
-    core.info(`Results: ${versions}`);
+    const results = await Promise.all(tags.map(i => resolveElectronVersion(i)));
+    versions = Array.from(results, r => r.runtime_version).toString();
+    core.info(`Electron Versions: ${versions}`);
     core.setOutput("versions", versions);
-    core.exportVariable("ELECTRON_VERSIONS", versions);
   } catch (error) {
     core.setFailed(error.message);
   }

@@ -10,61 +10,13 @@ on:
   schedule:
     - cron: "* * 1 * *"
 
-env:
-  ELECTRON_VERSIONS: ""
-
 jobs:
-  setup:
-    name: Setup
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-        with:
-          fetch-depth: 1
-
-      - name: Fetch Electron Versions
-        id: electron
-        uses: ./.github/actions/fetch-electron-versions
-        with:
-          max-count: 3
-          git-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump ELECTRON_VERSIONS
-        run: echo "$ELECTRON_VERSIONS"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
-
   build:
-    name: "Build ${{ matrix.os }} against ${{ matrix.electron.runtime_version }} (VSC: ${{ matrix.electron.tag }})"
-    needs: [setup]
+    name: "Build ${{ matrix.os }}"
     runs-on: ${{ matrix.os }}
     strategy:
-      # run all os/electron tests even if one fails
-      fail-fast: false
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
-        electron: [7.1.1]
     steps:
       - uses: actions/checkout@v1
 
@@ -72,6 +24,13 @@ jobs:
         uses: actions/setup-node@v1.2.0
         with:
           node-version: "12"
+
+      - name: Fetch Electron Versions
+        id: electron
+        uses: ./.github/actions/fetch-electron-versions
+        with:
+          max-count: 3
+          git-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Dependencies
         shell: bash
@@ -90,12 +49,12 @@ jobs:
       # generic all up electron test
       - name: Test Bindings (macOS/Windows)
         if: matrix.os != 'ubuntu-latest'
-        run: npm run test-electron -- ${{ matrix.electron.runtime_version }}
+        run: npm run test-electron -- ${{ steps.electron.output.versions }}
 
       # electron tests with virtual x server
       - name: Test Bindings (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: xvfb-run -e /dev/stdout -a npm run test-electron -- ${{ matrix.electron.runtime_version }}
+        run: xvfb-run -e /dev/stdout -a npm run test-electron -- ${{ steps.electron.output.versions }}
 
       # No tests written :(
       # - name: Run Tests
@@ -113,7 +72,7 @@ jobs:
 
   deploy:
     name: Publish
-    needs: [setup, build]
+    needs: build
     # if current branch name contains release and is not a PR
     if: contains(github.ref, 'release') && github.event_name == 'push'
     runs-on: ubuntu-latest
