@@ -44,9 +44,6 @@ foreach ($version in $electron_version) {
     #npm install 
     write-host "TEST Project: install electron version $version"
     npm install electron@$version
-    if ($LASTEXITCODE -ne 0 ) {
-        ActionFail "Failed to install electron@$version!"
-    }
 
     #sanity check
     npx electron --version
