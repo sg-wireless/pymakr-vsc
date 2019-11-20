@@ -545,3 +545,5 @@ node_modules
 
 # ignore the test package lock ( but not the package file) 
 test-electron/package-lock.json
+
+.env
