@@ -8,7 +8,8 @@ on:
     paths-ignore:
       - "doc/**"
   schedule:
-    - cron: "* * 1 * *"
+    # Run everyday at 1am
+    - cron: "0 1 * * *"
 
 jobs:
   build:
