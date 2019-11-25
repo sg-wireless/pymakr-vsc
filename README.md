@@ -8,6 +8,7 @@ Pymakr enables you to communicate to your Pycom board using the build in command
 
 More info and documentation can be found on [docs.pycom.io](https://docs.pycom.io)
 
+
 ## Dependencies
 - **NodeJS installed on your system (6.9.5 or higher)** https://nodejs.org
 
