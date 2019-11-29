@@ -1,30 +1,72 @@
-# No settings & config files
+# no vscode and tools settings 
 .vscode/**
-.eslintrc.json
 .gitignore
+.eslintrc.json
+.babelrc
 jsconfig.json
 
-# DOCUMENTATION 
-#No github templates
-.github/*
-doc/*
+# no transpiler mapping files 
+**/*.map
 
-# TEST Artefacts 
+# no tests 
 .vscode-test/**
-#no tests
 test/**
 
-# BUILD Artefacts 
-# do not include the map files 
-**/*.map
+# no docs 
+doc/*
+vsc-extension-quickstart.md
+
+#todo: seperate source from files needed for terminal only , and remove src folder 
 
 # No native_modules; they have been added to the node_modules folder
 native_modules
+# un-needed serialport files 
+node_modules/@serialport/binding-abstract/**
+node_modules/@serialport/binding-mock/**
 
-# no achive/zip or locally built .vsix files in to root
-*.vsix
-*.zip
+# ino readme and changelog 
+node_modules/**/README.md
+node_modules/**/Readme.md
+node_modules/**/README.markdown
+node_modules/**/CHANG*.md
+node_modules/**/CODE_OF_CONDUCT.md
+node_modules/**/CONTRIBUTING.md
+node_modules/**/contributing.md
+node_modules/**/history.md
+node_modules/**/*_TEMPLATE.md
+node_modules/**/usage.txt
+node_modules/**/readme.md
+node_modules/**/readme.markdown
+node_modules/**/History.md
+node_modules/**/Readme.md
+node_modules/**/GOVERNANCE.md
 
-# DEV DEPENDENCIES 
-# do not include pwsh install module
-node_modules/pwsh
+node_modules/**/AUTHORS
+node_modules/**/AUTHORS.md
+node_modules/**/OWNERS
+
+#backup files
+node_modules/**/*.md~
+node_modules/**/*.bak
+
+#no tests 
+node_modules/**/test
+node_modules/**/mocha.opts
+node_modules/**/.coveralls.yml
+node_modules/mute-stream/coverage
+node_modules/**/test.js
+node_modules/**/test.log
+
+# not sure regarding debug ?
+node_modules/**/debug
+
+# no examples 
+node_modules/**/examples
+
+# no config files for linters / editors / travis
+node_modules/**/.travis.yml
+node_modules/**/.eslintrc
+node_modules/**/.editorconfig
+node_modules/**/.jshintrc
+node_modules/**/.nyc_output
+
