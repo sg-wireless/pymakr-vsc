@@ -20,9 +20,6 @@ vsc-extension-quickstart.md
 
 # No native_modules; they have been added to the node_modules folder
 native_modules
-# un-needed serialport files 
-node_modules/@serialport/binding-abstract/**
-node_modules/@serialport/binding-mock/**
 
 # ino readme and changelog 
 node_modules/**/README.md
@@ -56,9 +53,6 @@ node_modules/**/.coveralls.yml
 node_modules/mute-stream/coverage
 node_modules/**/test.js
 node_modules/**/test.log
-
-# not sure regarding debug ?
-node_modules/**/debug
 
 # no examples 
 node_modules/**/examples
