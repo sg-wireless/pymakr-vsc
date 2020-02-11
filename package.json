@@ -60,15 +60,15 @@
       },
       {
         "command": "pymakr.projectSettings",
-        "title": "Pymakr > Project Settings"
+        "title": "Pymakr > Project settings"
       },
       {
         "command": "pymakr.globalSettings",
-        "title": "Pymakr > Global Settings"
+        "title": "Pymakr > Global settings"
       },
       {
         "command": "pymakr.extra.getVersion",
-        "title": "Pymakr > Extra's > Get board version"
+        "title": "Pymakr > Extra's > Get firmware version"
       },
       {
         "command": "pymakr.extra.getWifiMac",
@@ -76,7 +76,7 @@
       },
       {
         "command": "pymakr.extra.getSerial",
-        "title": "Pymakr > Extra's > List Serial Ports"
+        "title": "Pymakr > Extra's > List serial ports"
       },
       {
         "command": "pymakr.help",

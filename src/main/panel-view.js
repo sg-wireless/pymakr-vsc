@@ -31,7 +31,7 @@ export default class PanelView extends EventEmitter {
     this.statusItems['disconnect'] = this.createStatusItem('disconnect',"$(x) Disconnect","pymakr.disconnect","Disconnect")
     this.statusItems['settings'] = this.createStatusItem('settings',"$(gear) Settings","pymakr.globalSettings","Global Pymakr settings")
     this.statusItems['projectsettings'] = this.createStatusItem('projectsettings',"$(gear) Project settings","pymakr.projectSettings","Project settings for Pymakr")
-    this.statusItems['getversion'] = this.createStatusItem('getversion',"$(tag) Get version","pymakr.extra.getVersion","Get board version")
+    this.statusItems['getversion'] = this.createStatusItem('getversion',"$(tag) Get version","pymakr.extra.getVersion","Get firmware version")
     this.statusItems['getssid'] = this.createStatusItem('getssid',"$(rss) Get WiFi SSID","pymakr.extra.getWifiMac","Get WiFi AP SSID")
     this.statusItems['listserial'] = this.createStatusItem('listserial',"$(list-unordered) List serialports","pymakr.extra.getSerial","List available serialports")
     this.statusItems['listcommands'] = this.createStatusItem('listcommands',"$(list-unordered) All commands","pymakr.listCommands","List all available pymakr commands")
@@ -58,12 +58,12 @@ export default class PanelView extends EventEmitter {
     items.push({ label: "Pymakr > Disconnect", description: "", cmd: "disconnect" });
     items.push({ label: "Pymakr > Run current file", description: "", cmd: "run" });
     items.push({ label: "Pymakr > Run current line or selection", description: "", cmd: "runselection" });    
-    items.push({ label: "Pymakr > Upload Project", description: "", cmd: "upload" });
+    items.push({ label: "Pymakr > Upload project", description: "", cmd: "upload" });
     items.push({ label: "Pymakr > Upload current file only", description: "", cmd: "upload_current_file" });
     items.push({ label: "Pymakr > Download Project", description: "", cmd: "download" });
-    items.push({ label: "Pymakr > Project Settings", description: "", cmd: "project_settings" });
+    items.push({ label: "Pymakr > Project settings", description: "", cmd: "project_settings" });
     items.push({ label: "Pymakr > Global Setting", description: "", cmd: "global_settings" });
-    items.push({ label: "Pymakr > Extra > Get board version", description: "", cmd: "get_version" });
+    items.push({ label: "Pymakr > Extra > Get firmware version", description: "", cmd: "get_version" });
     items.push({ label: "Pymakr > Extra > Get WiFi AP SSID", description: "", cmd: "get_wifi" });
     items.push({ label: "Pymakr > Extra > List Serial Ports", description: "", cmd: "get_serial" });
     items.push({ label: "Pymakr > Help", description: "", cmd: "help" });
@@ -125,8 +125,8 @@ export default class PanelView extends EventEmitter {
           this.setButton('upload','primitive-square','Cancel')
         }
       }else{
-        this.setButton('upload','triangle-up','Upload')
-        this.setButton('download','triangle-down','Download')
+        this.setButton("upload", 'primitive-square', "Upload");
+        this.setButton("download", "primitive-square", "Download");
       }
 
       this.setTitle('connected')
@@ -145,7 +145,7 @@ export default class PanelView extends EventEmitter {
     if(status == "connected"){
       icon = "check"
     }
-    this.setButton('status',icon,'Pycom Console')
+    this.setButton('status',icon,'Pymakr Console')
   }
 
 

@@ -11,7 +11,7 @@ export default class Term {
       this.port = parseInt(Math.random()*1000 + 1337)
       this.host = "127.0.0.1"
       this.term_buffer = ""
-      this.terminal_name = "Pycom Console"
+      this.terminal_name = "Pymakr Console"
       this.shellprompt = '>>> ';
       this.pyboard = pyboard
       this.logger = new Logger('Term')
