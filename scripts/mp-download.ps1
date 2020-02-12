@@ -192,7 +192,6 @@ function DownloadPrebuild {
             &"$root_folder\node_modules\.bin\prebuild-install.cmd" --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
         } else {
             # linux / mac : same command , slightly different path
-            node_modules/.bin/prebuild-install --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
             &"$root_folder/node_modules/.bin/prebuild-install" --runtime $runtime --target $version --arch $arch --platform $platform --tag-prefix $prefix
         }
     }  catch {

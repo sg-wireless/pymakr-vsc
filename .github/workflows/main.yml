@@ -71,22 +71,22 @@ jobs:
           name: pymakr-nightly.vsix
           path: ./pymakr-${{ github.sha }}.vsix
 
-  deploy:
-    name: Publish
-    needs: build
-    # if current branch name contains release and is not a PR
-    if: contains(github.ref, 'release') && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-
-      - name: Install Production Dependencies
-        run: |
-          npm ci
-          npm prune --production
-
-      - name: Package Extension
-        run: npx vsce package
-
-      - name: Publish Extension
-        run: npx vsce publish --pat ${{ secrets.VSCE_TOKEN }}
+#   deploy:
+#    name: Publish
+#    needs: build
+#    # if current branch name contains release and is not a PR
+#    if: contains(github.ref, 'release') && github.event_name == 'push'
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v1
+#
+#      - name: Install Production Dependencies
+#        run: |
+#          npm ci
+#          npm prune --production
+#
+#      - name: Package Extension
+#        run: npx vsce package
+#
+#      - name: Publish Extension
+#        run: npx vsce publish --pat ${{ secrets.VSCE_TOKEN }}
