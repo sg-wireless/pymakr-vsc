@@ -14,4 +14,9 @@ test-electron/package-lock.json
 
 .env
 
+node_modules/**/config.gypi
+node_modules/**/**/config.gypi
+native_modules/**/config.gypi
+native_modules/**/**/config.gypi
+
 .DS_Store
