@@ -12,6 +12,12 @@ jsconfig.json
 .vscode-test/**
 test/**
 
+node_modules/**/config.gypi
+node_modules/**/**/config.gypi
+native_modules/**/config.gypi
+native_modules/**/**/config.gypi
+
+
 # no docs 
 doc/*
 vsc-extension-quickstart.md
