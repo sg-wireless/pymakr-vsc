@@ -370,7 +370,6 @@ export default class Pymakr extends EventEmitter {
 
   getWifiMac(){
     var _this = this
-    console.log("triggered")
     if(!this.pyboard.connected){
       this.terminal.writeln("Please connect to your device")
       return
@@ -388,7 +387,6 @@ export default class Pymakr extends EventEmitter {
   getSerial(){
     var _this = this
     this.terminal.enter()
-
     PySerial.list(this.settings,function(list,manufacturers){
       _this.terminal.writeln("Found "+list.length+" serialport"+(list.length == 1 ? "" : "s"))
       for(var i=0;i<list.length;i++){
