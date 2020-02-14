@@ -370,12 +370,14 @@ export default class Pymakr extends EventEmitter {
 
   getWifiMac(){
     var _this = this
+    console.log("triggered")
     if(!this.pyboard.connected){
       this.terminal.writeln("Please connect to your device")
       return
     }
 
-    var command = "from network import WLAN; from binascii import hexlify; from os import uname; wlan = WLAN(); mac = hexlify(wlan.mac()).decode('ascii'); device = uname().sysname;print('WiFi AP SSID: %(device)s-wlan-%(mac)s' % {'device': device, 'mac': mac[len(mac)-4:len(mac)]})"
+    var command =
+      "from network import WLAN; from binascii import hexlify; from os import uname; wlan = WLAN(); mac = hexlify(wlan.mac().ap_mac).decode('ascii'); device = uname().sysname;print('WiFi AP SSID: %(device)s-wlan-%(mac)s' % {'device': device, 'mac': mac[len(mac)-4:len(mac)]})";
     _this.pyboard.send_wait_for_blocking(command+'\n\r',command,function(err){
       if(err){
         _this.logger.error("Failed to send command: "+command)
