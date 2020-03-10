@@ -1,10 +1,12 @@
 
-## 1.1.6-beta - Stability improvments 
-- update to serialport 8.0.5 
-- add automated tests for serialport & multiple electron versions 
+## 1.1.6 - Stability improvements 
+- Add automated tests for serialport & multiple electron versions [@josverl]
+- Updated to serialport 8.0.5 [@josverl]
+- Updated Pymakr Icon 
+- Compatibility fix with VSC 1.43.0
 
 ## 1.1.5 - Compatibility vscode 1.40
-- Windows (x64/ia32) and MacOS and Linx (x64) compatibility with vscode 1.40
+- Windows (x64/ia32) and MacOS and Linx (x64) compatibility with VSC 1.40
 - Long term fix that should also prevent issues with future updates 
 
 
@@ -33,8 +35,8 @@
 - Smaller package size by improving the way the precompiled serialport library is stored 
 - Detecting root folder of the board to fix compatibility with non-pycom boards [@josverl]
 - Made Nodejs version check blocking
-- Compability fix with atom project settings
-- Dependancy vulnerability fix
+- Compatibility fix with atom project settings
+- Dependency vulnerability fix
 
 ## 1.0.7 - minor improvements
 - Fixed issue with error handling when sync_folder is not set correctly
