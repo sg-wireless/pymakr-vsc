@@ -1,6 +1,6 @@
 - Update package.json with the new version number
 - Upload to master branch
 - Create a vsix file using the commandline: ```vsce package```
-- Login tot he marketplace with pycomiot@outlook.com
+- Login to the marketplace with pycomiot@outlook.com
 - Go to https://marketplace.visualstudio.com/manage/publishers/pycom
 - Update package by uploading the vsix
