@@ -8,6 +8,7 @@ Pymakr enables you to communicate to your Pycom board using the build in command
 
 More info and documentation can be found on [docs.pycom.io](https://docs.pycom.io)
 
+
 ## Dependencies
 - **NodeJS installed on your system (6.9.5 or higher)** https://nodejs.org
 
@@ -15,19 +16,19 @@ More info and documentation can be found on [docs.pycom.io](https://docs.pycom.i
 
 The terminal will open by default after the package is installed. Use the `Pymakr > Global settings` or `Pymakr > Project settings` command to setup your connection. After changing the settings, use the `Connect` command to connect using the new settings.
 
-At any time, use the `Pycom Console` button on the left bottom to toggle the terminal. When closing, the board is disconnected, indicated by the `x` icon in the button. When manually closing the terminal (`x` on the right top of the terminal) the connection stays active. Press the `Pycom Console` button or use the `Disconnect` command to close the connection.
+At any time, use the `Pymakr Console` button on the left bottom to toggle the terminal. When closing, the board is disconnected, indicated by the `x` icon in the button. When manually closing the terminal (`x` on the right top of the terminal) the connection stays active. Press the `Pymakr Console` button or use the `Disconnect` command to close the connection.
 
 ## Commands
 
 - Connect (ctrl-shift-c)           : Connects to the board
 - Disconnect                       : Disconnects from the board
 - Global settings (ctrl-shift-g)   : Opens the installation-wide settings file
-- Project Settings                 : Opens project specific settings that overwrite global settings
+- Project settings                 : Opens project specific settings that overwrite global settings
 - Run (ctrl-shift-r)               : Runs currently open file on the board ()
 - Run selection (ctrl-shift-enter) : Rns the current selected line on the board
 - Sync (ctrl-shift-s)              : Synchronizes the complete project to the board, using the sync folder settings
 - List serial ports                : Lists all available serial ports and copies the first one to the clipboard
-- Get board version                : Displays firmware version of the connected board
+- Get firmware version             : Displays firmware version of the connected board
 - Get WiFi SSID                    : Gets the SSID of the boards WiFi access point
 - Help                             : Print this list of commands and settings
 

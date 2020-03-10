@@ -2,11 +2,31 @@
 {
     "version": "0.1.0",
     "configurations": [
+    {
+        "type": "node",
+        "request": "launch",
+        "name": "Electron-Test Index",
+        "runtimeExecutable": "C:\\develop\\pymakr-vsc\\test\\test-electron\\node_modules\\electron\\dist\\electron.exe",
+        
+        "program": "C:\\develop\\pymakr-vsc\\test\\test-electron\\index.js"
+    },
         {
-            "type": "node",
+            "name": "PowerShell Launch Current File w/Args Prompt",
+            "type": "PowerShell",
             "request": "launch",
-            "name": "Launch install",
-            "program": "${workspaceFolder}/scripts/install.js"
+            "script": "${file}",
+            "args": [
+                "${command:SpecifyScriptArgs}"
+            ],
+            "cwd": "${workspacefolder}"
+        },
+        {
+            "name": "PowerShell Launch Current File",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "${file}",
+            "args": [],
+            "cwd": "${workspaceFolder}"
         },
         {
             "type": "node",

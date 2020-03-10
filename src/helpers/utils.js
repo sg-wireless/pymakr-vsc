@@ -43,8 +43,8 @@ export default class Utils {
           }
       })
     }catch(e){
-      _this.logger.error("Failed to execute worker:")
-      _this.logger.error(e)
+      console.error('Failed to execute worker:');
+      console.error(e)
       end(e)
     }
   }

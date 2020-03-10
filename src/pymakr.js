@@ -375,7 +375,8 @@ export default class Pymakr extends EventEmitter {
       return
     }
 
-    var command = "from network import WLAN; from binascii import hexlify; from os import uname; wlan = WLAN(); mac = hexlify(wlan.mac()).decode('ascii'); device = uname().sysname;print('WiFi AP SSID: %(device)s-wlan-%(mac)s' % {'device': device, 'mac': mac[len(mac)-4:len(mac)]})"
+    var command =
+      "from network import WLAN; from binascii import hexlify; from os import uname; wlan = WLAN(); mac = hexlify(wlan.mac().ap_mac).decode('ascii'); device = uname().sysname;print('WiFi AP SSID: %(device)s-wlan-%(mac)s' % {'device': device, 'mac': mac[len(mac)-4:len(mac)]})";
     _this.pyboard.send_wait_for_blocking(command+'\n\r',command,function(err){
       if(err){
         _this.logger.error("Failed to send command: "+command)
@@ -386,7 +387,6 @@ export default class Pymakr extends EventEmitter {
   getSerial(){
     var _this = this
     this.terminal.enter()
-
     PySerial.list(this.settings,function(list,manufacturers){
       _this.terminal.writeln("Found "+list.length+" serialport"+(list.length == 1 ? "" : "s"))
       for(var i=0;i<list.length;i++){
