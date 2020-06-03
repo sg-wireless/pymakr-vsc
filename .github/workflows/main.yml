@@ -61,15 +61,15 @@ jobs:
       # - name: Run Tests
       #   run: npm run test
 
-      - name: Package Extension
-        run: npx vsce package -o pymakr-${{ github.sha }}.vsix
+      # - name: Package Extension
+      #   run: npx vsce package -o pymakr-${{ github.sha }}.vsix
 
-      - name: Upload VSIX
-        if: github.event_name == 'schedule'
-        uses: actions/upload-artifact@master
-        with:
-          name: pymakr-nightly.vsix
-          path: ./pymakr-${{ github.sha }}.vsix
+      # - name: Upload VSIX
+      #   if: github.event_name == 'schedule'
+      #   uses: actions/upload-artifact@master
+      #   with:
+      #     name: pymakr-nightly.vsix
+      #     path: ./pymakr-${{ github.sha }}.vsix
 
 #   deploy:
 #    name: Publish
