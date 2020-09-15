@@ -1,8 +1,8 @@
     # Native module binding
-    @serialport/bindings@8.0.4
-    
+    @serialport/bindings@9.0.1
+
     # Target
-    runtime     : electron 
+    runtime     : electron
     version     : 9.3.0
     platform    : win32
     arch        : x64
