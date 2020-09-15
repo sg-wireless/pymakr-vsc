@@ -9,6 +9,6 @@
   "author": "Jos Verlinde",
   "license": "MIT",
   "dependencies": {
-    "electron": "^6.1.2"
+    "electron": "^7.2.4"
   }
 }
