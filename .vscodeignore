@@ -1,16 +1,20 @@
-# no vscode and tools settings 
+# no vscode and tools settings
 .vscode/**
 .gitignore
 .eslintrc.json
 .babelrc
 jsconfig.json
 
-# no transpiler mapping files 
+# no transpiler mapping files
 **/*.map
 
-# no tests 
+# no tests
 .vscode-test/**
 test/**
+test-electron/**
+
+# scripts
+scripts/**
 
 node_modules/**/config.gypi
 node_modules/**/**/config.gypi
@@ -18,16 +22,16 @@ native_modules/**/config.gypi
 native_modules/**/**/config.gypi
 
 
-# no docs 
+# no docs
 doc/*
 vsc-extension-quickstart.md
 
-#todo: seperate source from files needed for terminal only , and remove src folder 
+#todo: seperate source from files needed for terminal only , and remove src folder
 
 # No native_modules; they have been added to the node_modules folder
 native_modules
 
-# ino readme and changelog 
+# ino readme and changelog
 node_modules/**/README.md
 node_modules/**/Readme.md
 node_modules/**/README.markdown
@@ -52,7 +56,7 @@ node_modules/**/OWNERS
 node_modules/**/*.md~
 node_modules/**/*.bak
 
-#no tests 
+#no tests
 node_modules/**/test
 node_modules/**/mocha.opts
 node_modules/**/.coveralls.yml
@@ -60,7 +64,7 @@ node_modules/mute-stream/coverage
 node_modules/**/test.js
 node_modules/**/test.log
 
-# no examples 
+# no examples
 node_modules/**/examples
 
 # no config files for linters / editors / travis
@@ -69,4 +73,3 @@ node_modules/**/.eslintrc
 node_modules/**/.editorconfig
 node_modules/**/.jshintrc
 node_modules/**/.nyc_output
-
