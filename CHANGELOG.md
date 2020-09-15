@@ -1,16 +1,19 @@
+## 1.1.7 - Compatibility vscode 1.49
+- Updated to serialport 9.0.1
+- Compatibility fix with VSC 1.490
 
-## 1.1.6 - Stability improvements 
+## 1.1.6 - Stability improvements
 - Add automated tests for serialport & multiple electron versions [@josverl]
 - Updated to serialport 8.0.5 [@josverl]
-- Updated Pymakr Icon 
+- Updated Pymakr Icon
 - Compatibility fix with VSC 1.43.0
 
 ## 1.1.5 - Compatibility vscode 1.40
 - Windows (x64/ia32) and MacOS and Linx (x64) compatibility with VSC 1.40
-- Long term fix that should also prevent issues with future updates 
+- Long term fix that should also prevent issues with future updates
 
 
-## 1.1.4 - Electron Multiplatform 
+## 1.1.4 - Electron Multiplatform
 - Provide improved stability by including serialport native modules for current and future electron versions. Fixes multiple serialport issues
 
 ## 1.1.3 - Compatibility vscode 1.36
@@ -21,7 +24,7 @@
 
 ## 1.1.2 - Bugfixes
 - Solving major issue with new serialport precompiles. Bindings.node is now moved to the correct folder on first start
-- Bugfix for reading local files wihout extension (when doing upload or download). 
+- Bugfix for reading local files wihout extension (when doing upload or download).
 - Added 'env' and 'venv' folders to default ignore list
 - Added missing rxjs dependancy
 
@@ -32,7 +35,7 @@
 ## 1.1.0 - Improvements
 - Multiple download and upload stability improvements and bugfixes [@josverl]
 - Multiple bugfixes in UI and other code [@josverl]
-- Smaller package size by improving the way the precompiled serialport library is stored 
+- Smaller package size by improving the way the precompiled serialport library is stored
 - Detecting root folder of the board to fix compatibility with non-pycom boards [@josverl]
 - Made Nodejs version check blocking
 - Compatibility fix with atom project settings
@@ -58,7 +61,7 @@
 - Multiple bugfixes
 
 ## 1.0.4
-- Fix re-connection to board 
+- Fix re-connection to board
 - Prevent generic boards to hang in boatloader [@Josverl]
 - Added additional dev info to readme file [@Josverl]
 - Rebuild serialport libraries for latest vscode version (1.28.2)
