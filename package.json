@@ -2,7 +2,7 @@
   "name": "pymakr",
   "displayName": "Pymakr",
   "description": "Adds a REPL console to the terminal that connects to your Pycom board. Run single files or synchronize your project files to your board.",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "publisher": "pycom",
   "repository": "https://github.com/pycom/pymakr-vsc",
   "icon": "images/logo.png",
