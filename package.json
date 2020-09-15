@@ -167,7 +167,7 @@
   },
   "scripts": {
     "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
-    "download-native": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions 7.1.1 -IgnoreNodeVersion",
+    "download-native": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions 9.2.1 -IgnoreNodeVersion",
     "build": "babel src --out-dir lib --source-maps",
     "build-dev": "babel src --out-dir lib --source-maps --watch",
     "test-electron": "pwsh -nop -f ./test-electron/runtest.ps1",
