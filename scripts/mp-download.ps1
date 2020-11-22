@@ -4,13 +4,7 @@
     DefaultParameterSetName='download'
 )]
 param (
-
-    # ToDo: read module version from package.json
-    # the (sub module = @serialport/bindings@9.0.1)
-    $module_name = '@serialport/bindings',
-    $module_ver  = '9.0.1',
-
-    # Copy
+    # Copy 
     [Parameter(ParameterSetName='copyonly')]
     [switch]$copyonly,
 
@@ -81,6 +75,13 @@ param (
 
 
 )
+
+# read module version from package.json 
+# the (sub module = @serialport/bindings@8.0.4)
+
+$module_name = '@serialport/bindings'
+$pkg = Get-Content .\package-lock.json | Convertfrom-Json
+$module_ver = $pkg.dependencies.'@serialport/bindings'.version
 
 # #########################################################################################################
 #  parameter fixup,  expect array @('x.x.x'), convert from string passed by npm
@@ -233,7 +234,7 @@ param(
         # from : \@serialport\bindings\build\Release\bindings.node
         # to a folder per "abi<ABI_ver>-<platform>-<arch>"
         switch ($loadmethod) {
-            'node' {        # use the node version for the path ( implemended by binding)
+            'node' {        # use the node version for the path ( implemented by binding) 
                             # supported by ('binding')('serialport')
                             # <root>/node_modules/@serialport/bindings/compiled/<version>/<platform>/<arch>/binding.node
                             # Note: runtime is not used in path
@@ -241,7 +242,7 @@ param(
 
                             # make sure the containing folder exists
                             $dest_folder = (split-Path $dest_file -Parent)
-                            new-item dest_folder -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+                            new-item $dest_folder -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
                             # copy all *.node native bindings
                             Get-ChildItem $src_folder -Filter "*.node"       | Copy-Item -Destination $dest_folder -Container
                             # additional files to help identify the binary in the future
@@ -391,6 +392,8 @@ switch ($PSCmdlet.ParameterSetName)
         #    npm install prebuild-install --save-dev
         # (c) jos_verlinde@hotmail.com
         # licence MIT
+        
+        npm update node-abi
 
         foreach ($mod in "node-abi","prebuild-install","serialport" ){
             if(-not ( $package.devDependencies."$mod" -or $package.dependencies."$mod") ) {
@@ -513,6 +516,7 @@ switch ($PSCmdlet.ParameterSetName)
             CopyNativeModules $native_modules  (Join-Path $root_folder 'node_modules')
         }
         Write-Host -ForegroundColor blue "Platform bindings are listed in: $docs_file"
+        exit 0
     }
 
     Default {
