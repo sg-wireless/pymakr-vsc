@@ -1,3 +1,7 @@
+## 1.1.7 - Compatibility vscode 1.53
+- Updated node-abi to latest version
+- Compatibility fix with VSC 1.53.0
+
 ## 1.1.7 - Compatibility vscode 1.49
 - Updated to serialport 9.0.1
 - Compatibility fix with VSC 1.490
