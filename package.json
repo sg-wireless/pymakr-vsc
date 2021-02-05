@@ -2,7 +2,7 @@
   "name": "pymakr",
   "displayName": "Pymakr",
   "description": "Adds a REPL console to the terminal that connects to your Pycom board. Run single files or synchronize your project files to your board.",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "publisher": "pycom",
   "repository": "https://github.com/pycom/pymakr-vsc",
   "icon": "images/logo.png",
@@ -12,7 +12,7 @@
     "theme": "light"
   },
   "engines": {
-    "vscode": "^1.36.0"
+    "vscode": "^1.53.0"
   },
   "keywords": [
     "pycom",
@@ -167,7 +167,7 @@
   },
   "scripts": {
     "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
-    "download-native": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions 9.2.1 -IgnoreNodeVersion",
+    "download-native": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions 11.2.1 -IgnoreNodeVersion",
     "build": "babel src --out-dir lib --source-maps",
     "build-dev": "babel src --out-dir lib --source-maps --watch",
     "test-electron": "pwsh -nop -f ./test-electron/runtest.ps1",
@@ -190,13 +190,13 @@
     "copy-paste": "^1.3.0",
     "crypto-js": "^3.1.9-1",
     "debug": "^4.1.1",
-    "electron": "^6.1.2",
+    "electron": "^11.2.1",
     "electron-rebuild": "^1.8.6",
     "element-resize-detector": "1.1.15",
     "lie": "^3.3.0",
     "nan": "2.14.0",
     "ncp": "^2.0.0",
-    "node-abi": "^2.19.1",
+    "node-abi": "^2.19.3",
     "object.assign": "^4.1.0",
     "ora": "^4.0.3",
     "promirepl": "^2.0.1",
