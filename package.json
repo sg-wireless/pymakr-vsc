@@ -220,7 +220,7 @@
     "chai": "^4.2.0",
     "eslint": "^6.7.1",
     "mocha": "^6.2.2",
-    "prebuild-install": "^5.3.3",
+    "prebuild-install": "^6.0.0",
     "vscode": "^1.1.36"
   }
 }
