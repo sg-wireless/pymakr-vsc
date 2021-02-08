@@ -111,7 +111,7 @@ export default class PySerial {
   }
 
   static isSerialPort(name, cb) {
-    if (name && (name.substr(0, 3) == 'COM' || name.indexOf('tty') > -1 || name.indexOf('/dev') > -1)) {
+    if (name && name.substr && (name.substr(0, 3) == 'COM' || name.indexOf('tty') > -1 || name.indexOf('/dev') > -1)) {
       cb(true);
     } else {
       fs.access(name, fs.constants.F_OK, function(err) {
