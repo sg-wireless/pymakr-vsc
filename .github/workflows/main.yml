@@ -17,12 +17,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest, ubuntu-20.04]
     steps:
       - uses: actions/checkout@v1
 
       - name: Setup node
-        uses: actions/setup-node@v1.2.0
+        uses: actions/setup-node@v1
         with:
           node-version: "12"
 
@@ -30,15 +30,23 @@ jobs:
         id: electron
         uses: ./.github/actions/fetch-electron-versions
         with:
-          max-count: 3
+          max-count: 5
           git-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Dependencies
         shell: bash
         run: |
+          echo '::group::npm install npx'
           npm install npx
+          echo '::endgroup::'
+
+          echo '::group::npm add prebuild-install'
           npm add prebuild-install --save-dev
+          echo '::endgroup::'
+
+          echo '::group::npm install --no-audit'
           npm install --no-audit
+          echo '::endgroup::'
 
       #      todo: fix errors in running prebuild-install in Action runners
       #      - name: Update Native Modules
@@ -49,12 +57,12 @@ jobs:
 
       # generic all up electron test
       - name: Test Bindings (macOS/Windows)
-        if: matrix.os != 'ubuntu-latest'
+        if: contains(matrix.os,'ubuntu') == false
         run: npm run test-electron -- ${{ steps.electron.outputs.versions }}
 
       # electron tests with virtual x server
       - name: Test Bindings (Linux)
-        if: matrix.os == 'ubuntu-latest'
+        if: contains(matrix.os,'ubuntu')
         run: xvfb-run -e /dev/stdout -a npm run test-electron -- ${{ steps.electron.outputs.versions }}
 
       # No tests written :(
