@@ -6,9 +6,9 @@
 param (
 
     # ToDo: read module version from package.json
-    # the (sub module = @serialport/bindings@9.0.1)
+    # the (sub module = @serialport/bindings@9.0.6)
     $module_name = '@serialport/bindings',
-    $module_ver  = '9.0.1',
+    $module_ver  = '9.0.6',
 
     # Copy
     [Parameter(ParameterSetName='copyonly')]
