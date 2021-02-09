@@ -50,7 +50,8 @@ export default class PySerial {
 
     var timeout = null;
     console.log('Trying to open stream');
-    this.stream.open(function() {
+    this.stream.open(function(e) {
+      console.log(e)
       _this.sendPing(function(err) {
         if (!err) {
           clearTimeout(timeout);
