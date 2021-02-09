@@ -218,6 +218,7 @@
     "babel-core": "^6.26.3",
     "babel-preset-es2015": "6.24.1",
     "chai": "^4.2.0",
+    "electron-rebuild": "^2.3.5",
     "eslint": "^6.7.1",
     "mocha": "^6.2.2",
     "prebuild-install": "^6.0.0",
