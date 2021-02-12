@@ -43,7 +43,7 @@ foreach ($version in $electron_version) {
 
     #npm install
     write-host "TEST Project: install electron version $version"
-    npm install electron@$version --silent --quite
+    npm install electron@$version --silent --quiet
 
     #sanity check
     npx electron --version
@@ -52,7 +52,7 @@ foreach ($version in $electron_version) {
     cd $root_folder
 
     Write-Host "Root Project: Prep for CI Install (npm ci)"
-    npm ci --silent --quite
+    npm ci --silent --quiet
     npm prune
 
     # also make sure that the native modules are in place for the test
