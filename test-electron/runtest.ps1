@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 param(
-  $electron_version = ('7.3.2' , '9.3.3', '11.2.1')
+  $electron_version = ('7.3.2' , '11.2.1')
 )
 # '4.2.5','5.0.10','6.1.2','9.3.3','9.2.1', '11.2.1'
 
@@ -68,17 +68,12 @@ foreach ($version in $electron_version) {
     copy-item $test_folder/bindings_1.5.0/bindings.js $root_folder/node_modules/bindings/bindings.js -force -Verbose
 
     write-host "run test app"
-    # &npx electron test/index.js
-    #npm run test
+
     npx electron ./index.js
+    cd $root_folder
+
     if ($LASTEXITCODE -ne 0 ) {
-        #--- Root Project
-        cd $root_folder
         ActionFail "serial port cannot be loaded, try to re-build"
-    }
-    else {
-        #--- Root Project
-        cd $root_folder
     }
 
 }
