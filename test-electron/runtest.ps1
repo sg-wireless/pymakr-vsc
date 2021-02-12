@@ -65,7 +65,8 @@ foreach ($version in $electron_version) {
     # use a version of bindings module that provides some more output on what is loaded
     # todo: check that the root project is indeed using the same version or build a path version
     # hardcoded for bindings@1.5.0
-    copy-item $test_folder/bindings_1.5.0/bindings.js $root_folder/node_modules/bindings/bindings.js -force -Verbose
+    # copy-item $test_folder/bindings_1.5.0/bindings.js $root_folder/node_modules/bindings/bindings.js -force -Verbose
+    # make sure you have bindings installed on teh root_folder level
 
     write-host "run test app"
 
