@@ -30,6 +30,7 @@ jobs:
         shell: bash
         run: |
           cd ./.github/actions/fetch-electron-versions
+          npm install
           npm run build
           cd ../../../
 
