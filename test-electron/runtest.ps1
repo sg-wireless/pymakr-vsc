@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 param(
-  $electron_version = ('7.3.2' , ' 9.3.3', '11.2.1')
+  $electron_version = ('7.3.2' , '9.3.3', '11.2.1')
 )
 # '4.2.5','5.0.10','6.1.2','9.3.3','9.2.1', '11.2.1'
 
@@ -43,7 +43,7 @@ foreach ($version in $electron_version) {
 
     #npm install
     write-host "TEST Project: install electron version $version"
-    npm install electron@$version
+    npm install electron@$version --silent --quite
 
     #sanity check
     npx electron --version
@@ -52,7 +52,7 @@ foreach ($version in $electron_version) {
     cd $root_folder
 
     Write-Host "Root Project: Prep for CI Install (npm ci)"
-    npm ci
+    npm ci --silent --quite
     npm prune
 
     # also make sure that the native modules are in place for the test
@@ -82,5 +82,6 @@ foreach ($version in $electron_version) {
     }
 
 }
+
 #finally
 exit(0)
