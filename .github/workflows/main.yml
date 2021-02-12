@@ -30,7 +30,7 @@ jobs:
         id: electron
         uses: ./.github/actions/fetch-electron-versions
         with:
-          max-count: 5
+          max-count: 3
           git-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Dependencies
