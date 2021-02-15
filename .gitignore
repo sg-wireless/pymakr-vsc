@@ -20,3 +20,6 @@ native_modules/**/config.gypi
 native_modules/**/**/config.gypi
 
 .DS_Store
+
+test-electron/package-lock.json
+.github/actions/fetch-electron-versions/dist
