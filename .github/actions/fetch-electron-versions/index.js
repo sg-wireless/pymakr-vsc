@@ -66,7 +66,7 @@ const getVSCodeTags = async (count = 3) => {
   core.debug(`Valid tags: ${valid_tags}`);
 
   // Prepend master tag
-  const tags = ["master", ...valid_tags];
+  const tags = ["main", ...valid_tags];
   return tags;
 };
 
