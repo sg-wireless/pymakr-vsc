@@ -1,3 +1,6 @@
+## 1.1.10 - Compatibility vscode 1.53
+- fix binding for windows
+
 ## 1.1.9 - Compatibility vscode 1.53
 - fix binding issue
 
