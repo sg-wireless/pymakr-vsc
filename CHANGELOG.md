@@ -1,3 +1,6 @@
+## 1.1.9 - Compatibility vscode 1.53
+- fix binding issue
+
 ## 1.1.8 - Compatibility vscode 1.53
 - Updated node-abi to latest version
 - Compatibility fix with VSC 1.53.0
