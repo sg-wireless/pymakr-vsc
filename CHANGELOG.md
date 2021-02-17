@@ -1,5 +1,5 @@
 ## 1.1.11 - Compatibility vscode 1.53
-- fix binding for linux
+- fix binding for Linux
 
 ## 1.1.10 - Compatibility vscode 1.53
 - fix binding for windows
