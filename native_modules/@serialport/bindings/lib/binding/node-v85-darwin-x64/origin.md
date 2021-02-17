@@ -3,7 +3,7 @@
 
     # Target
     runtime     : electron
-    version     : 4.2.5
-    platform    : win32
+    version     : 11.2.3
+    platform    : darwin
     arch        : x64
-    abi         : 69
+    abi         : 85

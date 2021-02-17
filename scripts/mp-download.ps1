@@ -4,7 +4,7 @@
     DefaultParameterSetName='download'
 )]
 param (
-    # Copy 
+    # Copy
     [Parameter(ParameterSetName='copyonly')]
     [switch]$copyonly,
 
@@ -76,7 +76,7 @@ param (
 
 )
 
-# read module version from package.json 
+# read module version from package.json
 # the (sub module = @serialport/bindings@8.0.4)
 
 $module_name = '@serialport/bindings'
@@ -234,7 +234,7 @@ param(
         # from : \@serialport\bindings\build\Release\bindings.node
         # to a folder per "abi<ABI_ver>-<platform>-<arch>"
         switch ($loadmethod) {
-            'node' {        # use the node version for the path ( implemented by binding) 
+            'node' {        # use the node version for the path ( implemented by binding)
                             # supported by ('binding')('serialport')
                             # <root>/node_modules/@serialport/bindings/compiled/<version>/<platform>/<arch>/binding.node
                             # Note: runtime is not used in path
@@ -392,7 +392,7 @@ switch ($PSCmdlet.ParameterSetName)
         #    npm install prebuild-install --save-dev
         # (c) jos_verlinde@hotmail.com
         # licence MIT
-        
+
         npm update node-abi
 
         foreach ($mod in "node-abi","prebuild-install","serialport" ){
