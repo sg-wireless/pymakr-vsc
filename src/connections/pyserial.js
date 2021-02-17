@@ -50,7 +50,8 @@ export default class PySerial {
 
     var timeout = null;
     console.log('Trying to open stream');
-    this.stream.open(function() {
+    this.stream.open(function(e) {
+      console.log(e)
       _this.sendPing(function(err) {
         if (!err) {
           clearTimeout(timeout);
@@ -111,7 +112,7 @@ export default class PySerial {
   }
 
   static isSerialPort(name, cb) {
-    if (name && (name.substr(0, 3) == 'COM' || name.indexOf('tty') > -1 || name.indexOf('/dev') > -1)) {
+    if (name && name.substr && (name.substr(0, 3) == 'COM' || name.indexOf('tty') > -1 || name.indexOf('/dev') > -1)) {
       cb(true);
     } else {
       fs.access(name, fs.constants.F_OK, function(err) {

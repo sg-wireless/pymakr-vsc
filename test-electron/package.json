@@ -3,12 +3,13 @@
   "version": "1.0.0",
   "description": "test serialport under electron",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Jos Verlinde",
   "license": "MIT",
+  "scripts": {
+    "test": "npx electron ./index.js"
+  },
   "dependencies": {
-    "electron": "^6.1.2"
+    "electron": "^11.2.1",
+    "ini": "^1.3.8"
   }
 }
