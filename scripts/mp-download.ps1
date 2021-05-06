@@ -301,6 +301,7 @@ param(
 function CleanReleaseFolder ($module_folder){
     # Always Clean module release folder to prevent the wrong runtime from being blocking other platforms
     Remove-Item "$module_folder/build/Release" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item "$module_folder/compiled" -Recurse -Force -ErrorAction SilentlyContinue
     write-host -ForegroundColor Green  "`nCleaned the '$module_folder/build/release' folder,`nto prevent including native modules in the default location and breaking cross-platform portability."
 
 }
