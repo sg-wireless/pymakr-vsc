@@ -48,12 +48,14 @@ const getVSCodeTags = async (count = 3) => {
     ...repo,
     per_page: 50
   });
+  console.log(JSON.stringify(repo_tags, null, 2));
 
   const versReg = /^([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/gm;
 
   // Filter valid tags
   let valid_tags = repo_tags.data.filter(i => {
     let vers = i.name;
+    console.log(vers);
     if (vers.includes("vsda") || vers.includes("translation")) {
       return false;
     }
