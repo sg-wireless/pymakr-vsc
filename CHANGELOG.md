@@ -1,3 +1,6 @@
+## 1.1.12 - Compatibility vscode 1.53
+- fix serialports binding for new vscode 1.56.0
+
 ## 1.1.11 - Compatibility vscode 1.53
 - fix binding for Linux
 
