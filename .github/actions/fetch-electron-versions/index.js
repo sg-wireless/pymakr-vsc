@@ -56,7 +56,7 @@ const getVSCodeTags = async (count = 3) => {
   let valid_tags = repo_tags.data.filter(i => {
     let vers = i.name;
     console.log(vers);
-    if (vers.includes("vsda") || vers.includes("translation")) {
+    if (vers.includes("vsda") || vers.includes("translation") || vers === "1.999.0") {
       return false;
     }
     if (versReg.test(vers)) {
