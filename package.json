@@ -169,7 +169,7 @@
     "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
     "download-native": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions 11.2.1 -IgnoreNodeVersion",
     "build": "babel src --out-dir lib --source-maps",
-    "rebuild": "electron-rebuild",
+    "install": "electron-rebuild -v 13.1.7",
     "build-dev": "babel src --out-dir lib --source-maps --watch",
     "test-electron": "pwsh -nop -f ./test-electron/runtest.ps1",
     "package-prep": "npm install vsce -g",
