@@ -28,6 +28,13 @@
     "*"
   ],
   "main": "./pymakr",
+  "scripts": {
+    "build": "babel src --out-dir lib --source-maps",
+    "build-dev": "babel src --out-dir lib --source-maps --watch",
+    "test-electron": "pwsh -nop -f ./test-electron/runtest.ps1",
+    "package": "vsce package",
+    "vscode:prepublish": "npm ci && npm prune"
+  },
   "contributes": {
     "commands": [
       {
@@ -165,17 +172,6 @@
       ]
     }
   },
-  "scripts": {
-    "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
-    "download-native": "pwsh -nop -f ./scripts/mp-download.ps1 -ElectronVersions 11.2.1 -IgnoreNodeVersion",
-    "build": "babel src --out-dir lib --source-maps",
-    "rebuild": "electron-rebuild",
-    "build-dev": "babel src --out-dir lib --source-maps --watch",
-    "test-electron": "pwsh -nop -f ./test-electron/runtest.ps1",
-    "package-prep": "npm install vsce -g",
-    "package": "vsce package",
-    "vscode:prepublish": "npm ci && npm prune"
-  },
   "backup-required-to-include-binaries": {
     "postinstall": "pwsh -nop -f ./scripts/mp-download.ps1 -copyonly",
     "vscode:prepublish": "npm ci && npm prune"
@@ -186,44 +182,15 @@
   },
   "dependencies": {
     "binascii": "0.0.2",
-    "bindings": "^1.5.0",
-    "commander": "4.0.1",
     "copy-paste": "^1.3.0",
-    "crypto-js": "^3.1.9-1",
-    "debug": "^4.1.1",
-    "element-resize-detector": "1.1.15",
-    "lie": "^3.3.0",
-    "nan": "2.14.0",
-    "ncp": "^2.0.0",
-    "node-abi": "^2.30.0",
-    "object.assign": "^4.1.0",
-    "ora": "^4.0.3",
-    "promirepl": "^2.0.1",
-    "prompt-list": "^3.2.0",
+    "node-abi": "^2.30.1",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.5.3",
-    "safe-buffer": "^5.2.0",
-    "serialport": "^9.2.0",
-    "spdx-correct": "^3.1.0",
-    "spdx-exceptions": "^2.2.0",
-    "telnet-client": "^1.2.3",
-    "typescript": "^3.7.2",
-    "utf8": "^3.0.0",
-    "xterm": "^4.2.0"
+    "serialport": "^9.2.0"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.12.11",
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
     "babel-preset-es2015": "6.24.1",
-    "chai": "^4.2.0",
-    "electron": "^13.0.0",
-    "electron-rebuild": "^2.3.5",
-    "eslint": "^6.7.1",
-    "mocha": "^6.2.2",
-    "prebuild-install": "^6.0.0",
-    "vsce": "^1.96.1",
+    "vsce": "^1.96.3",
     "vscode": "^1.1.36"
   }
 }
