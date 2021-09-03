@@ -2,7 +2,12 @@ var vscode = require('vscode');
 var { execSync } = require('child_process');
 var PanelView, Pymakr, Pyboard,SettingsWrapper, pb,v,sw,pymakr
 
+function buildBinaries (){
+    execSync(`npx electron-rebuild -v ${process.versions.electron}`, {cwd: __dirname})
+}
+
 function activate(context) {
+    buildBinaries()
 
     prepareSerialPort(function(error){
         if(error){
