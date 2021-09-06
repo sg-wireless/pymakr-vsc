@@ -1,4 +1,8 @@
-## 1.1.12 - Compatibility vscode 1.53
+## 1.1.13 - Compatibility vscode 1.59
+- fix serialports binding for new vscode 1.59.0
+- try a new way to build on the fly (may help to fix all new issues with new vscode releases)
+
+## 1.1.12 - Compatibility vscode 1.56
 - fix serialports binding for new vscode 1.56.0
 
 ## 1.1.11 - Compatibility vscode 1.53
