@@ -29,8 +29,6 @@
   ],
   "main": "./pymakr",
   "scripts": {
-    "build": "babel src --out-dir lib --source-maps",
-    "build-dev": "babel src --out-dir lib --source-maps --watch",
     "test-electron": "pwsh -nop -f ./test-electron/runtest.ps1",
     "package": "vsce package",
     "vscode:prepublish": "npm ci && npm prune"
@@ -188,8 +186,6 @@
     "serialport": "^9.2.0"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-es2015": "6.24.1",
     "vsce": "^1.96.3",
     "vscode": "^1.1.36"
   }
