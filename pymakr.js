@@ -1,11 +1,10 @@
 var vscode = require('vscode');
 var { execSync } = require('child_process');
-const {electronModulePatcher} = require('./lib/helpers/electron-module-patcher')
+const { downloadPrebuild } = require('./lib/helpers/download-prebuild')
 var PanelView, Pymakr, Pyboard,SettingsWrapper, pb,v,sw,pymakr
 
 
-function activate(context) {
-    electronModulePatcher()
+async function activate(context) {
 
     prepareSerialPort(function(error){
         if(error){
