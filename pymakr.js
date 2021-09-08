@@ -7,13 +7,6 @@ var PanelView, Pymakr, Pyboard,SettingsWrapper, pb,v,sw,pymakr
 async function activate(context) {
 
     prepareSerialPort(function(error){
-        if(error){
-            var err_mess = "There was an error with your serialport module, Pymakr will likely not work properly. Please try to install again or report an issue on our github (see developer console for details)"
-            vscode.window.showErrorMessage(err_mess)
-            console.log(err_mess)
-            console.log(error)
-        }
-
         SettingsWrapper = require('./lib/main/settings-wrapper');
 
         sw = new SettingsWrapper(function(){
@@ -145,37 +138,25 @@ function deactivate() {
     v.destroy()
 }
 
-function prepareSerialPort(cb){
-    
+async function prepareSerialPort(cb){    
     try {
-        require("serialport");
-        cb()
+        require("serialport");        
     }catch(e){
-        console.log("Error while loading serialport library")
-        console.log(e)
-        cb(e)
-        // FIXME: install.js has been removed, the below just treid to re-copy 
-        // var exec = require('child_process').exec
-        // var cmd = 'npx electron-rebuild --force --version '+ process.versions['electron'];
-        // exec(cmd,function(error, stdout, stderr){
-        //         try {
-        //             require("serialport");
-        //             cb()
-        //         }catch(e){
-        //             cb(e)
-        //         }
-        //     });
-
-        // FIXME: install.js has been removed, the below just tried to re-copy 
-        // exec('node '+ __dirname+'/scripts/install.js no_rebuild',function(error, stdout, stderr){
-        //         try {
-        //             require("serialport");
-        //             cb()
-        //         }catch(e){
-        //             cb(e)
-        //         }
-        //     });
+        console.log('[pymakr] downloading bindings for "serialport"')
+        await downloadPrebuild()        
+        
+        // let's call it again to check that it works
+        try {
+            delete require.cache[require.resolve('serialport')];
+            require("serialport")
+        }catch(e){
+            vscode.window.showErrorMessage(
+                "There was an error with your serialport module, Pymakr will likely not work properly. Please try to install again or report an issue on our github (see developer console for details)"
+            )
+            throw e
+        }
     }
+    cb()
 }
 
 
