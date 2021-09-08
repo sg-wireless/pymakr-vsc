@@ -1,9 +1,12 @@
 var vscode = require('vscode');
 var { execSync } = require('child_process');
+const {electronModulePatcher} = require('./lib/helpers/electron-module-patcher')
 var PanelView, Pymakr, Pyboard,SettingsWrapper, pb,v,sw,pymakr
 
 
 function activate(context) {
+    electronModulePatcher()
+
     prepareSerialPort(function(error){
         if(error){
             var err_mess = "There was an error with your serialport module, Pymakr will likely not work properly. Please try to install again or report an issue on our github (see developer console for details)"
@@ -12,7 +15,7 @@ function activate(context) {
             console.log(error)
         }
 
-        SettingsWrapper = require('./lib/main/settings-wrapper').default;
+        SettingsWrapper = require('./lib/main/settings-wrapper');
 
         sw = new SettingsWrapper(function(){
             const nodejs_installed = execSync('node -v', {encoding: 'utf8'}).substr(0,1) === "v"            
@@ -22,9 +25,9 @@ function activate(context) {
             }else{
             
 
-                PanelView = require('./lib/main/panel-view').default;
-                Pymakr = require('./lib/pymakr').default;
-                Pyboard = require('./lib/board/pyboard').default;
+                PanelView = require('./lib/main/panel-view');
+                Pymakr = require('./lib/pymakr');
+                Pyboard = require('./lib/board/pyboard');
 
                 
                 pb = new Pyboard(sw)
