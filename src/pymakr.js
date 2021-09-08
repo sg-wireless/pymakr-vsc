@@ -1,15 +1,15 @@
 'use babel';
 
-import Sync from './board/sync';
-import Runner from './board/runner';
-import PySerial from './connections/pyserial';
-import Utils from './helpers/utils';
-import ApiWrapper from './main/api-wrapper.js';
-import Logger from './helpers/logger.js'
-import Config from './config.js'
+const Sync = require('./board/sync');
+const Runner = require('./board/runner');
+const PySerial = require('./connections/pyserial');
+const Utils = require('./helpers/utils');
+const ApiWrapper = require('./main/api-wrapper.js');
+const Logger = require('./helpers/logger.js')
+const Config = require('./config.js')
 var EventEmitter = require('events');
 
-export default class Pymakr extends EventEmitter {
+module.exports = class Pymakr extends EventEmitter {
 
   constructor(serializedState,pyboard,view,settings) {
     super()

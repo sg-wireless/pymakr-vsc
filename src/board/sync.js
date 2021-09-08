@@ -1,7 +1,7 @@
 'use babel';
 
-import Shell from './shell.js'
-import Config from '../config.js'
+const Shell = require('./shell.js')const Shell = require('./shell.js')const Shell = require('./shell.js')const Shell = require('./shell.js')const Shell = require('./shell.js')const Shell = require('./shell.js')
+const Config = require('../config.js')const Config = require('../config.js')const Config = require('../config.js')const Config = require('../config.js')const Config = require('../config.js')
 import Logger from '../helpers/logger.js'
 import ApiWrapper from '../main/api-wrapper.js';
 import ProjectStatus from './project-status.js';
@@ -9,7 +9,7 @@ import Utils from '../helpers/utils.js';
 var fs = require('fs');
 
 
-export default class Sync {
+module.exports = class Sync {
 
   constructor(pyboard,settings,terminal) {
     this.logger = new Logger('Sync')

@@ -2,11 +2,11 @@
 var fs = require('fs');
 var vscode = require('vscode');
 var ncp = require('copy-paste')
-import Utils from '../helpers/utils.js';
-import {window, workspace} from 'vscode';
-import Config from '../config.js';
+const Utils = require('../helpers/utils.js');
+const { window, workspace } = require('vscode');
+const Config = require('../config.js');
 
-export default class ApiWrapper {
+module.exports = class ApiWrapper {
   constructor(settings) {
     this.default_config = Config.settings()
     this.settings = settings

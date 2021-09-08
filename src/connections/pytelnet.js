@@ -1,10 +1,10 @@
 'use babel';
 
-import TelnetClient from './telnet/telnetcli.js';
+const TelnetClient = require('./telnet/telnetcli.js');
 
 var AYT = '\xff\xf6'
 
-export default class PyTelnet {
+module.exports = class PyTelnet {
 
   constructor(address,params){
     this.type = "telnet"

@@ -14,7 +14,7 @@ var homeDir = os.homedir();
 // Result in the console will be:
 // [warning] Pyboard | Syncing to outdated firmware
 
-export default class Utils {
+module.exports = class Utils {
 
   constructor(settings){
     this.settings = settings

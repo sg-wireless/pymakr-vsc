@@ -1,7 +1,7 @@
 'use babel';
 var fs = require('fs');
-import Logger from '../helpers/logger.js'
-import ShellWorkers from './shell-workers.js'
+const Logger = require('../helpers/logger.js')const Logger = require('../helpers/logger.js')const Logger = require('../helpers/logger.js')const Logger = require('../helpers/logger.js')const Logger = require('../helpers/logger.js')
+const ShellWorkers = require('./shell-workers.js')const ShellWorkers = require('./shell-workers.js')const ShellWorkers = require('./shell-workers.js')const ShellWorkers = require('./shell-workers.js')
 import ApiWrapper from '../main/api-wrapper.js';
 import Utils from '../helpers/utils.js';
 import Config from '../config.js';
@@ -10,7 +10,7 @@ var exec = require('child_process').exec
 var fs = require('fs')
 
 
-export default class Shell {
+module.exports = class Shell {
 
   constructor(pyboard,cb,method,settings){
     var _this = this

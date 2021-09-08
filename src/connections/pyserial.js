@@ -1,12 +1,12 @@
 'use babel';
 
-import Logger from '../helpers/logger.js';
+const Logger = require('../helpers/logger.js');
 var fs = require('fs');
 
 var SerialPort = require('serialport');
 console.log('Serialport included without issues');
 
-export default class PySerial {
+module.exports = class PySerial {
   // 'Microsoft' and 'Microchip Technology, Inc.' manufacturers show on boards with a PIC on windows
 
   constructor(address, params, settings) {

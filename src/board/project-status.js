@@ -1,10 +1,10 @@
 'use babel';
 var fs = require('fs');
 var crypto = require('crypto');
-import Logger from '../helpers/logger.js'
-import Utils from '../helpers/utils.js';
+const Logger = require('../helpers/logger.js')
+const Utils = require('../helpers/utils.js')
 
-export default class ProjectStatus {
+module.exports = class ProjectStatus {
 
   constructor(shell,settings,local_folder){
     this.shell = shell

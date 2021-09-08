@@ -1,17 +1,17 @@
 'use babel';
 const EventEmitter = require('events');
-import ApiWrapper from './api-wrapper.js';
-import Logger from '../helpers/logger.js';
+const ApiWrapper = require('./api-wrapper.js');
+const Logger = require('../helpers/logger.js');
 var fs = require('fs');
 var vscode = require('vscode');
-import Config from '../config.js'
-import Utils from '../helpers/utils.js';
-import PySerial from '../connections/pyserial';
-import {workspace} from 'vscode';
+const Config = require('../config.js')
+const Utils = require('../helpers/utils.js');
+const PySerial = require('../connections/pyserial');
+const {workspace} = require('vscode');
 const dns = require('dns');
 
 
-export default class SettingsWrapper extends EventEmitter {
+module.exports = class SettingsWrapper extends EventEmitter {
   constructor(cb) {
     super()
     this.config = Config.settings()

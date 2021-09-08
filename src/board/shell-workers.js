@@ -1,8 +1,8 @@
 'use babel';
-import Logger from '../helpers/logger.js'
+const Logger = require('../helpers/logger.js')
 var binascii = require('binascii');
 
-export default class ShellWorkers {
+module.exports = class ShellWorkers {
 
   constructor(shell,pyboard,settings){
     this.shell = shell

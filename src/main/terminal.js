@@ -1,11 +1,11 @@
 'use babel';
 var vscode = require('vscode');
-import Logger from '../helpers/logger.js'
-import ApiWrapper from '../main/api-wrapper.js';
+const Logger = require('../helpers/logger.js')const Logger = require('../helpers/logger.js')
+const ApiWrapper = require('../main/api-wrapper.js');
 
 var Socket = require('net').Socket;
 
-export default class Term {
+module.exports = class Term {
 
     constructor(cb,pyboard,settings) {
       this.port = parseInt(Math.random()*1000 + 1337)

@@ -1,5 +1,5 @@
 'use babel';
-import Config from '../config.js'
+const Config = require('../config.js')
 
 var LOG_LEVEL = Config.constants().logging_level
 var LEVELS = ['silly','verbose','info','warning','error','critical']
@@ -12,7 +12,7 @@ var LEVELS = ['silly','verbose','info','warning','error','critical']
 // Result in the console will be:
 // [warning] Pyboard | Syncing to outdated firmware
 
-export default class Logger {
+module.exports = class Logger {
 
   constructor(classname){
     this.classname = classname

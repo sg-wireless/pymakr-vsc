@@ -1,1 +1,1 @@
-export default class PyboardError extends Error{}
+module.exports = class PyboardError extends Error{}

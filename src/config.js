@@ -1,6 +1,6 @@
 'use babel';
 
-export default class Config {
+module.exports = class Config {
   static constants(){
     return {
       logging_level: 3, // 3 = warning, 4 = error. anything higher than 5 = off. see logger.js for all levels

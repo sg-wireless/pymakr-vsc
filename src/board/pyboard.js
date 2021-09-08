@@ -1,11 +1,11 @@
 'use babel';
 
-import Config from '../config.js'
-import Pyserial from '../connections/pyserial';
-import Pytelnet from '../connections/pytelnet';
-import Pysocket from '../connections/pysocket';
-import Authorize from './authorize';
-import Logger from '../helpers/logger.js'
+const Config = require('../config.js')
+const Pyserial = require('../connections/pyserial')
+const Pytelnet = require('../connections/pytelnet')
+const Pysocket = require('../connections/pysocket')
+const Authorize = require('./authorize')
+const Logger = require('../helpers/logger.js')
 
 var CTRL_A = '\x01' // raw repl
 var CTRL_B = '\x02' // exit raw repl
@@ -24,7 +24,7 @@ var RAW_REPL=3
 var RUNNING_FILE=4
 var PASTE_MODE=5
 
-export default class Pyboard {
+module.exports = class Pyboard {
 
   constructor(settings){
     this.connected = false

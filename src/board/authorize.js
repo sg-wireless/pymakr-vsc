@@ -1,6 +1,6 @@
 'use babel';
 
-export default class Authorize {
+module.exports = class Authorize {
 
   constructor(pyboard){
     this.pyboard = pyboard

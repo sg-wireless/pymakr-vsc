@@ -1,8 +1,8 @@
 'use babel';
 
-import ApiWrapper from '../main/api-wrapper.js';
+const ApiWrapper = require('../main/api-wrapper.js');
 
-export default class Runner {
+module.exports = class Runner {
   constructor(pyboard,terminal,pymakr) {
     this.pyboard = pyboard
     this.terminal = terminal

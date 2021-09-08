@@ -3,13 +3,13 @@
 var vscode = require('vscode');
 import { StatusBarAlignment, window } from 'vscode';
 
-import Term from './terminal';
-import ApiWrapper from '../main/api-wrapper.js';
+const Term = require('./terminal');const Term = require('./terminal')const Term = require('./terminal')
+const ApiWrapper = require('../main/api-wrapper.js');const ApiWrapper = require('../main/api-wrapper.js')
 import Logger from '../helpers/logger.js';
 
 var EventEmitter = require('events');
 
-export default class PanelView extends EventEmitter {
+module.exports = class PanelView extends EventEmitter {
   constructor(pyboard, settings) {
     super();
     var _this = this;

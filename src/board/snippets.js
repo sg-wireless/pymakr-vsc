@@ -1,10 +1,10 @@
 'use babel';
 
-import ApiWrapper from '../main/api-wrapper.js';
-import ConfigSnippets from '../config-snippets.js';
+const ApiWrapper = require('../main/api-wrapper.js');const ApiWrapper = require('../main/api-wrapper.js')
+const ConfigSnippets = require('../config-snippets.js');
 var fs = require('fs');
 
-export default class Snippets {
+module.exports = class Snippets {
   constructor(view) {
     this.view = view
     this.api = new ApiWrapper()

@@ -2,7 +2,7 @@
 
 var Socket = require('net').Socket;
 
-export default class PySocket {
+module.exports = class PySocket {
 
   constructor(address,params){
     this.type = "socket"
