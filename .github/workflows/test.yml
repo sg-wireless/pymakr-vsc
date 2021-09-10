@@ -14,15 +14,24 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:        
-        os: [windows-latest, macos-latest, ubuntu-latest, ubuntu-20.04]
+        os: [windows-latest, macos-latest, ubuntu-latest]
     steps:
-      - uses: actions/checkout@v1
+      - name: checkout
+        uses: actions/checkout@v2
       
       - name: Setup node
         uses: actions/setup-node@v1
         with:
-          node-version: "14"
-        run: npm install
+          node-version: 14
+      
+      - name: install dependencies
+        run: npm ci
+        
 
-      - name: Run test
-        run: node ./test/runTest.js
+      - if: runner.os == 'Linux'
+        run: |
+          rm /home/runner/work/pymakr-vsc/pymakr-vsc/node_modules/@serialport/bindings/build/Release/bindings.node
+          xvfb-run -a npm test
+
+      - if: runner.os != 'Linux'
+        run: npm test
