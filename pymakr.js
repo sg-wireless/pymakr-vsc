@@ -6,7 +6,7 @@ var PanelView, Pymakr, Pyboard,SettingsWrapper, pb,v,sw,pymakr
 
 async function activate(context) {
 
-    prepareSerialPort(function(error){
+    await prepareSerialPort(function(error){
         SettingsWrapper = require('./lib/main/settings-wrapper');
 
         sw = new SettingsWrapper(function(){
