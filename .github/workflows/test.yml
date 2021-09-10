@@ -1,0 +1,28 @@
+name: Build Pymakr
+
+on:
+  pull_request: ~
+  push:
+    branches-ignore:
+      - "dependabot/**"
+    paths-ignore:
+      - "doc/**"
+
+jobs:
+  build:
+    name: "Build ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:        
+        os: [windows-latest, macos-latest, ubuntu-latest, ubuntu-20.04]
+    steps:
+      - uses: actions/checkout@v1
+      
+      - name: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "14"
+        run: npm install
+
+      - name: Run test
+        run: node ./test/runTest.js
