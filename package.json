@@ -31,7 +31,8 @@
   "scripts": {
     "test": "node ./test/runTest.js",
     "package": "vsce package",
-    "vscode:prepublish": "npm ci && npm prune"
+    "vscode:prepublish": "npm ci && npm prune",
+    "deploy": "vsce publish"
   },
   "contributes": {
     "commands": [
