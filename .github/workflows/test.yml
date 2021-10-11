@@ -1,4 +1,4 @@
-name: Build Pymakr
+name: Test Pymakr
 
 on:
   pull_request: ~
