@@ -1,3 +1,9 @@
+# Changelog
+
+
+## [1.1.14](https://github.com/pycom/pymakr-vsc/compare/release-v1.1.13...release-v1.1.14) (2021-10-11)
+- fix Node build tools are no longer a requirement
+
 ## 1.1.12 - Compatibility vscode 1.53
 - fix serialports binding for new vscode 1.56.0
 

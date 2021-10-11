@@ -1,7 +1,5 @@
 # no  node_modules
 node_modules
-# no transpiled
-/lib
 # no packages
 *.vsix
 
@@ -23,3 +21,6 @@ native_modules/**/**/config.gypi
 
 test-electron/package-lock.json
 .github/actions/fetch-electron-versions/dist
+.history
+connection_state.json
+config.gypi
