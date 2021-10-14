@@ -1,7 +1,7 @@
 var vscode = require('vscode');
 var { execSync } = require('child_process');
-const { downloadPrebuild } = require('./lib/helpers/download-prebuild')
-var PanelView, Pymakr, Pyboard,SettingsWrapper, pb,v,sw,pymakr
+const { prepareSerialPort } = require('./lib/serialport')
+var PanelView, Pymakr, Pyboard, SettingsWrapper, pb, v, sw, pymakr
 
 
 async function activate(context) {
@@ -90,13 +90,7 @@ async function activate(context) {
             context.subscriptions.push(disposable);
 
             // // not used. open/close terminal command is already available. 
-                // // not used. open/close terminal command is already available. 
             // // not used. open/close terminal command is already available. 
-            // // not used. open/close terminal command is already available. 
-                    // // not used. open/close terminal command is already available. 
-            // // not used. open/close terminal command is already available. 
-            // // not used. open/close terminal command is already available. 
-                // // not used. open/close terminal command is already available. 
             // // not used. open/close terminal command is already available. 
             // // Terminal opens automatically when doing a connect, run or sync action.
             // var disposable = vscode.commands.registerCommand('pymakr.toggleREPL', function () {
@@ -143,30 +137,9 @@ function deactivate() {
     v.destroy()
 }
 
-async function prepareSerialPort(cb){    
-    try {
-        require("serialport");        
-    }catch(e){
-        console.log('[pymakr] downloading bindings for "serialport"')
-        await downloadPrebuild()        
-        
-        // let's call it again to check that it works
-        try {
-            delete require.cache[require.resolve('serialport')];
-            require("serialport")
-        }catch(e){
-            vscode.window.showErrorMessage(
-                "There was an error with your serialport module, Pymakr will likely not work properly. Please try to install again or report an issue on our github (see developer console for details)"
-            )
-            throw e
-        }
-    }
-    cb()
-}
-
 
 module.exports = {
-     activate,
-     deactivate
+    activate,
+    deactivate
 }
 
