@@ -24,9 +24,7 @@ jobs:
 
     - if: runner.os == 'Linux'
       name: Run tests (Linux)
-      run: |
-        rm /home/runner/work/pymakr-vsc/pymakr-vsc/node_modules/@serialport/bindings/build/Release/bindings.node
-        xvfb-run -a npm test
+      run: xvfb-run -a npm test
 
     - if: runner.os != 'Linux'
       name: Run tests (Mac/Win)
