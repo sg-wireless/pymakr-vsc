@@ -1,12 +1,7 @@
 name: Deploy PyMakr
 
 on:
-  # the 1st condition
-  workflow_run:
-    workflows: [test]
-    # branches: [main, master, beta] disable while we test it
-    types:
-      - completed
+  ['push']
 
 jobs:
   deploy:
