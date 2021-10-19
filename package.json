@@ -31,8 +31,31 @@
   "scripts": {
     "test": "node ./test/runTest.js",
     "package": "vsce package",
-    "vscode:prepublish": "npm ci && npm prune",
-    "deploy": "vsce publish"
+    "semantic-release": "semantic-release"
+  },
+  "@release comment": [
+    "`release` is used by `semantic-release` to automate deployments",
+    "We include vsix files with each release to make sure there's a",
+    "fallback option, if a user should experience a regression error",
+    "To test semantic-release, run:",
+    "npm run semantic-release -- --dry-run --debug"
+  ],
+  "release": {
+    "verifyConditions": [
+      "semantic-release-vsce",
+      "@semantic-release/github"
+    ],
+    "prepare": {
+      "path": "semantic-release-vsce",
+      "packageVsix": true
+    },
+    "publish": [
+      "semantic-release-vsce",
+      {
+        "path": "@semantic-release/github",
+        "assets": "*.vsix"
+      }
+    ]
   },
   "contributes": {
     "commands": [
@@ -190,7 +213,8 @@
   "devDependencies": {
     "@vscode/test-electron": "^1.6.2",
     "mocha": "^9.1.1",
-    "vsce": "^1.96.3",
-    "vscode": "^1.1.36"
+    "semantic-release": "^18.0.0",
+    "semantic-release-vsce": "^3.5.0",
+    "vsce": "^1.96.3"
   }
 }
