@@ -1,0 +1,21 @@
+name: Deploy PyMakr
+
+on:
+  ['push']
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - run: npm ci
+
+      - name: Publish
+        run: npm run semantic-release -- --dry-run --debug
+        env:
+          VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN }}

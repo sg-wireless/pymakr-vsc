@@ -2,12 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [1.1.15-beta.0](https://github.com/pycom/pymakr-vsc/compare/v1.1.14-beta.0...v1.1.15-beta.0) (2021-10-14)
-
-
-### Bug Fixes
-
-* better handling for unavailable bindings ([3b4a57e](https://github.com/pycom/pymakr-vsc/commit/3b4a57ec7ae85695ac1a830eb2b4737b16fbeab5))
+## [1.1.15](https://github.com/pycom/pymakr-vsc/compare/v1.1.14...v1.1.15) (2021-10-15)
+- better handling for unavailable bindings ([3b4a57e](https://github.com/pycom/pymakr-vsc/commit/3b4a57ec7ae85695ac1a830eb2b4737b16fbeab5))
 
 ## [1.1.14](https://github.com/pycom/pymakr-vsc/compare/release-v1.1.13...release-v1.1.14) (2021-10-11)
 - fix Node build tools are no longer a requirement
