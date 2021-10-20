@@ -1,7 +1,9 @@
 name: Deploy PyMakr
 
 on:
-  ['push']
+  push:
+    branches:
+      - master
 
 jobs:
   deploy:
