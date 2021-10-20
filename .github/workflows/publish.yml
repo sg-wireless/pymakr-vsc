@@ -19,7 +19,8 @@ jobs:
       - run: npm ci
 
       - name: Publish
-        run: npm run semantic-release -- --dry-run --debug
+        # for testing, add --dry-run
+        run: npm run semantic-release -- --debug
         env:
           VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
