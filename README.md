@@ -124,14 +124,11 @@ This may be the case if your board is a generic micropython board.
 If you want to contribute to this project you can test the app the following way:
 
 - Download the code or clone the repo
-- Install Babel by running `npm install --save-dev babel-core`
 - Open the folder in VSC
-- Press F1 and execute `Tasks: Run build task` to run the babel builder
 - Press F5 to run the plugin (opens a new VSC window)
  
 Note: make sure you have the 'code' terminal command installed. See [code setup for Mac(https://code.visualstudio.com/docs/setup/mac)
 
 ## Create a local package
-- Install the vscode publishing tool by running `npm install -g vsce`
-- Create a .vsix package by running `vsce package`
+- Create a .vsix package by running `npm run package`
 - you can then install the .vsix package by running `code --install-extension pymakr-1.x.y.vsix`
