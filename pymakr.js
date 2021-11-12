@@ -1,8 +1,7 @@
 const vscode = require('vscode');
 const { execSync } = require('child_process');
 const { prepareSerialPort } = require('./lib/serialport')
-const SettingsWrapper = require('./lib/main/settings-wrapper');
-let destroy
+const destroyHandles = []
 
 /**
  * same as vscode.commands.registerCommand but automatically pushes disposables to context subscriptions     
@@ -23,6 +22,12 @@ const pushCommands = (context, commands) => {
 async function activate(context) {
     await prepareSerialPort()
 
+    /**
+     * we have to import SettingsWrapper after prepareSerialPort
+     * since SettingsWrapper imports serialport
+     */
+    const SettingsWrapper = require('./lib/main/settings-wrapper');
+
     const settingsWrapper = new SettingsWrapper(function () {
         const nodejs_installed = execSync('node -v', { encoding: 'utf8' }).substr(0, 1) === "v"
 
@@ -39,7 +44,7 @@ async function activate(context) {
             const pymakr = new Pymakr({}, pyboard, panelView, settingsWrapper)
             const { terminal } = panelView
 
-            destroy = () => panelView.destroy()
+            destroyHandles.push(() => panelView.destroy())
 
             pushCommands(context, {
                 'pymakr.help': () => {
@@ -108,6 +113,6 @@ async function activate(context) {
 
 module.exports = {
     activate,
-    deactivate: destroy
+    deactivate: () => destroyHandles.map(destroy => destroy())
 }
 
