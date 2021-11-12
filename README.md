@@ -113,18 +113,22 @@ This may be the case if your board is a generic micropython board.
 3) re-run 'pymakr > Extra > List Serial ports'
 4) is the board is not detected as the first , you may need to move it to the front of the list.
 
+### Binding errors for `serialport`
+`serialport` relies on a native module which needs to be downloaded or built at runtime. Sometimes this fails.
+
+**Solutions:**
+- Install VSCode [manually](https://code.visualstudio.com/docs/setup/setup-overview) (we've had [issues](https://github.com/pycom/pymakr-vsc/issues/184#issuecomment-959293789) with package managers like Snap)
+- If a working binding can't be downloaded, PyMakr will try to build them locally with `node-gyp`. Please see requirements for your OS [here](https://github.com/nodejs/node-gyp#installation)
+
 ## Developing
 If you want to contribute to this project you can test the app the following way:
 
 - Download the code or clone the repo
-- Install Babel by running `npm install --save-dev babel-core`
 - Open the folder in VSC
-- Press F1 and execute `Tasks: Run build task` to run the babel builder
 - Press F5 to run the plugin (opens a new VSC window)
  
 Note: make sure you have the 'code' terminal command installed. See [code setup for Mac(https://code.visualstudio.com/docs/setup/mac)
 
 ## Create a local package
-- Install the vscode publishing tool by running `npm install -g vsce`
-- Create a .vsix package by running `vsce package`
+- Create a .vsix package by running `npm run package`
 - you can then install the .vsix package by running `code --install-extension pymakr-1.x.y.vsix`
