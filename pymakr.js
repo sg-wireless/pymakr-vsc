@@ -3,6 +3,17 @@ var { execSync } = require('child_process');
 const { prepareSerialPort } = require('./lib/serialport')
 var PanelView, Pymakr, Pyboard, SettingsWrapper, pb, v, sw, pymakr
 
+/**
+ * same as vscode.commands.registerCommand but automatically pushes disposables to context subscriptions     
+ * @param {vscode.ExtensionContext} context 
+ * @param {Object.<string, (...args: any[]) => any>} commands
+ */
+const pushCommands = (context, commands) => {
+    Object.entries(commands).forEach(([command, callback]) => {
+        const disposable = vscode.commands.registerCommand(command, callback)
+        context.subscriptions.push(disposable)
+    })
+}
 
 async function activate(context) {
     await prepareSerialPort()
@@ -21,113 +32,65 @@ async function activate(context) {
             Pyboard = require('./lib/board/pyboard');
 
 
-            pb = new Pyboard(sw)
-            v = new PanelView(pb, sw)
-            pymakr = new Pymakr({}, pb, v, sw)
-
-
-            var terminal = v.terminal
-
-            var disposable = vscode.commands.registerCommand('pymakr.help', function () {
-                terminal.show()
-                pymakr.writeHelpText()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.listCommands', function () {
-                v.showQuickPick()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.connect', function () {
-                terminal.show()
-                pymakr.connect()
-            })
-
-            var disposable = vscode.commands.registerCommand('pymakr.run', function () {
-                terminal.show()
-                pymakr.run()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.runselection', function () {
-                terminal.show()
-                pymakr.runselection()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.upload', function () {
-                terminal.show()
-                pymakr.upload()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.uploadFile', function () {
-                terminal.show()
-                pymakr.uploadFile()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.download', function () {
-                terminal.show()
-                pymakr.download()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.globalSettings', function () {
-                pymakr.openGlobalSettings()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.projectSettings', function () {
-                pymakr.openProjectSettings()
-            })
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.disconnect', function () {
-                pymakr.disconnect()
-            });
-            context.subscriptions.push(disposable);
-
-            // // not used. open/close terminal command is already available. 
-            // // not used. open/close terminal command is already available. 
-            // // not used. open/close terminal command is already available. 
-            // // Terminal opens automatically when doing a connect, run or sync action.
-            // var disposable = vscode.commands.registerCommand('pymakr.toggleREPL', function () {
-            //     pymakr.toggleVisibility()
-            // });
-            // context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.toggleConnect', function () {
-                if (!pymakr.pyboard.connected) {
+            pushCommands(context, {
+                'pymakr.help': () => {
                     terminal.show()
+                    pymakr.writeHelpText()
+                },
+                'pymakr.listCommands': () => {
+                    panelView.showQuickPick()
+                },
+                'pymakr.connect': () => {
+                    terminal.show()
+                    pymakr.connect()
+                },
+                'pymakr.run': () => {
+                    terminal.show()
+                    pymakr.run()
+                },
+                'pymakr.runselection': () => {
+                    terminal.show()
+                    pymakr.runselection()
+                },
+                'pymakr.upload': () => {
+                    terminal.show()
+                    pymakr.upload()
+                },
+                'pymakr.uploadFile': () => {
+                    terminal.show()
+                    pymakr.uploadFile()
+                },
+                'pymakr.download': () => {
+                    terminal.show()
+                    pymakr.download()
+                },
+                'pymakr.globalSettings': () => {
+                    pymakr.openGlobalSettings()
+                },
+                'pymakr.projectSettings': () => {
+                    pymakr.openProjectSettings()
+                },
+                'pymakr.disconnect': () => {
+                    pymakr.disconnect()
+                },
+                'pymakr.toggleConnect': () => {
+                    if (!pymakr.pyboard.connected)
+                        terminal.show()
+                    pymakr.toggleConnect()
+                },
+                'pymakr.extra.getVersion': () => {
+                    terminal.show()
+                    pymakr.getVersion()
+                },
+                'pymakr.extra.getWifiMac': () => {
+                    terminal.show()
+                    pymakr.getWifiMac()
+                },
+                'pymakr.extra.getSerial': () => {
+                    terminal.show()
+                    pymakr.getSerial()
                 }
-                pymakr.toggleConnect()
-            });
-            context.subscriptions.push(disposable);
-
-
-            var disposable = vscode.commands.registerCommand('pymakr.extra.getVersion', function () {
-                terminal.show()
-                pymakr.getVersion()
-            });
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.extra.getWifiMac', function () {
-                terminal.show()
-                pymakr.getWifiMac()
-            });
-            context.subscriptions.push(disposable);
-
-            var disposable = vscode.commands.registerCommand('pymakr.extra.getSerial', function () {
-                terminal.show()
-                pymakr.getSerial()
-            });
-            context.subscriptions.push(disposable);
-
-        }
-
-    })
+            })
 
 }
 
