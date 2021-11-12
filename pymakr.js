@@ -1,7 +1,8 @@
-var vscode = require('vscode');
-var { execSync } = require('child_process');
+const vscode = require('vscode');
+const { execSync } = require('child_process');
 const { prepareSerialPort } = require('./lib/serialport')
-var PanelView, Pymakr, Pyboard, SettingsWrapper, pb, v, sw, pymakr
+const SettingsWrapper = require('./lib/main/settings-wrapper');
+let destroy
 
 /**
  * same as vscode.commands.registerCommand but automatically pushes disposables to context subscriptions     
@@ -15,22 +16,30 @@ const pushCommands = (context, commands) => {
     })
 }
 
+/**
+ * this method activates the extension
+ * @param {vscode.ExtensionContext} context 
+ */
 async function activate(context) {
     await prepareSerialPort()
-    SettingsWrapper = require('./lib/main/settings-wrapper');
 
-    sw = new SettingsWrapper(function () {
+    const settingsWrapper = new SettingsWrapper(function () {
         const nodejs_installed = execSync('node -v', { encoding: 'utf8' }).substr(0, 1) === "v"
 
         if (!nodejs_installed) {
             vscode.window.showErrorMessage("NodeJS not detected on this machine, which is required for Pymakr to work. See the Pymakr readme for dependencies.")
         } else {
+            const PanelView = require('./lib/main/panel-view');
+            const Pymakr = require('./lib/pymakr');
+            const Pyboard = require('./lib/board/pyboard');
 
 
-            PanelView = require('./lib/main/panel-view');
-            Pymakr = require('./lib/pymakr');
-            Pyboard = require('./lib/board/pyboard');
+            const pyboard = new Pyboard(settingsWrapper)
+            const panelView = new PanelView(pyboard, settingsWrapper)
+            const pymakr = new Pymakr({}, pyboard, panelView, settingsWrapper)
+            const { terminal } = panelView
 
+            destroy = () => panelView.destroy()
 
             pushCommands(context, {
                 'pymakr.help': () => {
@@ -92,17 +101,13 @@ async function activate(context) {
                 }
             })
 
+        }
+
+    })
 }
-
-
-
-function deactivate() {
-    v.destroy()
-}
-
 
 module.exports = {
     activate,
-    deactivate
+    deactivate: destroy
 }
 
