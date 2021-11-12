@@ -12,7 +12,7 @@ async function activate(context) {
         const nodejs_installed = execSync('node -v', { encoding: 'utf8' }).substr(0, 1) === "v"
 
         if (!nodejs_installed) {
-            vscode.window.showErrorMessage("NodeJS not detected on this machine, which is required for Pymakr to work. See the Pymakr readme for dependancies.")
+            vscode.window.showErrorMessage("NodeJS not detected on this machine, which is required for Pymakr to work. See the Pymakr readme for dependencies.")
         } else {
 
 
