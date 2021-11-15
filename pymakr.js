@@ -8,7 +8,7 @@ const destroyHandles = []
  * @param {vscode.ExtensionContext} context 
  * @param {Object.<string, (...args: any[]) => any>} commands
  */
-const pushCommands = (context, commands) => {
+const batchRegisterCommands = (context, commands) => {
     Object.entries(commands).forEach(([command, callback]) => {
         const disposable = vscode.commands.registerCommand(command, callback)
         context.subscriptions.push(disposable)
@@ -46,7 +46,7 @@ async function activate(context) {
 
             destroyHandles.push(() => panelView.destroy())
 
-            pushCommands(context, {
+            batchRegisterCommands(context, {
                 'pymakr.help': () => {
                     terminal.show()
                     pymakr.writeHelpText()
