@@ -1,6 +1,12 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+## [1.1.17](https://github.com/pycom/pymakr-vsc/compare/v1.1.16...v1.1.17) (2022-01-04)
+- better handling for unavailable bindings (3b4a57e)
+- github action error for deploy script (1e2b9c5)
+- reduce requirements for fallback builds (6b05f12)
+
+## [1.1.16](https://github.com/pycom/pymakr-vsc/compare/v1.1.15...v1.1.16) (2021-10-27)
+- binding: updated serialport to 9.2.4 (d4a8934)
 
 ## [1.1.15](https://github.com/pycom/pymakr-vsc/compare/v1.1.14...v1.1.15) (2021-10-15)
 - better handling for unavailable bindings ([3b4a57e](https://github.com/pycom/pymakr-vsc/commit/3b4a57ec7ae85695ac1a830eb2b4737b16fbeab5))
