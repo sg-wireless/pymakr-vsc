@@ -10,7 +10,7 @@ The majority of the sessing can be specified in both the global config file as w
 | ctrl_c_on_connect| yes     | yes    | false                 | If true, executes a ctrl-c on connect to stop running programs
 ||||
 | auto_connect     | no       | yes    | true | Autoconnect on USB. Ignores any \'address\' setting and automatically connects to the top item in the serialport list
-| autoconnect_comport_manufacturers| no | yes | 'Pycom','Pycom Ltd.','FTDI', 'Microsoft','Microchip Technology, Inc.'| Comma separated list of all the  comport manufacturers supported for the autoconnect feature. Defaults to all possible manufacturers that pycom boards can return.
+| autoconnect_comport_manufacturers| no | yes | 'Pycom','Pycom Ltd.','FTDI', 'Microsoft','Microchip Technology, Inc.', '1a86'| Comma separated list of all the  comport manufacturers supported for the autoconnect feature. Defaults to all possible manufacturers that pycom boards can return.
 ||||
 | sync_folder      | yes     | yes    | ""                    | Folder to synchronize. Empty to sync projects main folder
 | sync_file_types  | yes     | yes    | "py,txt,log,json,xml,html,js, css,mpy" | Types of files to be synchronized
