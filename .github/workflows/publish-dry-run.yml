@@ -1,9 +1,12 @@
-name: Deploy PyMakr
-
+name: Dry run deploy
 on:
   push:
     branches:
       - develop
+      - semantic-release/*
+      - feature/*
+      - fix/*
+      - breaking/*
 
 jobs:
   deploy:
