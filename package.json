@@ -7,6 +7,7 @@
   "repository": "https://github.com/pycom/pymakr-vsc",
   "icon": "images/logo.png",
   "license": "SEE LICENSE IN <LICENSE.md>",
+  "private": true,
   "galleryBanner": {
     "color": "#ffffff",
     "theme": "light"
@@ -56,10 +57,10 @@
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
-      "@semantic-release/github",
+      "@semantic-release/changelog",      
       "@semantic-release/npm",
-      "@semantic-release/changelog",
-      "@semantic-release/git"
+      "@semantic-release/git",
+      "@semantic-release/github"
     ],
     "verifyConditions": [
       "semantic-release-vsce",
