@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "checkJs": true,
     "target": "es6",
     "lib": ["es6"]
   },
-  "include": ["lib/**/*.js"],
+  "include": ["lib/**/*.js", "typedef.js"],
   "exclude": ["node_modules", "precompiles"]
 }
