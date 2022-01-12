@@ -12,10 +12,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
       - name: Install Node.js
         uses: actions/setup-node@v1
         with:
           node-version: 16
+          
       - run: npm ci
 
       - name: Publish
@@ -23,4 +28,5 @@ jobs:
         run: npm run semantic-release
         env:
           VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN }}
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
