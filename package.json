@@ -1,0 +1,218 @@
+{
+  "name": "pymakr",
+  "displayName": "PyMakr",
+  "publisher": "Pycom",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.62.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "pymakr",
+          "title": "PyMakr",
+          "icon": "media/pycom.svg"
+        }
+      ]
+    },
+    "views": {
+      "pymakr": [
+        {
+          "id": "pymakr-explorer",
+          "name": "PyMakr Explorer",
+          "icon": "media/dep.svg",
+          "contextualTitle": "PyMakr Explorer"
+        }
+      ],
+      "explorer": [
+        {
+          "id": "jsonOutline",
+          "name": "Json Outline",
+          "when": "jsonOutlineEnabled"
+        },
+        {
+          "id": "ftpExplorer",
+          "name": "FTP Explorer"
+        },
+        {
+          "id": "fileExplorer",
+          "name": "File Explorer"
+        },
+        {
+          "id": "testView",
+          "name": "Test View"
+        },
+        {
+          "id": "testViewDragAndDrop",
+          "name": "Test View Drag and Drop"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "pymakr.connect",
+        "title": "Pymakr > Connect"
+      },
+      {
+        "command": "pymakr.disconnect",
+        "title": "Pymakr > Disconnect"
+      },
+      {
+        "command": "pymakr.upload",
+        "title": "Pymakr > Upload project"
+      },
+      {
+        "command": "pymakr.uploadFile",
+        "title": "Pymakr > Upload current file only"
+      },
+      {
+        "command": "pymakr.download",
+        "title": "Pymakr > Download project"
+      },
+      {
+        "command": "pymakr.run",
+        "title": "Pymakr > Run current file"
+      },
+      {
+        "command": "pymakr.runselection",
+        "title": "Pymakr > Run current selection"
+      },
+      {
+        "command": "pymakr.projectSettings",
+        "title": "Pymakr > Project settings"
+      },
+      {
+        "command": "pymakr.globalSettings",
+        "title": "Pymakr > Global settings"
+      },
+      {
+        "command": "pymakr.extra.getVersion",
+        "title": "Pymakr > Extra's > Get firmware version"
+      },
+      {
+        "command": "pymakr.extra.getWifiMac",
+        "title": "Pymakr > Extra's > Get WiFi AP SSID"
+      },
+      {
+        "command": "pymakr.extra.getSerial",
+        "title": "Pymakr > Extra's > List serial ports"
+      },
+      {
+        "command": "pymakr.help",
+        "title": "Pymakr > Help"
+      },
+      {
+        "command": "pymakr.listCommands",
+        "title": "Pymakr > List all Commands"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "",
+        "key": "ctrl+e",
+        "when": "terminalFocus"
+      },
+      {
+        "command": "pymakr.connect",
+        "key": "ctrl+shift+c",
+        "mac": "cmd+shift+c"
+      },
+      {
+        "command": "pymakr.upload",
+        "key": "ctrl+shift+s",
+        "mac": "cmd+shift+s"
+      },
+      {
+        "command": "pymakr.uploadFile",
+        "key": "ctrl+shift+s",
+        "mac": "ctrl+shift+s"
+      },
+      {
+        "command": "pymakr.run",
+        "key": "ctrl+shift+r",
+        "mac": "cmd+shift+r"
+      },
+      {
+        "command": "pymakr.runselection",
+        "key": "ctrl+shift+enter",
+        "mac": "cmd+shift+enter"
+      },
+      {
+        "command": "pymakr.globalSettings",
+        "key": "ctrl+shift+g",
+        "mac": "cmd+shift+g"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "pymakr.upload",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.run",
+          "group": "pymakr"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "pymakr.connect",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.run",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.runselection",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.upload",
+          "group": "pymakr"
+        }
+      ],
+      "editor/title": [
+        {
+          "command": "pymakr.run",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.upload",
+          "group": "pymakr"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js",
+    "test:unit": "probs src --glob **/*.spec.js",
+    "test-watch:unit": "npx nodemon --exec npm run test:unit"
+  },
+  "devDependencies": {
+    "@types/glob": "^7.2.0",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.63.1",
+    "@vscode/test-electron": "^2.0.3",
+    "eslint": "^8.1.0",
+    "glob": "^7.1.7",
+    "mocha": "^9.1.3",
+    "probs": "^0.1.6",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "cheap-watch": "^1.0.4"
+  }
+}
