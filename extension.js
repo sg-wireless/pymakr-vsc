@@ -9,9 +9,9 @@ const { PyMakr } = require('./src/PyMakr');
 /**
  * @param {vscode.ExtensionContext} context
  */
-function activate(context) {
+async function activate(context) {
 
-	const pymakr = new PyMakr
+	const pymakr = new PyMakr(context)
 
 
 	// The command has been defined in the package.json file

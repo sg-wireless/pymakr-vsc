@@ -27,10 +27,16 @@
     "views": {
       "pymakr": [
         {
-          "id": "pymakr-explorer",
-          "name": "PyMakr Explorer",
+          "id": "pymakr-projects-tree",
+          "name": "Projects",
           "icon": "media/dep.svg",
-          "contextualTitle": "PyMakr Explorer"
+          "contextualTitle": "Projects"
+        },
+        {
+          "id": "pymakr-devices-tree",
+          "name": "Devices",
+          "icon": "media/dep.svg",
+          "contextualTitle": "Devices"
         }
       ],
       "explorer": [
@@ -213,6 +219,7 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "cheap-watch": "^1.0.4"
+    "cheap-watch": "^1.0.4",
+    "serialport": "^10.0.2"
   }
 }
