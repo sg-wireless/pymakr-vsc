@@ -2,20 +2,14 @@ const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
 
-
 /** @implements {vscode.TreeDataProvider<vscode.TreeItem>} */
 class ProjectsProvider {
   /**
    * @param {PyMakr} PyMakr
    */
   constructor(PyMakr) {
+    PyMakr.projectStore.subscribe(this.refresh.bind(this));
     this.PyMakr = PyMakr;
-
-    this.PyMakr.projectStore.subscribe(this.refresh.bind(this));
-
-    setTimeout(() => {
-      console.log("timeout", PyMakr.projectStore.get());
-    }, 5000);
   }
 
   _onDidChangeTreeData = new vscode.EventEmitter();
