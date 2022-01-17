@@ -2,6 +2,7 @@ const vscode = require("vscode");
 const fs = require("fs");
 const path = require("path");
 
+
 /** @implements {vscode.TreeDataProvider<vscode.TreeItem>} */
 class ProjectsProvider {
   /**
@@ -29,7 +30,8 @@ class ProjectsProvider {
    * @returns { vscode.TreeItem }
    */
   getTreeItem(element) {
-    console.log({ element });
+    // console.log({ element });
+    // console.log(element.label.name);
     return element;
   }
 
@@ -39,7 +41,6 @@ class ProjectsProvider {
    * @returns  {Dependency[]}
    */
   getChildren(element) {
-    console.log("getting children");
     if (element === undefined) {
       return this.PyMakr.projectStore.get().map((project) => new TreeItem(project.name));
     }
