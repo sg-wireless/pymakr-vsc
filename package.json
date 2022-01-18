@@ -220,6 +220,7 @@
   },
   "dependencies": {
     "cheap-watch": "^1.0.4",
+    "consolite": "^0.2.10",
     "serialport": "^10.0.2"
   }
 }
