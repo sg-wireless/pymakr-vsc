@@ -14,7 +14,7 @@ const getDevices = async (pyMakr) => {
  * @param {PyMakr} pyMakr
  */
 const createDevicesStore = (pyMakr) => {
-  /** @type {Writable<Device[]} */
+  /** @type {Writable<Device[]>} */
   const store = writable([]);
 
   const refresh = async () => store.set(await getDevices(pyMakr));
