@@ -41,8 +41,8 @@ function boardInput(message) {
   process.stdout.write(message);
 }
 
-function log(msg) {
+function log(...msg) {
   if (debug) {
-    console.log(msg);
+    console.log(...msg);
   }
 }
