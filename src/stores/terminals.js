@@ -9,7 +9,8 @@ const createTerminalsStore = (pyMakr) => {
   /** @type {Writable<Terminal[]>} */
   const store = writable([]);
 
-  const create = () => store.update((terms) => [...terms, new Terminal(pyMakr)]);
+  /** @param {import('../interfaces/Base').BaseInterface} _interface */
+  const create = (_interface) => store.update((terms) => [...terms, new Terminal(pyMakr, _interface)]);
   const remove = (term) => store.update((terms) => terms.filter((_term) => _term !== term));
 
   const disposable = vscode.window.onDidCloseTerminal((term) => {
