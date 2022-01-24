@@ -11,8 +11,7 @@ const { PyMakr } = require('./src/PyMakr');
  */
 async function activate(context) {
 
-	const pymakr = new PyMakr(context)
-
+	new PyMakr(context)
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with  registerCommand
