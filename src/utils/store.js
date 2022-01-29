@@ -1,3 +1,24 @@
+/**
+ * Stores are inspired by Svelte's "writable" stores, but contain a few extra features
+ * 
+ * Create store:
+ * const myStore = writable('hello')
+ * 
+ * Get value of store:
+ * myStore.get()
+ * 
+ * Subscribe to store
+ * myStore.subscribe(callback)
+ * 
+ * Set store value
+ * myStore.set('new value')
+ * 
+ * Update store value
+ * myStore.update(oldValue => 'new value')
+ * 
+ * Create a derived store
+ * const myDerivedStore = 
+ */
 
 const storeOptions = {
   onSub: (x) => void 0,
