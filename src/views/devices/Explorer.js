@@ -36,7 +36,7 @@ class DevicesProvider {
    */
   getChildren(element) {
     if (element === undefined) {
-      return this.PyMakr.devicesStore.get().map((device) => new TreeItem(device.name));
+      return this.PyMakr.devicesStore.get().map((device) => new TreeItem(device));
     }
     return element.children;
   }
@@ -47,15 +47,17 @@ class TreeItem extends vscode.TreeItem {
   children;
 
   /**
-   * @param {string} label
+   * @param {import('../../Device').Device} device
    * @param {TreeItem[]=} children
    */
-  constructor(label, children) {
+  constructor(device, children) {
     super(
-      label,
+      device.name,
       children === undefined ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed
     );
-    this.children = children;
+    this.protocol = device.protocol;
+    this.address = device.address;
+    this.id = device.id
   }
 }
 

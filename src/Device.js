@@ -1,19 +1,17 @@
-const { PySerial } = require("./interfaces/PySerial");
-
 class Device {
   /**
-   * @param {import('serialport').PortInfo & {friendlyName?: string}} info
    * @param {PyMakr} pyMakr
+   * @param {Object} info
    */
-  constructor(info, pyMakr) {
-    this.info = info;
-    this.name = info.friendlyName;
+  constructor(pyMakr, name, protocol, address, password, info = {}) {
     this.pyMakr = pyMakr;
-    this.log = pyMakr.log.createChild(info.friendlyName);
-    
-    this.interfaces = {
-      usb: new PySerial(this, { address: info.path }),
-    };
+    this.protocol = protocol;
+    this.address = address;
+    this.password = password;
+    this.name = name;
+    this.info = info;
+    this.id = `${protocol}://${address}`;
+    this.log = pyMakr.log.createChild(this.name);
   }
 }
 

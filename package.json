@@ -159,6 +159,12 @@
       }
     ],
     "menus": {
+      "view/item/context": [
+        {
+          "command": "pymakr.connect",
+          "group": "inline"
+        }
+      ],
       "explorer/context": [
         {
           "command": "pymakr.upload",
@@ -222,7 +228,7 @@
   "dependencies": {
     "cheap-watch": "^1.0.4",
     "consolite": "^0.2.10",
-    "micropython-ctl": "^1.13.4",
+    "micropython-ctl": "^1.13.8-beta2",
     "serialport": "^10.0.2"
   }
 }

@@ -1,5 +1,6 @@
 const { createLogger } = require("consolite");
 const vscode = require("vscode");
+const { Commands } = require("./commands");
 const { createDevicesStore } = require("./stores/devices");
 const { createProjectsStore } = require("./stores/projects");
 const { createTerminalsStore } = require("./stores/terminals");
@@ -16,7 +17,7 @@ class PyMakr {
     this.projectStore = createProjectsStore(this);
     this.devicesStore = createDevicesStore(this);
     this.terminalsStore = createTerminalsStore(this);
-    this.terminalsStore.create()
+    this.commands = new Commands(this).commands;
 
     const projectsProvider = new ProjectsProvider(this);
     const devicesProvider = new DevicesProvider(this);

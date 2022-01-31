@@ -7,7 +7,7 @@ const { writable } = require("../utils/store");
  */
 const getDevices = async (pyMakr) => {
   const devices = await serialport.list();
-  return devices.map((device) => new Device(device, pyMakr));
+  return devices.map((device) => new Device(pyMakr, device.friendlyName, 'serial', device.path, null, device));
 };
 
 /**

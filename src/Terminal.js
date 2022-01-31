@@ -1,23 +1,25 @@
-const { Socket } = require("net");
-const { resolve } = require("path");
 const vscode = require("vscode");
-const { once } = require("./utils/misc");
-
-// reference: https://github.com/pycom/pymakr-vsc/blob/680770c502f5042526d3b1cb85706fb19c0951d2/lib/main/terminal.js
 
 class Terminal {
   /**
    *
    * @param {PyMakr} pyMakr
-   * @param {string} address
+   * @param {import('./Device').Device} device
    */
-  constructor(pyMakr, address) {
-    // /** @type {'connecting'|'connected'|'closed'|'failed'} */
-    // this.status = "connecting";
-    this.address = address
+  constructor(pyMakr, device) {
     this.pyMakr = pyMakr;
+    this.device = device;
     this.log = this.pyMakr.log.createChild("Terminal");
-    this.term = vscode.window.createTerminal("my new terminal", "npm", ["run", "mctl", "--", "repl"]);
+
+    const args = device.protocol === "serial" ? ["--tty", device.address] : ["--host", device.address, device.password];
+
+    this.term = vscode.window.createTerminal({
+      name: device.id,
+      shellPath: "npm",
+      shellArgs: ["run", "mctl", "--", "repl", ...args],
+      // todo fix for simultaneous connections
+      // env: { WEBREPL_HOST: Math.floor(Math.random() * 1000).toString() },
+    });
     this.term.show();
   }
 }

@@ -3,25 +3,22 @@ const { writable } = require("../utils/store");
 const vscode = require("vscode");
 
 /**
- * @param {PyMakr} pyMakr
+ * @param {PyMakr} pymakr
  */
-const createTerminalsStore = (pyMakr) => {
+const createTerminalsStore = (pymakr) => {
   /** @type {Writable<Terminal[]>} */
   const store = writable([]);
 
-  /** @param {import('../interfaces/Base').BaseInterface} _interface */
-  const create = (_interface) => store.update((terms) => [...terms, new Terminal(pyMakr, _interface)]);
+  const create = (device) => store.update((terms) => [...terms, new Terminal(pymakr, device)]);
   const remove = (term) => store.update((terms) => terms.filter((_term) => _term !== term));
 
   const disposable = vscode.window.onDidCloseTerminal((term) => {
     store.update((terminals) => {
       const terminal = terminals.find((terminal) => terminal.term === term);
-      terminal.status = "closed";
-      terminal.stream.end();
       return terminals.filter((_terminal) => _terminal !== terminal);
     });
   });
-  pyMakr.context.subscriptions.push(disposable);
+  pymakr.context.subscriptions.push(disposable);
 
   return { ...store, create, remove };
 };
