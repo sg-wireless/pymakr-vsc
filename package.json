@@ -203,6 +203,7 @@
     "lint": "eslint .",
     "pretest": "npm run lint",
     "test": "node ./test/runTest.js",
+    "mctl": "mctl",
     "test:unit": "probs src --glob **/*.spec.js",
     "test-watch:unit": "npx nodemon --exec npm run test:unit"
   },
@@ -221,6 +222,7 @@
   "dependencies": {
     "cheap-watch": "^1.0.4",
     "consolite": "^0.2.10",
+    "micropython-ctl": "^1.13.4",
     "serialport": "^10.0.2"
   }
 }
