@@ -1,17 +1,18 @@
 class Device {
   /**
-   * @param {PyMakr} pyMakr
-   * @param {Object} info
+   * @param {PyMakr} pymakr
+   * @param {DeviceInput} deviceInput
    */
-  constructor(pyMakr, name, protocol, address, password, info = {}) {
-    this.pyMakr = pyMakr;
+  constructor(pymakr, deviceInput) {
+    const { address, name, protocol, raw, password } = deviceInput;
+    this.pymakr = pymakr;
     this.protocol = protocol;
     this.address = address;
     this.password = password;
     this.name = name;
-    this.info = info;
+    this.raw = raw;
     this.id = `${protocol}://${address}`;
-    this.log = pyMakr.log.createChild(this.name);
+    this.log = pymakr.log.createChild("Device: " + this.name);
   }
 }
 

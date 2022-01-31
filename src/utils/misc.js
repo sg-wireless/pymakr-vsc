@@ -8,4 +8,11 @@ const once = (fn, context) => {
   };
 };
 
-module.exports = { once };
+/**
+ * @template T
+ * @param {T|T[]} input
+ * @returns {T[]}
+ */
+const coerceArray = (input) => (Array.isArray(input) ? input : [input]);
+
+module.exports = { once, coerceArray };

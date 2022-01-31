@@ -1,26 +1,30 @@
-const serialport = require("serialport");
 const { Device } = require("../Device");
+const { coerceArray } = require("../utils/misc");
 const { writable } = require("../utils/store");
 
 /**
- * @param {PyMakr} pyMakr
+ * @param {PyMakr} pymakr
  */
-const getDevices = async (pyMakr) => {
-  const devices = await serialport.list();
-  return devices.map((device) => new Device(pyMakr, device.friendlyName, 'serial', device.path, null, device));
-};
-
-/**
- * @param {PyMakr} pyMakr
- */
-const createDevicesStore = (pyMakr) => {
+const createDevicesStore = (pymakr) => {
   /** @type {Writable<Device[]>} */
   const store = writable([]);
 
-  const refresh = async () => store.set(await getDevices(pyMakr));
-  refresh();
+  /**
+   * @param {DeviceInput|DeviceInput[]} deviceInput
+   */
+  const insert = (deviceInput) => {
+    const newDevices = coerceArray(deviceInput).map((input) => new Device(pymakr, input));
+    store.update((devices) => [...devices, ...newDevices]);
+  };
 
-  return { ...store, refresh };
+  /**
+   * @param {Device} device
+   */
+  const remove = (device) => {
+    store.update((devices) => devices.filter((_device) => _device !== device));
+  };
+
+  return { ...store, insert, remove };
 };
 
 module.exports = { createDevicesStore };
