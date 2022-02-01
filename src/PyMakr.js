@@ -17,6 +17,7 @@ class PyMakr {
   constructor(context) {
     this.context = context;
     this.log = createLogger("PyMakr");
+    this.log.level = 5
     this.projectStore = createProjectsStore(this);
     this.devicesStore = createDevicesStore(this);
     this.terminalsStore = createTerminalsStore(this);
