@@ -66,20 +66,37 @@
     "commands": [
       {
         "command": "pymakr.newDevice",
-        "title": "New device",
+        "title": "Add a new device",
         "icon": "$(plus)"
       },
       {
         "command": "pymakr.connect",
-        "title": "Connect"        
+        "title": "Create terminal",
+        "icon": "$(terminal-view-icon)"
       },
       {
         "command": "pymakr.disconnect",
         "title": "Disconnect"
       },
       {
+        "command": "pymakr.downloadProject",
+        "shortTitle": "Download",
+        "title": "Download project from device",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "pymakr.uploadProject",
+        "shortTitle": "Upload",
+        "title": "Upload project to device",
+        "icon": "$(cloud-upload)"
+      },
+      {
         "command": "pymakr.setActiveProject",
         "title": "Set project"
+      },
+      {
+        "command": "pymakr.addDeviceToProject",
+        "title": "Add device"
       },
       {
         "command": "pymakr.upload",
@@ -170,7 +187,23 @@
     "menus": {
       "view/item/context": [
         {
+          "command": "pymakr.addDeviceToProject",
+          "group": "inline",
+          "when": "viewItem == project"
+        },
+        {
+          "command": "pymakr.downloadProject",
+          "when": "viewItem == projectDevice",
+          "group": "inline"
+        },
+        {
+          "command": "pymakr.uploadProject",
+          "when": "viewItem == projectDevice",
+          "group": "inline"
+        },
+        {
           "command": "pymakr.connect",
+          "when": "viewItem == device || viewItem == projectDevice",
           "group": "inline"
         }
       ],

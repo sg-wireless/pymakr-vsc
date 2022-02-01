@@ -14,8 +14,7 @@ class Commands {
 
   commands = {
     "pymakr.connect": (treeItem) => {
-      const device = this.pymakr.devicesStore.get().find((device) => device.id === treeItem.id);
-      this.pymakr.terminalsStore.create(device);
+      this.pymakr.terminalsStore.create(treeItem.device);
     },
 
     "pymakr.newDevice": async () => {
@@ -71,7 +70,25 @@ class Commands {
       this.pymakr.activeProjectStore.set(selectedProject.project);
     },
     "pymakr.uploadProject": async () => {
-      console.log('upload')
+      console.log("upload");
+    },
+    "pymakr.downloadProject": async () => {
+      // this.pymakr.
+    },
+
+    /**
+     *
+     * @param {import('../views/projects/Explorer').ProjectTreeItem} treeItem
+     */
+    "pymakr.addDeviceToProject": async (treeItem) => {
+      const { device } = await vscode.window.showQuickPick([
+        { label: "unset", device: null },
+        ...this.pymakr.devicesStore.get().map((_device) => ({
+          label: _device.name,
+          device: _device,
+        })),
+      ]);
+      treeItem.project.addDevice(device);
     },
   };
 }

@@ -29,39 +29,47 @@ class PyMakr {
     this.terminalsStore = createTerminalsStore(this);
     this.commands = new Commands(this).commands;
 
-    const projectsProvider = new ProjectsProvider(this);
-    const devicesProvider = new DevicesProvider(this);
+    this.projectsProvider = new ProjectsProvider(this);
+    this.devicesProvider = new DevicesProvider(this);
 
-    vscode.window.registerTreeDataProvider("pymakr-projects-tree", projectsProvider);
-    vscode.window.registerTreeDataProvider("pymakr-devices-tree", devicesProvider);
+    this.setup();
+  }
 
-    this.registerUSBDevices();
-    this.registerProjects();
+  async setup() {
+    vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider);
+    vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider);
+    await Promise.all([this.registerUSBDevices(), this.registerProjects()]);
+    await this.recoverProjects();
+    this.projectsProvider.refresh();
     this.decorateStatusBar();
   }
-  
-  decorateStatusBar() {    
+
+  async recoverProjects() {
+    return Promise.all(this.projectsStore.get().map((project) => project.recoverProject()));
+  }
+
+  decorateStatusBar() {
     const projectSelect = vscode.window.createStatusBarItem("activeWorkspace", 1, 10);
+    projectSelect.text = this.activeProjectStore.get()?.name
     projectSelect.command = "pymakr.setActiveProject";
     projectSelect.show();
-    
+
     const projectUpload = vscode.window.createStatusBarItem("projectUpload", 1, 9);
-    projectUpload.text = "$(arrow-up)";
+    projectUpload.text = "$(cloud-upload)";
     projectUpload.command = "pymakr.uploadProject";
     projectUpload.show();
-    
+
     const projectDownload = vscode.window.createStatusBarItem("projectDownload", 1, 8);
-    projectDownload.text = "$(arrow-down)";
+    projectDownload.text = "$(cloud-download)";
     projectDownload.command = "pymakr.downloadProject";
     projectDownload.show();
-    
+
     this.activeProjectStore.subscribe((project) => (projectSelect.text = project.name));
   }
 
   async registerProjects() {
     await this.projectsStore.refresh();
     await this.activeProjectStore.setToLastUsedOrFirstFound();
-
     this.log.debug("active project", this.activeProjectStore.get().folder);
   }
 

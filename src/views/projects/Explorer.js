@@ -25,27 +25,36 @@ class ProjectsProvider {
 
   getChildren(element) {
     if (element === undefined) {
-      return this.PyMakr.projectsStore.get().map((project) => new TreeItem(project.name));
+      return this.PyMakr.projectsStore.get().map((project) => new ProjectTreeItem(project));
     }
     return element.children;
   }
 }
 
-class TreeItem extends vscode.TreeItem {
-  /** @type {TreeItem[]|undefined} */
-  children;
-
+class ProjectTreeItem extends vscode.TreeItem {
   /**
-   * @param {string} label
-   * @param {TreeItem[]=} children
+   * @param {import('../../Project').Project} project
    */
-  constructor(label, children) {
-    super(
-      label,
-      children === undefined ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed
-    );
-    this.children = children;
+  constructor(project) {
+    super(project.name, 2);
+    this.project = project;
+    this.children = project.devices.map((device) => new ProjectDeviceTreeItem(device, project));
+    this.contextValue = "project";
   }
 }
 
-module.exports = { ProjectsProvider };
+class ProjectDeviceTreeItem extends vscode.TreeItem {
+  /**
+   *
+   * @param {import('../../Device').Device} device
+   * @param {import('../../Project').Project} project
+   */
+  constructor(device, project) {
+    super(device.name, vscode.TreeItemCollapsibleState.None);
+    this.project = project
+    this.device = device
+    this.contextValue = "projectDevice";
+  }
+}
+
+module.exports = { ProjectsProvider, ProjectTreeItem };

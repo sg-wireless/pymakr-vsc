@@ -19,21 +19,12 @@ class DevicesProvider {
     this._onDidChangeTreeData.fire();
   }
 
-  /**
-   * @param {Dependency} element
-   * @returns { vscode.TreeItem }
-   */
   getTreeItem(element) {
     // console.log({ element });
     // console.log(element.label.name);
     return element;
   }
 
-  /**
-   *
-   * @param {Dependency} element
-   * @returns  {Dependency[]}
-   */
   getChildren(element) {
     if (element === undefined) {
       return this.PyMakr.devicesStore.get().map((device) => new TreeItem(device));
@@ -55,9 +46,8 @@ class TreeItem extends vscode.TreeItem {
       device.name,
       children === undefined ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed
     );
-    this.protocol = device.protocol;
-    this.address = device.address;
-    this.id = device.id
+    this.contextValue = "device";
+    this.device = device
   }
 }
 
