@@ -65,12 +65,17 @@
     },
     "commands": [
       {
+        "command": "pymakr.newDevice",
+        "title": "New device",
+        "icon": "$(plus)"
+      },
+      {
         "command": "pymakr.connect",
-        "title": "Pymakr > Connect"
+        "title": "Connect"
       },
       {
         "command": "pymakr.disconnect",
-        "title": "Pymakr > Disconnect"
+        "title": "Disconnect"
       },
       {
         "command": "pymakr.upload",
@@ -165,6 +170,11 @@
           "group": "inline"
         }
       ],
+      "view/title": [{
+        "command": "pymakr.newDevice",
+        "when": "view == pymakr-devices-tree",
+        "group": "navigation"        
+      }],
       "explorer/context": [
         {
           "command": "pymakr.upload",

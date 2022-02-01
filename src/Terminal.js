@@ -11,16 +11,26 @@ class Terminal {
     this.device = device;
     this.log = this.pyMakr.log.createChild("Terminal");
 
-    const args = device.protocol === "serial" ? ["--tty", device.address] : ["--host", device.address, device.password];
+    const isTelnet = device.protocol === "telnet";
 
+    const args = isTelnet ? ["--host", device.address, device.password] : ["--tty", device.address];
+    const env = {}
+    if(isTelnet){
+      env.WEBREPL_PASSWORD = device.password
+      device.password = 'REDACTED'
+    }
+
+    const shellArgs = ["run", "mctl", "--", "repl", ...args];
+    this.log.debug("exec: npm", shellArgs.join(" "));
     this.term = vscode.window.createTerminal({
       name: device.id,
       shellPath: "npm",
-      shellArgs: ["run", "mctl", "--", "repl", ...args],
+      shellArgs,
       // todo fix for simultaneous connections
-      // env: { WEBREPL_HOST: Math.floor(Math.random() * 1000).toString() },
+      env: { WEBREPL_HOST: Math.floor(Math.random() * 1000).toString() },
     });
     this.term.show();
+    console.log(this.term.exitStatus);
   }
 }
 

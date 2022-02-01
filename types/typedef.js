@@ -10,8 +10,9 @@
 /**
  * @typedef {Object} DeviceInput
  * @prop {string} name
- * @prop {string} protocol
+ * @prop {'serial'|'telnet'} protocol
  * @prop {string} address
+ * @prop {string=} username
  * @prop {string=} password
- * @prop {any} raw
+ * @prop {any=} raw
  */
