@@ -71,11 +71,15 @@
       },
       {
         "command": "pymakr.connect",
-        "title": "Connect"
+        "title": "Connect"        
       },
       {
         "command": "pymakr.disconnect",
         "title": "Disconnect"
+      },
+      {
+        "command": "pymakr.setActiveProject",
+        "title": "Set project"
       },
       {
         "command": "pymakr.upload",
@@ -170,11 +174,13 @@
           "group": "inline"
         }
       ],
-      "view/title": [{
-        "command": "pymakr.newDevice",
-        "when": "view == pymakr-devices-tree",
-        "group": "navigation"        
-      }],
+      "view/title": [
+        {
+          "command": "pymakr.newDevice",
+          "when": "view == pymakr-devices-tree",
+          "group": "navigation"
+        }
+      ],
       "explorer/context": [
         {
           "command": "pymakr.upload",

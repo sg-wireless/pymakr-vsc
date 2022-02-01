@@ -17,7 +17,9 @@ class Commands {
       const device = this.pymakr.devicesStore.get().find((device) => device.id === treeItem.id);
       this.pymakr.terminalsStore.create(device);
     },
+
     "pymakr.newDevice": async () => {
+      /** @type {{label: 'telnet'|'serial'}} */
       const { label: protocol } = await vscode.window.showQuickPick([
         {
           label: "telnet",
@@ -40,7 +42,11 @@ class Commands {
         : "";
 
       const password = isTelnet
-        ? await vscode.window.showInputBox({ password: true, prompt: "Password for your device [default: python]", value: "python" })
+        ? await vscode.window.showInputBox({
+            password: true,
+            prompt: "Password for your device [default: python]",
+            value: "python",
+          })
         : "";
 
       const name = await vscode.window.showInputBox({
@@ -49,6 +55,23 @@ class Commands {
       });
 
       this.pymakr.devicesStore.insert({ address, protocol, name, username, password });
+    },
+
+    "pymakr.setActiveProject": async () => {
+      const { relative } = require("path");
+      const findShortest = (a, b) => (a.length < b.length ? a : b);
+      const workspaceFolders = vscode.workspace.workspaceFolders.map((f) => f.uri.path);
+      const selectedProject = await vscode.window.showQuickPick(
+        this.pymakr.projectsStore.get().map((project) => ({
+          label: project.name,
+          description: workspaceFolders.map((path) => relative(path, project.folder)).reduce(findShortest),
+          project,
+        }))
+      );
+      this.pymakr.activeProjectStore.set(selectedProject.project);
+    },
+    "pymakr.uploadProject": async () => {
+      console.log('upload')
     },
   };
 }

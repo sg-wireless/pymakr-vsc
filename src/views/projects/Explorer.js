@@ -8,7 +8,7 @@ class ProjectsProvider {
    * @param {PyMakr} PyMakr
    */
   constructor(PyMakr) {
-    PyMakr.projectStore.subscribe(this.refresh.bind(this));
+    PyMakr.projectsStore.subscribe(this.refresh.bind(this));
     this.PyMakr = PyMakr;
   }
 
@@ -19,24 +19,13 @@ class ProjectsProvider {
     this._onDidChangeTreeData.fire();
   }
 
-  /**
-   * @param {Dependency} element
-   * @returns { vscode.TreeItem }
-   */
   getTreeItem(element) {
-    // console.log({ element });
-    // console.log(element.label.name);
     return element;
   }
 
-  /**
-   *
-   * @param {Dependency} element
-   * @returns  {Dependency[]}
-   */
   getChildren(element) {
     if (element === undefined) {
-      return this.PyMakr.projectStore.get().map((project) => new TreeItem(project.name));
+      return this.PyMakr.projectsStore.get().map((project) => new TreeItem(project.name));
     }
     return element.children;
   }
