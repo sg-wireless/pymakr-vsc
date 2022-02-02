@@ -73,7 +73,7 @@ class Commands {
       console.log("upload");
     },
     "pymakr.downloadProject": async () => {
-      // this.pymakr.
+      console.log("download");      
     },
 
     /**
@@ -81,14 +81,26 @@ class Commands {
      * @param {import('../views/projects/Explorer').ProjectTreeItem} treeItem
      */
     "pymakr.addDeviceToProject": async (treeItem) => {
+      const { project } = treeItem;
+      const devices = this.pymakr.devicesStore.get();
       const { device } = await vscode.window.showQuickPick([
-        { label: "unset", device: null },
-        ...this.pymakr.devicesStore.get().map((_device) => ({
-          label: _device.name,
-          device: _device,
-        })),
+        ...devices
+          .filter((_device) => !project.devices.includes(_device))
+          .map((_device) => ({
+            label: _device.name,
+            device: _device,
+          })),
       ]);
-      treeItem.project.addDevice(device);
+      project.addDevice(device);
+    },
+
+    /**
+     *
+     * @param {import('../views/projects/Explorer').ProjectDeviceTreeItem} treeItem
+     */
+    "pymakr.removeDeviceFromProject": async (treeItem) => {
+      const { project, device } = treeItem;
+      project.removeDevice(device);
     },
   };
 }

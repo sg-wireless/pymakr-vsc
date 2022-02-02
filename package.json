@@ -96,7 +96,13 @@
       },
       {
         "command": "pymakr.addDeviceToProject",
-        "title": "Add device"
+        "shortTitle": "Add device",
+        "title": "Add device to project"
+      },
+      {
+        "command": "pymakr.removeDeviceFromProject",
+        "title": "Remove device from project",
+        "shortTitle": "Remove device"
       },
       {
         "command": "pymakr.upload",
@@ -184,7 +190,19 @@
         "mac": "cmd+shift+g"
       }
     ],
+    "submenus": [
+      {
+        "id": "pymakr.projectDevice",
+        "icon": "$(ellipsis)",
+        "label": "device"
+      }
+    ],
     "menus": {
+      "pymakr.projectDevice": [
+        {
+          "command": "pymakr.removeDeviceFromProject"
+        }
+      ],
       "view/item/context": [
         {
           "command": "pymakr.addDeviceToProject",
@@ -194,17 +212,22 @@
         {
           "command": "pymakr.downloadProject",
           "when": "viewItem == projectDevice",
-          "group": "inline"
+          "group": "inline@8"
         },
         {
           "command": "pymakr.uploadProject",
           "when": "viewItem == projectDevice",
-          "group": "inline"
+          "group": "inline@6"
         },
         {
           "command": "pymakr.connect",
           "when": "viewItem == device || viewItem == projectDevice",
           "group": "inline"
+        },
+        {
+          "submenu": "pymakr.projectDevice",
+          "group": "inline@10",
+          "when": "viewItem == projectDevice"
         }
       ],
       "view/title": [

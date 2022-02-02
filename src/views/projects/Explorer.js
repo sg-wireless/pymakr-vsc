@@ -57,4 +57,4 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
   }
 }
 
-module.exports = { ProjectsProvider, ProjectTreeItem };
+module.exports = { ProjectsProvider, ProjectTreeItem, ProjectDeviceTreeItem };

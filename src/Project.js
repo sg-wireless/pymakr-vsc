@@ -30,14 +30,26 @@ class Project {
    * @param {import('./Device').Device} device
    */
   addDevice(device) {
-    const { workspaceState } = this.pymakr.context;
     this.devices.push(device);
+    this.pymakr.projectsProvider.refresh();
+    this.saveToWorkspaceState()
+  }
+
+  /**
+   * @param {import('./Device').Device} device
+   */
+  removeDevice(device) {
+    this.devices = this.devices.filter(_device => _device !== device);
+    this.pymakr.projectsProvider.refresh();
+    this.saveToWorkspaceState()
+  }
+
+  saveToWorkspaceState() {
+    const { workspaceState } = this.pymakr.context;
     const projects = workspaceState.get("pycom.projects") || {};
     projects[this.folder] = projects[this.folder] || {};
-    projects[this.folder].devices = projects[this.folder].devices || [];
-    projects[this.folder].devices.push(device.id);
+    projects[this.folder].devices = this.devices.map((d) => d.id);
     workspaceState.update("pycom.projects", projects);
-    this.pymakr.projectsProvider.refresh();
   }
 }
 
