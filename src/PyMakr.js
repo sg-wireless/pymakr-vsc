@@ -8,6 +8,7 @@ const { DevicesProvider } = require("./views/devices/Explorer");
 const { ProjectsProvider } = require("./views/projects/Explorer");
 const serialport = require("serialport");
 const { Server } = require("./terminal/Server");
+const { resolve } = require("path");
 
 /**
  *
@@ -44,6 +45,7 @@ class PyMakr {
     await this.recoverProjects();
     this.projectsProvider.refresh();
     this.decorateStatusBar();
+    this.createTerminalProvider()
   }
 
   async recoverProjects() {
@@ -67,6 +69,14 @@ class PyMakr {
     projectDownload.show();
 
     this.activeProjectStore.subscribe((project) => (projectSelect.text = project.name));
+  }
+
+  createTerminalProvider() {
+    vscode.window.registerTerminalProfileProvider("pymakr.terminal-profile", {
+      provideTerminalProfile: () => ({
+        options: { shellPath: "node", shellArgs: [resolve(__dirname, "terminal/client.js")], name: "PyMakr" },
+      }),
+    });
   }
 
   async registerProjects() {

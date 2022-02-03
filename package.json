@@ -15,6 +15,14 @@
   ],
   "main": "./extension.js",
   "contributes": {
+    "terminal": {
+      "profiles": [
+        {
+          "id": "pymakr.terminal-profile",
+          "title": "PyMakr"
+        }
+      ]
+    },
     "viewsContainers": {
       "activitybar": [
         {
@@ -301,6 +309,7 @@
     "cheap-watch": "^1.0.4",
     "consolite": "^0.2.10",
     "micropython-ctl": "^1.13.8-beta2",
+    "prompts": "^2.4.2",
     "serialport": "^10.0.2"
   }
 }

@@ -16,3 +16,9 @@
  * @prop {string=} password
  * @prop {any=} raw
  */
+
+/**
+ * @typedef {Object} ProtocolAndAddress
+ * @prop {string} protocol
+ * @prop {string} address
+ */
