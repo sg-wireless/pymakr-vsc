@@ -73,7 +73,7 @@ class Commands {
       console.log("upload");
     },
     "pymakr.downloadProject": async () => {
-      console.log("download");      
+      console.log("download");
     },
 
     /**
@@ -83,7 +83,7 @@ class Commands {
     "pymakr.addDeviceToProject": async (treeItem) => {
       const { project } = treeItem;
       const devices = this.pymakr.devicesStore.get();
-      const { device } = await vscode.window.showQuickPick([
+      const pick = await vscode.window.showQuickPick([
         ...devices
           .filter((_device) => !project.devices.includes(_device))
           .map((_device) => ({
@@ -91,7 +91,7 @@ class Commands {
             device: _device,
           })),
       ]);
-      project.addDevice(device);
+      if (pick) project.addDevice(pick.device);
     },
 
     /**
