@@ -7,6 +7,7 @@ const { createTerminalsStore } = require("./stores/terminals");
 const { DevicesProvider } = require("./views/devices/Explorer");
 const { ProjectsProvider } = require("./views/projects/Explorer");
 const serialport = require("serialport");
+const { Server } = require("./terminal/Server");
 
 /**
  *
@@ -28,6 +29,7 @@ class PyMakr {
     this.devicesStore = createDevicesStore(this);
     this.terminalsStore = createTerminalsStore(this);
     this.commands = new Commands(this).commands;
+    this.server = new Server(this);
 
     this.projectsProvider = new ProjectsProvider(this);
     this.devicesProvider = new DevicesProvider(this);
@@ -50,7 +52,7 @@ class PyMakr {
 
   decorateStatusBar() {
     const projectSelect = vscode.window.createStatusBarItem("activeWorkspace", 1, 10);
-    projectSelect.text = this.activeProjectStore.get()?.name
+    projectSelect.text = this.activeProjectStore.get()?.name;
     projectSelect.command = "pymakr.setActiveProject";
     projectSelect.show();
 

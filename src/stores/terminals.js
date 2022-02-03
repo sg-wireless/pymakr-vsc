@@ -1,4 +1,4 @@
-const { Terminal } = require("../Terminal");
+const { Terminal } = require("../terminal/Terminal");
 const { writable } = require("../utils/store");
 const vscode = require("vscode");
 
