@@ -2,6 +2,9 @@ const { createServer } = require("net");
 const vscode = require('vscode')
 const PORT = 5364; // todo abstract
 
+/**
+ * This is the terminal server. It handles all client terminal connections.
+ */
 class Server {
   /**
    * @param {PyMakr} pymakr
@@ -32,6 +35,7 @@ class Server {
         socket.on("data", (data) => {
           this.log.debug('received', data.toString())
           device.adapter.sendData(data);
+          // make sure device data is sent to the last active terminal
           device.adapter.onTerminalData = (data) => socket.write(data);
         });
         
