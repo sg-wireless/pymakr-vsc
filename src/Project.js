@@ -8,7 +8,7 @@ class Project {
    **/
   constructor(configFile, pymakr) {
     this.configFile = configFile;
-    this.folder = dirname(configFile.path);
+    this.folder = dirname(configFile.fsPath);
     this.config = JSON.parse(readFileSync(configFile.fsPath, "utf-8"));
     this.name = this.config.name || basename(this.folder);
     this.pymakr = pymakr;

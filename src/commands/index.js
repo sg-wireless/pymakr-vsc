@@ -1,4 +1,8 @@
+const { mkdirSync, readdirSync, statSync, readFileSync } = require("fs");
+const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
+const { relative } = require("path");
+const { msgs } = require("../utils/msgs");
 
 class Commands {
   /**
@@ -6,6 +10,7 @@ class Commands {
    */
   constructor(pymakr) {
     this.pymakr = pymakr;
+    this.log = pymakr.log.createChild("command >");
     const disposables = Object.entries(this.commands).map(([key, value]) =>
       vscode.commands.registerCommand(key, value.bind(this))
     );
@@ -57,7 +62,6 @@ class Commands {
     },
 
     "pymakr.setActiveProject": async () => {
-      const { relative } = require("path");
       const findShortest = (a, b) => (a.length < b.length ? a : b);
       const workspaceFolders = vscode.workspace.workspaceFolders.map((f) => f.uri.path);
       const selectedProject = await vscode.window.showQuickPick(
@@ -69,15 +73,54 @@ class Commands {
       );
       this.pymakr.activeProjectStore.set(selectedProject.project);
     },
-    "pymakr.uploadProject": async () => {
-      console.log("upload");
-    },
-    "pymakr.downloadProject": async () => {
-      console.log("download");
+
+    /**
+     * @param {import('../views/projects/Explorer').ProjectDeviceTreeItem} treeItem
+     */
+    "pymakr.uploadProject": async (treeItem) => {
+      const uploadFile = async (filename) => {
+        this.log.debug('uploading', filename)
+        const destination =  '/flash/' + relative(treeItem.project.folder, filename)
+        const data = Buffer.from(readFileSync(filename))
+        await treeItem.device.adapter.putFile(destination, data, { checkIfSimilarBeforeUpload: true })
+      };
+
+      const processDir = async (dir) => {
+        for (const file of readdirSync(dir)) {
+          const filename = dir + "/" + file;
+          if (statSync(filename).isFile()) await uploadFile(filename);
+          else await processDir(filename);
+        }
+      };
+
+      processDir(treeItem.project.folder)      
     },
 
     /**
-     *
+     * @param {import('../views/projects/Explorer').ProjectDeviceTreeItem} treeItem
+     */
+    "pymakr.downloadProject": async (treeItem) => {
+      const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
+      const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
+        ...fad,
+        destination: treeItem.project.folder + fad.filename.replace(/^\/flash/, ""),
+      }));
+      const files = filesAndDirs.filter((f) => !f.isDir);
+      const dirs = filesAndDirs.filter((f) => f.isDir);
+
+      this.log.debug(...msgs.download(filesAndDirs));
+
+      dirs.forEach((dir) => mkdirSync(dir.destination, { recursive: true }));
+
+      const writePromises = [];
+      for (const file of files) {
+        const contents = await treeItem.device.adapter.getFile(file.filename);
+        writePromises.push(writeFile(file.destination, contents));
+      }
+      await Promise.all(writePromises);
+    },
+
+    /**
      * @param {import('../views/projects/Explorer').ProjectTreeItem} treeItem
      */
     "pymakr.addDeviceToProject": async (treeItem) => {
