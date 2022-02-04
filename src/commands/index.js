@@ -75,7 +75,7 @@ class Commands {
     },
 
     /**
-     * @param {import('../views/projects/Explorer').ProjectDeviceTreeItem} treeItem
+     * @param {import('../providers/ProjectsProvider').ProjectDeviceTreeItem} treeItem
      */
     "pymakr.uploadProject": async (treeItem) => {
       const uploadFile = async (filename) => {
@@ -97,7 +97,7 @@ class Commands {
     },
 
     /**
-     * @param {import('../views/projects/Explorer').ProjectDeviceTreeItem} treeItem
+     * @param {import('../providers/ProjectsProvider').ProjectDeviceTreeItem} treeItem
      */
     "pymakr.downloadProject": async (treeItem) => {
       const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
@@ -121,7 +121,7 @@ class Commands {
     },
 
     /**
-     * @param {import('../views/projects/Explorer').ProjectTreeItem} treeItem
+     * @param {import('../providers/ProjectsProvider').ProjectTreeItem} treeItem
      */
     "pymakr.addDeviceToProject": async (treeItem) => {
       const { project } = treeItem;
@@ -139,7 +139,7 @@ class Commands {
 
     /**
      *
-     * @param {import('../views/projects/Explorer').ProjectDeviceTreeItem} treeItem
+     * @param {import('../providers/ProjectsProvider').ProjectDeviceTreeItem} treeItem
      */
     "pymakr.removeDeviceFromProject": async (treeItem) => {
       const { project, device } = treeItem;
