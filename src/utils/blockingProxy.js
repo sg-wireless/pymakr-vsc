@@ -1,4 +1,3 @@
-
 /**
  * @template T
  * @typedef {T  & {__isBusy: Boolean, __ready: ResolvablePromise<any>}} BlockingProxy
@@ -6,9 +5,7 @@
 
 /**
  * @typedef {Object} QueueItem
- * @prop {function} method
- * @prop {Object} target
- * @prop {any[]} args
+ * @prop {function} exec
  * @prop {function} resolve
  * @prop {function} reject
  **/
@@ -32,16 +29,25 @@ const resolvablePromise = () => {
 };
 
 /**
+ * queues methods so no method can run before the previously
+ * called method has been resolved or rejected
  * @template T
  * @param {T} _target
+ * @param {Object} _options
+ * @param {string[]} _options.exceptions
  * @returns {BlockingProxy<T>}
  */
-const createBlockingProxy = (_target) => {
+const createBlockingProxy = (_target, _options) => {
   /**@type {QueueItem[]} */
   const queue = [];
 
+  const options = { exceptions: [], ..._options };
+
   const target = /** @type {BlockingProxy<T>} */ (_target);
 
+  /**
+   * runs queued methods in sequence
+   */
   const processQueue = async () => {
     if (target.__isBusy) return;
 
@@ -51,7 +57,7 @@ const createBlockingProxy = (_target) => {
     while (queue.length) {
       const queueItem = queue.shift();
       try {
-        const result = await queueItem.method.bind(queueItem.target)(...queueItem.args);
+        const result = await queueItem.exec();
         queueItem.resolve(result);
       } catch (err) {
         queueItem.reject(err);
@@ -64,11 +70,22 @@ const createBlockingProxy = (_target) => {
 
   return new Proxy(target, {
     get(target, field) {
+      // skip queue for any fields that are exempt
+      if (options.exceptions.includes(field)) return target[field].bind(target);
+
       const method = target[field];
+
       if (field === "__ready") return target["__ready"] || new Promise((resolve) => resolve());
       else if (method instanceof Function) {
         const promise = (...args) =>
-          new Promise((resolve, reject) => queue.push({ method, target, args, resolve, reject }));
+          new Promise((resolve, reject) =>
+            queue.push({
+              exec: () => method.bind(target)(...args),
+              resolve,
+              reject,
+            })
+          );
+
         processQueue();
         return promise;
       } else return method;
