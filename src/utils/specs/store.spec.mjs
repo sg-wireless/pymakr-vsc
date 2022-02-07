@@ -1,6 +1,6 @@
-const { writable, derived, chainDerived } = require("../store");
+import { writable, derived, chainDerived } from "../store.js";
 
-test("plain store", (test) => {
+test("plain store", () => {
   let store;
   let unsub;
   let subValue = "untouched";
@@ -29,7 +29,7 @@ test("plain store", (test) => {
   });
 });
 
-test("derived store", (test) => {
+test("derived store", () => {
   let store;
   let unsub;
   let subValue = "untouched";
@@ -68,7 +68,7 @@ test("derived store", (test) => {
   });
 });
 
-test("deriveChained", (test) => {
+test("deriveChained", () => {
   const storeStr = writable("store1");
   const storeFn = writable(str => 'derived-'+str)
 

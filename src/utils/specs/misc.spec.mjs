@@ -1,4 +1,4 @@
-const { once } = require("../misc");
+import { once } from "../misc.js";
 
 test("once functions can only be called once", () => {
   let counter = 0;
