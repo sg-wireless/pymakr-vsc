@@ -22,8 +22,10 @@ class Project {
     const storedProjects = this.pymakr.context.workspaceState.get("pycom.projects") || {};
     const devices = this.pymakr.devicesStore.get();
     const storedProject = storedProjects[this.folder];
-    this.log.debug("recover", storedProject);
-    if (storedProject) this.devices = devices.filter((_device) => storedProject.devices.includes(_device.id));
+    if (storedProject) {
+      this.log.debug("recover", storedProject);
+      this.devices = devices.filter((_device) => storedProject.devices.includes(_device.id));
+    }
   }
 
   /**
@@ -32,16 +34,16 @@ class Project {
   addDevice(device) {
     this.devices.push(device);
     this.pymakr.projectsProvider.refresh();
-    this.saveToWorkspaceState()
+    this.saveToWorkspaceState();
   }
 
   /**
    * @param {import('./Device').Device} device
    */
   removeDevice(device) {
-    this.devices = this.devices.filter(_device => _device !== device);
+    this.devices = this.devices.filter((_device) => _device !== device);
     this.pymakr.projectsProvider.refresh();
-    this.saveToWorkspaceState()
+    this.saveToWorkspaceState();
   }
 
   saveToWorkspaceState() {
