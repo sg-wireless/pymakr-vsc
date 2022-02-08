@@ -9,6 +9,7 @@ const { ProjectsProvider } = require("./providers/ProjectsProvider");
 const { SerialPort } = require("serialport");
 const { Server } = require("./terminal/Server");
 const { resolve } = require("path");
+const { FileSystemProvider } = require("./providers/filesystemProvider");
 
 /**
  *
@@ -34,18 +35,21 @@ class PyMakr {
 
     this.projectsProvider = new ProjectsProvider(this);
     this.devicesProvider = new DevicesProvider(this);
+    this.fileSystem = new FileSystemProvider(this);
+    vscode.workspace.registerFileSystemProvider("serial", this.fileSystem, { isCaseSensitive: true });
+    vscode.workspace.registerFileSystemProvider("telnet", this.fileSystem, { isCaseSensitive: true });
+    vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider);
+    vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider);
 
     this.setup();
   }
 
   async setup() {
-    vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider);
-    vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider);
     await Promise.all([this.registerUSBDevices(), this.registerProjects()]);
     await this.recoverProjects();
     this.projectsProvider.refresh();
     this.decorateStatusBar();
-    this.createTerminalProvider()
+    this.createTerminalProvider();
   }
 
   async recoverProjects() {

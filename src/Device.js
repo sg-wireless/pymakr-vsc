@@ -1,4 +1,7 @@
 const { MicroPythonDevice } = require("micropython-ctl");
+const vscode = require("vscode");
+const { createBlockingProxy } = require("./utils/blockingProxy");
+const { waitFor } = require("./utils/misc");
 
 class Device {
   /**
@@ -24,19 +27,21 @@ class Device {
 
   async connect() {
     if (this.protocol === "serial") {
-      await this.adapter.connectSerial(this.address);
-      
-      const boardInfoPromise = this.adapter.getBoardInfo();
-      const timeOutPromise = new Promise((_res, rej) =>
-        setTimeout(() => rej("timed out while getting board info"), 3000)
-      );
+      try {
+        this.log.debug("connecting...");
+        const connectPromise = this.adapter.connectSerial(this.address);
+        await waitFor(connectPromise, 1000, "Timed out while connecting.");
+        this.info = await waitFor(this.adapter.getBoardInfo(), 1000, "timed out while getting board info");
 
-      return Promise.race([boardInfoPromise, timeOutPromise])
-        .then((res) => {
-          this.log.debug("boardInfo", res);
-          this.info = res;
-        })
-        .catch((err) => this.log.error(err));
+        this.log.debug("boardInfo", this.info);
+
+        vscode.workspace.updateWorkspaceFolders(0, 0, {
+          uri: vscode.Uri.parse(`${this.protocol}://${this.address}/flash`),
+          name: `${this.protocol}://${this.address}`,
+        });
+      } catch (err) {
+        this.log.error(`Failed to connect to ${this.address} Error:`, err, this.adapter);
+      }
     }
   }
 

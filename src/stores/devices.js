@@ -24,7 +24,18 @@ const createDevicesStore = (pymakr) => {
     store.update((devices) => devices.filter((_device) => _device !== device));
   };
 
-  return { ...store, insert, remove };
+  /**
+   * @param {string} protocol
+   * @param {string} address
+   */
+  const getByProtocolAndAddress = (protocol, address) =>
+    store
+      .get()
+      .find(
+        (_device) => _device.protocol === protocol && _device.address.toLowerCase() === address.toLocaleLowerCase()
+      );
+
+  return { ...store, getByProtocolAndAddress, insert, remove };
 };
 
 module.exports = { createDevicesStore };
