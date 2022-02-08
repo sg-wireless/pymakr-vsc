@@ -1,6 +1,4 @@
 const vscode = require("vscode");
-const fs = require("fs");
-const path = require("path");
 
 /** @implements {vscode.TreeDataProvider<vscode.TreeItem>} */
 class DevicesProvider {
@@ -38,7 +36,7 @@ class TreeItem extends vscode.TreeItem {
   children;
 
   /**
-   * @param {import('../../Device').Device} device
+   * @param {import('../Device').Device} device
    * @param {TreeItem[]=} children
    */
   constructor(device, children) {
