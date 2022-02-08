@@ -15,7 +15,8 @@ class Device {
     this.raw = raw;
     this.id = `${protocol}://${address}`;
     this.log = pymakr.log.createChild("Device: " + this.name);
-    this.adapter = new MicroPythonDevice();
+    const adapter = new MicroPythonDevice();
+    this.adapter = createBlockingProxy(adapter, { exceptions: ["sendData"] });
     /** @type {import("micropython-ctl").BoardInfo} */
     this.info = null;
     this.connect();
