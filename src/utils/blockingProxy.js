@@ -1,11 +1,13 @@
 /**
  * @template T
- * @typedef {T  & {__isBusy: Boolean, __ready: ResolvablePromise<any>}} BlockingProxy
+ * @typedef {T  & {__isBusy: Boolean, __ready: ResolvablePromise<any>, __lastCall: QueueItem}} BlockingProxy
  */
 
 /**
  * @typedef {Object} QueueItem
  * @prop {function} exec
+ * @prop {string|symbol} field
+ * @prop {any[]} args
  * @prop {function} resolve
  * @prop {function} reject
  **/
@@ -34,7 +36,7 @@ const resolvablePromise = () => {
  * @template T
  * @param {T} _target
  * @param {Object} _options
- * @param {string[]} _options.exceptions
+ * @param {(string|symbol)[]} _options.exceptions
  * @returns {BlockingProxy<T>}
  */
 const createBlockingProxy = (_target, _options) => {
@@ -44,6 +46,7 @@ const createBlockingProxy = (_target, _options) => {
   const options = { exceptions: [], ..._options };
 
   const target = /** @type {BlockingProxy<T>} */ (_target);
+  target.__lastCall = null;
 
   /**
    * runs queued methods in sequence
@@ -56,6 +59,7 @@ const createBlockingProxy = (_target, _options) => {
 
     while (queue.length) {
       const queueItem = queue.shift();
+      target.__lastCall = queueItem;
       try {
         const result = await queueItem.exec();
         queueItem.resolve(result);
@@ -74,19 +78,20 @@ const createBlockingProxy = (_target, _options) => {
       if (options.exceptions.includes(field)) return target[field].bind(target);
 
       const method = target[field];
-
       if (field === "__ready") return target["__ready"] || new Promise((resolve) => resolve());
       else if (method instanceof Function) {
         const promise = (...args) =>
-          new Promise((resolve, reject) =>
+          new Promise((resolve, reject) => {
             queue.push({
               exec: () => method.bind(target)(...args),
+              field,
+              args,
               resolve,
               reject,
-            })
-          );
+            });
+            processQueue();
+          });
 
-        processQueue();
         return promise;
       } else return method;
     },
