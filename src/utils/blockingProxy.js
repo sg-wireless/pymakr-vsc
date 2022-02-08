@@ -69,7 +69,6 @@ const createBlockingProxy = (_target, _options) => {
     }
 
     target.__isBusy = false;
-    console.log(target.__ready);
   };
 
   return new Proxy(target, {
@@ -80,8 +79,8 @@ const createBlockingProxy = (_target, _options) => {
       const method = target[field];
       if (field === "__ready") return target["__ready"] || new Promise((resolve) => resolve());
       else if (method instanceof Function) {
-        const promise = (...args) =>
-          new Promise((resolve, reject) => {
+        const promise = (...args) => {
+          return new Promise((resolve, reject) => {
             queue.push({
               exec: () => method.bind(target)(...args),
               field,
@@ -91,7 +90,7 @@ const createBlockingProxy = (_target, _options) => {
             });
             processQueue();
           });
-
+        };
         return promise;
       } else return method;
     },
