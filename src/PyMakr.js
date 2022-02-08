@@ -6,13 +6,13 @@ const { createProjectsStore, createActiveProjectStore } = require("./stores/proj
 const { createTerminalsStore } = require("./stores/terminals");
 const { DevicesProvider } = require("./providers/DevicesProvider");
 const { ProjectsProvider } = require("./providers/ProjectsProvider");
-const serialport = require("serialport");
+const { SerialPort } = require("serialport");
 const { Server } = require("./terminal/Server");
 const { resolve } = require("path");
 
 /**
  *
- * @param {serialport.PortInfo & {friendlyName: string}} raw
+ * @param {import("@serialport/bindings-cpp").PortInfo & {friendlyName: string}} raw
  * @returns {DeviceInput}
  */
 const rawSerialToDeviceInput = (raw) => ({ address: raw.path, name: raw.friendlyName, protocol: "serial", raw });
@@ -86,7 +86,7 @@ class PyMakr {
   }
 
   async registerUSBDevices() {
-    const rawSerials = await serialport.list();
+    const rawSerials = await SerialPort.list();
     this.devicesStore.insert(rawSerials.map(rawSerialToDeviceInput));
   }
 }
