@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "description": "Name of the project. If empty, the project will be named by it's folder name.",
+      "type": "string",
+      "default": "My Pyboard Project"
+    },
+    "ctrl_c_on_connect": {
+      "description": "If true, executes a ctrl-c on connect to stop running programs",
+      "type": "boolean"
+    },
+    "py_ignore": {
+      "description": "Comma separated list of files and folders to ignore when uploading (no wildcard or regular expressions supported",
+      "type": "array"
+    },
+    "safe_boot_on_upload": {
+      "description": "Safe-boot before upload, Only works with firmware v1.16.0.b1 and up. Safe boots the board before uploading to prevent running out of memory while uploading. Especially useful on older boards with less memory, but adds about 2 seconds to the upload procedure'",
+      "type": "boolean"
+    },
+    "reboot_after_upload": {
+      "description": "Reboots your pycom board after any upload or download action",
+      "type": "boolean"
+    },
+    "username": {
+      "description": "Board username, only for telnet",
+      "type": "string",
+      "default": "micro",
+      "deprecated": true,
+      "deprecationMessage": "Deprecated. Board credentials are stored in a persistent VSCode session."
+    },
+    "password": {
+      "description": "Board password, only for telnet",
+      "type": "string",
+      "default": "python",
+      "deprecated": true,
+      "deprecationMessage": "Deprecated. Board credentials are stored in a persistent VSCode session."
+    },
+    "address": {
+      "description": "IP address or comport for your device",
+      "type": "string",
+      "deprecated": true,
+      "deprecationMessage": "Deprecated. Board address is stored in a persistent VSCode session."
+    },
+    "sync_folder": {
+      "description": "Folder to synchronize. Empty to sync projects main folder",
+      "type": "string",
+      "deprecated": true,
+      "deprecationMessage": "Deprecated. Please use the explorer context menu for upload/download of specific folders and files."
+    },
+    "open_on_start": {
+      "description": "Weather to open the terminal and connect to the board when starting Code",
+      "type": "boolean",
+      "deprecated": true,
+      "deprecationMessage": "Deprecated. VSCode will automatically attempt to restore any terminals left open in your last session."
+    },
+    "fast_upload": {
+      "description": "Fast upload (experimental), Uses bigger batches and compresses larger (>4kb) files to make uploading faster. Only works on newer devices with 4mb of ram and firmware version >=1.19.x",
+      "type": "boolean",
+      "deprecated": true,
+      "deprecationMessage": "Deprecated. This may or may not be reimplemented."
+    }
+  }
+}

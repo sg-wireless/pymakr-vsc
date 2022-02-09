@@ -15,6 +15,18 @@
   ],
   "main": "./extension.js",
   "contributes": {
+    "jsonValidation": [
+      {
+        "fileMatch": "pymakr.conf",
+        "url": "./pymakr.schema.json"
+      }
+    ],
+    "languages": [
+      {
+        "id": "json",
+        "filenamePatterns": ["pymakr.conf"]
+      }
+    ],
     "terminal": {
       "profiles": [
         {
@@ -73,6 +85,11 @@
     },
     "commands": [
       {
+        "command": "pymakr.addDeviceToFileExplorer",
+        "title": "Add device to file explorer",
+        "icon": "$(remote-explorer-view-icon)"
+      },
+      {
         "command": "pymakr.newDevice",
         "title": "Add a new device",
         "icon": "$(plus)"
@@ -104,7 +121,7 @@
       },
       {
         "command": "pymakr.addDeviceToProject",
-        "shortTitle": "Add device",
+        "shortTitle": "$(plus)device",
         "title": "Add device to project"
       },
       {
@@ -200,18 +217,23 @@
     ],
     "submenus": [
       {
-        "id": "pymakr.projectDevice",
+        "id": "pymakr.projectDeviceMenu",
         "icon": "$(ellipsis)",
         "label": "device"
       }
     ],
     "menus": {
-      "pymakr.projectDevice": [
+      "pymakr.projectDeviceMenu": [
         {
           "command": "pymakr.removeDeviceFromProject"
         }
       ],
       "view/item/context": [
+        {
+          "command": "pymakr.addDeviceToFileExplorer",
+          "group": "inline@10",
+          "when": "viewItem == device || viewItem == projectDevice"
+        },
         {
           "command": "pymakr.addDeviceToProject",
           "group": "inline",
@@ -233,8 +255,8 @@
           "group": "inline"
         },
         {
-          "submenu": "pymakr.projectDevice",
-          "group": "inline@10",
+          "submenu": "pymakr.projectDeviceMenu",
+          "group": "inline@100",
           "when": "viewItem == projectDevice"
         }
       ],
@@ -310,6 +332,7 @@
     "consolite": "^0.2.10",
     "micropython-ctl": "^1.13.8-beta2",
     "prompts": "^2.4.2",
-    "serialport": "^10.0.2"
+    "serialport": "^10.2.2",
+    "@serialport/bindings": "^10.0.1"
   }
 }
