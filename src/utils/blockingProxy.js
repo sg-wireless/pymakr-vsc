@@ -31,12 +31,14 @@ const resolvablePromise = () => {
 };
 
 /**
- * queues methods so no method can run before the previously
- * called method has been resolved or rejected
+ * returns a proxied _target object. Methods on the returned object
+ * are queued, meaning that no method can run before the previously
+ * called method has been resolved or rejected. In other words,
+ * methods are forced to run in sequence, rather than in parallel.
  * @template T
  * @param {T} _target
  * @param {Object} _options
- * @param {(string|symbol)[]} _options.exceptions
+ * @param {(string|symbol)[]} _options.exceptions methods that should not be queued
  * @returns {BlockingProxy<T>}
  */
 const createBlockingProxy = (_target, _options) => {

@@ -18,11 +18,17 @@ class Device {
     this.raw = raw;
     this.id = `${protocol}://${address}`;
     this.log = pymakr.log.createChild("Device: " + this.name);
-    const adapter = new MicroPythonDevice();
-    this.adapter = createBlockingProxy(adapter, { exceptions: ["sendData"] });
+    this.adapter = this.createAdapter()
     /** @type {import("micropython-ctl").BoardInfo} */
     this.info = null;
     this.connect();
+  }
+
+  createAdapter(){
+    const rawAdapter = new MicroPythonDevice();
+    // We need to wrap the rawAdapter in a blocking proxy to make sure commands
+    // run in sequence rather in in parallel. See JSDoc comment for more info.
+    return createBlockingProxy(rawAdapter, { exceptions: ["sendData"] });
   }
 
   async connect() {
