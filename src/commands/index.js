@@ -4,6 +4,13 @@ const vscode = require("vscode");
 const { relative } = require("path");
 const { msgs } = require("../utils/msgs");
 
+/**
+ * @typedef {import('../providers/ProjectsProvider').ProjectTreeItem} ProjectTreeItem
+ * @typedef {import('../providers/DevicesProvider').DeviceTreeItem} DeviceTreeItem
+ * @typedef {import('../providers/ProjectsProvider').ProjectDeviceTreeItem} ProjectDeviceTreeItem
+ * @typedef {DeviceTreeItem | ProjectDeviceTreeItem} AnyDeviceTreeItem
+ */
+
 class Commands {
   /**
    * @param {PyMakr} pymakr
@@ -75,14 +82,14 @@ class Commands {
     },
 
     /**
-     * @param {import('../providers/ProjectsProvider').ProjectDeviceTreeItem} treeItem
+     * @param {ProjectDeviceTreeItem} treeItem
      */
     "pymakr.uploadProject": async (treeItem) => {
       const uploadFile = async (filename) => {
-        this.log.debug('uploading', filename)
-        const destination =  '/flash/' + relative(treeItem.project.folder, filename)
-        const data = Buffer.from(readFileSync(filename))
-        await treeItem.device.adapter.putFile(destination, data, { checkIfSimilarBeforeUpload: true })
+        this.log.debug("uploading", filename);
+        const destination = "/flash/" + relative(treeItem.project.folder, filename);
+        const data = Buffer.from(readFileSync(filename));
+        await treeItem.device.adapter.putFile(destination, data, { checkIfSimilarBeforeUpload: true });
       };
 
       const processDir = async (dir) => {
@@ -93,11 +100,11 @@ class Commands {
         }
       };
 
-      processDir(treeItem.project.folder)      
+      processDir(treeItem.project.folder);
     },
 
     /**
-     * @param {import('../providers/ProjectsProvider').ProjectDeviceTreeItem} treeItem
+     * @param {ProjectDeviceTreeItem} treeItem
      */
     "pymakr.downloadProject": async (treeItem) => {
       const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
@@ -121,7 +128,7 @@ class Commands {
     },
 
     /**
-     * @param {import('../providers/ProjectsProvider').ProjectTreeItem} treeItem
+     * @param {ProjectTreeItem} treeItem
      */
     "pymakr.addDeviceToProject": async (treeItem) => {
       const { project } = treeItem;
@@ -138,12 +145,22 @@ class Commands {
     },
 
     /**
-     *
-     * @param {import('../providers/ProjectsProvider').ProjectDeviceTreeItem} treeItem
+     * @param {ProjectDeviceTreeItem} treeItem
      */
     "pymakr.removeDeviceFromProject": async (treeItem) => {
       const { project, device } = treeItem;
       project.removeDevice(device);
+    },
+
+    /**
+     * @param {ProjectDeviceTreeItem} treeItem
+     */
+    "pymakr.addDeviceToFileExplorer": async (treeItem) => {
+      const { device } = treeItem;
+      vscode.workspace.updateWorkspaceFolders(0, 0, {
+        uri: vscode.Uri.parse(`${device.protocol}://${device.address}/flash`),
+        name: `${device.protocol}://${device.address}`,
+      });
     },
   };
 }

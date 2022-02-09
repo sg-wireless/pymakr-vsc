@@ -25,19 +25,19 @@ class DevicesProvider {
 
   getChildren(element) {
     if (element === undefined) {
-      return this.PyMakr.devicesStore.get().map((device) => new TreeItem(device));
+      return this.PyMakr.devicesStore.get().map((device) => new DeviceTreeItem(device));
     }
     return element.children;
   }
 }
 
-class TreeItem extends vscode.TreeItem {
-  /** @type {TreeItem[]|undefined} */
+class DeviceTreeItem extends vscode.TreeItem {
+  /** @type {DeviceTreeItem[]|undefined} */
   children;
 
   /**
    * @param {import('../Device').Device} device
-   * @param {TreeItem[]=} children
+   * @param {DeviceTreeItem[]=} children
    */
   constructor(device, children) {
     super(
@@ -49,4 +49,4 @@ class TreeItem extends vscode.TreeItem {
   }
 }
 
-module.exports = { DevicesProvider };
+module.exports = { DevicesProvider, DeviceTreeItem };
