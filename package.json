@@ -30,7 +30,7 @@
             6
           ],
           "enumDescriptions": ["fatal", "error", "warn", "info", "debug", "trace"],
-          "description": "Defaults to 'info'. Logs can be seen in the developer tools (ctrl + shift i)."
+          "description": "Defaults to 'info'. Logs can be read in the developer tools (ctrl + shift i)."
         },
         "pymakr.logFilter": {
           "type": "string",
