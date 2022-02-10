@@ -34,10 +34,11 @@ class Device {
   async connect() {
     if (this.protocol === "serial") {
       try {
-        this.log.debug("connecting...");
+        this.log.info("connecting...");
         const connectPromise = this.adapter.connectSerial(this.address);
-        await waitFor(connectPromise, 1000, "Timed out while connecting.");
-        this.info = await waitFor(this.adapter.getBoardInfo(), 1000, "timed out while getting board info");
+        await waitFor(connectPromise, 2000, "Timed out while connecting.");
+        this.log.info('connected.')
+        this.info = await waitFor(this.adapter.getBoardInfo(), 10000, "timed out while getting board info");
 
         this.log.debug("boardInfo", this.info);
       } catch (err) {

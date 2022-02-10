@@ -1,4 +1,3 @@
-const { createLogger } = require("consolite");
 const vscode = require("vscode");
 const { Commands } = require("./commands");
 const { createDevicesStore } = require("./stores/devices");
@@ -10,6 +9,7 @@ const { SerialPort } = require("serialport");
 const { Server } = require("./terminal/Server");
 const { resolve } = require("path");
 const { FileSystemProvider } = require("./providers/filesystemProvider");
+const { createLogger } = require("./utils/createLogger");
 
 /**
  *
@@ -23,9 +23,10 @@ class PyMakr {
    * @param {vscode.ExtensionContext} context
    */
   constructor(context) {
-    this.context = context;
     this.log = createLogger("PyMakr");
-    this.log.level = 5;
+    this.updateConfig("silent");
+    this.context = context;
+
     this.projectsStore = createProjectsStore(this);
     this.activeProjectStore = createActiveProjectStore(this);
     this.devicesStore = createDevicesStore(this);
@@ -40,8 +41,16 @@ class PyMakr {
     vscode.workspace.registerFileSystemProvider("telnet", this.fileSystem, { isCaseSensitive: true });
     vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider);
     vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider);
+    vscode.workspace.onDidChangeConfiguration(this.updateConfig.bind(this));
 
     this.setup();
+  }
+
+  updateConfig(mode) {
+    const config = vscode.workspace.getConfiguration("pymakr");
+    this.log.level = this.log.levels[config.logLevel];
+    this.log.filter = config.logFilter !== "" ? new RegExp(config.logFilter) : null;
+    if (mode !== "silent") this.log.info("updated config:", config);
   }
 
   async setup() {

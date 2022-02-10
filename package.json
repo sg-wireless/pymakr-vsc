@@ -19,23 +19,36 @@
       "title": "PyMakr",
       "properties": {
         "pymakr.logLevel": {
-          "type": "number",
-          "default": 3,
+          "type": "string",
+          "default": "info",
           "enum": [
-            1,
-            2,
-            3,
-            4,
-            5,
-            6
+            "fatal",
+            "error",
+            "warn",
+            "info",
+            "debugShort",
+            "debug",
+            "traceShort",
+            "trace"
           ],
-          "enumDescriptions": ["fatal", "error", "warn", "info", "debug", "trace"],
+          "enumDescriptions": [
+            "Plugin breaking errors",
+            "Errors",
+            "Warnings",
+            "General plugin information",
+            "Short debug messages",
+            "Long debug messages",
+            "Trace without stacktrace",
+            "Trace with stacktrace"
+          ],
           "description": "Defaults to 'info'. Logs can be read in the developer tools (ctrl + shift i)."
         },
         "pymakr.logFilter": {
           "type": "string",
           "description": "Regular expression. If not empty, only logs matching the filter will be displayed.",
-          "examples": [".*terminal.*"]
+          "examples": [
+            ".*terminal.*"
+          ]
         }
       }
     },
@@ -354,11 +367,11 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@serialport/bindings": "^10.0.1",
     "cheap-watch": "^1.0.4",
-    "consolite": "^0.2.10",
+    "consolite": "^0.3.3",
     "micropython-ctl-cont": "^1.13.8",
     "prompts": "^2.4.2",
-    "serialport": "^10.2.2",
-    "@serialport/bindings": "^10.0.1"
+    "serialport": "^10.2.2"
   }
 }

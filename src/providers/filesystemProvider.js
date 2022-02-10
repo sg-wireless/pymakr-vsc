@@ -64,10 +64,11 @@ class FileSystemProvider {
   async stat(uri) {
     const device = this._getDevice(uri);
     try {
+      this.log.traceShort("stat file", uri);
       const stat = await device.adapter.statPath(uri.path);
-      console.log("stat", stat);
+      this.log.debug("stat for", uri.path, stat);
+
       if (!stat.exists) throw vscode.FileSystemError.FileNotFound(uri);
-      console.log(stat)
       return {
         ctime: Date.now(), //todo (fork or pr for micropython-ctl)
         mtime: Date.now(), //todo (fork or pr for micropython-ctl)
@@ -84,12 +85,13 @@ class FileSystemProvider {
    * @param {vscode.Uri} uri
    */
   async readDirectory(uri) {
+    this.log.traceShort("read dir", uri.path);
     const device = this._getDevice(uri);
     const path = uri.path.startsWith("/flash") ? uri.path : "/flash";
 
     try {
       const files = await device.adapter.listFiles(path, { recursive: false });
-      this.log.debug("read dir", path, JSON.stringify(files));
+      this.log.debug( `found files in "${uri.path}"`, files);
       /** @type { [string, vscode.FileType][]} */
       const content = files.map((f) => [
         f.filename.replace(/^\/.+\//, ""), // get basename instead of absolute path
