@@ -24,7 +24,9 @@
     "languages": [
       {
         "id": "json",
-        "filenamePatterns": ["pymakr.conf"]
+        "filenamePatterns": [
+          "pymakr.conf"
+        ]
       }
     ],
     "terminal": {
