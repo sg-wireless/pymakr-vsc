@@ -1,5 +1,6 @@
 const { readFileSync } = require("fs");
 const { dirname, basename } = require("path");
+const vscode = require("vscode");
 
 class Project {
   /**
@@ -7,15 +8,24 @@ class Project {
    * @param {PyMakr} pymakr
    **/
   constructor(configFile, pymakr) {
+    this.pymakr = pymakr;
     this.configFile = configFile;
     this.folder = dirname(configFile.fsPath);
-    this.config = JSON.parse(readFileSync(configFile.fsPath, "utf-8"));
+    this.config = {};
+    try {
+      this.config = JSON.parse(readFileSync(configFile.fsPath, "utf-8"));
+    } catch (err) {
+      this.err = `Could not parse config: ${configFile.fsPath}`;
+      this.pymakr.log.error("could not parse config:", configFile.fsPath);
+      vscode.window.showErrorMessage(this.err);
+    }
+
     this.name = this.config.name || basename(this.folder);
-    this.pymakr = pymakr;
     this.log = pymakr.log.createChild("project: " + this.name);
 
     /** @type {import('./Device').Device[]} */
     this.devices = [];
+    this.recoverProject()
   }
 
   recoverProject() {
