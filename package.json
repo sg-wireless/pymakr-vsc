@@ -15,6 +15,30 @@
   ],
   "main": "./extension.js",
   "contributes": {
+    "configuration": {
+      "title": "PyMakr",
+      "properties": {
+        "pymakr.logLevel": {
+          "type": "number",
+          "default": 3,
+          "enum": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "enumDescriptions": ["fatal", "error", "warn", "info", "debug", "trace"],
+          "description": "Defaults to 'info'. Logs can be seen in the developer tools (ctrl + shift i)."
+        },
+        "pymakr.logFilter": {
+          "type": "string",
+          "description": "Regular expression. If not empty, only logs matching the filter will be displayed.",
+          "examples": [".*terminal.*"]
+        }
+      }
+    },
     "jsonValidation": [
       {
         "fileMatch": "pymakr.conf",
