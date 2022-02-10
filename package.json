@@ -356,7 +356,7 @@
   "dependencies": {
     "cheap-watch": "^1.0.4",
     "consolite": "^0.2.10",
-    "micropython-ctl": "^1.13.8-beta2",
+    "micropython-ctl-cont": "^1.13.8",
     "prompts": "^2.4.2",
     "serialport": "^10.2.2",
     "@serialport/bindings": "^10.0.1"
