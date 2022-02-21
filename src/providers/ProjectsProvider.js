@@ -33,7 +33,7 @@ class ProjectsProvider {
 
 class ProjectTreeItem extends vscode.TreeItem {
   /**
-   * @param {import('../../Project').Project} project
+   * @param {import('../Project').Project} project
    */
   constructor(project) {
     super(project.name, 2);
@@ -46,13 +46,14 @@ class ProjectTreeItem extends vscode.TreeItem {
 class ProjectDeviceTreeItem extends vscode.TreeItem {
   /**
    *
-   * @param {import('../../Device').Device} device
-   * @param {import('../../Project').Project} project
+   * @param {import('../Device').Device} device
+   * @param {import('../Project').Project} project
    */
   constructor(device, project) {
     super(device.name, vscode.TreeItemCollapsibleState.None);
     this.project = project
     this.device = device
+    this.contextValue = device.connected ? "connectedProjectDevice" : 'projectDevice';
     const filename = device.connected ? 'lightning.svg' : 'lightning-muted.svg'
     this.iconPath = {
       dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),

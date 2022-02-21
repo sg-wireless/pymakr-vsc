@@ -25,7 +25,25 @@ class Commands {
   }
 
   commands = {
+    "pymakr.runSelection": () => {
+      console.log("not implemented yet");
+    },
+    /**
+     * @param {ProjectDeviceTreeItem} treeItem
+     */
     "pymakr.connect": (treeItem) => {
+      treeItem.device.connect()
+    },
+    /**
+     * @param {ProjectDeviceTreeItem} treeItem
+     */
+    "pymakr.disconnect": (treeItem) => {
+      treeItem.device.disconnect()
+    },
+    /**
+     * @param {ProjectDeviceTreeItem} treeItem
+     */
+    "pymakr.createTerminal": (treeItem) => {
       this.pymakr.terminalsStore.create(treeItem.device);
     },
 

@@ -124,9 +124,14 @@
     },
     "commands": [
       {
+        "command": "pymakr.connect",
+        "title": "Connect device",
+        "icon": "$(zap)"
+      },
+      {
         "command": "pymakr.addDeviceToFileExplorer",
-        "title": "Add device to file explorer",
-        "icon": "$(remote-explorer-view-icon)"
+        "title": "Open device in file explorer",
+        "icon": "$(folder)"
       },
       {
         "command": "pymakr.newDevice",
@@ -134,13 +139,13 @@
         "icon": "$(plus)"
       },
       {
-        "command": "pymakr.connect",
+        "command": "pymakr.createTerminal",
         "title": "Create terminal",
         "icon": "$(terminal-view-icon)"
       },
       {
         "command": "pymakr.disconnect",
-        "title": "Disconnect"
+        "title": "Disconnect device"
       },
       {
         "command": "pymakr.downloadProject",
@@ -185,7 +190,7 @@
         "title": "Pymakr > Run current file"
       },
       {
-        "command": "pymakr.runselection",
+        "command": "pymakr.runSelection",
         "title": "Pymakr > Run current selection"
       },
       {
@@ -224,7 +229,7 @@
         "when": "terminalFocus"
       },
       {
-        "command": "pymakr.connect",
+        "command": "pymakr.createTerminal",
         "key": "ctrl+shift+c",
         "mac": "cmd+shift+c"
       },
@@ -244,7 +249,7 @@
         "mac": "cmd+shift+r"
       },
       {
-        "command": "pymakr.runselection",
+        "command": "pymakr.runSelection",
         "key": "ctrl+shift+enter",
         "mac": "cmd+shift+enter"
       },
@@ -264,14 +269,18 @@
     "menus": {
       "pymakr.projectDeviceMenu": [
         {
-          "command": "pymakr.removeDeviceFromProject"
+          "command": "pymakr.removeDeviceFromProject",
+          "when": "viewItem == connectedProjectDevice"
+        },
+        {
+          "command": "pymakr.disconnect"
         }
       ],
       "view/item/context": [
         {
           "command": "pymakr.addDeviceToFileExplorer",
           "group": "inline@10",
-          "when": "viewItem == device || viewItem == projectDevice"
+          "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice"
         },
         {
           "command": "pymakr.addDeviceToProject",
@@ -280,13 +289,18 @@
         },
         {
           "command": "pymakr.downloadProject",
-          "when": "viewItem == projectDevice",
+          "when": "viewItem == connectedProjectDevice",
           "group": "inline@8"
         },
         {
           "command": "pymakr.uploadProject",
-          "when": "viewItem == projectDevice",
+          "when": "viewItem == connectedProjectDevice",
           "group": "inline@6"
+        },
+        {
+          "command": "pymakr.createTerminal",
+          "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice",
+          "group": "inline"
         },
         {
           "command": "pymakr.connect",
@@ -296,7 +310,7 @@
         {
           "submenu": "pymakr.projectDeviceMenu",
           "group": "inline@100",
-          "when": "viewItem == projectDevice"
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice"
         }
       ],
       "view/title": [
@@ -318,7 +332,7 @@
       ],
       "editor/context": [
         {
-          "command": "pymakr.connect",
+          "command": "pymakr.createTerminal",
           "group": "pymakr"
         },
         {
@@ -326,7 +340,7 @@
           "group": "pymakr"
         },
         {
-          "command": "pymakr.runselection",
+          "command": "pymakr.runSelection",
           "group": "pymakr"
         },
         {

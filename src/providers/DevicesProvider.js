@@ -38,15 +38,11 @@ class DeviceTreeItem extends vscode.TreeItem {
 
   /**
    * @param {import('../Device').Device} device
-   * @param {DeviceTreeItem[]=} children
    */
-  constructor(device, children) {
-    super(
-      device.name,
-      children === undefined ? vscode.TreeItemCollapsibleState.None : vscode.TreeItemCollapsibleState.Collapsed
-    );
-    this.contextValue = "device";
-    this.device = device
+  constructor(device) {
+    super(device.name, vscode.TreeItemCollapsibleState.None);
+    this.contextValue = device.connected ? "connectedDevice" : "device";
+    this.device = device;
     const filename = device.connected ? 'lightning.svg' : 'lightning-muted.svg'
     this.iconPath = {
       dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),

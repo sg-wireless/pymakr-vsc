@@ -49,7 +49,7 @@ class PyMakr {
   updateConfig(mode) {
     const config = vscode.workspace.getConfiguration("pymakr");
     this.log.level = this.log.levels[config.logLevel];
-    this.log.filter = config.logFilter !== "" ? new RegExp(config.logFilter) : null;
+    this.log.filter = config.logFilter !== "" ? new RegExp(config.logFilter) : '';
     if (mode !== "silent") this.log.info("updated config:", config);
   }
 
