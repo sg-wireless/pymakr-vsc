@@ -100,7 +100,7 @@ class PyMakr {
 
   async registerUSBDevices() {
     const rawSerials = await SerialPort.list();
-    this.devicesStore.insert(rawSerials.map(rawSerialToDeviceInput));
+    this.devicesStore.upsert(rawSerials.map(rawSerialToDeviceInput));
   }
 }
 

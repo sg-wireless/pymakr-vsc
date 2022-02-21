@@ -12,8 +12,12 @@ const createDevicesStore = (pymakr) => {
   /**
    * @param {DeviceInput|DeviceInput[]} deviceInput
    */
-  const insert = (deviceInput) => {
-    const newDevices = coerceArray(deviceInput).map((input) => new Device(pymakr, input));
+  const upsert = (deviceInput) => {
+    const deviceInputs = coerceArray(deviceInput);
+    const newDeviceInputs = deviceInputs.filter(
+      (input) => !store.get().find((device) => device.protocol === input.protocol && device.address === input.address)
+    );
+    const newDevices = newDeviceInputs.map((input) => new Device(pymakr, input));
     store.update((devices) => [...devices, ...newDevices]);
   };
 
@@ -35,7 +39,7 @@ const createDevicesStore = (pymakr) => {
         (_device) => _device.protocol === protocol && _device.address.toLowerCase() === address.toLocaleLowerCase()
       );
 
-  return { ...store, getByProtocolAndAddress, insert, remove };
+  return { ...store, getByProtocolAndAddress, upsert, remove };
 };
 
 module.exports = { createDevicesStore };

@@ -65,7 +65,7 @@ class Commands {
         prompt: "Name of your device",
       });
 
-      this.pymakr.devicesStore.insert({ address, protocol, name, username, password });
+      this.pymakr.devicesStore.upsert({ address, protocol, name, username, password });
     },
 
     "pymakr.setActiveProject": async () => {
