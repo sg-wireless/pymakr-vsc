@@ -53,7 +53,11 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
     super(device.name, vscode.TreeItemCollapsibleState.None);
     this.project = project
     this.device = device
-    this.contextValue = "projectDevice";
+    const filename = device.connected ? 'lightning.svg' : 'lightning-muted.svg'
+    this.iconPath = {
+      dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
+      light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
+    };
   }
 }
 

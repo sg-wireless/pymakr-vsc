@@ -1,3 +1,4 @@
+const path = require("path");
 const vscode = require("vscode");
 
 /** @implements {vscode.TreeDataProvider<vscode.TreeItem>} */
@@ -46,6 +47,11 @@ class DeviceTreeItem extends vscode.TreeItem {
     );
     this.contextValue = "device";
     this.device = device
+    const filename = device.connected ? 'lightning.svg' : 'lightning-muted.svg'
+    this.iconPath = {
+      dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
+      light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
+    };
   }
 }
 
