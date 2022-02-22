@@ -22,6 +22,7 @@ class Device {
     this.connected = false;
     this.name = name;
     this.raw = raw;
+    /** `${protocol}://${address}` */
     this.id = `${protocol}://${address}`;
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
