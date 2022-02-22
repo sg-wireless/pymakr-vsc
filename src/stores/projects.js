@@ -52,13 +52,15 @@ const createActiveProjectStore = (pymakr) => {
   const setToLastUsedOrFirstFound = () => {
     const folder = pymakr.context.workspaceState.get("activeProject");
     const projects = pymakr.projectsStore.get();
-    const project = projects.find((_project) => _project.folder === folder) || projects[0];
-    set(project);
+    if (projects && projects.length) {
+      const project = projects.find((_project) => _project.folder === folder) || projects[0];
+      set(project);
+    }
   };
   return {
     ...store,
     set,
-    setToLastUsedOrFirstFound
+    setToLastUsedOrFirstFound,
   };
 };
 
