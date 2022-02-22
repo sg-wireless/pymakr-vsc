@@ -42,4 +42,36 @@ const createDevicesStore = (pymakr) => {
   return { ...store, getByProtocolAndAddress, upsert, remove };
 };
 
-module.exports = { createDevicesStore };
+/**
+ * @param {PyMakr} pymakr
+ */
+const createActiveDeviceStore = (pymakr) => {
+  /** @type {Writable<Device>} */
+  const store = writable(null);
+
+  /** @param {Device} value */
+  const set = (value) => {
+    pymakr.context.workspaceState.update("activeDevice", value.id);
+    store.set(value);
+  };
+
+  /**
+   * Recovers the active device from the workspace state
+   * If no device is found, the first available device is chosen
+   */
+  const setToLastUsedOrFirstFound = () => {
+    const deviceId = pymakr.context.workspaceState.get("activeDevice");
+    const devices = pymakr.devicesStore.get();
+    if (devices && devices.length) {
+      const device = devices.find((d) => d.id === deviceId) || devices.find((d) => d.connected) || devices[0];
+      set(device);
+    }
+  };
+  return {
+    ...store,
+    set,
+    setToLastUsedOrFirstFound,
+  };
+};
+
+module.exports = { createDevicesStore, createActiveDeviceStore };

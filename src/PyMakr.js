@@ -1,6 +1,6 @@
 const vscode = require("vscode");
 const { Commands } = require("./commands");
-const { createDevicesStore } = require("./stores/devices");
+const { createDevicesStore, createActiveDeviceStore } = require("./stores/devices");
 const { createProjectsStore, createActiveProjectStore } = require("./stores/projects");
 const { createTerminalsStore } = require("./stores/terminals");
 const { DevicesProvider } = require("./providers/DevicesProvider");
@@ -29,6 +29,7 @@ class PyMakr {
 
     this.projectsStore = createProjectsStore(this);
     this.activeProjectStore = createActiveProjectStore(this);
+    this.activeDeviceStore = createActiveDeviceStore(this);
     this.devicesStore = createDevicesStore(this);
     this.terminalsStore = createTerminalsStore(this);
     this.commands = new Commands(this).commands;
@@ -49,7 +50,7 @@ class PyMakr {
   updateConfig(mode) {
     const config = vscode.workspace.getConfiguration("pymakr");
     this.log.level = this.log.levels[config.logLevel];
-    this.log.filter = config.logFilter !== "" ? new RegExp(config.logFilter) : '';
+    this.log.filter = config.logFilter !== "" ? new RegExp(config.logFilter) : "";
     if (mode !== "silent") this.log.info("updated config:", config);
   }
 
@@ -66,10 +67,15 @@ class PyMakr {
   }
 
   decorateStatusBar() {
-    const projectSelect = vscode.window.createStatusBarItem("activeWorkspace", 1, 10);
-    projectSelect.text = this.activeProjectStore.get()?.name;
+    const projectSelect = vscode.window.createStatusBarItem("activeWorkspace", 1, 11);
+    projectSelect.text = this.activeProjectStore.get()?.name || "[no project selected]";
     projectSelect.command = "pymakr.setActiveProject";
     projectSelect.show();
+
+    const deviceSelect = vscode.window.createStatusBarItem("activeWorkspace", 1, 10);
+    deviceSelect.text = this.activeDeviceStore.get()?.name || "[no device selected]";
+    deviceSelect.command = "pymakr.setActiveDevice";
+    deviceSelect.show();
 
     const projectUpload = vscode.window.createStatusBarItem("projectUpload", 1, 9);
     projectUpload.text = "$(cloud-upload)";
@@ -82,6 +88,7 @@ class PyMakr {
     projectDownload.show();
 
     this.activeProjectStore.subscribe((project) => (projectSelect.text = project.name));
+    this.activeDeviceStore.subscribe((device) => (deviceSelect.text = device.name));
   }
 
   createTerminalProvider() {

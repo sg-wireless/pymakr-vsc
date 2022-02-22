@@ -102,6 +102,16 @@ class Commands {
       this.pymakr.activeProjectStore.set(selectedProject.project);
     },
 
+    "pymakr.setActiveDevice": async () => {
+      const selectedDevice = await vscode.window.showQuickPick(
+        this.pymakr.devicesStore.get().map((device) => ({
+          label: device.name,
+          device,
+        }))
+      );
+      this.pymakr.activeDeviceStore.set(selectedDevice.device);
+    },
+
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */

@@ -49,6 +49,7 @@ class Device {
         this.log.info("connected.");
         this.info = await waitFor(this.adapter.getBoardInfo(), 10000, "timed out while getting board info");
         this.log.debug("boardInfo", this.info);
+        await this.pymakr.activeDeviceStore.setToLastUsedOrFirstFound();
       } catch (err) {
         const error = [`Failed to connect to ${this.address}.`, err.message, this.adapter]
         vscode.window.showErrorMessage([error[0], err.message , 'Please see developer logs for more info.'].join(' - '))
