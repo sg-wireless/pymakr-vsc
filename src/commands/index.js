@@ -17,7 +17,7 @@ class Commands {
    */
   constructor(pymakr) {
     this.pymakr = pymakr;
-    this.log = pymakr.log.createChild("command >");
+    this.log = pymakr.log.createChild("command");
     const disposables = Object.entries(this.commands).map(([key, value]) =>
       vscode.commands.registerCommand(key, value.bind(this))
     );
