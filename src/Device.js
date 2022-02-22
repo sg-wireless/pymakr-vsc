@@ -2,7 +2,7 @@ const { MicroPythonDevice } = require("micropython-ctl");
 const { createBlockingProxy } = require("./utils/blockingProxy");
 const { waitFor } = require("./utils/misc");
 const { writable } = require("./utils/store");
-const vscode = require('vscode')
+const vscode = require("vscode");
 
 class Device {
   /**
@@ -43,7 +43,7 @@ class Device {
       try {
         this.log.info("connecting...");
         const connectPromise = this.adapter.connectSerial(this.address);
-        await waitFor(connectPromise, 2000, "Timed out while connecting.");        
+        await waitFor(connectPromise, 2000, "Timed out while connecting.");
         this.connected = true;
         this.changed();
         this.log.info("connected.");
@@ -51,17 +51,17 @@ class Device {
         this.log.debug("boardInfo", this.info);
         await this.pymakr.activeDeviceStore.setToLastUsedOrFirstFound();
       } catch (err) {
-        const error = [`Failed to connect to ${this.address}.`, err.message, this.adapter]
-        vscode.window.showErrorMessage([error[0], err.message , 'Please see developer logs for more info.'].join(' - '))
-        this.log.error(...error)
+        const error = [`Failed to connect to ${this.address}.`, err.message, this.adapter];
+        vscode.window.showErrorMessage([error[0], err.message, "Please see developer logs for more info."].join(" - "));
+        this.log.error(...error);
       }
     }
   }
-  async disconnect(){
-    const connectPromise = this.adapter.disconnect()
+  async disconnect() {
+    const connectPromise = this.adapter.disconnect();
     await waitFor(connectPromise, 2000, "Timed out while disconnecting.");
-    this.connected = false
-    this.changed()
+    this.connected = false;
+    this.changed();
   }
 
   propagate() {

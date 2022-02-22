@@ -32,13 +32,13 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     "pymakr.connect": (treeItem) => {
-      treeItem.device.connect()
+      treeItem.device.connect();
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
     "pymakr.disconnect": (treeItem) => {
-      treeItem.device.disconnect()
+      treeItem.device.disconnect();
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem
