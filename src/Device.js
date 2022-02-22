@@ -32,6 +32,23 @@ class Device {
     subscribe(() => this.propagate());
   }
 
+  /**
+   *
+   * @param {string} script
+   * @param {import("micropython-ctl-cont").RunScriptOptions} options
+   * @returns
+   */
+  async runScript(script, options) {
+    /** @type {import("micropython-ctl-cont").RunScriptOptions} options */
+    const defaults = {
+      runGcCollectBeforeCommand: true,      
+    };
+    this.log.debugShort(`runScript:\n\n${script}\n\n`);
+    const result = await this.adapter.runScript(script + "\n", Object.assign(defaults, options));
+    this.log.debugShort(`script returned:\n\n${result}\n\n`);
+    return result;
+  }
+
   createAdapter() {
     const rawAdapter = new MicroPythonDevice();
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands

@@ -25,8 +25,24 @@ class Commands {
   }
 
   commands = {
-    "pymakr.runSelection": () => {
-      console.log("not implemented yet");
+    "pymakr.runEditor": async () => {
+      const editor = vscode.window.activeTextEditor;
+      const text = editor.document.getText(editor.selection) || editor.document.getText();
+      return this.commands["pymakr.runScript"](text);
+    },
+    /**
+     * @param {string} text
+     */
+    "pymakr.runScript": async (text) => {
+      const options = {};
+      return await this.pymakr.activeDeviceStore.get().runScript(text, options);
+    },
+    /**
+     * @param {vscode.Uri} uri
+     */
+    "pymakr.runFile": (uri) => {
+      const text = readFileSync(uri.fsPath, "utf-8");
+      return this.commands["pymakr.runScript"](text);
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem

@@ -190,12 +190,14 @@
         "title": "Pymakr > Download project"
       },
       {
-        "command": "pymakr.run",
-        "title": "Pymakr > Run current file"
+        "command": "pymakr.runEditor",
+        "title": "Run on device",        
+        "shortTitle": "Run"
       },
       {
-        "command": "pymakr.runSelection",
-        "title": "Pymakr > Run current selection"
+        "command": "pymakr.runFile",
+        "title": "Run on device",
+        "shortTitle": "Run"
       },
       {
         "command": "pymakr.projectSettings",
@@ -248,14 +250,9 @@
         "mac": "ctrl+shift+s"
       },
       {
-        "command": "pymakr.run",
+        "command": "pymakr.runEditor",
         "key": "ctrl+shift+r",
         "mac": "cmd+shift+r"
-      },
-      {
-        "command": "pymakr.runSelection",
-        "key": "ctrl+shift+enter",
-        "mac": "cmd+shift+enter"
       },
       {
         "command": "pymakr.globalSettings",
@@ -268,6 +265,10 @@
         "id": "pymakr.projectDeviceMenu",
         "icon": "$(ellipsis)",
         "label": "device"
+      },
+      {
+        "id": "pymakr.editorContextMenu",
+        "label": "pymakr"
       }
     ],
     "menus": {
@@ -278,6 +279,16 @@
         },
         {
           "command": "pymakr.disconnect"
+        }
+      ],
+      "pymakr.editorContextMenu": [
+        {
+          "command": "pymakr.runEditor",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.upload",
+          "group": "pymakr"
         }
       ],
       "view/item/context": [
@@ -330,31 +341,18 @@
           "group": "pymakr"
         },
         {
-          "command": "pymakr.run",
+          "command": "pymakr.runFile",
           "group": "pymakr"
         }
       ],
       "editor/context": [
         {
-          "command": "pymakr.createTerminal",
-          "group": "pymakr"
-        },
-        {
-          "command": "pymakr.run",
-          "group": "pymakr"
-        },
-        {
-          "command": "pymakr.runSelection",
-          "group": "pymakr"
-        },
-        {
-          "command": "pymakr.upload",
-          "group": "pymakr"
+          "submenu": "pymakr.editorContextMenu"
         }
       ],
       "editor/title": [
         {
-          "command": "pymakr.run",
+          "command": "pymakr.runEditor",
           "group": "pymakr"
         },
         {
