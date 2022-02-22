@@ -179,11 +179,7 @@
       },
       {
         "command": "pymakr.upload",
-        "title": "Pymakr > Upload project"
-      },
-      {
-        "command": "pymakr.uploadFile",
-        "title": "Pymakr > Upload current file only"
+        "title": "Upload to device"
       },
       {
         "command": "pymakr.download",
