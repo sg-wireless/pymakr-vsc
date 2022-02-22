@@ -35,7 +35,7 @@ const createTimeout = (time, msg = "operation timed out") =>
 
 /**
  * promise wrapper that returns a rejection if the promise didn't resolve within <time>
- * @example 
+ * @example
  * const body = await waitFor(fetchFile('hello.txt'), 3000, 'file failed to fetch in 3 seconds.')
  * @template T
  * @param {Promise<T>} promise
@@ -45,4 +45,17 @@ const createTimeout = (time, msg = "operation timed out") =>
  */
 const waitFor = (promise, time, msg) => Promise.race([promise, createTimeout(time, msg)]);
 
-module.exports = { once, coerceArray, createTimeout, waitFor };
+/**
+ * Coerce functions to {dispose: function}
+ * Objects with a dispose property will be returned as is
+ * @template {(()=>any)|{dispose: ()=>any}} T
+ * @param {T} fn
+ * @returns {{dispose: ()=>any}}
+ */
+const coerceDisposable = (fn) => {
+  if (fn instanceof Function) return { dispose: fn };
+  else if (fn.dispose) return fn;
+  else throw new Error("fn must be a function or an object with a dispose property");
+};
+
+module.exports = { once, coerceArray, createTimeout, waitFor, coerceDisposable };

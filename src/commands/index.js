@@ -25,6 +25,10 @@ class Commands {
   }
 
   commands = {
+    "pymakr.toggleAdvancedMode": async () => {
+      const advancedMode = vscode.workspace.getConfiguration("pymakr").get("advancedMode");
+      this.pymakr.config.get().update("advancedMode", !advancedMode);
+    },
     "pymakr.runEditor": async () => {
       const editor = vscode.window.activeTextEditor;
       const text = editor.document.getText(editor.selection) || editor.document.getText();

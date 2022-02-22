@@ -10,6 +10,8 @@ const { Server } = require("./terminal/Server");
 const { resolve } = require("path");
 const { FileSystemProvider } = require("./providers/filesystemProvider");
 const { createLogger } = require("./utils/createLogger");
+const { StatusBar } = require("./StatusBar");
+const { writable } = require("./utils/store");
 
 /**
  *
@@ -23,6 +25,8 @@ class PyMakr {
    * @param {vscode.ExtensionContext} context
    */
   constructor(context) {
+    this.config = writable(vscode.workspace.getConfiguration("pymakr"));
+
     this.log = createLogger("PyMakr");
     this.updateConfig("silent");
     this.context = context;
@@ -38,65 +42,46 @@ class PyMakr {
     this.projectsProvider = new ProjectsProvider(this);
     this.devicesProvider = new DevicesProvider(this);
     this.fileSystem = new FileSystemProvider(this);
-    vscode.workspace.registerFileSystemProvider("serial", this.fileSystem, { isCaseSensitive: true });
-    vscode.workspace.registerFileSystemProvider("telnet", this.fileSystem, { isCaseSensitive: true });
-    vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider);
-    vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider);
-    vscode.workspace.onDidChangeConfiguration(this.updateConfig.bind(this));
+    this.statusBar = new StatusBar(this);
 
+    this.registerWithIde();
     this.setup();
   }
 
+  registerWithIde() {
+    const disposables = [
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration("pymakr")) this.config.set(vscode.workspace.getConfiguration("pymakr"));
+      }),
+      vscode.workspace.registerFileSystemProvider("serial", this.fileSystem, { isCaseSensitive: true }),
+      vscode.workspace.registerFileSystemProvider("telnet", this.fileSystem, { isCaseSensitive: true }),
+      vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider),
+      vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider),
+      vscode.workspace.onDidChangeConfiguration(this.updateConfig.bind(this)),
+      vscode.window.registerTerminalProfileProvider("pymakr.terminal-profile", {
+        provideTerminalProfile: () => ({
+          options: { shellPath: "node", shellArgs: [resolve(__dirname, "terminal/client.js")], name: "PyMakr" },
+        }),
+      }),
+    ];
+
+    this.context.subscriptions.push(...disposables);
+  }
+
   updateConfig(mode) {
-    const config = vscode.workspace.getConfiguration("pymakr");
-    this.log.level = this.log.levels[config.logLevel];
-    this.log.filter = config.logFilter !== "" ? new RegExp(config.logFilter) : "";
-    if (mode !== "silent") this.log.info("updated config:", config);
+    this.log.level = this.log.levels[this.config.get().logLevel];
+    this.log.filter = this.config.get().logFilter !== "" ? new RegExp(this.config.get().logFilter) : "";
+    if (mode !== "silent") this.log.info("updated config:", this.config.get());
   }
 
   async setup() {
     await Promise.all([this.registerUSBDevices(), this.registerProjects()]);
     await this.recoverProjects();
     this.projectsProvider.refresh();
-    this.decorateStatusBar();
-    this.createTerminalProvider();
   }
 
   async recoverProjects() {
     return Promise.all(this.projectsStore.get().map((project) => project.recoverProject()));
-  }
-
-  decorateStatusBar() {
-    const projectSelect = vscode.window.createStatusBarItem("activeWorkspace", 1, 11);
-    projectSelect.text = this.activeProjectStore.get()?.name || "[no project selected]";
-    projectSelect.command = "pymakr.setActiveProject";
-    projectSelect.show();
-
-    const deviceSelect = vscode.window.createStatusBarItem("activeWorkspace", 1, 10);
-    deviceSelect.text = this.activeDeviceStore.get()?.name || "[no device selected]";
-    deviceSelect.command = "pymakr.setActiveDevice";
-    deviceSelect.show();
-
-    const projectUpload = vscode.window.createStatusBarItem("projectUpload", 1, 9);
-    projectUpload.text = "$(cloud-upload)";
-    projectUpload.command = "pymakr.uploadProject";
-    projectUpload.show();
-
-    const projectDownload = vscode.window.createStatusBarItem("projectDownload", 1, 8);
-    projectDownload.text = "$(cloud-download)";
-    projectDownload.command = "pymakr.downloadProject";
-    projectDownload.show();
-
-    this.activeProjectStore.subscribe((project) => (projectSelect.text = project.name));
-    this.activeDeviceStore.subscribe((device) => (deviceSelect.text = device.name));
-  }
-
-  createTerminalProvider() {
-    vscode.window.registerTerminalProfileProvider("pymakr.terminal-profile", {
-      provideTerminalProfile: () => ({
-        options: { shellPath: "node", shellArgs: [resolve(__dirname, "terminal/client.js")], name: "PyMakr" },
-      }),
-    });
   }
 
   async registerProjects() {
