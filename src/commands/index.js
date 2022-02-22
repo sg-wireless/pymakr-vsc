@@ -115,7 +115,7 @@ class Commands {
           project,
         }))
       );
-      this.pymakr.activeProjectStore.set(selectedProject.project);
+      if (selectedProject) this.pymakr.activeProjectStore.set(selectedProject.project);
     },
 
     "pymakr.setActiveDevice": async () => {
@@ -125,7 +125,7 @@ class Commands {
           device,
         }))
       );
-      this.pymakr.activeDeviceStore.set(selectedDevice.device);
+      if (selectedDevice) this.pymakr.activeDeviceStore.set(selectedDevice.device);
     },
 
     /**
