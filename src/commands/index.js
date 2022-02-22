@@ -88,11 +88,14 @@ class Commands {
 
     "pymakr.setActiveProject": async () => {
       const findShortest = (a, b) => (a.length < b.length ? a : b);
-      const workspaceFolders = vscode.workspace.workspaceFolders.map((f) => f.uri.path);
+      const workspaceFolders = vscode.workspace.workspaceFolders.map((f) => f.uri.fsPath);
       const selectedProject = await vscode.window.showQuickPick(
         this.pymakr.projectsStore.get().map((project) => ({
           label: project.name,
-          description: workspaceFolders.map((path) => relative(path, project.folder)).reduce(findShortest),
+          description: workspaceFolders
+            .map((path) => relative(path, project.folder))
+            .reduce(findShortest)
+            .replaceAll("\\", "/"),
           project,
         }))
       );
