@@ -164,6 +164,10 @@
         "title": "Set project"
       },
       {
+        "command": "pymakr.setActiveDevice",
+        "title": "Set active device"
+      },
+      {
         "command": "pymakr.addDeviceToProject",
         "shortTitle": "$(plus)device",
         "title": "Add device to project"
