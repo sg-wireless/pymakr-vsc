@@ -49,6 +49,11 @@
           "examples": [
             ".*terminal.*"
           ]
+        },
+        "pymakr.advancedMode": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompts on actions instead of using defaults."
         }
       }
     },
@@ -187,13 +192,17 @@
       },
       {
         "command": "pymakr.runEditor",
-        "title": "Run on device",        
+        "title": "Run on device",
         "shortTitle": "Run"
       },
       {
         "command": "pymakr.runFile",
         "title": "Run on device",
         "shortTitle": "Run"
+      },
+      {
+        "command": "pymakr.toggleAdvancedMode",
+        "title": "Toggle advanced mode"
       },
       {
         "command": "pymakr.projectSettings",
