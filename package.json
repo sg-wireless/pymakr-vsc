@@ -197,7 +197,7 @@
       },
       {
         "command": "pymakr.runFile",
-        "title": "Run on device",
+        "title": "Run file on device",
         "shortTitle": "Run"
       },
       {
@@ -274,6 +274,10 @@
       {
         "id": "pymakr.editorContextMenu",
         "label": "pymakr"
+      },
+      {
+        "id": "pymakr.explorerContextMenu",
+        "label": "pymakr"
       }
     ],
     "menus": {
@@ -289,6 +293,16 @@
       "pymakr.editorContextMenu": [
         {
           "command": "pymakr.runEditor",
+          "group": "pymakr"
+        },
+        {
+          "command": "pymakr.upload",
+          "group": "pymakr"
+        }
+      ],
+      "pymakr.explorerContextMenu": [
+        {
+          "command": "pymakr.runFile",
           "group": "pymakr"
         },
         {
@@ -342,12 +356,7 @@
       ],
       "explorer/context": [
         {
-          "command": "pymakr.upload",
-          "group": "pymakr"
-        },
-        {
-          "command": "pymakr.runFile",
-          "group": "pymakr"
+          "submenu": "pymakr.explorerContextMenu"
         }
       ],
       "editor/context": [
@@ -357,12 +366,7 @@
       ],
       "editor/title": [
         {
-          "command": "pymakr.runEditor",
-          "group": "pymakr"
-        },
-        {
-          "command": "pymakr.upload",
-          "group": "pymakr"
+          "submenu": "pymakr.editorContextMenu"
         }
       ]
     }
