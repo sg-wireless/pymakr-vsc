@@ -5,20 +5,13 @@ const { createProjectsStore, createActiveProjectStore } = require("./stores/proj
 const { createTerminalsStore } = require("./stores/terminals");
 const { DevicesProvider } = require("./providers/DevicesProvider");
 const { ProjectsProvider } = require("./providers/ProjectsProvider");
-const { SerialPort } = require("serialport");
 const { Server } = require("./terminal/Server");
 const { resolve } = require("path");
 const { FileSystemProvider } = require("./providers/filesystemProvider");
 const { createLogger } = require("./utils/createLogger");
 const { StatusBar } = require("./StatusBar");
 const { writable } = require("./utils/store");
-
-/**
- *
- * @param {import("@serialport/bindings-cpp").PortInfo & {friendlyName: string}} raw
- * @returns {DeviceInput}
- */
-const rawSerialToDeviceInput = (raw) => ({ address: raw.path, name: raw.friendlyName, protocol: "serial", raw });
+const { coerceDisposable } = require("./utils/misc");
 
 class PyMakr {
   /**
@@ -75,9 +68,10 @@ class PyMakr {
   }
 
   async setup() {
-    await Promise.all([this.registerUSBDevices(), this.registerProjects()]);
+    await Promise.all([this.devicesStore.registerUSBDevices(), this.registerProjects()]);
     await this.recoverProjects();
     this.projectsProvider.refresh();
+    this.context.subscriptions.push(coerceDisposable(this.devicesStore.watchUSBDevices()));
   }
 
   async recoverProjects() {
@@ -88,11 +82,6 @@ class PyMakr {
     await this.projectsStore.refresh();
     await this.activeProjectStore.setToLastUsedOrFirstFound();
     this.log.debug("active project", this.activeProjectStore.get().folder);
-  }
-
-  async registerUSBDevices() {
-    const rawSerials = await SerialPort.list();
-    this.devicesStore.upsert(rawSerials.map(rawSerialToDeviceInput));
   }
 }
 

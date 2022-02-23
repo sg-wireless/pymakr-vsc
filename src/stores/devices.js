@@ -1,6 +1,20 @@
 const { Device } = require("../Device");
 const { coerceArray } = require("../utils/misc");
 const { writable } = require("../utils/store");
+const { SerialPort } = require("serialport");
+
+/**
+ * converts serial.PortInfo to { address, name, protocol, raw }
+ * @param {import("@serialport/bindings-cpp").PortInfo & {friendlyName: string}} raw
+ * @returns {DeviceInput}
+ */
+const rawSerialToDeviceInput = (raw) => ({ address: raw.path, name: raw.friendlyName, protocol: "serial", raw });
+
+/**
+ * @param {DeviceInput} device
+ * @returns {string}
+ */
+const createId = (device) => `${device.protocol}://${device.address}`;
 
 /**
  * @param {PyMakr} pymakr
@@ -15,10 +29,10 @@ const createDevicesStore = (pymakr) => {
   const upsert = (deviceInput) => {
     const deviceInputs = coerceArray(deviceInput);
     const newDeviceInputs = deviceInputs.filter(
-      (input) => !store.get().find((device) => device.protocol === input.protocol && device.address === input.address)
+      (input) => !store.get().find((device) => createId(device) === createId(input))
     );
     const newDevices = newDeviceInputs.map((input) => new Device(pymakr, input));
-    store.update((devices) => [...devices, ...newDevices]);
+    if (newDevices.length) store.update((devices) => [...devices, ...newDevices]);
   };
 
   /**
@@ -39,7 +53,41 @@ const createDevicesStore = (pymakr) => {
         (_device) => _device.protocol === protocol && _device.address.toLowerCase() === address.toLocaleLowerCase()
       );
 
-  return { ...store, getByProtocolAndAddress, upsert, remove };
+  const registerUSBDevices = async () => {
+    pymakr.log.traceShort("register USB devices");
+    const rawSerials = await SerialPort.list();
+    const deviceInputs = rawSerials.map(rawSerialToDeviceInput);
+    const inputIds = deviceInputs.map(createId);
+
+    upsert(deviceInputs);
+
+    store.get().forEach((device) => {
+      const _lastOnlineState = device.online;
+      
+      // update online status
+      device.online = inputIds.includes(device.id);
+      
+      // if status has changed, update connection
+      if (device.online !== _lastOnlineState) device.updateConnection();
+    });
+  };
+
+  /** @type {NodeJS.Timer} */
+  let watchIntervalHandle;
+  const watchUSBDevices = () => {
+    watchIntervalHandle = setInterval(registerUSBDevices, 500);
+    return () => clearInterval(watchIntervalHandle);
+  };
+
+  return {
+    ...store,
+    getByProtocolAndAddress,
+    upsert,
+    remove,
+    registerUSBDevices,
+    watchUSBDevices,
+    stopWatchingUSBDevices: () => clearInterval(watchIntervalHandle),
+  };
 };
 
 /**
