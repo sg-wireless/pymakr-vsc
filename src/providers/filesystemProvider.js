@@ -20,9 +20,15 @@ class FileSystemProvider {
     device.adapter.mkdir(uri.path);
   }
 
-  delete(uri) {
+  async delete(uri) {
     const device = this._getDevice(uri);
-    return device.adapter.remove(uri.path, true);
+    try {
+      const { isDir } = await device.adapter.statPath(uri.path);
+      return await device.adapter.remove(uri.path, isDir);
+    } catch (err) {
+      if (err.message.endsWith(" ENOENT")) throw vscode.FileSystemError.FileNotFound(`Could not find '${uri.path}'.`);
+      else vscode.window.showErrorMessage('Uncaught error: ' + err.toString())
+    }
   }
 
   watch(uri, options) {
@@ -64,8 +70,8 @@ class FileSystemProvider {
   async stat(uri) {
     const device = this._getDevice(uri);
     if (device.connecting) await device.__connectingPromise;
-    if (!device.connected) throw vscode.FileSystemError.Unavailable('Device is offline');
-    
+    if (!device.connected) throw vscode.FileSystemError.Unavailable("Device is offline");
+
     try {
       this.log.traceShort("stat file", uri);
       const stat = await device.adapter.statPath(uri.path);
@@ -94,7 +100,7 @@ class FileSystemProvider {
 
     try {
       const files = await device.adapter.listFiles(path, { recursive: false });
-      this.log.debug( `found files in "${uri.path}"`, files);
+      this.log.debug(`found files in "${uri.path}"`, files);
       /** @type { [string, vscode.FileType][]} */
       const content = files.map((f) => [
         f.filename.replace(/^\/.+\//, ""), // get basename instead of absolute path
