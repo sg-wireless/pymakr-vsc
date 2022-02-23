@@ -58,4 +58,15 @@ const coerceDisposable = (fn) => {
   else throw new Error("fn must be a function or an object with a dispose property");
 };
 
-module.exports = { once, coerceArray, createTimeout, waitFor, coerceDisposable };
+/**
+ * gets symmetrical difference between two arrays
+ * @param {any[]} arrA 
+ * @param {any[]} arrB 
+ * @returns {[any[],any[]]}
+ */
+ const getDifference = (arrA, arrB) => [
+  arrA.filter((val) => !arrB.includes(val)),
+  arrB.filter((val) => !arrA.includes(val)),
+];
+
+module.exports = { once, coerceArray, createTimeout, waitFor, coerceDisposable, getDifference };
