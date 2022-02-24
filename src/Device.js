@@ -13,7 +13,7 @@ class Device {
   constructor(pymakr, deviceInput) {
     const { subscribe, set } = writable(this);
     this.subscribe = subscribe;
-    /** call whenever device changes need to be propagated to subscriptions */
+    /** call whenever device changes need to be onChanged to subscriptions */
     this.changed = () => set(this);
     const { address, name, protocol, raw, password } = deviceInput;
     this.pymakr = pymakr;
@@ -38,7 +38,7 @@ class Device {
     this.info = null;
 
     this.updateConnection();
-    subscribe(() => this.propagate());
+    subscribe(() => this.onChanged());
   }
 
   async updateConnection() {
@@ -120,7 +120,7 @@ class Device {
     this.changed();
   }
 
-  propagate() {
+  onChanged() {
     this.pymakr.devicesProvider.refresh();
     this.pymakr.projectsProvider.refresh();
   }
