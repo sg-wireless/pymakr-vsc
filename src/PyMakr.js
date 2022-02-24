@@ -12,6 +12,7 @@ const { createLogger } = require("./utils/createLogger");
 const { StatusBar } = require("./StatusBar");
 const { writable } = require("./utils/store");
 const { coerceDisposable } = require("./utils/misc");
+const manifest = require("../package.json");
 
 class PyMakr {
   /**
@@ -23,6 +24,7 @@ class PyMakr {
     this.log = createLogger("PyMakr");
     this.updateConfig("silent");
     this.context = context;
+    this.manifest = manifest;
 
     this.projectsStore = createProjectsStore(this);
     this.activeProjectStore = createActiveProjectStore(this);
