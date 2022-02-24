@@ -3,6 +3,7 @@ const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { relative } = require("path");
 const { msgs } = require("../utils/msgs");
+const { mapEnumsToQuickPick } = require("../utils/misc");
 
 /**
  * @typedef {import('../providers/ProjectsProvider').ProjectTreeItem} ProjectTreeItem
@@ -25,6 +26,46 @@ class Commands {
   }
 
   commands = {
+    /**
+     * @param {DeviceTreeItem} treeItem
+     */
+    "pymakr.configureDevice": async (treeItem) => {
+      const { device } = treeItem;
+      const manifestConfig = device.pymakr.manifest.contributes.configuration.properties;
+
+      let menu = "main";
+      while (menu !== "_DONE_") {
+        /**
+         * @type {Object.<string, (config: DeviceConfig) => Promise<string>>}
+         */
+        const menus = {
+          main: async (config) => {
+            const result = await vscode.window.showQuickPick(
+              [
+                { label: "autoConnect", description: config.autoConnect },
+                { label: "username", description: config.username || "" },
+                { label: "password", description: config.password || "" },
+              ],
+              {}
+            );
+            return result?.label || "_DONE_";
+          },
+          autoConnect: async (config) => {
+            const { enum: enums, enumDescriptions } = manifestConfig["pymakr.autoConnect"];
+
+            const options = enums.map(mapEnumsToQuickPick(enumDescriptions));
+            options.push({ label: "Use default", description: "Use defaults from VSCode settings" });
+
+            const { label } = await vscode.window.showQuickPick(options);
+            device.config.set("autoConnect", label);
+            return "main";
+          },
+        };
+
+        const config = device.config.get();
+        menu = await menus[menu](config);
+      }
+    },
     "pymakr.toggleAdvancedMode": async () => {
       const advancedMode = vscode.workspace.getConfiguration("pymakr").get("advancedMode");
       this.pymakr.config.get().update("advancedMode", !advancedMode);

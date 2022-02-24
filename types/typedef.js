@@ -1,6 +1,7 @@
 /**
  * @typedef {import('../src/PyMakr').PyMakr} PyMakr
  * @typedef {import('vscode')} vscode
+ * @typedef {import('../src/stores/deviceConfig').DeviceConfig} DeviceConfig
  */
 
 /**

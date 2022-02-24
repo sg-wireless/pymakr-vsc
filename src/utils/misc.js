@@ -60,13 +60,18 @@ const coerceDisposable = (fn) => {
 
 /**
  * gets symmetrical difference between two arrays
- * @param {any[]} arrA 
- * @param {any[]} arrB 
+ * @param {any[]} arrA
+ * @param {any[]} arrB
  * @returns {[any[],any[]]}
  */
- const getDifference = (arrA, arrB) => [
+const getDifference = (arrA, arrB) => [
   arrA.filter((val) => !arrB.includes(val)),
   arrB.filter((val) => !arrA.includes(val)),
 ];
 
-module.exports = { once, coerceArray, createTimeout, waitFor, coerceDisposable, getDifference };
+const mapEnumsToQuickPick = (descriptions) => (_enum, index) => ({
+  label: _enum,
+  description: descriptions[index],
+});
+
+module.exports = { once, coerceArray, createTimeout, waitFor, coerceDisposable, getDifference, mapEnumsToQuickPick };
