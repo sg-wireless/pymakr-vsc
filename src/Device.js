@@ -1,6 +1,6 @@
 const { MicroPythonDevice } = require("micropython-ctl");
 const { createBlockingProxy } = require("./utils/blockingProxy");
-const { waitFor } = require("./utils/misc");
+const { waitFor, cherryPick } = require("./utils/misc");
 const { writable } = require("./utils/store");
 const vscode = require("vscode");
 const { createDeviceConfigStore } = require("./stores/deviceConfig");
@@ -42,12 +42,12 @@ class Device {
   }
 
   async updateConnection() {
-    const deviceConfig = this.config.get();
-    if (this.online) {
-      const canConnect = !this.connected;
-      const shouldConnect = deviceConfig.autoConnect === "always";
-      const shouldReconnect = this.lostConnection && deviceConfig.autoConnect === "onLostConnection";
-      if (canConnect && (shouldConnect || shouldReconnect)) await this.connect();
+    if (this.online && !this.connected) {
+      const autoConnect = this.config.get().autoConnect || this.pymakr.config.get().get("autoConnect");
+      const shouldConnect = autoConnect === "always";
+      const shouldResume = autoConnect === "lastState" && this.loadState().connected;
+      const shouldReconnect = autoConnect === "onLostConnection" && this.lostConnection;
+      if (shouldConnect || shouldResume || shouldReconnect) await this.connect();
     } else {
       this.lostConnection = this.lostConnection || this.connected;
       this.connected = false;
@@ -120,7 +120,28 @@ class Device {
     this.changed();
   }
 
+  saveState() {
+    return this.handleState("save");
+  }
+  loadState() {
+    return this.handleState("load");
+  }
+  handleState(action) {
+    const key = `pymakr.devices.${this.id}.state`;
+    const { workspaceState } = this.pymakr.context;
+
+    if (action === "save") {
+      const currentState = cherryPick(this, ["connected", "name"]);
+      workspaceState.update(key, currentState);
+    }
+
+    const state = workspaceState.get(key);
+    this.log.debugShort("handleState", action, state);
+    return state;
+  }
+
   onChanged() {
+    this.saveState();
     this.pymakr.devicesProvider.refresh();
     this.pymakr.projectsProvider.refresh();
   }

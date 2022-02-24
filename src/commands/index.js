@@ -54,9 +54,10 @@ class Commands {
             const { enum: enums, enumDescriptions } = manifestConfig["pymakr.autoConnect"];
 
             const options = enums.map(mapEnumsToQuickPick(enumDescriptions));
-            options.push({ label: "Use default", description: "Use defaults from VSCode settings" });
+            options.push({ label: "Use default", description: "Use defaults from VSCode settings", clear: true });
 
-            const { label } = await vscode.window.showQuickPick(options);
+            let { label, clear } = await vscode.window.showQuickPick(options);
+            if (clear) label = null;
             device.config.set("autoConnect", label);
             return "main";
           },
