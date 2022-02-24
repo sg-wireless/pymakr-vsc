@@ -74,4 +74,24 @@ const mapEnumsToQuickPick = (descriptions) => (_enum, index) => ({
   description: descriptions[index],
 });
 
-module.exports = { once, coerceArray, createTimeout, waitFor, coerceDisposable, getDifference, mapEnumsToQuickPick };
+/**
+ * Returns a cloned object with cherry picked props
+ * @template T
+ * @template {(keyof T)} K
+ * @param {T} obj
+ * @param {K[]} props
+ * @returns {{[P in K]: T[P]}}
+ */
+const cherryPick = (obj, props) =>
+  props.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), /** @type {obj} */ ({}));
+
+module.exports = {
+  once,
+  coerceArray,
+  createTimeout,
+  waitFor,
+  coerceDisposable,
+  getDifference,
+  mapEnumsToQuickPick,
+  cherryPick,
+};

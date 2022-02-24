@@ -1,4 +1,4 @@
-import { getDifference, once } from "../misc.js";
+import { cherryPick, getDifference, mapEnumsToQuickPick, once } from "../misc.js";
 
 test("once functions can only be called once", () => {
   let counter = 0;
@@ -28,4 +28,21 @@ test("getDifference returns difference", () => {
     [1, 2, 3],
     [6, 7, 8],
   ]);
+});
+
+test("mapEnumsToQuickPick", () => {
+  const enums = ["f", "b", "b"];
+  const descriptions = ["foo", "bar", "baz"];
+  const result = enums.map(mapEnumsToQuickPick(descriptions));
+  assert.deepEqual(result, [
+    { label: "f", description: "foo" },
+    { label: "b", description: "bar" },
+    { label: "b", description: "baz" },
+  ]);
+});
+
+test("cherryPick", () => {
+  const obj = { foo: "foo", bar: "bar", baz: "baz" };
+  const cherryPicked = cherryPick(obj, ["foo", "bar"]);
+  assert.deepEqual(cherryPicked, { foo: "foo", bar: "bar" });
 });
