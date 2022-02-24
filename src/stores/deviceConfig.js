@@ -3,10 +3,9 @@
  * @prop {'always'|'never'|'onLostConnection'|'lastState'} autoConnect
  * @prop {string} username defaults to "micro"
  * @prop {string} password defaults to "python"
- * @prop {boolean} _lastState last connected state, true for connected
  */
 
-const { writable } = require('../utils/store');
+const { writable } = require("../utils/store");
 
 /**
  * Creates a config for a given device
@@ -17,7 +16,9 @@ const createDeviceConfigStore = (device) => {
   const WSID = `pymakr.devices.${device.id}.config`;
   /** @type {DeviceConfig} */
   const defaults = {
-    autoConnect: device.pymakr.config.get().get('autoConnect'),
+    autoConnect: device.pymakr.config.get().get("autoConnect"),
+    username: "micro",
+    password: "python",
   };
 
   /** @type {DeviceConfig} */
@@ -27,8 +28,8 @@ const createDeviceConfigStore = (device) => {
 
   return {
     /**
-     * 
-     * @param {string} key 
+     * Update device config
+     * @param {string} key
      * @param {string|number|object} value JSONable value
      */
     set: (key, value) => {
