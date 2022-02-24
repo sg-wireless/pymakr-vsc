@@ -4,14 +4,17 @@
   "publisher": "Pycom",
   "description": "",
   "version": "2.0.0-alpha.0",
+  "repository": {
+    "url": "https://github.com/pycom/pymakr-vsc"
+  },
   "engines": {
-    "vscode": "^1.62.0"
+    "vscode": "^1.63.0"
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onStartupFinished"
   ],
   "main": "./extension.js",
   "release": {

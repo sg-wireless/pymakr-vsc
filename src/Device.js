@@ -1,4 +1,4 @@
-const { MicroPythonDevice } = require("micropython-ctl");
+const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
 const { waitFor, cherryPick } = require("./utils/misc");
 const { writable } = require("./utils/store");

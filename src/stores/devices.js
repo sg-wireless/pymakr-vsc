@@ -91,6 +91,7 @@ const createDevicesStore = (pymakr) => {
 };
 
 /**
+ * Store that contains the currently active (primary) device
  * @param {PyMakr} pymakr
  */
 const createActiveDeviceStore = (pymakr) => {
