@@ -3,7 +3,7 @@
   "displayName": "PyMakr",
   "publisher": "Pycom",
   "description": "",
-  "version": "0.0.1",
+  "version": "2.0.0-alpha.0",
   "engines": {
     "vscode": "^1.62.0"
   },
@@ -14,6 +14,22 @@
     "*"
   ],
   "main": "./extension.js",
+  "release": {
+    "verifyConditions": [
+      "semantic-release-vsce",
+      "@semantic-release/github"
+    ],
+    "prepare": {
+      "path": "semantic-release-vsce",
+      "packageVsix": true
+    },
+    "publish": [
+      {
+        "path": "@semantic-release/github",
+        "assets": "*.vsix"
+      }
+    ]
+  },
   "contributes": {
     "configuration": {
       "title": "PyMakr",
@@ -62,7 +78,7 @@
             "never",
             "onLostConnection",
             "lastState"
-          ],          
+          ],
           "enumDescriptions": [
             "Always auto connect to devices.",
             "Never auto connect to devices.",
@@ -413,6 +429,8 @@
     "glob": "^7.1.7",
     "mocha": "^9.1.3",
     "probs": "^1.0.0-3",
+    "semantic-release": "^19.0.2",
+    "semantic-release-vsce": "^5.0.8",
     "typescript": "^4.4.4"
   },
   "dependencies": {
