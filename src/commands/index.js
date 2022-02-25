@@ -265,12 +265,17 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.addDeviceToFileExplorer": async (treeItem) => {
-      const { device } = treeItem;
-      vscode.workspace.updateWorkspaceFolders(0, 0, {
-        uri: vscode.Uri.parse(`${device.protocol}://${device.address}/flash`),
-        name: `${device.protocol}://${device.address}`,
-      });
+    "pymakr.addDeviceToFileExplorer": async ({device}) => {
+      const uri = vscode.Uri.from({
+        scheme: device.protocol,
+        // vscode doesn't like "/" in the authority name
+        authority: device.address.replaceAll('/', '%2F'),
+        path: '/flash'
+      })
+
+      const name =  `${device.protocol}:/${device.address}`
+
+      vscode.workspace.updateWorkspaceFolders(0, 0, { uri, name });
     },
   };
 }

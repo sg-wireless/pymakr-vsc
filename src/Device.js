@@ -137,7 +137,7 @@ class Device {
 
     const state = workspaceState.get(key);
     this.log.debugShort("handleState", action, state);
-    return state;
+    return state || {};
   }
 
   onChanged() {

@@ -27,7 +27,7 @@ class FileSystemProvider {
       return await device.adapter.remove(uri.path, isDir);
     } catch (err) {
       if (err.message.endsWith(" ENOENT")) throw vscode.FileSystemError.FileNotFound(`Could not find '${uri.path}'.`);
-      else vscode.window.showErrorMessage('Uncaught error: ' + err.toString())
+      else vscode.window.showErrorMessage("Uncaught error: " + err.toString());
     }
   }
 
@@ -60,7 +60,8 @@ class FileSystemProvider {
    * @param {vscode.Uri} uri
    */
   _getDevice(uri) {
-    return this.pymakr.devicesStore.getByProtocolAndAddress(uri.scheme, uri.authority);
+    const authority = uri.authority.replaceAll("%2F", "/");
+    return this.pymakr.devicesStore.getByProtocolAndAddress(uri.scheme, authority);
   }
 
   /**
