@@ -350,11 +350,13 @@
       "pymakr.explorerContextMenu": [
         {
           "command": "pymakr.createProject",
-          "group": "pymakr"
+          "group": "pymakr",
+          "when": "explorerResourceIsFolder"
         },
         {
           "command": "pymakr.runFile",
-          "group": "pymakr"
+          "group": "pymakr",
+          "when": "!explorerResourceIsFolder"
         },
         {
           "command": "pymakr.upload",
