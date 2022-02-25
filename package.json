@@ -165,6 +165,10 @@
     },
     "commands": [
       {
+        "command": "pymakr.createProject",
+        "title":"Create project in folder"
+      },
+      {
         "command": "pymakr.configureDevice",
         "title": "Configure device"
       },
@@ -344,6 +348,10 @@
         }
       ],
       "pymakr.explorerContextMenu": [
+        {
+          "command": "pymakr.createProject",
+          "group": "pymakr"
+        },
         {
           "command": "pymakr.runFile",
           "group": "pymakr"

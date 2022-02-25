@@ -1,4 +1,4 @@
-const { mkdirSync, readdirSync, statSync, readFileSync } = require("fs");
+const { mkdirSync, readdirSync, statSync, readFileSync, writeFileSync } = require("fs");
 const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { relative } = require("path");
@@ -26,6 +26,23 @@ class Commands {
   }
 
   commands = {
+    /**
+     * Creates a new Pymakr project in a folder
+     * @param {vscode.Uri} uri
+     */
+    "pymakr.createProject": async (uri) => {
+      const name = await vscode.window.showInputBox({
+        title: "Project name",
+        value: uri.path.split("/").pop(),
+      });
+      
+      const project = {
+        name,
+        py_ignore: ["pymakr.conf", ".vscode", ".gitignore", ".git", "env", "venv"],
+      };
+
+      writeFileSync(uri.fsPath + "/pymakr.conf", JSON.stringify(project, null, 2));
+    },
     /**
      * @param {DeviceTreeItem} treeItem
      */
