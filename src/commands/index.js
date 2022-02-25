@@ -35,7 +35,7 @@ class Commands {
         title: "Project name",
         value: uri.path.split("/").pop(),
       });
-      
+
       const project = {
         name,
         py_ignore: ["pymakr.conf", ".vscode", ".gitignore", ".git", "env", "venv"],

@@ -166,7 +166,7 @@
     "commands": [
       {
         "command": "pymakr.createProject",
-        "title":"Create project in folder"
+        "title": "Create project in folder"
       },
       {
         "command": "pymakr.configureDevice",
