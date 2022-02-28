@@ -1,3 +1,5 @@
+const { relative, resolve } = require("path");
+
 /**
  * creates a function that can only be called once
  * @param {function} fn
@@ -85,6 +87,41 @@ const mapEnumsToQuickPick = (descriptions) => (_enum, index) => ({
 const cherryPick = (obj, props) =>
   props.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), /** @type {obj} */ ({}));
 
+/**
+ * Curried function.Returns the nearest parent from an array of folders
+ * @param {string[]} parents
+ * @returns {(child:string)=>string}
+ */
+const getNearestParent = (parents) => {
+  const findLongest = (a, b) => (a.length > b.length ? a : b);
+  const _parents = parents.map((p) => resolve(p));
+  /**
+   * @param {string} child
+   */
+  return (child) => {
+    const _child = resolve(child);
+    return _parents.filter((p) => _child.startsWith(p)).reduce(findLongest);
+  };
+};
+
+/**
+ * Curried function.Returns the relative path from the nearest provided parent
+ * @param {string[]} parents
+ * @returns {(child:string)=>string}
+ */
+const getRelativeFromNearestParent = (parents) => (child) => {
+  const nearestParent = getNearestParent(parents)(child);
+  return relative(nearestParent, child);
+};
+
+/**
+ * Curried function.Returns the relative posix path from the nearest provided parent
+ * @param {string[]} parents
+ * @returns {(child:string)=>string}
+ */
+const getRelativeFromNearestParentPosix = (parents) => (child) =>
+  getRelativeFromNearestParent(parents)(child).replaceAll("\\", "/");
+
 module.exports = {
   once,
   coerceArray,
@@ -94,4 +131,7 @@ module.exports = {
   getDifference,
   mapEnumsToQuickPick,
   cherryPick,
+  getNearestParent,
+  getRelativeFromNearestParent,
+  getRelativeFromNearestParentPosix,
 };

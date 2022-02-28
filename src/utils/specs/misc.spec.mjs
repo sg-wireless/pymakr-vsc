@@ -1,4 +1,12 @@
-import { cherryPick, getDifference, mapEnumsToQuickPick, once } from "../misc.js";
+import {
+  cherryPick,
+  getDifference,
+  getNearestParent,
+  getRelativeFromNearestParent,
+  getRelativeFromNearestParentPosix,
+  mapEnumsToQuickPick,
+  once,
+} from "../misc.js";
 
 test("once functions can only be called once", () => {
   let counter = 0;
@@ -45,4 +53,12 @@ test("cherryPick", () => {
   const obj = { foo: "foo", bar: "bar", baz: "baz" };
   const cherryPicked = cherryPick(obj, ["foo", "bar"]);
   assert.deepEqual(cherryPicked, { foo: "foo", bar: "bar" });
+});
+
+test("getNearestParent + relative", () => {
+  const parents = ["c:\\some\\folder\\path", "c:\\some\\folder", "c:\\some"];
+  const child = "c:\\some\\folder\\child\\path";
+  assert.equal(getNearestParent(parents)(child), "c:\\some\\folder");
+  assert.equal(getRelativeFromNearestParent(parents)(child), "child\\path");
+  assert.equal(getRelativeFromNearestParentPosix(parents)(child), "child/path");
 });

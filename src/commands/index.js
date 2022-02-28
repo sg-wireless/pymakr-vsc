@@ -3,7 +3,7 @@ const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { relative } = require("path");
 const { msgs } = require("../utils/msgs");
-const { mapEnumsToQuickPick } = require("../utils/misc");
+const { mapEnumsToQuickPick, getRelativeFromNearestParent } = require("../utils/misc");
 
 /**
  * @typedef {import('../providers/ProjectsProvider').ProjectTreeItem} ProjectTreeItem
@@ -166,15 +166,11 @@ class Commands {
     },
 
     "pymakr.setActiveProject": async () => {
-      const findShortest = (a, b) => (a.length < b.length ? a : b);
       const workspaceFolders = vscode.workspace.workspaceFolders.map((f) => f.uri.fsPath);
       const selectedProject = await vscode.window.showQuickPick(
         this.pymakr.projectsStore.get().map((project) => ({
           label: project.name,
-          description: workspaceFolders
-            .map((path) => relative(path, project.folder))
-            .reduce(findShortest)
-            .replaceAll("\\", "/"),
+          description: getRelativeFromNearestParent(workspaceFolders)(project.folder),
           project,
         }))
       );
