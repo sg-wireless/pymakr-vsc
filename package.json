@@ -1,9 +1,9 @@
 {
   "name": "pymakr",
-  "displayName": "PyMakr",
+  "displayName": "PyMakr 2.0 Preview",
   "publisher": "Pycom",
   "description": "",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
@@ -137,29 +137,6 @@
           "name": "Devices",
           "icon": "media/dep.svg",
           "contextualTitle": "Devices"
-        }
-      ],
-      "explorer": [
-        {
-          "id": "jsonOutline",
-          "name": "Json Outline",
-          "when": "jsonOutlineEnabled"
-        },
-        {
-          "id": "ftpExplorer",
-          "name": "FTP Explorer"
-        },
-        {
-          "id": "fileExplorer",
-          "name": "File Explorer"
-        },
-        {
-          "id": "testView",
-          "name": "Test View"
-        },
-        {
-          "id": "testViewDragAndDrop",
-          "name": "Test View Drag and Drop"
         }
       ]
     },
@@ -430,7 +407,8 @@
     "test": "node ./test/runTest.js",
     "mctl": "mctl",
     "test:unit": "probs src",
-    "test-watch:unit": "npx nodemon --exec npm run test:unit"
+    "test-watch:unit": "npx nodemon --exec npm run test:unit",
+    "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/rewrite/"
   },
   "devDependencies": {
     "@types/glob": "^7.2.0",

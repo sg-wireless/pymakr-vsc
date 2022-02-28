@@ -1,9 +1,12 @@
-const { mkdirSync, readdirSync, statSync, readFileSync, writeFileSync } = require("fs");
+const { mkdirSync, readFileSync, writeFileSync } = require("fs");
 const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
-const { relative } = require("path");
 const { msgs } = require("../utils/msgs");
-const { mapEnumsToQuickPick, getRelativeFromNearestParent } = require("../utils/misc");
+const {
+  mapEnumsToQuickPick,
+  getRelativeFromNearestParent,
+  getRelativeFromNearestParentPosix,
+} = require("../utils/misc");
 
 /**
  * @typedef {import('../providers/ProjectsProvider').ProjectTreeItem} ProjectTreeItem
@@ -190,23 +193,24 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.uploadProject": async (treeItem) => {
-      const uploadFile = async (filename) => {
-        this.log.debug("uploading", filename);
-        const destination = "/flash/" + relative(treeItem.project.folder, filename);
-        const data = Buffer.from(readFileSync(filename));
-        await treeItem.device.adapter.putFile(destination, data, { checkIfSimilarBeforeUpload: true });
-      };
+    "pymakr.uploadProject": ({device, project}) => device.upload(project.folder, "/"),
 
-      const processDir = async (dir) => {
-        for (const file of readdirSync(dir)) {
-          const filename = dir + "/" + file;
-          if (statSync(filename).isFile()) await uploadFile(filename);
-          else await processDir(filename);
-        }
-      };
+    /**
+     * @param {vscode.Uri} treeItem
+     */
+    "pymakr.upload": async ({ fsPath }) => {
+      const projectFolders = this.pymakr.projectsStore.get().map((p) => p.folder);
+      const relativePathFromProject = "/" + getRelativeFromNearestParentPosix(projectFolders)(fsPath);
+      const { device } = await vscode.window.showQuickPick(
+        this.pymakr.devicesStore.get().map((device) => ({ device, label: device.name }))
+      );
 
-      processDir(treeItem.project.folder);
+      const destination = await vscode.window.showInputBox({
+        title: "destination",
+        value: relativePathFromProject,
+      });
+
+      if (device && destination) await device.upload(fsPath, destination);
     },
 
     /**
@@ -261,15 +265,15 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.addDeviceToFileExplorer": async ({device}) => {
+    "pymakr.addDeviceToFileExplorer": async ({ device }) => {
       const uri = vscode.Uri.from({
         scheme: device.protocol,
         // vscode doesn't like "/" in the authority name
-        authority: device.address.replaceAll('/', '%2F'),
-        path: '/flash'
-      })
+        authority: device.address.replaceAll("/", "%2F"),
+        path: "/flash",
+      });
 
-      const name =  `${device.protocol}:/${device.address}`
+      const name = `${device.protocol}:/${device.address}`;
 
       vscode.workspace.updateWorkspaceFolders(0, 0, { uri, name });
     },

@@ -1,6 +1,8 @@
+const { dirname } = require("path");
+const { readFileSync, statSync, readdirSync } = require("fs");
 const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
-const { waitFor, cherryPick } = require("./utils/misc");
+const { waitFor, cherryPick, getRelativeFromNearestParentPosix } = require("./utils/misc");
 const { writable } = require("./utils/store");
 const vscode = require("vscode");
 const { createDeviceConfigStore } = require("./stores/deviceConfig");
@@ -146,8 +148,50 @@ class Device {
     this.pymakr.projectsProvider.refresh();
   }
 
-  upload() {
-    // this.adapter.
+  async _uploadFile(file, destination) {
+    const _destination = `/flash/${destination}`.replace(/\/+/g, "/");
+    const destinationDir = dirname(_destination);
+    this.log.traceShort("uploadFile", file, "to", _destination);
+    const data = Buffer.from(readFileSync(file));
+    // todo move mkdir logic to micropython-ctl-cont
+    try {
+      await this.adapter.mkdir(destinationDir);
+    } catch (err) {
+      if (!err.message.match("OSError: \\[Errno 17\\] EEXIST")) throw err;
+    }
+    return this.adapter.putFile(_destination, data, { checkIfSimilarBeforeUpload: true });
+  }
+
+  async _uploadDir(dir, destination) {
+    for (const file of readdirSync(dir)) await this._upload(`${dir}/${file}`, `${destination}/${file}`);
+  }
+
+  _upload(source, destination) {
+    return statSync(source).isDirectory()
+      ? this._uploadDir(source, destination)
+      : this._uploadFile(source, destination);
+  }
+
+  /**
+   * Uploads file or folder to device
+   * @param {string} source
+   * @param {string} destination
+   */
+  async upload(source, destination) {
+    // todo move tight coupled vscode
+    try {
+      this.log.info("copy from", source, "to", destination);
+      await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+        progress.report({ message: `copy to ${this.name}` });
+        this.log.info("upload", source, "to", destination);
+        await this._upload(source, destination);
+        this.log.info("upload completed");
+      });
+    } catch (err) {
+      const errors = ["failed to upload", source, "to", destination, "\r\nReason:", err];
+      vscode.window.showErrorMessage(errors.join(" "));
+      this.log.error(errors);
+    }
   }
 }
 
