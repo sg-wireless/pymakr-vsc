@@ -100,8 +100,22 @@ class Commands {
      * @param {string} text
      */
     "pymakr.runScript": async (text) => {
-      const options = {};
-      return await this.pymakr.activeDeviceStore.get().runScript(text, options);
+      /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
+      const options = {
+        disableDedent: true,
+        broadcastOutputAsTerminalData: true,
+        runGcCollectBeforeCommand: true,
+      };
+
+      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+        progress.report({ message: "Run script" });
+        try {
+          return await this.pymakr.activeDeviceStore.get().runScript(text, options);
+        } catch (err) {
+          console.log("er,", err.message);
+          vscode.window.showErrorMessage("Could not run script. Reason: " + err);
+        }
+      });
     },
     /**
      * @param {vscode.Uri} uri
@@ -193,7 +207,7 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.uploadProject": ({device, project}) => device.upload(project.folder, "/"),
+    "pymakr.uploadProject": ({ device, project }) => device.upload(project.folder, "/"),
 
     /**
      * @param {vscode.Uri} treeItem
