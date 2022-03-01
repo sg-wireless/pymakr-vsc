@@ -309,11 +309,11 @@
       "pymakr.projectDeviceMenu": [
         {
           "command": "pymakr.removeDeviceFromProject",
-          "when": "viewItem == connectedProjectDevice"
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice"
         },
         {
           "command": "pymakr.disconnect",
-          "when": "viewItem == connectedProjectDevice"
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice"
         },
         {
           "command": "pymakr.configureDevice"
@@ -381,6 +381,7 @@
         },
         {
           "submenu": "pymakr.projectDeviceMenu",
+          "when": "viewItem != project",
           "group": "inline@100"          
         }
       ],
