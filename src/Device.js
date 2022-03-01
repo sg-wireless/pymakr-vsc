@@ -1,5 +1,5 @@
 const { dirname } = require("path");
-const { readFileSync, statSync, readdirSync } = require("fs");
+const { readFileSync, statSync, readdirSync, mkdirSync, createWriteStream } = require("fs");
 const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
 const { waitFor, cherryPick, getRelativeFromNearestParentPosix } = require("./utils/misc");
@@ -8,6 +8,8 @@ const vscode = require("vscode");
 const { createDeviceConfigStore } = require("./stores/deviceConfig");
 
 class Device {
+  __connectingPromise = null;
+
   /**
    * @param {PyMakr} pymakr
    * @param {DeviceInput} deviceInput
@@ -36,12 +38,19 @@ class Device {
     this.id = `${protocol}://${address}`;
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
+    this.terminalLogFile = this.createTerminalLogFile();
     /** @type {import("micropython-ctl").BoardInfo} */
     this.info = null;
 
     this.updateConnection();
     subscribe(() => this.onChanged());
   }
+
+  /**
+   * Handles data from this.adapter.onTerminalData
+   * @param {string} data
+   */
+  onTerminalData(data) {}
 
   async updateConnection() {
     if (this.online && !this.connected) {
@@ -78,10 +87,22 @@ class Device {
     const rawAdapter = new MicroPythonDevice();
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
-    return createBlockingProxy(rawAdapter, { exceptions: ["sendData"] });
+    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData"] });
+
+    adapter.onTerminalData = (data) => {
+      this.onTerminalData(data);
+      this.terminalLogFile.write(data);
+    };
+
+    return adapter;
   }
 
-  __connectingPromise = null;
+  createTerminalLogFile() {
+    const logFileName =
+      this.pymakr.context.logUri.fsPath + ["/device", this.protocol, this.address, Date.now() + ".log"].join("-");
+    mkdirSync(dirname(logFileName), { recursive: true });
+    return createWriteStream(logFileName);
+  }
 
   async connect() {
     if (!this.connecting) {
@@ -114,6 +135,7 @@ class Device {
     }
     return this.__connectingPromise;
   }
+
   async disconnect() {
     const connectPromise = this.adapter.disconnect();
     await waitFor(connectPromise, 2000, "Timed out while disconnecting.");

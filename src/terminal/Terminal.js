@@ -1,6 +1,10 @@
 const { resolve } = require("path");
 const vscode = require("vscode");
 
+/**
+ * Runs the client terminal, eg. `node client.js serial COM6`
+ * We need this because VSCode terminals have to be external scripts
+ */
 class Terminal {
   /**
    * @param {PyMakr} pyMakr

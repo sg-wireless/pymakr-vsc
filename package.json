@@ -3,7 +3,7 @@
   "displayName": "PyMakr 2.0 Preview",
   "publisher": "Pycom",
   "description": "",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-alpha.4",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
@@ -141,6 +141,10 @@
       ]
     },
     "commands": [
+      {
+        "command": "pymakr.showTerminalLog",
+        "title": "Open terminal log"
+      },
       {
         "command": "pymakr.createProject",
         "title": "Create project in folder"
@@ -312,6 +316,9 @@
         },
         {
           "command": "pymakr.configureDevice"
+        },
+        {
+          "command": "pymakr.showTerminalLog"
         }
       ],
       "pymakr.editorContextMenu": [

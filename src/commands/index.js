@@ -30,6 +30,13 @@ class Commands {
 
   commands = {
     /**
+     * @param {DeviceTreeItem} treeItem
+     */
+    "pymakr.showTerminalLog": (treeItem) => {
+      vscode.commands.executeCommand("vscode.open", vscode.Uri.file(treeItem.device.terminalLogFile.path));
+    },
+
+    /**
      * Creates a new Pymakr project in a folder
      * @param {vscode.Uri} uri
      */

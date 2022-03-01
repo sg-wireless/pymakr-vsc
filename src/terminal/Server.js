@@ -12,6 +12,7 @@ class Server {
   constructor(pymakr) {
     this.pymakr = pymakr;
     this.log = pymakr.log.createChild("terminal server");
+    // creates a new server for each new client
     this.server = createServer((socket) => {
       /** @type {ProtocolAndAddress[]} */
       const availableDevices = pymakr.devicesStore
@@ -36,7 +37,7 @@ class Server {
           this.log.debug('received', data.toString())
           device.adapter.sendData(data);
           // make sure device data is sent to the last active terminal
-          device.adapter.onTerminalData = (data) => socket.write(data);
+          device.onTerminalData = (data) => socket.write(data);
         });
         
         socket.on("error", (err) => {
