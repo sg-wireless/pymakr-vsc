@@ -3,7 +3,7 @@
   "displayName": "PyMakr 2.0 Preview",
   "publisher": "Pycom",
   "description": "",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
@@ -312,7 +312,8 @@
           "when": "viewItem == connectedProjectDevice"
         },
         {
-          "command": "pymakr.disconnect"
+          "command": "pymakr.disconnect",
+          "when": "viewItem == connectedProjectDevice"
         },
         {
           "command": "pymakr.configureDevice"
@@ -380,8 +381,7 @@
         },
         {
           "submenu": "pymakr.projectDeviceMenu",
-          "group": "inline@100",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice"
+          "group": "inline@100"          
         }
       ],
       "view/title": [
