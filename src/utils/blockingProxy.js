@@ -1,6 +1,6 @@
 /**
  * @template T
- * @typedef {T  & {__isBusy: Boolean, __ready: ResolvablePromise<any>, __lastCall: QueueItem}} BlockingProxy
+ * @typedef {T  & {__isBusy: Boolean, __ready: ResolvablePromise<any>, __lastCall: QueueItem, __target: T}} BlockingProxy
  */
 
 /**
@@ -49,6 +49,9 @@ const createBlockingProxy = (_target, _options) => {
 
   const target = /** @type {BlockingProxy<T>} */ (_target);
   target.__lastCall = null;
+  target.__target = target;
+  target.__ready = resolvablePromise();
+  target.__ready.resolve();
 
   /**
    * runs queued methods in sequence
@@ -70,10 +73,13 @@ const createBlockingProxy = (_target, _options) => {
       }
     }
 
+    target.__ready.resolve();
     target.__isBusy = false;
   };
 
   return new Proxy(target, {
+    ownKeys: (target) => Reflect.ownKeys(target),
+
     get(target, field) {
       // skip queue for any fields that are exempt
       if (options.exceptions.includes(field)) return target[field].bind(target);
