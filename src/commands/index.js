@@ -146,20 +146,20 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.connect": (treeItem) => {
-      treeItem.device.connect();
+    "pymakr.connect": ({ device }) => {
+      device.connect();
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.disconnect": (treeItem) => {
-      treeItem.device.disconnect();
+    "pymakr.disconnect": ({ device }) => {
+      device.disconnect();
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.createTerminal": (treeItem) => {
-      this.pymakr.terminalsStore.create(treeItem.device);
+    "pymakr.createTerminal": ({ device }) => {
+      this.pymakr.terminalsStore.create(device);
     },
 
     "pymakr.newDevice": async () => {
