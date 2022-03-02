@@ -23,7 +23,19 @@ class Commands {
     this.pymakr = pymakr;
     this.log = pymakr.log.createChild("command");
     const disposables = Object.entries(this.commands).map(([key, value]) =>
-      vscode.commands.registerCommand(key, value.bind(this))
+      vscode.commands.registerCommand(key, async (...params) => {
+        try {
+          await value.bind(this)(...params);
+        } catch (err) {
+          vscode.window.showErrorMessage(
+            `[Pymakr] Failed to run command: ${key}. Reason: ${
+              err.message || err.name || err
+            }. Please see logs for info.`
+          );
+          this.log.error(`Failed to run command: ${key} with params:`, params);
+          this.log.error(err);
+        }
+      })
     );
     pymakr.context.subscriptions.push(...disposables);
   }
@@ -141,6 +153,7 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     "pymakr.disconnect": (treeItem) => {
+      throw "ouch";
       treeItem.device.disconnect();
     },
     /**
