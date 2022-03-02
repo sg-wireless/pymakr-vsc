@@ -153,7 +153,6 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     "pymakr.disconnect": (treeItem) => {
-      throw "ouch";
       treeItem.device.disconnect();
     },
     /**
