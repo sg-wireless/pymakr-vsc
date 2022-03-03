@@ -8,7 +8,12 @@ const { SerialPort } = require("serialport");
  * @param {import("@serialport/bindings-cpp").PortInfo & {friendlyName: string}} raw
  * @returns {DeviceInput}
  */
-const rawSerialToDeviceInput = (raw) => ({ address: raw.path, name: raw.friendlyName || raw.path, protocol: "serial", raw });
+const rawSerialToDeviceInput = (raw) => ({
+  address: raw.path,
+  name: raw.friendlyName || raw.path,
+  protocol: "serial",
+  raw,
+});
 
 /**
  * @param {DeviceInput} device
@@ -63,10 +68,10 @@ const createDevicesStore = (pymakr) => {
 
     store.get().forEach((device) => {
       const _lastOnlineState = device.online;
-      
+
       // update online status
       device.online = inputIds.includes(device.id);
-      
+
       // if status has changed, update connection
       if (device.online !== _lastOnlineState) device.updateConnection();
     });
@@ -79,9 +84,16 @@ const createDevicesStore = (pymakr) => {
     return () => clearInterval(watchIntervalHandle);
   };
 
+  /**
+   * @param {string|string[]} ids
+   * @returns {Device[]}
+   */
+  const getAllById = (ids) => store.get().filter((_device) => coerceArray(ids).includes(_device.id));
+
   return {
     ...store,
     getByProtocolAndAddress,
+    getAllById,
     upsert,
     remove,
     registerUSBDevices,
