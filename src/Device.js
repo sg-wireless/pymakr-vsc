@@ -7,6 +7,14 @@ const { writable } = require("./utils/store");
 const vscode = require("vscode");
 const { StateManager } = require("./utils/stateManager");
 
+/**
+ * @typedef {Object} DeviceConfig
+ * @prop {'always'|'never'|'onLostConnection'|'lastState'} autoConnect
+ * @prop {string} username defaults to "micro"
+ * @prop {string} password defaults to "python"
+ * @prop {boolean} hidden
+ */
+
 /** @type {DeviceConfig} */
 const configDefaults = {
   autoConnect: "onLostConnection",
