@@ -89,7 +89,7 @@ class Commands {
             );
             return result?.label || "_DONE_";
           },
-          autoConnect: async (config) => {
+          autoConnect: async () => {
             const { enum: enums, enumDescriptions } = manifestConfig["pymakr.autoConnect"];
 
             const options = enums.map(mapEnumsToQuickPick(enumDescriptions));
@@ -97,13 +97,13 @@ class Commands {
 
             let { label, clear } = await vscode.window.showQuickPick(options);
             if (clear) label = null;
-            device.config.set("autoConnect", label);
+            device.config.autoConnect = label;
+            device.state.save()
             return "main";
           },
         };
 
-        const config = device.config.get();
-        menu = await menus[menu](config);
+        menu = await menus[menu](device.config);
       }
     },
     "pymakr.toggleAdvancedMode": async () => {

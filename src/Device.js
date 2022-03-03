@@ -2,10 +2,18 @@ const { dirname } = require("path");
 const { readFileSync, statSync, readdirSync, mkdirSync, createWriteStream } = require("fs");
 const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
-const { waitFor, cherryPick, getRelativeFromNearestParentPosix } = require("./utils/misc");
+const { waitFor, cherryPick } = require("./utils/misc");
 const { writable } = require("./utils/store");
 const vscode = require("vscode");
-const { createDeviceConfigStore } = require("./stores/deviceConfig");
+const { StateManager } = require("./utils/stateManager");
+
+/** @type {DeviceConfig} */
+const configDefaults = {
+  autoConnect: "onLostConnection",
+  username: "micro",
+  password: "python",
+  hidden: false,
+};
 
 class Device {
   __connectingPromise = null;
@@ -28,16 +36,15 @@ class Device {
     this.password = password;
     this.name = name;
     this.raw = raw;
+    this.state = this.createState();
 
     this.connected = false;
     this.connecting = false;
     this.online = false;
     this.lostConnection = false;
+    /** @type {DeviceConfig} */
+    this.config = { ...configDefaults, ...this.state.load().config };
 
-    this.config = createDeviceConfigStore(this);
-
-    /** `${protocol}://${address}` */
-    this.id = `${protocol}://${address}`;
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
     this.terminalLogFile = this.createTerminalLogFile();
@@ -48,6 +55,11 @@ class Device {
     subscribe(() => this.onChanged());
   }
 
+  createState() {
+    const getState = () => cherryPick(this, ["connected", "name", "id", "config"]);
+    return new StateManager(this.pymakr, `devices.${this.id}`, getState);
+  }
+
   /**
    * Handles data from this.adapter.onTerminalData
    * @param {string} data
@@ -56,9 +68,9 @@ class Device {
 
   async updateConnection() {
     if (this.online && !this.connected) {
-      const autoConnect = this.config.get().autoConnect || this.pymakr.config.get().get("autoConnect");
+      const autoConnect = this.config.autoConnect || this.pymakr.config.get().get("autoConnect");
       const shouldConnect = autoConnect === "always";
-      const shouldResume = autoConnect === "lastState" && this.loadState().connected;
+      const shouldResume = autoConnect === "lastState" && this.state.load().connected;
       const shouldReconnect = autoConnect === "onLostConnection" && this.lostConnection;
       if (shouldConnect || shouldResume || shouldReconnect) await this.connect();
     } else {
@@ -146,28 +158,8 @@ class Device {
     this.changed();
   }
 
-  saveState() {
-    return this.handleState("save");
-  }
-  loadState() {
-    return this.handleState("load");
-  }
-  handleState(action) {
-    const key = `pymakr.devices.${this.id}.state`;
-    const { workspaceState } = this.pymakr.context;
-
-    if (action === "save") {
-      const currentState = cherryPick(this, ["connected", "name"]);
-      workspaceState.update(key, currentState);
-    }
-
-    const state = workspaceState.get(key);
-    this.log.debugShort("handleState", action, state);
-    return state || {};
-  }
-
   onChanged() {
-    this.saveState();
+    this.state.save();
     this.pymakr.devicesProvider.refresh();
     this.pymakr.projectsProvider.refresh();
   }

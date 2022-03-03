@@ -1,6 +1,7 @@
 const { readFileSync } = require("fs");
 const { dirname, basename } = require("path");
 const vscode = require("vscode");
+const { StateManager } = require("./utils/stateManager");
 
 class Project {
   /**
@@ -20,22 +21,23 @@ class Project {
       vscode.window.showErrorMessage(this.err);
     }
 
+    this.state = this.createState();
     this.name = this.config.name || basename(this.folder);
     this.log = pymakr.log.createChild("project: " + this.name);
 
     /** @type {import('./Device').Device[]} */
     this.devices = [];
-    this.recoverProject()
+    this.recoverProject();
   }
 
   recoverProject() {
-    const storedProjects = this.pymakr.context.workspaceState.get("pycom.projects") || {};
-    const devices = this.pymakr.devicesStore.get();
-    const storedProject = storedProjects[this.folder];
-    if (storedProject) {
-      this.log.debug("recover", storedProject);
-      this.devices = devices.filter((_device) => storedProject.devices.includes(_device.id));
-    }
+    const deviceIds = this.state.load().devices || [];
+    this.devices = this.pymakr.devicesStore.getAllById(deviceIds);
+  }
+
+  createState() {
+    const getState = () => ({ devices: this.devices.map((device) => device.id) });
+    return new StateManager(this.pymakr, `projects.${this.folder}`, getState);
   }
 
   /**
@@ -44,7 +46,7 @@ class Project {
   addDevice(device) {
     this.devices.push(device);
     this.pymakr.projectsProvider.refresh();
-    this.saveToWorkspaceState();
+    this.state.save();
   }
 
   /**
@@ -53,15 +55,7 @@ class Project {
   removeDevice(device) {
     this.devices = this.devices.filter((_device) => _device !== device);
     this.pymakr.projectsProvider.refresh();
-    this.saveToWorkspaceState();
-  }
-
-  saveToWorkspaceState() {
-    const { workspaceState } = this.pymakr.context;
-    const projects = workspaceState.get("pycom.projects") || {};
-    projects[this.folder] = projects[this.folder] || {};
-    projects[this.folder].devices = this.devices.map((d) => d.id);
-    workspaceState.update("pycom.projects", projects);
+    this.state.save();
   }
 }
 
