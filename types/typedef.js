@@ -15,6 +15,7 @@
  * @prop {string} address
  * @prop {string=} username
  * @prop {string=} password
+ * @prop {string=} id if not specified, "<protocol>://<address>" will be used
  * @prop {any=} raw
  */
 

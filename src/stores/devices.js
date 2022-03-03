@@ -12,6 +12,7 @@ const rawSerialToDeviceInput = (raw) => ({
   address: raw.path,
   name: raw.friendlyName || raw.path,
   protocol: "serial",
+  id: raw.serialNumber,
   raw,
 });
 
@@ -62,8 +63,7 @@ const createDevicesStore = (pymakr) => {
     pymakr.log.traceShort("register USB devices");
     const rawSerials = await SerialPort.list();
     const deviceInputs = rawSerials.map(rawSerialToDeviceInput);
-    const inputIds = deviceInputs.map(createId);
-
+    const inputIds = deviceInputs.map((deviceInput) => deviceInput.id);
     upsert(deviceInputs);
 
     store.get().forEach((device) => {

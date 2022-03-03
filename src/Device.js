@@ -19,7 +19,9 @@ class Device {
     this.subscribe = subscribe;
     /** call whenever device changes need to be onChanged to subscriptions */
     this.changed = () => set(this);
-    const { address, name, protocol, raw, password } = deviceInput;
+    const { address, name, protocol, raw, password, id } = deviceInput;
+    this.id = id || `${protocol}://${address}`;
+
     this.pymakr = pymakr;
     this.protocol = protocol;
     this.address = address;
