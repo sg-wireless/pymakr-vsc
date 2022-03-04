@@ -1,5 +1,5 @@
 {
-  "name": "pymakr",
+  "name": "pymakr-preview",
   "displayName": "Pymakr 2.0 Preview",
   "publisher": "Pycom",
   "description": "",
@@ -35,7 +35,7 @@
   },
   "contributes": {
     "configuration": {
-      "title": "PyMakr",
+      "title": "PyMakr Preview",
       "properties": {
         "pymakr.logLevel": {
           "type": "string",
