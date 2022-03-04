@@ -26,7 +26,7 @@ jobs:
 
       - name: Publish
         # for testing, add --dry-run --debug
-        run: npx semantic-release
+        run: npx semantic-release --dry-run
         env:
           VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN }}
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
