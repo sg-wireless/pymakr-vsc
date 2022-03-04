@@ -20,7 +20,6 @@
   "main": "./extension.js",
   "release": {
     "verifyConditions": [
-      "semantic-release-vsce",
       "@semantic-release/github"
     ],
     "prepare": {
