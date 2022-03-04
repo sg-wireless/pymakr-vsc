@@ -41,10 +41,34 @@ class Commands {
   }
 
   commands = {
+    "pymakr.unhideDevice": async () => {
+      const devices = this.pymakr.devicesStore.get().filter((device) => device.config.hidden);
+      const picks = devices.map((device) => ({ label: device.name, description: device.id, device }));
+      const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to unhide" });
+
+      if (picked && picked.length) {
+        picked.forEach(({ device }) => {
+          device.config.hidden = false;
+          device.state.save();
+        });
+        this.pymakr.devicesProvider.refresh();
+        this.pymakr.projectsProvider.refresh();
+      }
+    },
+    /**
+     * @param {DeviceTreeItem} treeItem
+     */
+    "pymakr.hideDevice": ({ device }) => {
+      device.config.hidden = true;
+      device.state.save();
+      this.pymakr.devicesProvider.refresh();
+      this.pymakr.projectsProvider.refresh();
+    },
     /**
      * @param {DeviceTreeItem} treeItem
      */
     "pymakr.showTerminalLog": (treeItem) => {
+      // @ts-ignore
       vscode.commands.executeCommand("vscode.open", vscode.Uri.file(treeItem.device.terminalLogFile.path));
     },
 
@@ -98,7 +122,7 @@ class Commands {
             let { label, clear } = await vscode.window.showQuickPick(options);
             if (clear) label = null;
             device.config.autoConnect = label;
-            device.state.save()
+            device.state.save();
             return "main";
           },
         };
@@ -162,6 +186,43 @@ class Commands {
       this.pymakr.terminalsStore.create(device);
     },
 
+    "pymakr.newDeviceTelnet": async () => {
+      const address = await vscode.window.showInputBox({
+        placeHolder: "192.168.0.x",
+        prompt: "Hostname or IP of your device",
+      });
+      const username = await vscode.window.showInputBox({
+        prompt: "Username for your device [default: micro]",
+        value: " micro",
+      });
+      const password = await vscode.window.showInputBox({
+        password: true,
+        prompt: "Password for your device [default: python]",
+        value: "python",
+      });
+      const name = await vscode.window.showInputBox({
+        value: `telnet://${address}`,
+        prompt: "Name of your device",
+      });
+      const protocol = "telnet";
+      this.pymakr.devicesStore.upsert({ address, protocol, name, username, password });
+    },
+
+    "pymakr.newDeviceSerial": async () => {
+      const address = await vscode.window.showInputBox({
+        placeHolder: process.platform === "win32" ? "COM3" : "/dev/tty-usbserial3",
+        prompt: "Path to your device",
+      });
+      const name = await vscode.window.showInputBox({
+        value: `serial://${address}`,
+        prompt: "Name of your device",
+      });
+      const protocol = "serial";
+      this.pymakr.devicesStore.upsert({ address, protocol, name });
+    },
+
+    "pymakr.newDeviceRecover": async () => {},
+
     "pymakr.newDevice": async () => {
       /** @type {{label: 'telnet'|'serial'}} */
       const { label: protocol } = await vscode.window.showQuickPick([
@@ -172,6 +233,10 @@ class Commands {
         {
           label: "serial",
           description: "USB device",
+        },
+        {
+          label: "Recover device",
+          description: "Recover a previously hidden device",
         },
       ]);
 

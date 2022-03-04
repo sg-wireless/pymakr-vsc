@@ -59,7 +59,7 @@ class Device {
     /** @type {import("micropython-ctl-cont").BoardInfo} */
     this.info = null;
 
-    this.updateConnection();
+    if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
   }
 

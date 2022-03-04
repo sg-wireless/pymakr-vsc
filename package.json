@@ -1,9 +1,9 @@
 {
   "name": "pymakr",
-  "displayName": "PyMakr 2.0 Preview",
+  "displayName": "Pymakr 2.0 Preview",
   "publisher": "Pycom",
   "description": "",
-  "version": "2.0.0-alpha.5",
+  "version": "2.0.0-alpha.7",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
@@ -142,6 +142,10 @@
     },
     "commands": [
       {
+        "command": "pymakr.hideDevice",
+        "title": "Hide device"
+      },
+      {
         "command": "pymakr.showTerminalLog",
         "title": "Open terminal log"
       },
@@ -167,6 +171,18 @@
         "command": "pymakr.newDevice",
         "title": "Add a new device",
         "icon": "$(plus)"
+      },
+      {
+        "command": "pymakr.newDeviceSerial",
+        "title": "Serial"
+      },
+      {
+        "command": "pymakr.newDeviceTelnet",
+        "title": "Telnet"
+      },
+      {
+        "command": "pymakr.unhideDevice",
+        "title": "Unhide a device"
       },
       {
         "command": "pymakr.createTerminal",
@@ -292,6 +308,10 @@
     ],
     "submenus": [
       {
+        "id": "pymakr.newDeviceMenu",
+        "label": "New device"
+      },
+      {
         "id": "pymakr.projectDeviceMenu",
         "icon": "$(ellipsis)",
         "label": "device"
@@ -306,6 +326,14 @@
       }
     ],
     "menus": {
+      "pymakr.newDeviceMenu": [
+        {
+          "command": "pymakr.newDeviceSerial"
+        },
+        {
+          "command": "pymakr.newDeviceTelnet"
+        }
+      ],
       "pymakr.projectDeviceMenu": [
         {
           "command": "pymakr.removeDeviceFromProject",
@@ -320,6 +348,9 @@
         },
         {
           "command": "pymakr.showTerminalLog"
+        },
+        {
+          "command": "pymakr.hideDevice"
         }
       ],
       "pymakr.editorContextMenu": [
@@ -382,14 +413,15 @@
         {
           "submenu": "pymakr.projectDeviceMenu",
           "when": "viewItem != project",
-          "group": "inline@100"          
+          "group": "inline@100"
         }
       ],
       "view/title": [
         {
-          "command": "pymakr.newDevice",
-          "when": "view == pymakr-devices-tree",
-          "group": "navigation"
+          "submenu": "pymakr.newDeviceMenu"
+        },
+        {
+          "command": "pymakr.unhideDevice"
         }
       ],
       "explorer/context": [

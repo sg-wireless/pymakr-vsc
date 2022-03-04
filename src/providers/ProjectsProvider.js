@@ -38,7 +38,9 @@ class ProjectTreeItem extends vscode.TreeItem {
   constructor(project) {
     super(project.name, 2);
     this.project = project;
-    this.children = project.devices.map((device) => new ProjectDeviceTreeItem(device, project));
+    this.children = project.devices
+      .filter((device) => !device.config.hidden)
+      .map((device) => new ProjectDeviceTreeItem(device, project));
     this.contextValue = "project";
   }
 }
@@ -51,10 +53,10 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
    */
   constructor(device, project) {
     super(device.name, vscode.TreeItemCollapsibleState.None);
-    this.project = project
-    this.device = device
-    this.contextValue = device.connected ? "connectedProjectDevice" : 'projectDevice';
-    const filename = device.connected ? 'lightning.svg' : 'lightning-muted.svg'
+    this.project = project;
+    this.device = device;
+    this.contextValue = device.connected ? "connectedProjectDevice" : "projectDevice";
+    const filename = device.connected ? "lightning.svg" : "lightning-muted.svg";
     this.iconPath = {
       dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
       light: path.join(__dirname + "..", "..", "..", "media", "light", filename),

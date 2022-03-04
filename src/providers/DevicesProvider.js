@@ -26,7 +26,10 @@ class DevicesProvider {
 
   getChildren(element) {
     if (element === undefined) {
-      return this.PyMakr.devicesStore.get().map((device) => new DeviceTreeItem(device));
+      return this.PyMakr.devicesStore
+        .get()
+        .filter((device) => !device.config.hidden)
+        .map((device) => new DeviceTreeItem(device));
     }
     return element.children;
   }
@@ -43,7 +46,7 @@ class DeviceTreeItem extends vscode.TreeItem {
     super(device.name, vscode.TreeItemCollapsibleState.None);
     this.contextValue = device.connected ? "connectedDevice" : "device";
     this.device = device;
-    const filename = device.connected ? 'lightning.svg' : 'lightning-muted.svg'
+    const filename = device.connected ? "lightning.svg" : "lightning-muted.svg";
     this.iconPath = {
       dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
       light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
