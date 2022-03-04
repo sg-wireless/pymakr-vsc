@@ -56,7 +56,7 @@ class Device {
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
     this.terminalLogFile = this.createTerminalLogFile();
-    /** @type {import("micropython-ctl").BoardInfo} */
+    /** @type {import("micropython-ctl-cont").BoardInfo} */
     this.info = null;
 
     this.updateConnection();
