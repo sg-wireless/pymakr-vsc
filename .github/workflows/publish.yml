@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - alpha
+      - 2.x
 
 jobs:
   deploy:
