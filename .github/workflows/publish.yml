@@ -6,6 +6,7 @@ on:
       - master
       - alpha
       - 2.x
+      - next
 
 jobs:
   deploy:
