@@ -1,8 +1,10 @@
-# pymakr 2
+# Pymakr 2 - Preview
 
-### Alpha version
+### This is an alpha preview of the upcoming Pymakr 2
 
-Use at your own peril
+Please make sure to backup any projects that you use with this extension!
+
+---
 
 
 ### Create a new project
