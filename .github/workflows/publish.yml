@@ -29,6 +29,6 @@ jobs:
         # for testing, add --dry-run --debug
         run: npx semantic-release --dry-run
         env:
-          VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN }}
+          VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN2 }}
           GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
