@@ -1,8 +1,8 @@
 {
   "name": "pymakr-preview",
-  "displayName": "Pymakr 2.0 Preview",
+  "displayName": "Pymakr - Preview",
   "publisher": "Pycom",
-  "description": "",
+  "description": "Tech preview of the upcoming v2",
   "version": "2.0.0-alpha.7",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
@@ -40,6 +40,10 @@
         }
       ]
     ]
+  },
+  "icon": "media/pycom.png",
+  "vsce": {
+    "baseImagesUrl": "https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
   },
   "contributes": {
     "configuration": {
