@@ -24,8 +24,6 @@ class Terminal {
 
     this.term = vscode.window.createTerminal({ name, shellPath, shellArgs });
     this.term.show();
-    
-    console.log(this.term.exitStatus);
   }
 }
 
