@@ -83,7 +83,7 @@ class PyMakr {
   async registerProjects() {
     await this.projectsStore.refresh();
     await this.activeProjectStore.setToLastUsedOrFirstFound();
-    this.log.debug("active project", this.activeProjectStore.get().folder);
+    this.log.debug("active project", this.activeProjectStore.get()?.folder);
   }
 }
 
