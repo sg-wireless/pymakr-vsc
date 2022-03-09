@@ -12,6 +12,8 @@
 	"include": [
 		"src/**/*.js",
 		"src/**/*.ts",
+		"test/**/*.js",
+		"test/**/*.ts",
 		"types/typedef.js",
 		"types/store.js",
 	],

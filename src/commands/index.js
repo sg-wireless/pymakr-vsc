@@ -41,6 +41,8 @@ class Commands {
   }
 
   commands = {
+    /** provides pymakr to the callback - for testing purposes */
+    "pymakr.getPymakr": (cb) => cb(this.pymakr),
     "pymakr.unhideDevice": async () => {
       const devices = this.pymakr.devicesStore.get().filter((device) => device.config.hidden);
       const picks = devices.map((device) => ({ label: device.name, description: device.id, device }));
