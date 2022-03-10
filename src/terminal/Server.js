@@ -37,7 +37,7 @@ class Server {
           this.log.debug('received', data.toString())
           device.adapter.sendData(data);
           // make sure device data is sent to the last active terminal
-          device.onTerminalData = (data) => socket.write(data);
+          device.__onTerminalDataExclusive = (data) => socket.write(data);
         });
         
         socket.on("error", (err) => {

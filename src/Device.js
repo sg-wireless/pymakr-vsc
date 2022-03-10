@@ -69,10 +69,20 @@ class Device {
   }
 
   /**
-   * Handles data from this.adapter.onTerminalData
+   * Proxies data from this.adapter.onTerminalData
+   * Can be wrapped and extended
    * @param {string} data
    */
-  onTerminalData(data) {}
+  onTerminalData(data){}
+
+  /**
+   * Server.js will reactively assign this callback to the currently active terminal
+   * Therefore any wrapping or extending of this method will be lost whenever a terminal is used
+   * @param {string} data
+   */
+  __onTerminalDataExclusive(data) {}
+
+  
 
   async updateConnection() {
     if (this.online && !this.connected) {
@@ -112,6 +122,7 @@ class Device {
     const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData"] });
 
     adapter.onTerminalData = (data) => {
+      this.__onTerminalDataExclusive(data);
       this.onTerminalData(data);
       this.terminalLogFile.write(data);
     };
