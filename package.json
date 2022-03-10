@@ -3,7 +3,7 @@
   "displayName": "Pymakr - Preview",
   "publisher": "Pycom",
   "description": "Tech preview of the upcoming v2",
-  "version": "2.0.0-alpha.7",
+  "version": "2.1.2",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
