@@ -73,7 +73,7 @@ class Device {
    * Can be wrapped and extended
    * @param {string} data
    */
-  onTerminalData(data){}
+  onTerminalData(data) {}
 
   /**
    * Server.js will reactively assign this callback to the currently active terminal
@@ -81,8 +81,6 @@ class Device {
    * @param {string} data
    */
   __onTerminalDataExclusive(data) {}
-
-  
 
   async updateConnection() {
     if (this.online && !this.connected) {
@@ -139,34 +137,59 @@ class Device {
 
   async connect() {
     if (!this.connecting) {
-      this.connecting = true;
+      /* connectingPromise is used by other classes to detect when a device is connected.
+         should maybe be changed to a subscribable */
       this.__connectingPromise = new Promise(async (resolve, reject) => {
-        if (this.protocol === "serial") {
+        this._onConnectingHandler();
+        let err;
+        const reconnectIntervals = [0, 5, 500, 1000];
+        while (reconnectIntervals.length) {
           try {
-            this.log.info("connecting...");
-            const connectPromise = this.adapter.connectSerial(this.address);
-            await waitFor(connectPromise, 2000, "Timed out while connecting.");
-            this.connected = true;
-            this.lostConnection = false;
-            this.changed();
-            this.log.info("connected.");
-            this.info = await waitFor(this.adapter.getBoardInfo(), 10000, "timed out while getting board info");
-            this.log.debug("boardInfo", this.info);
-            await this.pymakr.activeDeviceStore.setToLastUsedOrFirstFound();
-            resolve();
-          } catch (err) {
-            const error = [`Failed to connect to ${this.address}.`, err.message, this.adapter];
-            vscode.window.showErrorMessage(
-              [error[0], err.message, "Please see developer logs for more info."].join(" - ")
-            );
-            this.log.error(...error);
-            reject(err);
+            await this._connectSerial();
+            resolve(this._onConnectedHandler());
+            return this.__connectingPromise;
+          } catch (_err) {
+            err = err || _err;
+            if (reconnectIntervals.length) this.log.info(`Failed to connect. (${err.message}) Retrying...`);
+            await new Promise((resolve) => setTimeout(resolve, reconnectIntervals.shift()));
           }
         }
+        // if we end here, we failed to connect
+        reject(this._onFailedConnectHandler(err));
       });
-      this.connecting = false;
+      return this.__connectingPromise;
     }
-    return this.__connectingPromise;
+  }
+
+  _onConnectingHandler() {
+    this.log.info("connecting...");
+    this.connecting = true;
+  }
+
+  _onFailedConnectHandler(err) {
+    this.connecting = false;
+    const error = [`Failed to connect to ${this.address}.`, err.message, this.adapter];
+    vscode.window.showErrorMessage([error[0], err.message, "Please see developer logs for more info."].join(" - "));
+    this.log.error(...error);
+    throw error;
+  }
+
+  /** @private */
+  async _onConnectedHandler() {
+    this.log.info("connected.");
+    this.connected = true;
+    this.connecting = false;
+    this.lostConnection = false;
+    this.changed();
+    this.info = await waitFor(this.adapter.getBoardInfo(), 10000, "timed out while getting board info");
+    this.log.debug("boardInfo", this.info);
+    await this.pymakr.activeDeviceStore.setToLastUsedOrFirstFound();
+  }
+
+  /** @private */
+  async _connectSerial() {
+    const connectPromise = this.adapter.connectSerial(this.address);
+    await waitFor(connectPromise, 2000, "Timed out while connecting.");
   }
 
   async disconnect() {
