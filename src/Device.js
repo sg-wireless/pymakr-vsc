@@ -174,6 +174,12 @@ class Device {
     throw error;
   }
 
+  _onDisconnected() {
+    this.connected = false;
+    this.lostConnection = false;
+    this.changed();
+  }
+
   /** @private */
   async _onConnectedHandler() {
     this.log.info("connected.");
@@ -193,11 +199,10 @@ class Device {
   }
 
   async disconnect() {
-    const connectPromise = this.adapter.disconnect();
-    await waitFor(connectPromise, 2000, "Timed out while disconnecting.");
-    this.connected = false;
-    this.lostConnection = false;
-    this.changed();
+    if (this.connected) {
+      await waitFor(this.adapter.disconnect(), 2000, "Timed out while disconnecting.");
+      this._onDisconnected();
+    }
   }
 
   onChanged() {
