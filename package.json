@@ -22,6 +22,7 @@
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
       [
         "semantic-release-vsce",
         {
@@ -449,7 +450,7 @@
         },
         {
           "command": "pymakr.createProject",
-          "group":"navigation"
+          "group": "navigation"
         }
       ],
       "explorer/context": [
@@ -479,6 +480,7 @@
     "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/rewrite/"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.1",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "16.x",
