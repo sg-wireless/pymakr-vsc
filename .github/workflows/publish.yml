@@ -31,5 +31,5 @@ jobs:
         run: npx semantic-release
         env:
           VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN2 }}
-          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
