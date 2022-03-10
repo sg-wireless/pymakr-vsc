@@ -146,11 +146,7 @@ class Commands {
      */
     "pymakr.runScript": async (text) => {
       /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
-      const options = {
-        disableDedent: true,
-        broadcastOutputAsTerminalData: true,
-        runGcCollectBeforeCommand: true,
-      };
+      const options = {};      
 
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
         progress.report({ message: "Run script" });

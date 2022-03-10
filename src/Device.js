@@ -23,6 +23,14 @@ const configDefaults = {
   hidden: false,
 };
 
+/** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
+const runScriptDefaults = {
+  disableDedent: true,
+  broadcastOutputAsTerminalData: true,
+  runGcCollectBeforeCommand: true,
+  resolveBeforeResult: true,
+};
+
 class Device {
   __connectingPromise = null;
 
@@ -99,18 +107,14 @@ class Device {
   /**
    *
    * @param {string} script
-   * @param {import("micropython-ctl-cont").RunScriptOptions} options
+   * @param {import("micropython-ctl-cont").RunScriptOptions=} options
    * @returns
    */
   async runScript(script, options) {
-    /** @type {import("micropython-ctl-cont").RunScriptOptions} options */
-    const defaults = {
-      runGcCollectBeforeCommand: true,
-    };
+    options = Object.assign({}, runScriptDefaults, options);
+
     this.log.debugShort(`runScript:\n\n${script}\n\n`);
-    const result = await this.adapter.runScript(script + "\n", Object.assign(defaults, options));
-    this.log.debugShort(`script returned:\n\n${result}\n\n`);
-    return result;
+    return this.adapter.runScript(script + "\n", options);
   }
 
   createAdapter() {
