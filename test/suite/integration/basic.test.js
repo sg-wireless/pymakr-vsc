@@ -1,20 +1,13 @@
 const vscode = require("vscode");
 
-/**
- * @param {import("../../../src/Device").Device} device
- */
-const nextTerminalData = (device) => {
-  const oldHook = device.adapter.onTerminalData;
-  return new Promise((resolve) => {
-    device.adapter.onTerminalData = (data) => {
-      resolve(data);
-      return oldHook(data);
-    };
-  });
-};
+const { disconnectAllDevices, nextTerminalData } = require("./utils");
+
+
 
 test("Can find devices", async ({ test }) => {
   assert(pymakr.devicesStore.get().length >= 2);
+
+  await disconnectAllDevices();
 
   test("device", async ({ test }) => {
     const device = pymakr.devicesStore.get()[0];
@@ -44,6 +37,11 @@ test("Can find devices", async ({ test }) => {
         const receivedFromTerminal = nextTerminalData(device);
         terminal.sendText('print("foo")\n');
         assert.equal(await receivedFromTerminal, 'print("foo")' + "\r\nfoo" + "\r\n>>> ");
+      });
+
+      test("can disconnect", async () => {
+        await device.disconnect();
+        assert(!device.connected);
       });
     });
   });
