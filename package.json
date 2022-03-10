@@ -39,7 +39,8 @@
             }
           ]
         }
-      ]
+      ],
+      "@semantic-release/git"
     ]
   },
   "icon": "media/pycom.png",
@@ -481,6 +482,7 @@
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "16.x",
