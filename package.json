@@ -166,8 +166,14 @@
         "title": "Open terminal log"
       },
       {
+        "command": "pymakr.createProjectInFolder",
+        "title": "Create project in folder",
+        "icon": "$(plus)"
+      },
+      {
         "command": "pymakr.createProject",
-        "title": "Create project in folder"
+        "title": "Create new project",
+        "icon": "$(plus)"
       },
       {
         "command": "pymakr.configureDevice",
@@ -381,7 +387,7 @@
       ],
       "pymakr.explorerContextMenu": [
         {
-          "command": "pymakr.createProject",
+          "command": "pymakr.createProjectInFolder",
           "group": "pymakr",
           "when": "explorerResourceIsFolder"
         },
@@ -440,6 +446,10 @@
         {
           "command": "pymakr.unhideDevice",
           "when": "view == pymakr-devices-tree"
+        },
+        {
+          "command": "pymakr.createProject",
+          "group":"navigation"
         }
       ],
       "explorer/context": [

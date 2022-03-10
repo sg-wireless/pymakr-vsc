@@ -74,23 +74,56 @@ class Commands {
       vscode.commands.executeCommand("vscode.open", vscode.Uri.file(treeItem.device.terminalLogFile.path));
     },
 
+    "pymakr.createProject": async () => {
+      const folder = await vscode.window.showOpenDialog({
+        canSelectFolders: true,
+        canSelectFiles: false,
+        canSelectMany: false,
+        openLabel: "Use this folder",
+        title: "Create new Pymakr project",
+      });
+      if (!folder) return;
+      const projectFolder = await this.commands["pymakr.createProjectInFolder"](folder[0]);
+      vscode.workspace.updateWorkspaceFolders(0, 0, { uri: folder[0] });
+    },
+
     /**
      * Creates a new Pymakr project in a folder
      * @param {vscode.Uri} uri
      */
-    "pymakr.createProject": async (uri) => {
+    "pymakr.createProjectInFolder": async (uri) => {
+      const baseFolder = uri.path.split("/").pop();
       const name = await vscode.window.showInputBox({
         title: "Project name",
-        value: uri.path.split("/").pop(),
+        value: baseFolder,
       });
 
-      const project = {
+      // if the name doesn't match the folder, ask the user if they would like a subfolder
+      if (name !== baseFolder) {
+        const subFolder = name.replace(/[^A-Za-z0-9-]/g, "-");
+        const newFolder = await vscode.window.showQuickPick(
+          [{ label: baseFolder }, { label: `${baseFolder}/${subFolder}` }],
+          { title: "Where would you like to create project?" }
+        );
+        if (!newFolder) return;
+        if (newFolder.label !== baseFolder) uri = vscode.Uri.parse(`${uri.path}/${subFolder}`);
+      }
+
+      const pymakrConfContent = {
         name,
         py_ignore: ["pymakr.conf", ".vscode", ".gitignore", ".git", "env", "venv"],
       };
 
-      writeFileSync(uri.fsPath + "/pymakr.conf", JSON.stringify(project, null, 2));
+      // create pymakr.conf
+      mkdirSync(uri.fsPath, { recursive: true });
+      writeFileSync(uri.fsPath + "/pymakr.conf", JSON.stringify(pymakrConfContent, null, 2));
+      // open pymakr.conf
+      const document = await vscode.workspace.openTextDocument(uri.fsPath + "/pymakr.conf", {});
+      vscode.window.showTextDocument(document);
+
+      return uri;
     },
+
     /**
      * @param {DeviceTreeItem} treeItem
      */
@@ -146,7 +179,7 @@ class Commands {
      */
     "pymakr.runScript": async (text) => {
       /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
-      const options = {};      
+      const options = {};
 
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
         progress.report({ message: "Run script" });
