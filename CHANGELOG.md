@@ -1,3 +1,10 @@
+## [2.1.3](https://github.com/pycom/pymakr-vsc/compare/v2.1.2...v2.1.3) (2022-03-10)
+
+
+### Bug Fixes
+
+* patch changelog with pre 2.1.2 entries ([07b1027](https://github.com/pycom/pymakr-vsc/commit/07b1027138a0f104faba9d27963048fa31ae2908))
+
 ## [2.1.2](https://github.com/pycom/pymakr-vsc/compare/v2.1.1...v2.1.2) (2022-03-10)
 
 ### Bug Fixes
