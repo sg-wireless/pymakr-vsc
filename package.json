@@ -434,10 +434,12 @@
       ],
       "view/title": [
         {
-          "submenu": "pymakr.newDeviceMenu"
+          "submenu": "pymakr.newDeviceMenu",
+          "when": "view == pymakr-devices-tree"
         },
         {
-          "command": "pymakr.unhideDevice"
+          "command": "pymakr.unhideDevice",
+          "when": "view == pymakr-devices-tree"
         }
       ],
       "explorer/context": [
