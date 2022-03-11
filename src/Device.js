@@ -121,7 +121,7 @@ class Device {
     const rawAdapter = new MicroPythonDevice();
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
-    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData"] });
+    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "reset"] });
 
     adapter.onTerminalData = (data) => {
       this.__onTerminalDataExclusive(data);

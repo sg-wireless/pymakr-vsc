@@ -41,6 +41,19 @@ class Commands {
   }
 
   commands = {
+    /**
+     * @param {DeviceTreeItem} treeItem
+     */
+    "pymakr.resetDevice": async ({ device }) => {
+      device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: false });
+    },
+    /**
+     * @param {DeviceTreeItem} treeItem
+     */
+    "pymakr.softResetDevice": async ({ device }) => {
+      console.log("soft reset");
+      device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: true });
+    },
     /** provides pymakr to the callback - for testing purposes */
     "pymakr.getPymakr": (cb) => cb(this.pymakr),
     "pymakr.unhideDevice": async () => {

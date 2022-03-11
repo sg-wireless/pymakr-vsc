@@ -156,6 +156,13 @@
     },
     "commands": [
       {
+        "command": "pymakr.resetDevice",
+        "title": "Hard reset device"
+      },
+      {
+        "command": "pymakr.softResetDevice",
+        "title": "Soft reset device"
+      },
         "command": "pymakr.getPymakr",
         "title": "get Pymakr instance (for extension development)"
       },
@@ -360,6 +367,15 @@
       ],
       "pymakr.projectDeviceMenu": [
         {
+          "command": "pymakr.resetDevice",
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "group": "1-primary"
+        },
+        {
+          "command": "pymakr.softResetDevice",
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "group": "1-primary"
+        },
           "command": "pymakr.removeDeviceFromProject",
           "when": "viewItem == connectedProjectDevice || viewItem == projectDevice"
         },
