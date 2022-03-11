@@ -119,6 +119,7 @@ class Commands {
         canSelectMany: false,
         openLabel: "Use this folder",
         title: "Create new Pymakr project",
+        defaultUri: vscode.Uri.file(require("os").homedir()),
       });
       if (!folder) return;
       const projectFolder = await this.commands["pymakr.createProjectInFolder"](folder[0]);
