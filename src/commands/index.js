@@ -122,7 +122,7 @@ class Commands {
         defaultUri: vscode.Uri.file(require("os").homedir()),
       });
       if (!folder) return;
-      const projectFolder = await this.commands["pymakr.createProjectInFolder"](folder[0]);
+      await this.commands["pymakr.createProjectInFolder"](folder[0]);
       vscode.workspace.updateWorkspaceFolders(0, 0, { uri: folder[0] });
     },
 
