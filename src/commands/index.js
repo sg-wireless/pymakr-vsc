@@ -378,7 +378,17 @@ class Commands {
         value: relativePathFromProject,
       });
 
-      if (device && destination) await device.upload(fsPath, destination);
+      if (device && destination)
+        try {
+          await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+            progress.report({ message: `copying...}` });
+            await device.upload(fsPath, destination);
+          });
+        } catch (err) {
+          const errors = ["failed to upload", fsPath, "to", destination, "\r\nReason:", err];
+          vscode.window.showErrorMessage(errors.join(" "));
+          this.log.error(errors);
+        }
     },
 
     /**

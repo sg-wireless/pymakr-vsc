@@ -4,7 +4,6 @@ const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
 const { waitFor, cherryPick } = require("./utils/misc");
 const { writable } = require("./utils/store");
-const vscode = require("vscode");
 const { StateManager } = require("./utils/stateManager");
 
 /**
@@ -173,7 +172,6 @@ class Device {
   _onFailedConnectHandler(err) {
     this.connecting = false;
     const error = [`Failed to connect to ${this.address}.`, err.message, this.adapter];
-    vscode.window.showErrorMessage([error[0], err.message, "Please see developer logs for more info."].join(" - "));
     this.log.error(...error);
     throw error;
   }
@@ -245,20 +243,9 @@ class Device {
    * @param {string} destination
    */
   async upload(source, destination) {
-    // todo move tight coupled vscode
-    try {
-      this.log.info("copy from", source, "to", destination);
-      await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-        progress.report({ message: `copy to ${this.name}` });
-        this.log.info("upload", source, "to", destination);
-        await this._upload(source, destination);
-        this.log.info("upload completed");
-      });
-    } catch (err) {
-      const errors = ["failed to upload", source, "to", destination, "\r\nReason:", err];
-      vscode.window.showErrorMessage(errors.join(" "));
-      this.log.error(errors);
-    }
+    this.log.info("upload", source, "to", destination);
+    await this._upload(source, destination);
+    this.log.info("upload completed");
   }
 }
 
