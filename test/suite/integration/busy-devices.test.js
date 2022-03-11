@@ -6,7 +6,10 @@ test("busy devices", async ({ test }) => {
 
   test("can disconnect a busy device", async () => {
     await device.connect();
-    device.runScript("import time\r\nwhile True: time.sleep(1)");
+    assert(device.connected)
+    await device.runScript("import time\r\nwhile True: time.sleep(1)");    
+    assert(device.connected)
     await device.disconnect()
+    assert(!device.connected)
   });
 });
