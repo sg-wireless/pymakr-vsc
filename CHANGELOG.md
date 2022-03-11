@@ -1,3 +1,17 @@
+# [2.2.0](https://github.com/pycom/pymakr-vsc/compare/v2.1.3...v2.2.0) (2022-03-11)
+
+
+### Bug Fixes
+
+* create project didn't always open explorer ([beddcd5](https://github.com/pycom/pymakr-vsc/commit/beddcd5744b1f77b45ac1f157ec2f4730756ed50))
+* group device menu entries ([c03e010](https://github.com/pycom/pymakr-vsc/commit/c03e010315ef81afd4d98811c526592614b83f08))
+
+
+### Features
+
+* erase and provision device ([bace03d](https://github.com/pycom/pymakr-vsc/commit/bace03d754e015a5336da78458896a3e1d7da66b))
+* soft and hard reset in device menu ([d400327](https://github.com/pycom/pymakr-vsc/commit/d4003274c7453ae92bdd4fb3b4a5d9d96c27e917))
+
 ## [2.1.3](https://github.com/pycom/pymakr-vsc/compare/v2.1.2...v2.1.3) (2022-03-10)
 
 
