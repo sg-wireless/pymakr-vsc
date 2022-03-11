@@ -54,6 +54,31 @@ class Commands {
       console.log("soft reset");
       device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: true });
     },
+    /**
+     * @param {DeviceTreeItem} treeItem
+     */
+    "pymakr.eraseDevice": async ({ device }) => {
+      const picks = [
+        { label: "empty project", _path: "empty" },
+        { label: "led example", _path: "led-example" },
+      ];
+      const picked = await vscode.window.showQuickPick(picks, { title: "How would you like to provision your device" });
+      if (!picked) return;
+
+      const templatePath = `${__dirname}/../../templates/${picked._path}`;
+
+      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+        progress.report({ message: "Erasing device" });
+        try {
+          await device.adapter.remove("/flash", true);
+          await device.upload(templatePath, "/");
+        } catch (err) {
+          console.log("er,", err.message);
+          vscode.window.showErrorMessage("Could not erase device. Reason: " + err);
+        }
+      });
+    },
+
     /** provides pymakr to the callback - for testing purposes */
     "pymakr.getPymakr": (cb) => cb(this.pymakr),
     "pymakr.unhideDevice": async () => {

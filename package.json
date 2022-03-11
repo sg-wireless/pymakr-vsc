@@ -163,6 +163,11 @@
         "command": "pymakr.softResetDevice",
         "title": "Soft reset device"
       },
+      {
+        "command": "pymakr.eraseDevice",
+        "title": "Erase device"
+      },
+      {
         "command": "pymakr.getPymakr",
         "title": "get Pymakr instance (for extension development)"
       },
@@ -380,8 +385,9 @@
           "when": "viewItem == connectedProjectDevice || viewItem == projectDevice"
         },
         {
-          "command": "pymakr.disconnect",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice"
+          "command": "pymakr.eraseDevice",
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "group": "2-config"
         },
         {
           "command": "pymakr.configureDevice"
