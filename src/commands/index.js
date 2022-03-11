@@ -57,28 +57,33 @@ class Commands {
     /**
      * @param {DeviceTreeItem} treeItem
      */
-    "pymakr.eraseDevice": async ({ device }) => {
+    "pymakr.eraseDevicePrompt": async ({ device }) => {
       const picks = [
         { label: "empty project", _path: "empty" },
         { label: "led example", _path: "led-example" },
       ];
       const picked = await vscode.window.showQuickPick(picks, { title: "How would you like to provision your device" });
-      if (!picked) return;
-
-      const templatePath = `${__dirname}/../../templates/${picked._path}`;
-
-      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-        progress.report({ message: "Erasing device" });
-        try {
-          await device.adapter.remove("/flash", true);
-          await device.upload(templatePath, "/");
-        } catch (err) {
-          console.log("er,", err.message);
-          vscode.window.showErrorMessage("Could not erase device. Reason: " + err);
-        }
-      });
+      if (picked) return this.commands["pymakr.eraseDevice"]({ device }, picked._path);
     },
-
+    /**
+     * @param {Partial<DeviceTreeItem>} treeItem
+     */
+    "pymakr.eraseDevice": async ({ device }, templateId) =>
+      new Promise((resolve, reject) =>
+        vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+          progress.report({ message: "Erasing device" });
+          try {
+            const templatePath = `${__dirname}/../../templates/${templateId}`;
+            await device.adapter.remove("/flash", true);
+            await device.upload(templatePath, "/");
+            resolve();
+          } catch (err) {
+            console.log("er,", err.message);
+            vscode.window.showErrorMessage("Could not erase device. Reason: " + err);
+            reject(err);
+          }
+        })
+      ),
     /** provides pymakr to the callback - for testing purposes */
     "pymakr.getPymakr": (cb) => cb(this.pymakr),
     "pymakr.unhideDevice": async () => {

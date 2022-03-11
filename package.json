@@ -164,7 +164,7 @@
         "title": "Soft reset device"
       },
       {
-        "command": "pymakr.eraseDevice",
+        "command": "pymakr.eraseDevicePrompt",
         "title": "Erase device"
       },
       {
@@ -392,7 +392,7 @@
           "group": "2-config"
         },
         {
-          "command": "pymakr.eraseDevice",
+          "command": "pymakr.eraseDevicePrompt",
           "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
           "group": "2-config"
         },
