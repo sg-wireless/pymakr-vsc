@@ -381,8 +381,15 @@
           "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
           "group": "1-primary"
         },
+        {
+          "command": "pymakr.disconnect",
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "group": "1-primary"
+        },
+        {
           "command": "pymakr.removeDeviceFromProject",
-          "when": "viewItem == connectedProjectDevice || viewItem == projectDevice"
+          "when": "viewItem == connectedProjectDevice || viewItem == projectDevice",
+          "group": "2-config"
         },
         {
           "command": "pymakr.eraseDevice",
@@ -390,13 +397,16 @@
           "group": "2-config"
         },
         {
-          "command": "pymakr.configureDevice"
+          "command": "pymakr.configureDevice",
+          "group": "2-config"
         },
         {
-          "command": "pymakr.showTerminalLog"
+          "command": "pymakr.hideDevice",
+          "group": "2-config"
         },
         {
-          "command": "pymakr.hideDevice"
+          "command": "pymakr.showTerminalLog",
+          "group": "5-debug"
         }
       ],
       "pymakr.editorContextMenu": [
