@@ -369,11 +369,11 @@ class Commands {
     "pymakr.uploadProject": ({ device, project }) => device.upload(project.folder, "/"),
 
     /**
-     * @param {vscode.Uri} treeItem
+     * @param {vscode.Uri} uri
      */
-    "pymakr.upload": async ({ fsPath }) => {
+    "pymakr.uploadPrompt": async (uri) => {
       const projectFolders = this.pymakr.projectsStore.get().map((p) => p.folder);
-      const relativePathFromProject = "/" + getRelativeFromNearestParentPosix(projectFolders)(fsPath);
+      const relativePathFromProject = "/" + getRelativeFromNearestParentPosix(projectFolders)(uri.fsPath);
       const { device } = await vscode.window.showQuickPick(
         this.pymakr.devicesStore.get().map((device) => ({ device, label: device.name }))
       );
@@ -383,17 +383,25 @@ class Commands {
         value: relativePathFromProject,
       });
 
-      if (device && destination)
-        try {
-          await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-            progress.report({ message: `copying...}` });
-            await device.upload(fsPath, destination);
-          });
-        } catch (err) {
-          const errors = ["failed to upload", fsPath, "to", destination, "\r\nReason:", err];
-          vscode.window.showErrorMessage(errors.join(" "));
-          this.log.error(errors);
-        }
+      if (device && destination) return this.commands["pymakr.upload"](uri, device, destination);
+    },
+
+    /**
+     * @param {vscode.Uri} uri
+     * @param {import('../Device.js').Device} device
+     * @param {string} destination not including /flash
+     */
+    "pymakr.upload": async ({ fsPath }, device, destination) => {
+      try {
+        await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+          progress.report({ message: `copying...}` });
+          await device.upload(fsPath, destination);
+        });
+      } catch (err) {
+        const errors = ["failed to upload", fsPath, "to", destination, "\r\nReason:", err];
+        vscode.window.showErrorMessage(errors.join(" "));
+        this.log.error(errors);
+      }
     },
 
     /**

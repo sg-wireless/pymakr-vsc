@@ -260,7 +260,7 @@
         "shortTitle": "Remove device"
       },
       {
-        "command": "pymakr.upload",
+        "command": "pymakr.uploadPrompt",
         "title": "Upload to device"
       },
       {
@@ -322,7 +322,7 @@
         "mac": "cmd+shift+c"
       },
       {
-        "command": "pymakr.upload",
+        "command": "pymakr.uploadPrompt",
         "key": "ctrl+shift+s",
         "mac": "cmd+shift+s"
       },
@@ -415,7 +415,7 @@
           "group": "pymakr"
         },
         {
-          "command": "pymakr.upload",
+          "command": "pymakr.uploadPrompt",
           "group": "pymakr"
         }
       ],
@@ -431,7 +431,7 @@
           "when": "!explorerResourceIsFolder"
         },
         {
-          "command": "pymakr.upload",
+          "command": "pymakr.uploadPrompt",
           "group": "pymakr"
         }
       ],
