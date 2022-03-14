@@ -2,11 +2,8 @@ const { mkdirSync, readFileSync, writeFileSync } = require("fs");
 const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
-const {
-  mapEnumsToQuickPick,
-  getRelativeFromNearestParent,
-  getRelativeFromNearestParentPosix,
-} = require("../utils/misc");
+const { mapEnumsToQuickPick, getRelativeFromNearestParent } = require("../utils/misc");
+const { relative } = require("path");
 
 /**
  * @typedef {import('../providers/ProjectsProvider').ProjectTreeItem} ProjectTreeItem
@@ -380,18 +377,16 @@ class Commands {
      * @param {vscode.Uri} uri
      */
     uploadPrompt: async (uri) => {
-      const projectFolders = this.pymakr.projectsStore.get().map((p) => p.folder);
-      const relativePathFromProject = "/" + getRelativeFromNearestParentPosix(projectFolders)(uri.fsPath);
-      const { device } = await vscode.window.showQuickPick(
-        this.pymakr.devicesStore.get().map((device) => ({ device, label: device.name }))
-      );
+      const project = this.pymakr.vscodeHelpers.coerceProjectByUri(uri);
+      const devices = await this.pymakr.vscodeHelpers.devicePickerByProject(project);
 
+      const relativePathFromProject = relative(project.folder, uri.fsPath).replace(/\\+/, "/");
       const destination = await vscode.window.showInputBox({
         title: "destination",
         value: relativePathFromProject,
       });
 
-      if (device && destination) return this.commands.upload(uri, device, destination);
+      return Promise.all(devices.map((device) => this.commands.upload(uri, device, destination)));
     },
 
     /**
