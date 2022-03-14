@@ -18,6 +18,14 @@
  */
 
 /**
+ * @template T
+ * @callback BeforeEachCall
+ * @param {T} target
+ * @param {string|symbol} field
+ * @param {any[]} params
+ */
+
+/**
  * @returns {ResolvablePromise<any>}
  */
 const resolvablePromise = () => {
@@ -37,15 +45,16 @@ const resolvablePromise = () => {
  * methods are forced to run in sequence, rather than in parallel.
  * @template T
  * @param {T} _target
- * @param {Object} _options
+ * @param {Object} [_options]
  * @param {(string|symbol)[]} _options.exceptions methods that should not be queued
+ * @param {BeforeEachCall<T>} _options.beforeEachCall
  * @returns {BlockingProxy<T>}
  */
 const createBlockingProxy = (_target, _options) => {
   /**@type {QueueItem[]} */
   const queue = [];
 
-  const options = { exceptions: [], ..._options };
+  const options = { exceptions: [], beforeEachCall: () => {}, ..._options };
 
   const target = /** @type {BlockingProxy<T>} */ (_target);
   target.__lastCall = null;
@@ -90,7 +99,10 @@ const createBlockingProxy = (_target, _options) => {
         const promise = (...args) => {
           return new Promise((resolve, reject) => {
             queue.push({
-              exec: () => method.bind(target)(...args),
+              exec: async () => {
+                await options.beforeEachCall(target, field, args);
+                return await method.bind(target)(...args);
+              },
               field,
               args,
               resolve,
