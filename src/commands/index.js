@@ -178,7 +178,7 @@ class Commands {
       let menu = "main";
       while (menu !== "_DONE_") {
         /**
-         * @type {Object.<string, (config: DeviceConfig) => Promise<string>>}
+         * @type {Object.<string, (config: import("../Device.js").DeviceConfig) => Promise<string>>}
          */
         const menus = {
           main: async (config) => {
@@ -299,7 +299,6 @@ class Commands {
     newDeviceRecover: async () => {},
 
     newDevice: async () => {
-      /** @type {{label: 'telnet'|'serial'}} */
       const { label: protocol } = await vscode.window.showQuickPick([
         {
           label: "telnet",
