@@ -13,6 +13,7 @@ const { StatusBar } = require("./StatusBar");
 const { writable } = require("./utils/store");
 const { coerceDisposable } = require("./utils/misc");
 const manifest = require("../package.json");
+const { createVSCodeHelpers } = require("./utils/vscodeHelpers");
 
 class PyMakr {
   /**
@@ -20,6 +21,7 @@ class PyMakr {
    */
   constructor(context) {
     this.config = writable(vscode.workspace.getConfiguration("pymakr"));
+    this.vscodeHelpers = createVSCodeHelpers(this);
 
     this.log = createLogger("PyMakr");
     this.updateConfig("silent");

@@ -223,18 +223,7 @@ class Commands {
      * @param {vscode.Uri} uri
      */
     runScriptPrompt: async (text, uri) => {
-      const projects = this.pymakr.projectsStore.get();
-      const project = projects.find((p) => uri.fsPath.startsWith(p.folder));
-
-      const answers = await vscode.window.showQuickPick(
-        this.pymakr.devicesStore.get().map((device) => ({
-          label: device.name,
-          picked: project.devices.includes(device),
-          _device: device,
-        })),
-        { canPickMany: true }
-      );
-      const devices = answers.map((a) => a._device);
+      const devices = await this.pymakr.vscodeHelpers.devicePickerByProject(uri);
       await Promise.all(devices.map((device) => this.commands.runScript(text, device)));
     },
     /**
