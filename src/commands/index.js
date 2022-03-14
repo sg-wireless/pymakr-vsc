@@ -23,7 +23,7 @@ class Commands {
     this.pymakr = pymakr;
     this.log = pymakr.log.createChild("command");
     const disposables = Object.entries(this.commands).map(([key, value]) =>
-      vscode.commands.registerCommand(key, async (...params) => {
+      vscode.commands.registerCommand(`pymakr.${key}`, async (...params) => {
         try {
           await value.bind(this)(...params);
         } catch (err) {
@@ -44,31 +44,31 @@ class Commands {
     /**
      * @param {DeviceTreeItem} treeItem
      */
-    "pymakr.resetDevice": async ({ device }) => {
+    resetDevice: async ({ device }) => {
       device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: false });
     },
     /**
      * @param {DeviceTreeItem} treeItem
      */
-    "pymakr.softResetDevice": async ({ device }) => {
+    softResetDevice: async ({ device }) => {
       console.log("soft reset");
       device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: true });
     },
     /**
      * @param {DeviceTreeItem} treeItem
      */
-    "pymakr.eraseDevicePrompt": async ({ device }) => {
+    eraseDevicePrompt: async ({ device }) => {
       const picks = [
         { label: "empty project", _path: "empty" },
         { label: "led example", _path: "led-example" },
       ];
       const picked = await vscode.window.showQuickPick(picks, { title: "How would you like to provision your device" });
-      if (picked) return this.commands["pymakr.eraseDevice"]({ device }, picked._path);
+      if (picked) return this.commands.eraseDevice({ device }, picked._path);
     },
     /**
      * @param {Partial<DeviceTreeItem>} treeItem
      */
-    "pymakr.eraseDevice": async ({ device }, templateId) =>
+    eraseDevice: async ({ device }, templateId) =>
       new Promise((resolve, reject) =>
         vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
           progress.report({ message: "Erasing device" });
@@ -85,8 +85,8 @@ class Commands {
         })
       ),
     /** provides pymakr to the callback - for testing purposes */
-    "pymakr.getPymakr": (cb) => cb(this.pymakr),
-    "pymakr.unhideDevice": async () => {
+    getPymakr: (cb) => cb(this.pymakr),
+    unhideDevice: async () => {
       const devices = this.pymakr.devicesStore.get().filter((device) => device.config.hidden);
       const picks = devices.map((device) => ({ label: device.name, description: device.id, device }));
       const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to unhide" });
@@ -103,7 +103,7 @@ class Commands {
     /**
      * @param {DeviceTreeItem} treeItem
      */
-    "pymakr.hideDevice": ({ device }) => {
+    hideDevice: ({ device }) => {
       device.config.hidden = true;
       device.state.save();
       this.pymakr.devicesProvider.refresh();
@@ -112,12 +112,12 @@ class Commands {
     /**
      * @param {DeviceTreeItem} treeItem
      */
-    "pymakr.showTerminalLog": (treeItem) => {
+    showTerminalLog: (treeItem) => {
       // @ts-ignore
       vscode.commands.executeCommand("vscode.open", vscode.Uri.file(treeItem.device.terminalLogFile.path));
     },
 
-    "pymakr.createProject": async () => {
+    createProject: async () => {
       const folder = await vscode.window.showOpenDialog({
         canSelectFolders: true,
         canSelectFiles: false,
@@ -127,7 +127,7 @@ class Commands {
         defaultUri: vscode.Uri.file(require("os").homedir()),
       });
       if (!folder) return;
-      await this.commands["pymakr.createProjectInFolder"](folder[0]);
+      await this.commands.createProjectInFolder(folder[0]);
       vscode.workspace.updateWorkspaceFolders(0, 0, { uri: folder[0] });
     },
 
@@ -135,7 +135,7 @@ class Commands {
      * Creates a new Pymakr project in a folder
      * @param {vscode.Uri} uri
      */
-    "pymakr.createProjectInFolder": async (uri) => {
+    createProjectInFolder: async (uri) => {
       const baseFolder = uri.path.split("/").pop();
       const name = await vscode.window.showInputBox({
         title: "Project name",
@@ -155,7 +155,7 @@ class Commands {
 
       const pymakrConfContent = {
         name,
-        py_ignore: ["pymakr.conf", ".vscode", ".gitignore", ".git", "env", "venv"],
+        py_ignore: ["conf", ".vscode", ".gitignore", ".git", "env", "venv"],
       };
 
       // create pymakr.conf
@@ -171,7 +171,7 @@ class Commands {
     /**
      * @param {DeviceTreeItem} treeItem
      */
-    "pymakr.configureDevice": async (treeItem) => {
+    configureDevice: async (treeItem) => {
       const { device } = treeItem;
       const manifestConfig = device.pymakr.manifest.contributes.configuration.properties;
 
@@ -193,7 +193,7 @@ class Commands {
             return result?.label || "_DONE_";
           },
           autoConnect: async () => {
-            const { enum: enums, enumDescriptions } = manifestConfig["pymakr.autoConnect"];
+            const { enum: enums, enumDescriptions } = manifestConfig["autoConnect"];
 
             const options = enums.map(mapEnumsToQuickPick(enumDescriptions));
             options.push({ label: "Use default", description: "Use defaults from VSCode settings", clear: true });
@@ -209,19 +209,19 @@ class Commands {
         menu = await menus[menu](device.config);
       }
     },
-    "pymakr.toggleAdvancedMode": async () => {
+    toggleAdvancedMode: async () => {
       const advancedMode = vscode.workspace.getConfiguration("pymakr").get("advancedMode");
       this.pymakr.config.get().update("advancedMode", !advancedMode);
     },
-    "pymakr.runEditor": async () => {
+    runEditor: async () => {
       const editor = vscode.window.activeTextEditor;
       const text = editor.document.getText(editor.selection) || editor.document.getText();
-      return this.commands["pymakr.runScript"](text);
+      return this.commands.runScript(text);
     },
     /**
      * @param {string} text
      */
-    "pymakr.runScript": async (text) => {
+    runScript: async (text) => {
       /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
       const options = {};
 
@@ -238,30 +238,30 @@ class Commands {
     /**
      * @param {vscode.Uri} uri
      */
-    "pymakr.runFile": (uri) => {
+    runFile: (uri) => {
       const text = readFileSync(uri.fsPath, "utf-8");
-      return this.commands["pymakr.runScript"](text);
+      return this.commands.runScript(text);
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.connect": ({ device }) => {
+    connect: ({ device }) => {
       device.connect();
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.disconnect": ({ device }) => {
+    disconnect: ({ device }) => {
       device.disconnect();
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.createTerminal": ({ device }) => {
+    createTerminal: ({ device }) => {
       this.pymakr.terminalsStore.create(device);
     },
 
-    "pymakr.newDeviceTelnet": async () => {
+    newDeviceTelnet: async () => {
       const address = await vscode.window.showInputBox({
         placeHolder: "192.168.0.x",
         prompt: "Hostname or IP of your device",
@@ -283,7 +283,7 @@ class Commands {
       this.pymakr.devicesStore.upsert({ address, protocol, name, username, password });
     },
 
-    "pymakr.newDeviceSerial": async () => {
+    newDeviceSerial: async () => {
       const address = await vscode.window.showInputBox({
         placeHolder: process.platform === "win32" ? "COM3" : "/dev/tty-usbserial3",
         prompt: "Path to your device",
@@ -296,9 +296,9 @@ class Commands {
       this.pymakr.devicesStore.upsert({ address, protocol, name });
     },
 
-    "pymakr.newDeviceRecover": async () => {},
+    newDeviceRecover: async () => {},
 
-    "pymakr.newDevice": async () => {
+    newDevice: async () => {
       /** @type {{label: 'telnet'|'serial'}} */
       const { label: protocol } = await vscode.window.showQuickPick([
         {
@@ -341,7 +341,7 @@ class Commands {
       this.pymakr.devicesStore.upsert({ address, protocol, name, username, password });
     },
 
-    "pymakr.setActiveProject": async () => {
+    setActiveProject: async () => {
       const workspaceFolders = vscode.workspace.workspaceFolders.map((f) => f.uri.fsPath);
       const selectedProject = await vscode.window.showQuickPick(
         this.pymakr.projectsStore.get().map((project) => ({
@@ -353,7 +353,7 @@ class Commands {
       if (selectedProject) this.pymakr.activeProjectStore.set(selectedProject.project);
     },
 
-    "pymakr.setActiveDevice": async () => {
+    setActiveDevice: async () => {
       const selectedDevice = await vscode.window.showQuickPick(
         this.pymakr.devicesStore.get().map((device) => ({
           label: device.name,
@@ -366,12 +366,12 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.uploadProject": ({ device, project }) => device.upload(project.folder, "/"),
+    uploadProject: ({ device, project }) => device.upload(project.folder, "/"),
 
     /**
      * @param {vscode.Uri} uri
      */
-    "pymakr.uploadPrompt": async (uri) => {
+    uploadPrompt: async (uri) => {
       const projectFolders = this.pymakr.projectsStore.get().map((p) => p.folder);
       const relativePathFromProject = "/" + getRelativeFromNearestParentPosix(projectFolders)(uri.fsPath);
       const { device } = await vscode.window.showQuickPick(
@@ -383,7 +383,7 @@ class Commands {
         value: relativePathFromProject,
       });
 
-      if (device && destination) return this.commands["pymakr.upload"](uri, device, destination);
+      if (device && destination) return this.commands.upload(uri, device, destination);
     },
 
     /**
@@ -391,7 +391,7 @@ class Commands {
      * @param {import('../Device.js').Device} device
      * @param {string} destination not including /flash
      */
-    "pymakr.upload": async ({ fsPath }, device, destination) => {
+    upload: async ({ fsPath }, device, destination) => {
       try {
         await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
           progress.report({ message: `copying...}` });
@@ -407,7 +407,7 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.downloadProject": async (treeItem) => {
+    downloadProject: async (treeItem) => {
       const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
       const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
         ...fad,
@@ -431,7 +431,7 @@ class Commands {
     /**
      * @param {ProjectTreeItem} treeItem
      */
-    "pymakr.addDeviceToProject": async (treeItem) => {
+    addDeviceToProject: async (treeItem) => {
       const { project } = treeItem;
       const devices = this.pymakr.devicesStore.get();
       const pick = await vscode.window.showQuickPick([
@@ -448,7 +448,7 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.removeDeviceFromProject": async (treeItem) => {
+    removeDeviceFromProject: async (treeItem) => {
       const { project, device } = treeItem;
       project.removeDevice(device);
     },
@@ -456,7 +456,7 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    "pymakr.addDeviceToFileExplorer": async ({ device }) => {
+    addDeviceToFileExplorer: async ({ device }) => {
       const uri = vscode.Uri.from({
         scheme: device.protocol,
         // vscode doesn't like "/" in the authority name

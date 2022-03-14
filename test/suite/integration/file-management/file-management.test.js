@@ -10,14 +10,14 @@ test("file management", async ({ test }) => {
   });
   test("can upload a file", async () => {
     const uri = vscode.Uri.file(__dirname + "/sample/sample-file-1.md");
-    await pymakr.commands["pymakr.upload"](uri, device, "/sample-file-1.md");
+    await pymakr.commands.upload(uri, device, "/sample-file-1.md");
     const files = await device.adapter.listFiles("/flash", { recursive: false });
     assert.equal(files.length, 1);
     assert.equal(files[0].filename, "/flash/sample-file-1.md");
   });
   test("can upload a dir", async () => {
     const uri = vscode.Uri.file(__dirname + "/sample");
-    await pymakr.commands["pymakr.upload"](uri, device, "/");
+    await pymakr.commands.upload(uri, device, "/");
     const files = await device.adapter.listFiles("/flash", { recursive: false });
     assert.equal(files.length, 3);
     assert.deepEqual(
@@ -26,7 +26,7 @@ test("file management", async ({ test }) => {
     );
   });
   test("can erase and provision a device", async () => {
-    await pymakr.commands["pymakr.eraseDevice"]({ device }, "empty");
+    await pymakr.commands.eraseDevice({ device }, "empty");
     const files = await device.adapter.listFiles("/flash", { recursive: false });
     assert.equal(files.length, 2);
     assert.deepEqual(
