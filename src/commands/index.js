@@ -216,19 +216,39 @@ class Commands {
     runEditor: async () => {
       const editor = vscode.window.activeTextEditor;
       const text = editor.document.getText(editor.selection) || editor.document.getText();
-      return this.commands.runScript(text);
+      return this.commands.runScriptPrompt(text, editor.document.uri);
     },
     /**
      * @param {string} text
+     * @param {vscode.Uri} uri
      */
-    runScript: async (text) => {
+    runScriptPrompt: async (text, uri) => {
+      const projects = this.pymakr.projectsStore.get();
+      const project = projects.find((p) => uri.fsPath.startsWith(p.folder));
+
+      const answers = await vscode.window.showQuickPick(
+        this.pymakr.devicesStore.get().map((device) => ({
+          label: device.name,
+          picked: project.devices.includes(device),
+          _device: device,
+        })),
+        { canPickMany: true }
+      );
+      const devices = answers.map((a) => a._device);
+      await Promise.all(devices.map((device) => this.commands.runScript(text, device)));
+    },
+    /**
+     * @param {string} text
+     * @param {import("../Device.js").Device} device
+     */
+    runScript: async (text, device) => {
       /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
       const options = {};
 
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-        progress.report({ message: "Run script" });
+        progress.report({ message: `Run script on ${device.name}` });
         try {
-          return await this.pymakr.activeDeviceStore.get().runScript(text, options);
+          return await device.runScript(text, options);
         } catch (err) {
           console.log("er,", err.message);
           vscode.window.showErrorMessage("Could not run script. Reason: " + err);
@@ -240,7 +260,7 @@ class Commands {
      */
     runFile: (uri) => {
       const text = readFileSync(uri.fsPath, "utf-8");
-      return this.commands.runScript(text);
+      return this.commands.runScriptPrompt(text, uri);
     },
     /**
      * @param {ProjectDeviceTreeItem} treeItem

@@ -120,7 +120,10 @@ class Device {
     const rawAdapter = new MicroPythonDevice();
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
-    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "reset"] });
+    const adapter = createBlockingProxy(rawAdapter, {
+      exceptions: ["sendData", "reset", "connectSerial"],
+      beforeEachCall: () => this.connect(),
+    });
 
     adapter.onTerminalData = (data) => {
       this.__onTerminalDataExclusive(data);
@@ -139,7 +142,7 @@ class Device {
   }
 
   async connect() {
-    if (!this.connecting) {
+    if (!this.connecting && !this.connected) {
       /* connectingPromise is used by other classes to detect when a device is connected.
          should maybe be changed to a subscribable */
       this.__connectingPromise = new Promise(async (resolve, reject) => {
@@ -189,7 +192,8 @@ class Device {
     this.connecting = false;
     this.lostConnection = false;
     this.changed();
-    this.info = await waitFor(this.adapter.getBoardInfo(), 10000, "timed out while getting board info");
+    // we need to use __target directly since we can't risk queueing board info, which could make connect() never resolve
+    this.info = await waitFor(this.adapter.__target.getBoardInfo(), 10000, "timed out while getting board info");
     this.log.debug("boardInfo", this.info);
     await this.pymakr.activeDeviceStore.setToLastUsedOrFirstFound();
   }
