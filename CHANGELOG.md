@@ -1,3 +1,11 @@
+# [2.3.0](https://github.com/pycom/pymakr-vsc/compare/v2.2.0...v2.3.0) (2022-03-14)
+
+
+### Features
+
+* device selector for run script ([ab89dcb](https://github.com/pycom/pymakr-vsc/commit/ab89dcba6ddc047d8e5e89303249321bdbc014f4))
+* support upload to multiple devices ([84c9301](https://github.com/pycom/pymakr-vsc/commit/84c93018fbb704524fa739d9654b6fc29ba6be39))
+
 # [2.2.0](https://github.com/pycom/pymakr-vsc/compare/v2.1.3...v2.2.0) (2022-03-11)
 
 
