@@ -505,9 +505,9 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "node ./test/runTest.js",
     "mctl": "mctl",
+    "pretest.bak": "npm run lint",
+    "test": "node ./test/runTest.js",
     "test:unit": "probs src",
     "test-watch:unit": "npx nodemon --exec npm run test:unit",
     "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/rewrite/"
