@@ -4,14 +4,6 @@ const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
 const { mapEnumsToQuickPick, getRelativeFromNearestParent } = require("../utils/misc");
 const { relative } = require("path");
-
-/**
- * @typedef {import('../providers/ProjectsProvider').ProjectTreeItem} ProjectTreeItem
- * @typedef {import('../providers/DevicesProvider').DeviceTreeItem} DeviceTreeItem
- * @typedef {import('../providers/ProjectsProvider').ProjectDeviceTreeItem} ProjectDeviceTreeItem
- * @typedef {DeviceTreeItem | ProjectDeviceTreeItem} AnyDeviceTreeItem
- */
-
 class Commands {
   /**
    * @param {PyMakr} pymakr
@@ -114,8 +106,8 @@ class Commands {
       vscode.commands.executeCommand("vscode.open", vscode.Uri.file(treeItem.device.terminalLogFile.path));
     },
 
-    createProject: async () => {
-      const folder = await vscode.window.showOpenDialog({
+    createProjectPrompt: async () => {
+      const folders = await vscode.window.showOpenDialog({
         canSelectFolders: true,
         canSelectFiles: false,
         canSelectMany: false,
@@ -123,16 +115,17 @@ class Commands {
         title: "Create new Pymakr project",
         defaultUri: vscode.Uri.file(require("os").homedir()),
       });
-      if (!folder) return;
-      await this.commands.createProjectInFolder(folder[0]);
-      vscode.workspace.updateWorkspaceFolders(0, 0, { uri: folder[0] });
+      if (!folders) return;
+      await this.commands.createProjectInFolderPrompt(folders[0], null, true);
     },
 
     /**
      * Creates a new Pymakr project in a folder
      * @param {vscode.Uri} uri
+     * @param {any} fluff
+     * @param {boolean} addToWorkspace
      */
-    createProjectInFolder: async (uri) => {
+    createProjectInFolderPrompt: async (uri, fluff, addToWorkspace) => {
       const baseFolder = uri.path.split("/").pop();
       const name = await vscode.window.showInputBox({
         title: "Project name",
@@ -150,19 +143,41 @@ class Commands {
         if (newFolder.label !== baseFolder) uri = vscode.Uri.parse(`${uri.path}/${subFolder}`);
       }
 
-      const pymakrConfContent = {
-        name,
+      this.commands.createProject(uri, { name });
+
+      // open pymakr.conf
+      const document = await vscode.workspace.openTextDocument(uri.fsPath + "/pymakr.conf");
+      await vscode.window.showTextDocument(document);
+
+      if (addToWorkspace) {
+        const wsPos = vscode.workspace.workspaceFolders.length || 0;
+        await vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri });
+      }
+
+      // if project is already available, prompt for devices to use
+      let project = this.pymakr.vscodeHelpers.coerceProject(uri);
+      if (project) return this.commands.addDeviceToProjectPrompt(uri);
+      // else wait for the projects store to update and prompt for devices to use
+      else
+        return new Promise((resolve) =>
+          this.pymakr.projectsStore.next(() => resolve(this.commands.addDeviceToProjectPrompt(uri)))
+        );
+    },
+
+    /**
+     * @param {vscode.Uri} uri
+     * @param {*} config
+     */
+    createProject: async (uri, config) => {
+      const defaultConfig = {
         py_ignore: ["conf", ".vscode", ".gitignore", ".git", "env", "venv"],
       };
 
+      config = Object.assign(defaultConfig, config);
+
       // create pymakr.conf
       mkdirSync(uri.fsPath, { recursive: true });
-      writeFileSync(uri.fsPath + "/pymakr.conf", JSON.stringify(pymakrConfContent, null, 2));
-      // open pymakr.conf
-      const document = await vscode.workspace.openTextDocument(uri.fsPath + "/pymakr.conf", {});
-      vscode.window.showTextDocument(document);
-
-      return uri;
+      writeFileSync(uri.fsPath + "/pymakr.conf", JSON.stringify(config, null, 2));
     },
 
     /**
@@ -377,7 +392,7 @@ class Commands {
      * @param {vscode.Uri} uri
      */
     uploadPrompt: async (uri) => {
-      const project = this.pymakr.vscodeHelpers.coerceProjectByUri(uri);
+      const project = this.pymakr.vscodeHelpers.coerceProject(uri);
       const devices = await this.pymakr.vscodeHelpers.devicePickerByProject(project);
 
       const relativePathFromProject = relative(project.folder, uri.fsPath).replace(/\\+/, "/");
@@ -432,20 +447,26 @@ class Commands {
     },
 
     /**
-     * @param {ProjectTreeItem} treeItem
+     * @param {projectRef} treeItemOrProject
      */
-    addDeviceToProject: async (treeItem) => {
-      const { project } = treeItem;
+    addDeviceToProjectPrompt: async (treeItemOrProject) => {
+      const project = this.pymakr.vscodeHelpers.coerceProject(treeItemOrProject);
       const devices = this.pymakr.devicesStore.get();
-      const pick = await vscode.window.showQuickPick([
-        ...devices
-          .filter((_device) => !project.devices.includes(_device))
-          .map((_device) => ({
-            label: _device.name,
-            device: _device,
-          })),
-      ]);
-      if (pick) project.addDevice(pick.device);
+      const picks = await vscode.window.showQuickPick(
+        [
+          ...devices
+            .filter((_device) => !project.devices.includes(_device))
+            .map((_device) => ({
+              label: _device.name,
+              device: _device,
+            })),
+        ],
+        {
+          title: `Which devices would you like to use with "${project.name}"`,
+          canPickMany: true,
+        }
+      );
+      if (picks) picks.map((pick) => project.addDevice(pick.device));
     },
 
     /**
@@ -463,13 +484,14 @@ class Commands {
       const uri = vscode.Uri.from({
         scheme: device.protocol,
         // vscode doesn't like "/" in the authority name
-        authority: device.address.replaceAll("/", "%2F"),
+        authority: device.address.replace(/\//g, "%2F"),
         path: "/flash",
       });
 
       const name = `${device.protocol}:/${device.address}`;
 
-      vscode.workspace.updateWorkspaceFolders(0, 0, { uri, name });
+      const wsPos = vscode.workspace.workspaceFolders.length || 0;
+      vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri, name });
     },
   };
 }

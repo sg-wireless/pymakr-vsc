@@ -180,12 +180,12 @@
         "title": "Open terminal log"
       },
       {
-        "command": "pymakr.createProjectInFolder",
+        "command": "pymakr.createProjectInFolderPrompt",
         "title": "Create project in folder",
         "icon": "$(plus)"
       },
       {
-        "command": "pymakr.createProject",
+        "command": "pymakr.createProjectPrompt",
         "title": "Create new project",
         "icon": "$(plus)"
       },
@@ -250,7 +250,7 @@
         "title": "Set active device"
       },
       {
-        "command": "pymakr.addDeviceToProject",
+        "command": "pymakr.addDeviceToProjectPrompt",
         "shortTitle": "$(plus)device",
         "title": "Add device to project"
       },
@@ -421,7 +421,7 @@
       ],
       "pymakr.explorerContextMenu": [
         {
-          "command": "pymakr.createProjectInFolder",
+          "command": "pymakr.createProjectInFolderPrompt",
           "group": "pymakr",
           "when": "explorerResourceIsFolder"
         },
@@ -442,7 +442,7 @@
           "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice"
         },
         {
-          "command": "pymakr.addDeviceToProject",
+          "command": "pymakr.addDeviceToProjectPrompt",
           "group": "inline",
           "when": "viewItem == project"
         },
@@ -482,7 +482,7 @@
           "when": "view == pymakr-devices-tree"
         },
         {
-          "command": "pymakr.createProject",
+          "command": "pymakr.createProjectPrompt",
           "group": "navigation"
         }
       ],
