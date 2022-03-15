@@ -1,7 +1,7 @@
 const vscode = require("vscode");
 const { Commands } = require("./commands");
 const { createDevicesStore, createActiveDeviceStore } = require("./stores/devices");
-const { createProjectsStore, createActiveProjectStore } = require("./stores/projects");
+const { createProjectsStore } = require("./stores/projects");
 const { createTerminalsStore } = require("./stores/terminals");
 const { DevicesProvider } = require("./providers/DevicesProvider");
 const { ProjectsProvider } = require("./providers/ProjectsProvider");
@@ -29,7 +29,6 @@ class PyMakr {
     this.manifest = manifest;
 
     this.projectsStore = createProjectsStore(this);
-    this.activeProjectStore = createActiveProjectStore(this);
     this.activeDeviceStore = createActiveDeviceStore(this);
     this.devicesStore = createDevicesStore(this);
     this.terminalsStore = createTerminalsStore(this);
@@ -84,8 +83,6 @@ class PyMakr {
 
   async registerProjects() {
     await this.projectsStore.refresh();
-    await this.activeProjectStore.setToLastUsedOrFirstFound();
-    this.log.debug("active project", this.activeProjectStore.get()?.folder);
   }
 }
 
