@@ -10,6 +10,7 @@
  * @prop {function(T):void} set
  * @prop {function(function(T):T):void} update
  * @prop {function(function(T):void):Unsubscribe} subscribe
+ * @prop {function(function(T):void):void} next
  */
 
 /**
@@ -17,6 +18,7 @@
  * @typedef {object} Readable
  * @prop {function():T} get
  * @prop {function(function(T):void):Unsubscribe} subscribe
+ * @prop {function(function(T):void):void} next
  */
 
 /**

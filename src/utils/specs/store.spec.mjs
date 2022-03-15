@@ -70,12 +70,12 @@ test("derived store", () => {
 
 test("deriveChained", () => {
   const storeStr = writable("store1");
-  const storeFn = writable(str => 'derived-'+str)
+  const storeFn = writable((str) => "derived-" + str);
 
   const chainedStore = chainDerived([storeStr], ([storeStr]) => {
-    return derived([storeFn], ([storeFn]) => {      
-      return storeFn(storeStr)
-    })
+    return derived([storeFn], ([storeFn]) => {
+      return storeFn(storeStr);
+    });
   });
 
   test("can create chained store", () => {
@@ -90,10 +90,22 @@ test("deriveChained", () => {
     storeStr.set("updated");
     assert.equal(chainedStore.get(), "derived-updated");
   });
-  
-  test('can set nested Value', ()=>{
-    storeFn.set(str => 'newDerived-'+str)
+
+  test("can set nested Value", () => {
+    storeFn.set((str) => "newDerived-" + str);
     assert.equal(chainedStore.get(), "newDerived-updated");
-  })
+  });
 });
 
+test("next", () => {
+  const subVals = [];
+  const nextVals = [];
+  const myStore = writable("");
+  myStore.subscribe((v) => subVals.push(v));
+  myStore.next((v) => nextVals.push(v));
+  myStore.set("a");
+  myStore.set("b");
+  myStore.set("c");
+  assert.deepEqual(subVals, ["a", "b", "c"]);
+  assert.deepEqual(nextVals, ["a"]);
+});
