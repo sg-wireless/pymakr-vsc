@@ -39,7 +39,7 @@ class PyMakr {
     this.projectsProvider = new ProjectsProvider(this);
     this.devicesProvider = new DevicesProvider(this);
     this.fileSystem = new FileSystemProvider(this);
-    this.statusBar = new StatusBar(this);
+    // this.statusBar = new StatusBar(this);
 
     this.registerWithIde();
     this.setup();
