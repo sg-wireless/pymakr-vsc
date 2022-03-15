@@ -16,7 +16,11 @@ const getProjects = async (pymakr) => {
 const createProjectsStore = (pymakr) => {
   /** @type {Writable<Project[]>} */
   const store = writable([]);
-  const refresh = async () => store.set(await getProjects(pymakr));
+  const refresh = async () => {
+    pymakr.log.debug('Refreshing projects store...')
+    store.set(await getProjects(pymakr))
+    pymakr.log.debug('Refreshing projects store. Complete!')
+  };
 
   const watcher = workspace.createFileSystemWatcher("**/pymakr.conf");
 
