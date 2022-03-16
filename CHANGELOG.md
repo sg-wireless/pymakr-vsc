@@ -1,3 +1,15 @@
+# [2.4.0](https://github.com/pycom/pymakr-vsc/compare/v2.3.0...v2.4.0) (2022-03-15)
+
+
+### Bug Fixes
+
+* disable statusBar ([3751311](https://github.com/pycom/pymakr-vsc/commit/3751311a5b3b40534fbeccb039a798f8b4157caa))
+
+
+### Features
+
+* better project wizard ([0c0cba2](https://github.com/pycom/pymakr-vsc/commit/0c0cba22485119d0ca1efa3b64099b250bc2b0e5))
+
 # [2.3.0](https://github.com/pycom/pymakr-vsc/compare/v2.2.0...v2.3.0) (2022-03-14)
 
 
