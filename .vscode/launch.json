@@ -18,7 +18,9 @@
 			"name": "Integration Tests",
 			"type": "extensionHost",
 			"request": "launch",
+			"preLaunchTask": "test:setup:workspaces",
 			"args": [
+				"${workspaceFolder}/test/workspaces/integration",
 				"--disable-extensions",
 				"--extensionDevelopmentPath=${workspaceFolder}",
 				"--extensionTestsPath=${workspaceFolder}/test/suite/index"
@@ -36,6 +38,6 @@
 				"<node_internals>/**"
 			],
 			"type": "pwa-node"		
-		},
+		}
 	]
 }
