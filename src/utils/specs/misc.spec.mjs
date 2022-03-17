@@ -1,12 +1,17 @@
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 import {
   cherryPick,
   getDifference,
   getNearestParent,
+  getNearestPymakrConfig,
   getRelativeFromNearestParent,
   getRelativeFromNearestParentPosix,
   mapEnumsToQuickPick,
   once,
 } from "../misc.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 test("once functions can only be called once", () => {
   let counter = 0;
@@ -61,4 +66,10 @@ test("getNearestParent + relative", () => {
   assert.equal(getNearestParent(parents)(child), "c:\\some\\folder");
   assert.equal(getRelativeFromNearestParent(parents)(child), "child\\path");
   assert.equal(getRelativeFromNearestParentPosix(parents)(child), "child/path");
+});
+
+test("getNearestPymakrConfig", () => {
+  const path = `${__dirname}/_sampleProject/folder/subfolder/foo`;
+  const result = getNearestPymakrConfig(path);
+  assert.equal(result.name, 'sample-project')
 });

@@ -1,6 +1,7 @@
 const vscode = require("vscode");
 const { Project } = require("../Project.js");
 const { ProjectDeviceTreeItem, ProjectTreeItem } = require("../providers/ProjectsProvider.js");
+const { getNearestPymakrProjectDir } = require("./misc.js");
 
 /**
  * @param {pymakr} pymakr
@@ -17,6 +18,7 @@ const createVSCodeHelpers = (pymakr) => {
       if (projectRef instanceof ProjectTreeItem) return projectRef.project;
       if (projectRef instanceof vscode.Uri) return helpers._getProjectByFsPath(projectRef.fsPath);
       if (typeof projectRef === "string") return helpers._getProjectByFsPath(projectRef);
+      throw new Error("projectRef did not match an accepted type");
     },
 
     /**
@@ -24,12 +26,16 @@ const createVSCodeHelpers = (pymakr) => {
      * @param {string} fsPath
      * @returns {Project}
      */
-    _getProjectByFsPath: (fsPath) => pymakr.projectsStore.get().find((project) => project.folder === fsPath),
+    _getProjectByFsPath: (fsPath) => {
+      const projectPath = getNearestPymakrProjectDir(fsPath);
+      return pymakr.projectsStore.get().find((project) => project.folder === projectPath);
+    },
 
     /**
      * @param {vscode.Uri | import('../Project.js').Project} projectOrUri
      */
     devicePickerByProject: async (projectOrUri) => {
+      if (!projectOrUri) throw new Error("projectOrUri can't be undefined");
       const project = helpers.coerceProject(projectOrUri);
 
       const answers = await vscode.window.showQuickPick(

@@ -19,10 +19,9 @@ test("file management", async ({ test }) => {
     const uri = vscode.Uri.file(__dirname + "/_sample");
     await pymakr.commands.upload(uri, device, "/");
     const files = await device.adapter.listFiles("/flash", { recursive: false });
-    assert.equal(files.length, 3);
     assert.deepEqual(
       files.map((f) => f.filename),
-      ["/flash/main.py", "/flash/sample-file-1.md", "/flash/sample-file-2.md"]
+      ["/flash/includeme", "/flash/main.py", "/flash/pymakr.conf", "/flash/sample-file-1.md", "/flash/sample-file-2.md"]
     );
   });
   test("can erase and provision a device", async () => {

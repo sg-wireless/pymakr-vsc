@@ -1,4 +1,5 @@
-const { relative, resolve } = require("path");
+const { existsSync, readFileSync } = require("fs");
+const { relative, resolve, dirname } = require("path");
 
 /**
  * creates a function that can only be called once
@@ -105,8 +106,8 @@ const getNearestParent = (parents) => {
 };
 
 /**
- * Curried function.Returns the relative path from the nearest provided parent
- * @param {string[]} parents
+ * Curried function. Returns the relative path from the nearest provided parent
+ * @param {string[]} parents array of file paths
  * @returns {(child:string)=>string}
  */
 const getRelativeFromNearestParent = (parents) => (child) => {
@@ -122,6 +123,34 @@ const getRelativeFromNearestParent = (parents) => (child) => {
 const getRelativeFromNearestParentPosix = (parents) => (child) =>
   getRelativeFromNearestParent(parents)(child).replaceAll("\\", "/");
 
+/**
+ * reads a json file
+ * @param {string} path
+ * @returns {Object.<string|number, any>}
+ */
+const readJsonFile = (path) => JSON.parse(readFileSync(path, "utf8"));
+
+/**
+ * resolves the nearest pymakr.conf
+ * @param {string} path
+ * @returns {PymakrConfFile}
+ */
+const getNearestPymakrConfig = (path) => {
+  const projectPath = getNearestPymakrProjectDir(path);
+  if (projectPath) return readJsonFile(`${projectPath}/pymakr.conf`);
+  else return null;
+};
+
+const getNearestPymakrProjectDir = (path) => {
+  const configPath = `${path}/pymakr.conf`;
+  if (existsSync(configPath)) return path;
+  else {
+    const parentDir = dirname(path);
+    if (parentDir !== path) return getNearestPymakrProjectDir(parentDir);
+    else return null;
+  }
+};
+
 module.exports = {
   once,
   coerceArray,
@@ -134,4 +163,6 @@ module.exports = {
   getNearestParent,
   getRelativeFromNearestParent,
   getRelativeFromNearestParentPosix,
+  getNearestPymakrConfig,
+  getNearestPymakrProjectDir,
 };

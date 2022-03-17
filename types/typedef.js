@@ -33,3 +33,12 @@
  * @typedef {DeviceTreeItem | ProjectDeviceTreeItem} AnyDeviceTreeItem
  * @typedef {import('vscode').TreeItem|import('vscode').Uri|string|Project} projectRef
  */
+
+/**
+ * @typedef {object} PymakrConfFile
+ * @prop {string[]} py_ignore
+ * @prop {string} name
+ * @prop {boolean} ctrl_c_on_connect
+ * @prop {boolean} reboot_after_upload
+ * @prop {boolean} safe_boot_on_upload
+ */

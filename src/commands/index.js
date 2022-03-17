@@ -170,7 +170,7 @@ class Commands {
      */
     createProject: async (uri, config) => {
       const defaultConfig = {
-        py_ignore: ["conf", ".vscode", ".gitignore", ".git", "env", "venv"],
+        py_ignore: [".vscode", ".gitignore", ".git", "env", "venv"],
       };
 
       config = Object.assign(defaultConfig, config);

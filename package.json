@@ -51,6 +51,19 @@
     "configuration": {
       "title": "PyMakr Preview",
       "properties": {
+        "pymakr.ignore": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            ".vscode",
+            ".gitignore",
+            ".git",
+            "env",
+            "venv"
+          ]
+        },
         "pymakr.logLevel": {
           "type": "string",
           "default": "info",
@@ -533,6 +546,7 @@
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.3",
     "micropython-ctl-cont": "^1.13.8",
+    "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
     "serialport": "^10.2.2"
   }

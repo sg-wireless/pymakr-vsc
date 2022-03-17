@@ -1,10 +1,11 @@
-const { dirname } = require("path");
+const { dirname, relative } = require("path");
 const { readFileSync, statSync, readdirSync, mkdirSync, createWriteStream } = require("fs");
 const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
-const { waitFor, cherryPick } = require("./utils/misc");
+const { waitFor, cherryPick, getNearestPymakrConfig, getNearestPymakrProjectDir } = require("./utils/misc");
 const { writable } = require("./utils/store");
 const { StateManager } = require("./utils/stateManager");
+const picomatch = require("picomatch");
 
 /**
  * @typedef {Object} DeviceConfig
@@ -217,38 +218,45 @@ class Device {
     this.pymakr.projectsProvider.refresh();
   }
 
-  async _uploadFile(file, destination) {
-    const _destination = `/flash/${destination}`.replace(/\/+/g, "/");
-    const destinationDir = dirname(_destination);
-    this.log.traceShort("uploadFile", file, "to", _destination);
-    const data = Buffer.from(readFileSync(file));
-    // todo move mkdir logic to micropython-ctl-cont
-    try {
-      await this.adapter.mkdir(destinationDir);
-    } catch (err) {
-      if (!err.message.match("OSError: \\[Errno 17\\] EEXIST")) throw err;
-    }
-    return this.adapter.putFile(_destination, data, { checkIfSimilarBeforeUpload: true });
-  }
-
-  async _uploadDir(dir, destination) {
-    for (const file of readdirSync(dir)) await this._upload(`${dir}/${file}`, `${destination}/${file}`);
-  }
-
-  _upload(source, destination) {
-    return statSync(source).isDirectory()
-      ? this._uploadDir(source, destination)
-      : this._uploadFile(source, destination);
-  }
-
   /**
    * Uploads file or folder to device
    * @param {string} source
    * @param {string} destination
    */
   async upload(source, destination) {
+    const ignores = this.pymakr.config.get().get("ignore");
+    const projectDir = getNearestPymakrProjectDir(source);
+    const pymakrConfig = getNearestPymakrConfig(projectDir);
+    if (pymakrConfig) ignores.push(...pymakrConfig.py_ignore);
+
+    const isIgnore = picomatch(ignores);
+
+    const _uploadFile = async (file, destination) => {
+      const _destination = `/flash/${destination}`.replace(/\/+/g, "/");
+      const destinationDir = dirname(_destination);
+      this.log.traceShort("uploadFile", file, "to", _destination);
+      const data = Buffer.from(readFileSync(file));
+      // todo move mkdir logic to micropython-ctl-cont
+      try {
+        await this.adapter.mkdir(destinationDir);
+      } catch (err) {
+        if (!err.message.match("OSError: \\[Errno 17\\] EEXIST")) throw err;
+      }
+      return this.adapter.putFile(_destination, data, { checkIfSimilarBeforeUpload: true });
+    };
+
+    const _uploadDir = async (dir, destination) => {
+      for (const file of readdirSync(dir)) await _upload(`${dir}/${file}`, `${destination}/${file}`);
+    };
+
+    const _upload = (source, destination) => {
+      const relativePath = relative(projectDir, source).replace(/\\/g, "/");
+      if (!isIgnore(relativePath))
+        return statSync(source).isDirectory() ? _uploadDir(source, destination) : _uploadFile(source, destination);
+    };
+
     this.log.info("upload", source, "to", destination);
-    await this._upload(source, destination);
+    await _upload(source, destination);
     this.log.info("upload completed");
   }
 }
