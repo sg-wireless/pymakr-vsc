@@ -9,14 +9,14 @@ test("file management", async ({ test }) => {
     assert.deepEqual(files, []);
   });
   test("can upload a file", async () => {
-    const uri = vscode.Uri.file(__dirname + "/sample/sample-file-1.md");
+    const uri = vscode.Uri.file(__dirname + "/_sample/sample-file-1.md");
     await pymakr.commands.upload(uri, device, "/sample-file-1.md");
     const files = await device.adapter.listFiles("/flash", { recursive: false });
     assert.equal(files.length, 1);
     assert.equal(files[0].filename, "/flash/sample-file-1.md");
   });
   test("can upload a dir", async () => {
-    const uri = vscode.Uri.file(__dirname + "/sample");
+    const uri = vscode.Uri.file(__dirname + "/_sample");
     await pymakr.commands.upload(uri, device, "/");
     const files = await device.adapter.listFiles("/flash", { recursive: false });
     assert.equal(files.length, 3);
