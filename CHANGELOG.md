@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/pycom/pymakr-vsc/compare/v2.4.0...v2.5.0) (2022-03-17)
+
+
+### Features
+
+* added ignore option for upload ([e61dd1b](https://github.com/pycom/pymakr-vsc/commit/e61dd1be30443dc4fd8fddb8a48e3c5be51362d7))
+
 # [2.4.0](https://github.com/pycom/pymakr-vsc/compare/v2.3.0...v2.4.0) (2022-03-15)
 
 
