@@ -6,31 +6,48 @@ Please make sure to backup any projects that you use with this extension!
 
 ---
 
+## Getting Started
 
-### Create a new project
-<img src="./media/readme/pymakr-create-project.gif">
+Please see [GET_STARTED.md](./GET_STARTED.md) for a quick intro.
 
+---
 
-### Move PyMakr to the explorer tab
+## What's new
 
-If you prefer to keep your Pymakr projects and devices next to your file explorer, you can move them to them to the file explorer tab.
+### New design
 
-<img src="./media/readme/pymakr-move-to-explorer.gif">
+Pymakr has gotten its own extension tab. Here projects and devices can be accessed.
 
-### Add a device to a project
+It's possible to drag these two views to the explorer tab for better accessibility (please see [Move PyMakr to the explorer tab](./README.md#move-pymakr-to-the-explorer-tab)).
 
-Linking devices to projects can speed up development when working on multiple projects and devices.
+<img src="./media/readme/design.png">
 
-<img src="./media/readme/pymakr-add-device-to-project.gif">
+### Multiple connected devices
 
-### Connect a device
+Multiple devices can now be connected at the same time.
+<img src="./media/readme/multiple-connections.gif">
 
-Before we can use a device, we need to connect it.
+### Shared terminals for the same device (experimental)
 
-<img src="./media/readme/pymakr-connect-a-device.gif">
+If multiple terminals are open for the same device, the last terminal to receive input will receive the device output. This is useful when handling large amounts of output.
+<img src="./media/readme/shared-terminal.gif">
 
-### Add a device to the file explorer
+### Projects
 
-To access our devices directly, we can add it to the file explorer. From here we can create/edit/delete files and folders.
+Project management is finally here and among the highlights are:
 
-<img src="./media/readme/pymakr-add-device-to-file-explorer.gif">
+- Multiple projects in one workspace
+- Auto detection of projects
+- Multiple devices per project
+
+<img src="./media/readme/projects.gif">
+
+### Device File explorer
+
+Mount your device inside VSCode and access it like a USB storage device. You can even save files directly to the device.
+<img src="./media/readme/device-file-explorer.gif">
+
+### Codebase (for contributors)
+Pymakr 2 was written completely from scratch and the codebase is now fully typed. On top of that we now have unit and integration tests.
+
+<img src="./media/readme/typed.gif">
