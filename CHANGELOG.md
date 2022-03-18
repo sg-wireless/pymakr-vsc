@@ -1,3 +1,16 @@
+# [2.6.0](https://github.com/pycom/pymakr-vsc/compare/v2.5.0...v2.6.0) (2022-03-18)
+
+
+### Bug Fixes
+
+* device autoconnect config broken ([1b6f265](https://github.com/pycom/pymakr-vsc/commit/1b6f2654b98f0572e8aff651aa4f79f2c14c5b5f))
+* remove deprecated shortcut ([9a36525](https://github.com/pycom/pymakr-vsc/commit/9a36525a2e035d583dd6a5433bfe079e7b19650f))
+
+
+### Features
+
+* added prompt for shared terminals ([5a34115](https://github.com/pycom/pymakr-vsc/commit/5a34115d8febdb6901fbbaf56ec0f9afe8d9276d))
+
 # [2.5.0](https://github.com/pycom/pymakr-vsc/compare/v2.4.0...v2.5.0) (2022-03-17)
 
 
