@@ -330,11 +330,6 @@
         "when": "terminalFocus"
       },
       {
-        "command": "pymakr.createTerminal",
-        "key": "ctrl+shift+c",
-        "mac": "cmd+shift+c"
-      },
-      {
         "command": "pymakr.uploadPrompt",
         "key": "ctrl+shift+s",
         "mac": "cmd+shift+s"
