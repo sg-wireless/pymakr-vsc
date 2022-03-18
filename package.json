@@ -117,6 +117,11 @@
           ],
           "default": "onLostConnection",
           "description": "When to connect devices automatically. Setting can be superseded on device level, by right clicking the device and selecting 'config'."
+        },
+        "pymakr.notifications.showSharedTerminalInfo": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show notification when a shared terminal is created."
         }
       }
     },
@@ -234,7 +239,7 @@
         "title": "Unhide a device"
       },
       {
-        "command": "pymakr.createTerminal",
+        "command": "pymakr.createTerminalPrompt",
         "title": "Create terminal",
         "icon": "$(terminal-view-icon)"
       },
@@ -465,7 +470,7 @@
           "group": "inline@6"
         },
         {
-          "command": "pymakr.createTerminal",
+          "command": "pymakr.createTerminalPrompt",
           "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice",
           "group": "inline"
         },

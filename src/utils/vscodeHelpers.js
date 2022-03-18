@@ -48,6 +48,18 @@ const createVSCodeHelpers = (pymakr) => {
       );
       return answers.map((a) => a._device);
     },
+
+    showSharedTerminalInfo: async () => {
+      if (pymakr.config.get().get("notifications.showSharedTerminalInfo")) {
+        const dontShowAgain = await vscode.window.showInformationMessage(
+          "When two terminals share a device, only the last used terminal will receive output from the device.",
+          "Don't show again"
+        );
+        if (dontShowAgain) {
+          pymakr.config.get().update("notifications.showSharedTerminalInfo", false, true);
+        }
+      }
+    },
   };
   return helpers;
 };

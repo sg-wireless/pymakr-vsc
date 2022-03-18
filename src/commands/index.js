@@ -278,8 +278,24 @@ class Commands {
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    createTerminal: ({ device }) => {
-      this.pymakr.terminalsStore.create(device);
+    createTerminalPrompt: async ({ device }) => {
+      const sharedTerm = "Create new shared terminal";
+      const openExistingTerm = "Open existing terminal";
+      
+      const existingTerminal = this.pymakr.terminalsStore.get().find((t) => t.device === device);
+      if (existingTerminal) {
+        const answer = await vscode.window.showInformationMessage(
+          `A terminal for ${device.name} already exists.`,
+          sharedTerm,
+          openExistingTerm
+        );
+        if (answer === sharedTerm) {
+          this.pymakr.terminalsStore.create(device);
+          this.pymakr.vscodeHelpers.showSharedTerminalInfo()
+        } else existingTerminal.term.show();
+      } else {
+        this.pymakr.terminalsStore.create(device);
+      }
     },
 
     newDeviceTelnet: async () => {
