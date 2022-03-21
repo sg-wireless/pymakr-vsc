@@ -2,7 +2,14 @@ const { dirname, relative } = require("path");
 const { readFileSync, statSync, readdirSync, mkdirSync, createWriteStream } = require("fs");
 const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
-const { waitFor, cherryPick, getNearestPymakrConfig, getNearestPymakrProjectDir } = require("./utils/misc");
+const {
+  waitFor,
+  cherryPick,
+  getNearestPymakrConfig,
+  getNearestPymakrProjectDir,
+  createIsIncluded,
+  serializeKeyValuePairs,
+} = require("./utils/misc");
 const { writable } = require("./utils/store");
 const { StateManager } = require("./utils/stateManager");
 const picomatch = require("picomatch");
@@ -67,8 +74,14 @@ class Device {
     /** @type {import("micropython-ctl-cont").BoardInfo} */
     this.info = null;
 
+    this.updateHideStatus()
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
+  }
+
+  updateHideStatus() {
+    const {include, exclude} = this.pymakr.config.get().get("devices");
+    this.config.hidden = !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw))
   }
 
   createState() {

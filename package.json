@@ -101,6 +101,22 @@
           "default": false,
           "description": "Prompts on actions instead of using defaults."
         },
+        "pymakr.devices.include": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [".*"],
+          "description": "Filter devices to include in the devices list. Uses regular expression. Will not include devices that match the exclude list."
+        },
+        "pymakr.devices.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Filter devices to exclude from the devices list. Uses regular expression. Takes precedence over includes."
+        },
         "pymakr.autoConnect": {
           "type": "string",
           "enum": [

@@ -151,6 +151,48 @@ const getNearestPymakrProjectDir = (path) => {
   }
 };
 
+/**
+ * @example
+ * arrayToRegexStr(['foo', 'bar']) === '(foo)|(bar)' //true
+ * @param {(string|RegExp)[]} arr
+ */
+const arrayToRegexStr = (arr) => arr.map((str) => `(${str})`).join("|");
+
+/**
+ * Check if an item matches an includes or excludes array
+ * @example
+ * const item = {foo: 'bar'}
+ * const filter = createIsIncluded(['.*'],['bar'], item => JSON.stringify(item))
+ * filter(item) // returns false as item matches exclude
+ * @param {(string|RegExp)[]} includes
+ * @param {(string|RegExp)[]} excludes
+ * @param {(item:any) => (string)} cb
+ * @returns
+ */
+const createIsIncluded = (includes, excludes, cb = (x) => x) => {
+  const incRegex = new RegExp(arrayToRegexStr(includes), "gi");
+  const excRegex = new RegExp(arrayToRegexStr(excludes), "gi");
+  return (item) => {
+    const str = cb(item);
+    return incRegex.test(str) && (!excludes.length || !excRegex.test(str));
+  };
+};
+
+/**
+ * Serializes flat object
+ * By default {foo: 123, bar: 'bar'} serializes to
+ * foo=123
+ * bar=bar
+ * @param {any} obj
+ * @param {string=} equalSign
+ * @param {string=} delimiter
+ * @returns
+ */
+const serializeKeyValuePairs = (obj, equalSign = "=", delimiter = "\r\n") =>
+  Object.entries(obj)
+    .map(([key, value]) => key + equalSign + value)
+    .join(delimiter);
+
 module.exports = {
   once,
   coerceArray,
@@ -165,4 +207,7 @@ module.exports = {
   getRelativeFromNearestParentPosix,
   getNearestPymakrConfig,
   getNearestPymakrProjectDir,
+  serializeKeyValuePairs,
+  createIsIncluded,
+  arrayToRegexStr
 };

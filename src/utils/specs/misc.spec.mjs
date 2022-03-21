@@ -1,7 +1,9 @@
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import {
+  arrayToRegexStr,
   cherryPick,
+  createIsIncluded,
   getDifference,
   getNearestParent,
   getNearestPymakrConfig,
@@ -9,6 +11,7 @@ import {
   getRelativeFromNearestParentPosix,
   mapEnumsToQuickPick,
   once,
+  serializeKeyValuePairs,
 } from "../misc.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -71,5 +74,45 @@ test("getNearestParent + relative", () => {
 test("getNearestPymakrConfig", () => {
   const path = `${__dirname}/_sampleProject/folder/subfolder/foo`;
   const result = getNearestPymakrConfig(path);
-  assert.equal(result.name, 'sample-project')
+  assert.equal(result.name, "sample-project");
+});
+
+test("arrayToRegexStr", () => {
+  assert.equal(arrayToRegexStr(["foo", "bar"]), "(foo)|(bar)");
+});
+
+test("serializeKeyValuePairs", () => {
+  const obj = {
+    foo: "foo",
+    bar: "test",
+    baz: 123,
+  };
+
+  const result = serializeKeyValuePairs(obj);
+  assert.equal(result, "foo=foo\r\nbar=test\r\nbaz=123");
+});
+
+test("createIsIncluded", () => {
+  const target1 = { name: "include-me" };
+  const target2 = { name: "exclude-me sometimes" };
+  const target3 = { name: "exclude-me everytime", someField: "exclude-me" };
+
+  const items = [target1, target2, target3];
+
+  test("no exclude includes everything", () => {
+    const result = items.filter(createIsIncluded([".*"], [], serializeKeyValuePairs));
+    assert.deepEqual(result, items);
+  });
+
+  test("vague excludes excludes all matches", () => {
+    const result = items.filter(createIsIncluded([".*"], ["exclude-me"], serializeKeyValuePairs));
+    assert.deepEqual(result, [items[0]]);
+  });
+
+  test("specific excludes excludes only specific matches", () => {
+    const result = items.filter(
+      createIsIncluded([".*"], ["someField=exclude-me"], serializeKeyValuePairs)
+    );
+    assert.deepEqual(result, [items[0], items[1]]);
+  });
 });
