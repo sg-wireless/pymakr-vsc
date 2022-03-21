@@ -496,7 +496,8 @@
         },
         {
           "command": "pymakr.createProjectPrompt",
-          "group": "navigation"
+          "group": "navigation",
+          "when": "view == pymakr-projects-tree"
         }
       ],
       "explorer/context": [
