@@ -1,3 +1,17 @@
+# [2.7.0](https://github.com/pycom/pymakr-vsc/compare/v2.6.0...v2.7.0) (2022-03-21)
+
+
+### Bug Fixes
+
+* create project fails if workspace is missing ([561bcb8](https://github.com/pycom/pymakr-vsc/commit/561bcb897c1cacf9749a6bc13ff232604472e6de))
+* new project button showed on all explorers ([40945d4](https://github.com/pycom/pymakr-vsc/commit/40945d401701a2de6fbe3e80c1fce9efc6b3a253))
+
+
+### Features
+
+* include/exclude devices option ([3da449c](https://github.com/pycom/pymakr-vsc/commit/3da449c6cfebecfe27d047f37edcd8cffb1f0f2b))
+* streamline device selection for projects ([d35f304](https://github.com/pycom/pymakr-vsc/commit/d35f3045fba876b34c90cfee7c8fddf9d6bfed7f))
+
 # [2.6.0](https://github.com/pycom/pymakr-vsc/compare/v2.5.0...v2.6.0) (2022-03-18)
 
 

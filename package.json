@@ -3,7 +3,7 @@
   "displayName": "Pymakr - Preview",
   "publisher": "Pycom",
   "description": "Tech preview of the upcoming v2",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
@@ -106,7 +106,9 @@
           "items": {
             "type": "string"
           },
-          "default": [".*"],
+          "default": [
+            ".*"
+          ],
           "description": "Filter devices to include in the devices list. Uses regular expression. Will not include devices that match the exclude list."
         },
         "pymakr.devices.exclude": {
