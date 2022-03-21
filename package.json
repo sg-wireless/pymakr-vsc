@@ -260,14 +260,6 @@
         "icon": "$(cloud-upload)"
       },
       {
-        "command": "pymakr.setActiveProject",
-        "title": "Set project"
-      },
-      {
-        "command": "pymakr.setActiveDevice",
-        "title": "Set active device"
-      },
-      {
         "command": "pymakr.selectDevicesForProjectPrompt",
         "shortTitle": "$(plus)device",
         "title": "Select devices"

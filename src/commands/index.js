@@ -377,28 +377,6 @@ class Commands {
       this.pymakr.devicesStore.upsert({ address, protocol, name, username, password });
     },
 
-    setActiveProject: async () => {
-      const workspaceFolders = vscode.workspace.workspaceFolders.map((f) => f.uri.fsPath);
-      const selectedProject = await vscode.window.showQuickPick(
-        this.pymakr.projectsStore.get().map((project) => ({
-          label: project.name,
-          description: getRelativeFromNearestParent(workspaceFolders)(project.folder),
-          project,
-        }))
-      );
-      if (selectedProject) this.pymakr.activeProjectStore.set(selectedProject.project);
-    },
-
-    setActiveDevice: async () => {
-      const selectedDevice = await vscode.window.showQuickPick(
-        this.pymakr.devicesStore.get().map((device) => ({
-          label: device.name,
-          device,
-        }))
-      );
-      if (selectedDevice) this.pymakr.activeDeviceStore.set(selectedDevice.device);
-    },
-
     /**
      * @param {ProjectDeviceTreeItem} treeItem
      */

@@ -1,6 +1,6 @@
 const vscode = require("vscode");
 const { Commands } = require("./commands");
-const { createDevicesStore, createActiveDeviceStore } = require("./stores/devices");
+const { createDevicesStore } = require("./stores/devices");
 const { createProjectsStore } = require("./stores/projects");
 const { createTerminalsStore } = require("./stores/terminals");
 const { DevicesProvider } = require("./providers/DevicesProvider");
@@ -29,7 +29,6 @@ class PyMakr {
     this.manifest = manifest;
 
     this.projectsStore = createProjectsStore(this);
-    this.activeDeviceStore = createActiveDeviceStore(this);
     this.devicesStore = createDevicesStore(this);
     this.terminalsStore = createTerminalsStore(this);
     this.commands = new Commands(this).commands;

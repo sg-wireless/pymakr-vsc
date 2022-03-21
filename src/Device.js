@@ -196,7 +196,6 @@ class Device {
     // we need to use __target directly since we can't risk queueing board info, which could make connect() never resolve
     this.info = await waitFor(this.adapter.__target.getBoardInfo(), 10000, "timed out while getting board info");
     this.log.debug("boardInfo", this.info);
-    await this.pymakr.activeDeviceStore.setToLastUsedOrFirstFound();
   }
 
   /** @private */
