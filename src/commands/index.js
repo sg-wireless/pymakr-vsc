@@ -156,11 +156,11 @@ class Commands {
 
       // if project is already available, prompt for devices to use
       let project = this.pymakr.vscodeHelpers.coerceProject(uri);
-      if (project) return this.commands.addDeviceToProjectPrompt(uri);
+      if (project) return this.commands.selectDevicesForProjectPrompt(uri);
       // else wait for the projects store to update and prompt for devices to use
       else
         return new Promise((resolve) =>
-          this.pymakr.projectsStore.next(() => resolve(this.commands.addDeviceToProjectPrompt(uri)))
+          this.pymakr.projectsStore.next(() => resolve(this.commands.selectDevicesForProjectPrompt(uri)))
         );
     },
 
@@ -465,24 +465,26 @@ class Commands {
     /**
      * @param {projectRef} treeItemOrProject
      */
-    addDeviceToProjectPrompt: async (treeItemOrProject) => {
+    selectDevicesForProjectPrompt: async (treeItemOrProject) => {
       const project = this.pymakr.vscodeHelpers.coerceProject(treeItemOrProject);
       const devices = this.pymakr.devicesStore.get();
       const picks = await vscode.window.showQuickPick(
         [
           ...devices
-            .filter((_device) => !project.devices.includes(_device))
+          .filter(d => !d.config.hidden)
             .map((_device) => ({
               label: _device.name,
               device: _device,
+              picked: project.devices.includes(_device)
             })),
         ],
         {
           title: `Which devices would you like to use with "${project.name}"`,
           canPickMany: true,
         }
-      );
-      if (picks) picks.map((pick) => project.addDevice(pick.device));
+      ) || [];
+      project.setDevices(picks.map(p => p.device))
+      
     },
 
     /**

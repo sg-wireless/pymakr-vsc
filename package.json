@@ -268,9 +268,9 @@
         "title": "Set active device"
       },
       {
-        "command": "pymakr.addDeviceToProjectPrompt",
+        "command": "pymakr.selectDevicesForProjectPrompt",
         "shortTitle": "$(plus)device",
-        "title": "Add device to project"
+        "title": "Select devices"
       },
       {
         "command": "pymakr.removeDeviceFromProject",
@@ -455,7 +455,7 @@
           "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice"
         },
         {
-          "command": "pymakr.addDeviceToProjectPrompt",
+          "command": "pymakr.selectDevicesForProjectPrompt",
           "group": "inline",
           "when": "viewItem == project"
         },

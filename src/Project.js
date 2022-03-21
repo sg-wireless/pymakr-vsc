@@ -41,6 +41,16 @@ class Project {
   }
 
   /**
+   * @param {import('./Device').Device[]} devices
+   */
+  setDevices(devices) {
+    this.devices = [...devices]
+    this.pymakr.projectsProvider.refresh();
+    this.state.save();
+  }
+
+  /**
+   * @deprecated
    * @param {import('./Device').Device} device
    */
   addDevice(device) {
@@ -50,6 +60,7 @@ class Project {
   }
 
   /**
+   * @deprecated
    * @param {import('./Device').Device} device
    */
   removeDevice(device) {
