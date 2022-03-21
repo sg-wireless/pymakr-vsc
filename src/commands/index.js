@@ -150,7 +150,7 @@ class Commands {
       await vscode.window.showTextDocument(document);
 
       if (addToWorkspace) {
-        const wsPos = vscode.workspace.workspaceFolders.length || 0;
+        const wsPos = vscode.workspace.workspaceFolders?.length || 0;
         await vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri });
       }
 
