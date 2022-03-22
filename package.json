@@ -48,99 +48,118 @@
     "baseImagesUrl": "https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
   },
   "contributes": {
-    "configuration": {
-      "title": "PyMakr Preview",
-      "properties": {
-        "pymakr.ignore": {
-          "type": "array",
-          "items": {
-            "type": "string"
+    "configuration": [
+      {
+        "title": "General",
+        "properties": {
+          "pymakr.ignore": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              ".vscode",
+              ".gitignore",
+              ".git",
+              "env",
+              "venv"
+            ]
           },
-          "default": [
-            ".vscode",
-            ".gitignore",
-            ".git",
-            "env",
-            "venv"
-          ]
-        },
-        "pymakr.logLevel": {
-          "type": "string",
-          "default": "info",
-          "enum": [
-            "fatal",
-            "error",
-            "warn",
-            "info",
-            "debugShort",
-            "debug",
-            "traceShort",
-            "trace"
-          ],
-          "enumDescriptions": [
-            "Plugin breaking errors",
-            "Errors",
-            "Warnings",
-            "General plugin information",
-            "Short debug messages",
-            "Long debug messages",
-            "Trace without stacktrace",
-            "Trace with stacktrace"
-          ],
-          "description": "Defaults to 'info'. Logs can be read in the developer tools (ctrl + shift i)."
-        },
-        "pymakr.logFilter": {
-          "type": "string",
-          "description": "Regular expression. If not empty, only logs matching the filter will be displayed.",
-          "examples": [
-            ".*terminal.*"
-          ]
-        },
-        "pymakr.advancedMode": {
-          "type": "boolean",
-          "default": false,
-          "description": "Prompts on actions instead of using defaults."
-        },
-        "pymakr.devices.include": {
-          "type": "array",
-          "items": {
-            "type": "string"
+          "pymakr.advancedMode": {
+            "type": "boolean",
+            "default": false,
+            "description": "Prompts on actions instead of using defaults."
+          }
+        }
+      },
+      {
+        "title": "Debug",
+        "properties": {
+          "pymakr.debug.logLevel": {
+            "type": "string",
+            "default": "info",
+            "enum": [
+              "fatal",
+              "error",
+              "warn",
+              "info",
+              "debugShort",
+              "debug",
+              "traceShort",
+              "trace"
+            ],
+            "enumDescriptions": [
+              "Plugin breaking errors",
+              "Errors",
+              "Warnings",
+              "General plugin information",
+              "Short debug messages",
+              "Long debug messages",
+              "Trace without stacktrace",
+              "Trace with stacktrace"
+            ],
+            "description": "Defaults to 'info'. Logs can be read in the developer tools (ctrl + shift i)."
           },
-          "default": [".*"],
-          "description": "Filter devices to include in the devices list. Uses regular expression. Will not include devices that match the exclude list."
-        },
-        "pymakr.devices.exclude": {
-          "type": "array",
-          "items": {
-            "type": "string"
+          "pymakr.debug.logFilter": {
+            "type": "string",
+            "description": "Regular expression. If not empty, only logs matching the filter will be displayed.",
+            "examples": [
+              ".*terminal.*"
+            ]
+          }
+        }
+      },
+      {
+        "title": "Devices",
+        "properties": {
+          "pymakr.devices.autoConnect": {
+            "type": "string",
+            "enum": [
+              "always",
+              "never",
+              "onLostConnection",
+              "lastState"
+            ],
+            "enumDescriptions": [
+              "Always auto connect to devices.",
+              "Never auto connect to devices.",
+              "Only auto connect to devices if connection was previously lost.",
+              "Auto connect to devices that were never manually disconnected."
+            ],
+            "default": "onLostConnection",
+            "description": "When to connect devices automatically. Setting can be superseded on device level, by right clicking the device and selecting 'config'."
           },
-          "default": [],
-          "description": "Filter devices to exclude from the devices list. Uses regular expression. Takes precedence over includes."
-        },
-        "pymakr.autoConnect": {
-          "type": "string",
-          "enum": [
-            "always",
-            "never",
-            "onLostConnection",
-            "lastState"
-          ],
-          "enumDescriptions": [
-            "Always auto connect to devices.",
-            "Never auto connect to devices.",
-            "Only auto connect to devices if connection was previously lost.",
-            "Auto connect to devices that were never manually disconnected."
-          ],
-          "default": "onLostConnection",
-          "description": "When to connect devices automatically. Setting can be superseded on device level, by right clicking the device and selecting 'config'."
-        },
-        "pymakr.notifications.showSharedTerminalInfo": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show notification when a shared terminal is created."
+          "pymakr.devices.include": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [
+              ".*"
+            ],
+            "description": "Filter devices to include in the devices list. Uses regular expression. Will not include devices that match the exclude list."
+          },
+          "pymakr.devices.exclude": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "description": "Filter devices to exclude from the devices list. Uses regular expression. Takes precedence over includes."
+          }
+        }
+      },
+      {
+        "title": "Notifications",
+        "properties": {
+          "pymakr.notifications.showSharedTerminalInfo": {
+            "type": "boolean",
+            "default": true,
+            "description": "Show notification when a shared terminal is created."
+          }
         }
       }
-    },
+    ],
     "jsonValidation": [
       {
         "fileMatch": "pymakr.conf",

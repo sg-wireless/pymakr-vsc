@@ -64,8 +64,8 @@ class PyMakr {
   }
 
   updateConfig(mode) {
-    this.log.level = this.log.levels[this.config.get().logLevel];
-    this.log.filter = this.config.get().logFilter !== "" ? new RegExp(this.config.get().logFilter) : "";
+    this.log.level = this.log.levels[this.config.get().debug.logLevel];
+    this.log.filter = this.config.get().logFilter !== "" ? new RegExp(this.config.get().debug.logFilter) : "";
     if (mode !== "silent") this.log.info("updated config:", this.config.get());
   }
 

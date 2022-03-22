@@ -105,7 +105,7 @@ class Device {
 
   async updateConnection() {
     if (this.online && !this.connected) {
-      const autoConnect = this.config.autoConnect || this.pymakr.config.get().get("autoConnect");
+      const autoConnect = this.config.autoConnect || this.pymakr.config.get().get("devices").autoConnect;
       const shouldConnect = autoConnect === "always";
       const shouldResume = autoConnect === "lastState" && this.state.load().connected;
       const shouldReconnect = autoConnect === "onLostConnection" && this.lostConnection;
