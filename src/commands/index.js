@@ -488,10 +488,8 @@ class Commands {
 
       const wsPos = vscode.workspace.workspaceFolders?.length || 0;
       vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri, name });
-      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (token) => {
-        token.report({ message: "Adding device to explorer..." });
-      });
-      return new Promise((resolve) => vscode.workspace.onDidChangeWorkspaceFolders(resolve));
+
+      return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar()
     },
   };
 }

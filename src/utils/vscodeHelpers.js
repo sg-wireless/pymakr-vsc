@@ -60,6 +60,12 @@ const createVSCodeHelpers = (pymakr) => {
         }
       }
     },
+    showAddDeviceToFileExplorerProgressBar: ()=>{
+      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (token) => {
+        token.report({ message: "Adding device to explorer..." });
+      });
+      return new Promise((resolve) => vscode.workspace.onDidChangeWorkspaceFolders(resolve));
+    }
   };
   return helpers;
 };
