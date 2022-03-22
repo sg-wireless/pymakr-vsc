@@ -126,7 +126,7 @@
               "Only auto connect to devices if connection was previously lost.",
               "Auto connect to devices that were never manually disconnected."
             ],
-            "default": "onLostConnection",
+            "default": "lastState",
             "description": "When to connect devices automatically. Setting can be superseded on device level, by right clicking the device and selecting 'config'."
           },
           "pymakr.devices.include": {
