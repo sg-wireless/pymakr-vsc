@@ -17,17 +17,21 @@ const createProjectsStore = (pymakr) => {
   /** @type {Writable<Project[]>} */
   const store = writable([]);
   const refresh = async () => {
-    pymakr.log.debug('Refreshing projects store...')
-    store.set(await getProjects(pymakr))
-    pymakr.log.debug('Refreshing projects store. Complete!')
+    pymakr.log.debug("Refreshing projects store...");
+    store.set(await getProjects(pymakr));
+    pymakr.log.debug("Refreshing projects store. Complete!");
   };
 
   const watcher = workspace.createFileSystemWatcher("**/pymakr.conf");
+  // Vscode doesn't detect when nested a pymaker.conf is deleted,
+  // so we trigger a refresh on every file/folder deletion
+  // if ever needed, we can throttle the function
+  const watchAll = workspace.createFileSystemWatcher("**");
 
   const disposables = [
     watcher.onDidChange(refresh),
     watcher.onDidCreate(refresh),
-    watcher.onDidDelete(refresh),
+    watchAll.onDidDelete(refresh),
     workspace.onDidChangeWorkspaceFolders(refresh),
   ];
 
@@ -35,6 +39,5 @@ const createProjectsStore = (pymakr) => {
 
   return { ...store, refresh };
 };
-
 
 module.exports = { createProjectsStore };
