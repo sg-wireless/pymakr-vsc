@@ -281,7 +281,7 @@ class Commands {
     createTerminalPrompt: async ({ device }) => {
       const sharedTerm = "Create new shared terminal";
       const openExistingTerm = "Open existing terminal";
-      
+
       const existingTerminal = this.pymakr.terminalsStore.get().find((t) => t.device === device);
       if (existingTerminal) {
         const answer = await vscode.window.showInformationMessage(
@@ -291,7 +291,7 @@ class Commands {
         );
         if (answer === sharedTerm) {
           this.pymakr.terminalsStore.create(device);
-          this.pymakr.vscodeHelpers.showSharedTerminalInfo()
+          this.pymakr.vscodeHelpers.showSharedTerminalInfo();
         } else existingTerminal.term.show();
       } else {
         this.pymakr.terminalsStore.create(device);
@@ -446,23 +446,23 @@ class Commands {
     selectDevicesForProjectPrompt: async (treeItemOrProject) => {
       const project = this.pymakr.vscodeHelpers.coerceProject(treeItemOrProject);
       const devices = this.pymakr.devicesStore.get();
-      const picks = await vscode.window.showQuickPick(
-        [
-          ...devices
-          .filter(d => !d.config.hidden)
-            .map((_device) => ({
-              label: _device.name,
-              device: _device,
-              picked: project.devices.includes(_device)
-            })),
-        ],
-        {
-          title: `Which devices would you like to use with "${project.name}"`,
-          canPickMany: true,
-        }
-      ) || [];
-      project.setDevices(picks.map(p => p.device))
-      
+      const picks =
+        (await vscode.window.showQuickPick(
+          [
+            ...devices
+              .filter((d) => !d.config.hidden)
+              .map((_device) => ({
+                label: _device.name,
+                device: _device,
+                picked: project.devices.includes(_device),
+              })),
+          ],
+          {
+            title: `Which devices would you like to use with "${project.name}"`,
+            canPickMany: true,
+          }
+        )) || [];
+      project.setDevices(picks.map((p) => p.device));
     },
 
     /**
