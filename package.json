@@ -178,13 +178,13 @@
           "id": "pymakr-projects-tree",
           "name": "Projects",
           "icon": "media/dep.svg",
-          "contextualTitle": "Projects"
+          "contextualTitle": "Pymakr"
         },
         {
           "id": "pymakr-devices-tree",
           "name": "Devices",
           "icon": "media/dep.svg",
-          "contextualTitle": "Devices"
+          "contextualTitle": "Pymakr"
         }
       ]
     },
