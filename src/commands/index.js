@@ -486,7 +486,7 @@ class Commands {
 
       const name = `${device.protocol}:/${device.address}`;
 
-      const wsPos = vscode.workspace.workspaceFolders.length || 0;
+      const wsPos = vscode.workspace.workspaceFolders?.length || 0;
       vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri, name });
     },
   };
