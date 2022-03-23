@@ -43,9 +43,10 @@ test("blocked object runs methods in sequence", async () => {
   const promises = [proxied.async20(), proxied.async20(), proxied.async20(), proxied.async20(), proxied.async20()];
 
   Promise.all(promises).then(() => (finishedLastTestStamp = Date.now()));
-  proxied.__ready.then(() => (isReadyTestStamp = Date.now()));
+  
+  proxied.__proxyMeta.ready.then(() => (isReadyTestStamp = Date.now()));
 
-  await Promise.all([...promises, proxied.__ready]);
+  await Promise.all([...promises, proxied.__proxyMeta.ready]);
 
   assert.ok(finishedLastTestStamp && isReadyTestStamp, "timestamps should be updated");
   assert.ok(finishedLastTestStamp - startStamp > 100, "methods should take at least 100ms (5 x 20ms)");
@@ -74,9 +75,9 @@ test("blocked object can have beforeEachCall hook and exceptions", async () => {
   ];
 
   Promise.all(promises).then(() => (finishedLastTestStamp = Date.now()));
-  proxied.__ready.then(() => (isReadyTestStamp = Date.now()));
+  proxied.__proxyMeta.ready.then(() => (isReadyTestStamp = Date.now()));
 
-  await Promise.all([...promises, proxied.__ready]);
+  await Promise.all([...promises, proxied.__proxyMeta.ready]);
 
   assert.ok(finishedLastTestStamp && isReadyTestStamp, "timestamps should be updated");
   assert.ok(

@@ -33,7 +33,7 @@ const coerceArray = (input) => (Array.isArray(input) ? input : [input]);
  * @param {string} msg
  * @returns
  */
-const createTimeout = (time, msg = "operation timed out") =>
+const timeoutAndReject = (time, msg = "operation timed out") =>
   new Promise((_res, rej) => setTimeout(() => rej(msg), time));
 
 /**
@@ -46,7 +46,7 @@ const createTimeout = (time, msg = "operation timed out") =>
  * @param {string} msg
  * @returns {Promise<T>}
  */
-const waitFor = (promise, time, msg) => Promise.race([promise, createTimeout(time, msg)]);
+const waitFor = (promise, time, msg) => Promise.race([promise, timeoutAndReject(time, msg)]);
 
 /**
  * Coerce functions to {dispose: function}
@@ -193,10 +193,23 @@ const serializeKeyValuePairs = (obj, equalSign = "=", delimiter = "\r\n") =>
     .map(([key, value]) => key + equalSign + value)
     .join(delimiter);
 
+/**
+ * @returns {Promise<any> & {resolve: function, reject: function}}
+ */
+const resolvablePromise = () => {
+  let resolve, reject;
+  const origPromise = new Promise((_resolve, _reject) => {
+    resolve = _resolve;
+    reject = _reject;
+  });
+
+  return Object.assign(origPromise, { resolve, reject });
+};
+
 module.exports = {
   once,
   coerceArray,
-  createTimeout,
+  timeoutAndReject,
   waitFor,
   coerceDisposable,
   getDifference,
@@ -209,5 +222,6 @@ module.exports = {
   getNearestPymakrProjectDir,
   serializeKeyValuePairs,
   createIsIncluded,
-  arrayToRegexStr
+  arrayToRegexStr,
+  resolvablePromise,
 };
