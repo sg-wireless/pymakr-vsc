@@ -3,6 +3,7 @@ const vscode = require("vscode");
 
 /**
  * Runs the client terminal, eg. `node client.js serial COM6`
+ * Each new terminal is an instance of this class
  * We need this because VSCode terminals have to be external scripts
  */
 class Terminal {
