@@ -121,13 +121,32 @@ class ProxyMeta {
     this.queue = [];
 
     this.isBusy = false;
+
+    this.isPaused = true;
+  }
+
+  run() {
+    this.isPaused = false;
+    this.processQueue();
+  }
+
+  /**
+   * Moves a number of items from the end of the queue and to the front.
+   * Their order will be preserved, so if queue equals [1,2,3,4,5], popToFront(3) would
+   * result in [3,4,5,1,2]
+   * @param {number} num
+   */
+  shiftLastToFront(num = 1) {
+    const items = this.queue.splice(-num, 0);
+    items.reverse().forEach((item) => this.queue.unshift(item));
+    return this
   }
 
   /**
    * runs queued methods in sequence
    */
   async processQueue() {
-    if (this.isBusy) return;
+    if (this.isBusy || this.isPaused) return;
 
     this.ready = resolvablePromise();
     this.isBusy = true;

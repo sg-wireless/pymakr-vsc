@@ -207,7 +207,10 @@ class Device {
     this.connecting = false;
     this.lostConnection = false;
     this.changed();
-    this.info = await waitFor(this.adapter.getBoardInfo(), 3000, msgs.boardInfoTimedOutErr(this.adapter));
+    const boardInfoPromise = this.adapter.getBoardInfo()
+    // move getBoardInfo to front of queue and start the proxy
+    this.adapter.__proxyMeta.shiftLastToFront().run()
+    this.info = await waitFor(boardInfoPromise, 10000, msgs.boardInfoTimedOutErr(this.adapter));
     this.log.debug("boardInfo", this.info);
   }
 
