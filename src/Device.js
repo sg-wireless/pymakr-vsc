@@ -13,6 +13,7 @@ const {
 const { writable } = require("./utils/store");
 const { StateManager } = require("./utils/stateManager");
 const picomatch = require("picomatch");
+const { msgs } = require("./utils/msgs");
 
 /**
  * @typedef {Object} DeviceConfig
@@ -74,14 +75,14 @@ class Device {
     /** @type {import("micropython-ctl-cont").BoardInfo} */
     this.info = null;
 
-    this.updateHideStatus()
+    this.updateHideStatus();
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
   }
 
   updateHideStatus() {
-    const {include, exclude} = this.pymakr.config.get().get("devices");
-    this.config.hidden = !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw))
+    const { include, exclude } = this.pymakr.config.get().get("devices");
+    this.config.hidden = !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw));
   }
 
   createState() {
@@ -206,8 +207,7 @@ class Device {
     this.connecting = false;
     this.lostConnection = false;
     this.changed();
-    // we need to use __target directly since we can't risk queueing board info, which could make connect() never resolve
-    this.info = await waitFor(this.adapter.__target.getBoardInfo(), 10000, "timed out while getting board info");
+    this.info = await waitFor(this.adapter.getBoardInfo(), 3000, msgs.boardInfoTimedOutErr(this.adapter));
     this.log.debug("boardInfo", this.info);
   }
 
