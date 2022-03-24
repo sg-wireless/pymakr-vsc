@@ -1,3 +1,25 @@
+# [2.8.0](https://github.com/pycom/pymakr-vsc/compare/v2.7.0...v2.8.0) (2022-03-24)
+
+
+### Bug Fixes
+
+* device file explorer required a workspace ([06c7ae7](https://github.com/pycom/pymakr-vsc/commit/06c7ae7ed8897e43fd608aa6b01402697975ef92))
+* projects would linger after they were deleted ([392c7ed](https://github.com/pycom/pymakr-vsc/commit/392c7ed1e4fcad58474a85e62094f34f6cb003cf))
+* reloading vscode broke filesystem providers ([566cf7f](https://github.com/pycom/pymakr-vsc/commit/566cf7f344848dc8fbf5201d86e0e3ff4ddbceda))
+* set default auto connect to "lastState" ([e72b260](https://github.com/pycom/pymakr-vsc/commit/e72b260edbc51771c33fa1def73aae106ab0474f))
+* titles for pymakr views when moved to new tab ([70a2c84](https://github.com/pycom/pymakr-vsc/commit/70a2c84b40b0d587a18c09a9b557cdbcad3a6427))
+
+
+### Features
+
+* create config sections ([451f2e3](https://github.com/pycom/pymakr-vsc/commit/451f2e345bc6eb82faaa8982b92185010b8808e3))
+* progress bar when adding device to explorer ([19023ae](https://github.com/pycom/pymakr-vsc/commit/19023ae5090d9b153280e2e6a3c78987cce420bf))
+
+
+### Performance Improvements
+
+* better insights into blockingProxy ([2e1a781](https://github.com/pycom/pymakr-vsc/commit/2e1a7818b11094945612a0c10b82c971e902e462))
+
 # [2.7.0](https://github.com/pycom/pymakr-vsc/compare/v2.6.0...v2.7.0) (2022-03-21)
 
 
