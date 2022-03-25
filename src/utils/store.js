@@ -108,7 +108,7 @@ const derived = (stores, callback) => {
       listeners.push(listener);
       const unsub = () => {
         const index = listeners.indexOf(listener);
-        listeners.splice(index, 1);
+        if (index >= 0) listeners.splice(index, 1);
       };
       return unsub;
     },
