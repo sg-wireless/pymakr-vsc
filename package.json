@@ -577,5 +577,8 @@
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
     "serialport": "^10.2.2"
+  },
+  "volta": {
+    "node": "14.19.1"
   }
 }
