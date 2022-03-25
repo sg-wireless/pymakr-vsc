@@ -112,6 +112,21 @@ const derived = (stores, callback) => {
       };
       return unsub;
     },
+    // todo needs test
+    next: (listener) => {
+      const oneTimeListener = (payload) => {
+        listener(payload);
+        unsub();
+      };
+      listeners.push(oneTimeListener);
+
+      function unsub() {
+        const index = listeners.indexOf(oneTimeListener);
+        if (index >= 0) listeners.splice(index, 1);
+      }
+
+      return unsub;
+    },
   };
 };
 
