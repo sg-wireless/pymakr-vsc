@@ -2,8 +2,6 @@ const vscode = require("vscode");
 
 const { disconnectAllDevices, nextTerminalData } = require("./utils");
 
-
-
 test("Can find devices", async ({ test }) => {
   assert(pymakr.devicesStore.get().length >= 2);
 
@@ -22,9 +20,12 @@ test("Can find devices", async ({ test }) => {
       pymakr.terminalsStore.create(device);
       const terminal = [...vscode.window.terminals].pop();
 
-      test("created REPL is last terminal", () => assert(terminal.creationOptions.shellArgs.includes("serial")));
+      /**@type {vscode.TerminalOptions} */
+      const creationOptions = terminal.creationOptions;
 
-      test("created repl shows welcome msg", async() => {
+      test("created REPL is last terminal", () => assert(creationOptions.shellArgs.includes("serial")));
+
+      test("created repl shows welcome msg", async () => {
         assert.equal(
           await welcomeMsg,
           "\r\nPycom MicroPython 1.20.2.r6 [v1.11-c5a0a97] on 2021-10-28; WiPy with ESP32" +

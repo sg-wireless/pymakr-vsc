@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 
-var port = process.argv.length >= 3 ? process.argv[2] : 1337;
+var port = process.argv.length >= 3 ? Number(process.argv[2]) : 1337;
 var ip = "127.0.0.1";
 
 var net = require("net");
 var clients = [];
 var stdin = process.openStdin();
+// todo not sure if this is correct
+// @ts-ignore
 stdin.setRawMode(true);
 var debug = true;
 
