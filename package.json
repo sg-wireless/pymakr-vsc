@@ -257,11 +257,6 @@
         "icon": "$(folder)"
       },
       {
-        "command": "pymakr.newDevice",
-        "title": "Add a new device",
-        "icon": "$(plus)"
-      },
-      {
         "command": "pymakr.newDeviceSerial",
         "title": "Serial"
       },
