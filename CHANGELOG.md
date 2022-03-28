@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/pycom/pymakr-vsc/compare/v2.8.0...v2.8.1) (2022-03-28)
+
+
+### Bug Fixes
+
+* device autoConnect config ([19001de](https://github.com/pycom/pymakr-vsc/commit/19001de0abcaaa80cd33633e3d62fe5420adfe31))
+
 # [2.8.0](https://github.com/pycom/pymakr-vsc/compare/v2.7.0...v2.8.0) (2022-03-24)
 
 
