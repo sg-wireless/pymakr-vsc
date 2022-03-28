@@ -185,7 +185,9 @@ class Commands {
      */
     configureDevice: async (treeItem) => {
       const { device } = treeItem;
-      const manifestConfig = device.pymakr.manifest.contributes.configuration.properties;
+      const manifestConfig = device.pymakr.manifest.contributes.configuration.find(
+        (conf) => conf.title === "Devices"
+      ).properties
 
       let menu = "main";
       while (menu !== "_DONE_") {
@@ -205,7 +207,7 @@ class Commands {
             return result?.label || "_DONE_";
           },
           autoConnect: async () => {
-            const { enum: enums, enumDescriptions } = manifestConfig["pymakr.autoConnect"];
+            const { enum: enums, enumDescriptions } = manifestConfig["pymakr.devices.autoConnect"];
 
             const options = enums.map(mapEnumsToQuickPick(enumDescriptions));
             options.push({ label: "Use default", description: "Use defaults from VSCode settings", clear: true });
@@ -489,7 +491,7 @@ class Commands {
       const wsPos = vscode.workspace.workspaceFolders?.length || 0;
       vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri, name });
 
-      return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar()
+      return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar();
     },
   };
 }
