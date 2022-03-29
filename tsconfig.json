@@ -17,8 +17,7 @@
 		"test/**/*.js",
 		"test/**/*.ts",
 		"types/typedef.js",
-		"types/store.js",
-		"typedoc.ts"
+		"types/store.js"
 	],
 	"exclude": [
 		"node_modules/**"
