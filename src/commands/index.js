@@ -4,6 +4,19 @@ const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
 const { mapEnumsToQuickPick, getRelativeFromNearestParent } = require("../utils/misc");
 const { relative } = require("path");
+
+/**
+ * Commands contains all commands that can be accessed through VSCode.
+ * If a command requires user input, create a separate command with a "Prompt" suffix to handle this.
+ * @example
+ * ```javascript
+ * {
+ *   createProject: ()=>{},
+ *   createProjectPrompt: ()=>{},
+ *   createProjectInFolderPrompt: ()=>{} //variation
+ * }
+ * ```
+ */
 class Commands {
   /**
    * @param {PyMakr} pymakr
@@ -165,6 +178,7 @@ class Commands {
     },
 
     /**
+     * Creates a new project
      * @param {vscode.Uri} uri
      * @param {*} config
      */

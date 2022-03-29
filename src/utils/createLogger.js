@@ -1,10 +1,20 @@
 const { createLogger: _createLogger } = require("consolite");
 
+/**
+ * Creates Consolite instance to handle all logging
+ * @param {string} name 
+ */
 const createLogger = (name) => {
-  /** @type {import('consolite').ConsoliteLogger & {debugShort?: function, traceShort?: function}}  */
-  const log = _createLogger(name);
-  log.debugShort = console.log;
-  log.traceShort = console.log;
+  const log = _createLogger(
+    {
+      methods: {
+        debugShort: console.log,
+        traceShort: console.log,
+      },
+    },
+    name
+  );
+  
   log.levels = {
     fatal: 0,
     error: 1,

@@ -54,7 +54,7 @@ _Hint: <kbd>F5</kbd> can be used to start the last executed task._
 | **example**      | Example projects (may be deleted for a templating approach) |
 | **media**        | Media assets                                                |
 | **node_modules** | _Node dependencies. Fully managed by `npm`._                |
-| **src**          | _Source files. See [API.md](./API.md) for info._            |
+| **src**          | _Source files. See [API.md](https://github.com/pycom/pymakr-vsc/blob/next/docs/index.html) for info._            |
 | **templates**    | Templates used for erasing device / creating new projects   |
 | **test**         | Integration tests                                           |
 | **types**        | Types used for auto completion                              |

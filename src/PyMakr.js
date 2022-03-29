@@ -15,6 +15,14 @@ const { coerceDisposable } = require("./utils/misc");
 const manifest = require("../package.json");
 const { createVSCodeHelpers } = require("./utils/vscodeHelpers");
 
+/**
+ * Pymakr is the root class and scope of the extension.
+ * All classes can access each other through this class.
+ * @example to access a vscodeHelper from providers/DevicesProvider.js
+ * ```javascript
+ * this.pymakr.vscodeHelpers.someHelper()
+ * ```
+ */
 class PyMakr {
   /**
    * @param {vscode.ExtensionContext} context
