@@ -60,7 +60,7 @@ class FileSystemProvider {
    * @param {vscode.Uri} uri
    */
   _getDevice(uri) {
-    const authority = uri.authority.replaceAll("%2F", "/");
+    const authority = uri.authority.replace(/%2F/g, "/");
     return this.pymakr.devicesStore.getByProtocolAndAddress(uri.scheme, authority);
   }
 

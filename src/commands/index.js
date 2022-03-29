@@ -187,7 +187,7 @@ class Commands {
       const { device } = treeItem;
       const manifestConfig = device.pymakr.manifest.contributes.configuration.find(
         (conf) => conf.title === "Devices"
-      ).properties
+      ).properties;
 
       let menu = "main";
       while (menu !== "_DONE_") {

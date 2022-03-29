@@ -121,7 +121,7 @@ const getRelativeFromNearestParent = (parents) => (child) => {
  * @returns {(child:string)=>string}
  */
 const getRelativeFromNearestParentPosix = (parents) => (child) =>
-  getRelativeFromNearestParent(parents)(child).replaceAll("\\", "/");
+  getRelativeFromNearestParent(parents)(child).replace(/\\/g, "/");
 
 /**
  * reads a json file

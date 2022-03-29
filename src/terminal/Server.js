@@ -1,5 +1,5 @@
 const { createServer } = require("net");
-const vscode = require('vscode')
+const vscode = require("vscode");
 const PORT = 5364; // todo abstract
 
 /**
@@ -30,17 +30,18 @@ class Server {
           .get()
           .find((_device) => _device.protocol === protocol && _device.address === address);
 
-        vscode.commands.executeCommand('workbench.action.terminal.renameWithArg', {name: `${protocol}://${address}`})
+        vscode.commands.executeCommand("workbench.action.terminal.renameWithArg", { name: `${protocol}://${address}` });
 
         // listen to keystrokes from client
         socket.on("data", (data) => {
-          this.log.debug('received', data.toString())
+          this.log.debug("received", data.toString());
           device.adapter.sendData(data);
           // make sure device data is sent to the last active terminal
           device.__onTerminalDataExclusive = (data) => socket.write(data);
         });
-        
+
         socket.on("error", (err) => {
+          // @ts-ignore err does have .code prop
           if (err.code !== "ECONNRESET") throw err;
           else this.log.debug("client disconnected");
         });
