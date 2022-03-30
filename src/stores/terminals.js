@@ -9,7 +9,15 @@ const createTerminalsStore = (pymakr) => {
   /** @type {Writable<Terminal[]>} */
   const store = writable([]);
 
+  /**
+   * Creates a new terminal for the provided device
+   * @param {Device} device
+   */
   const create = (device) => store.update((terms) => [...terms, new Terminal(pymakr, device)]);
+  /**
+   * Removes the provided terminal
+   * @param {Terminal} term 
+   */
   const remove = (term) => store.update((terms) => terms.filter((_term) => _term !== term));
 
   const disposable = vscode.window.onDidCloseTerminal((term) => {

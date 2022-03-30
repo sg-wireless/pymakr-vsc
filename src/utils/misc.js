@@ -166,7 +166,7 @@ const arrayToRegexStr = (arr) => arr.map((str) => `(${str})`).join("|");
  * filter(item) // returns false as item matches exclude
  * @param {(string|RegExp)[]} includes
  * @param {(string|RegExp)[]} excludes
- * @param {(item:any) => (string)} cb
+ * @param {(item:any) => (string)} cb optional callback to transform the item in the curried function
  * @returns
  */
 const createIsIncluded = (includes, excludes, cb = (x) => x) => {
@@ -180,9 +180,12 @@ const createIsIncluded = (includes, excludes, cb = (x) => x) => {
 
 /**
  * Serializes flat object
- * By default {foo: 123, bar: 'bar'} serializes to
- * foo=123
- * bar=bar
+ * @example default behavior
+ * ```javascript
+ * serializeKeyValuePairs ({foo: 123, bar: 'bar'}) 
+ * // foo=123
+ * // bar=bar
+ * ```
  * @param {any} obj
  * @param {string=} equalSign
  * @param {string=} delimiter

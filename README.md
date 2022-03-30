@@ -10,6 +10,8 @@ Please make sure to backup any projects that you use with this extension!
 
 Please see [GET_STARTED.md](./GET_STARTED.md) for a quick intro.
 
+To contribute, please see [CONTRIBUTE.md](./CONTRIBUTE.md).
+
 ---
 
 ## What's new

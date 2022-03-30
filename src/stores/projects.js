@@ -16,6 +16,7 @@ const getProjects = async (pymakr) => {
 const createProjectsStore = (pymakr) => {
   /** @type {Writable<Project[]>} */
   const store = writable([]);
+  /** Rescan for projects in workspace. */
   const refresh = async () => {
     pymakr.log.debug("Refreshing projects store...");
     store.set(await getProjects(pymakr));

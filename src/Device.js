@@ -43,6 +43,7 @@ class Device {
   __connectingPromise = null;
 
   /**
+   * All devices are instances of this class
    * @param {PyMakr} pymakr
    * @param {DeviceInput} deviceInput
    */
@@ -80,14 +81,21 @@ class Device {
     subscribe(() => this.onChanged());
   }
 
+  /**
+   * Hides / unhides this device depending on how it matches user's config.devices.include and config.devices.exclude
+   */
   updateHideStatus() {
     const { include, exclude } = this.pymakr.config.get().get("devices");
     this.config.hidden = !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw));
   }
 
+  /**
+   * Creates a state manager, that can save and load device state from VSCode's workspace state
+   * The saved data is determined by the callback provided to the StateManager constructor
+   */
   createState() {
-    const getState = () => cherryPick(this, ["connected", "name", "id", "config"]);
-    return new StateManager(this.pymakr, `devices.${this.id}`, getState);
+    const createState = () => cherryPick(this, ["connected", "name", "id", "config"]);
+    return new StateManager(this.pymakr, `devices.${this.id}`, createState);
   }
 
   /**
@@ -104,6 +112,10 @@ class Device {
    */
   __onTerminalDataExclusive(data) {}
 
+  /**
+   * Auto connects device if required by user preferences
+   * If device has lost connection, set lostConnection=true and call this.changed() to save device state and refresh views
+   */
   async updateConnection() {
     if (this.online && !this.connected) {
       const autoConnect = this.config.autoConnect || this.pymakr.config.get().get("devices").autoConnect;
@@ -119,10 +131,9 @@ class Device {
   }
 
   /**
-   *
+   * Run a Python script on this device
    * @param {string} script
    * @param {import("micropython-ctl-cont").RunScriptOptions=} options
-   * @returns
    */
   async runScript(script, options) {
     options = Object.assign({}, runScriptDefaults, options);
@@ -131,6 +142,9 @@ class Device {
     return this.adapter.runScript(script + "\n", options);
   }
 
+  /**
+   * Creates a MicroPythonDevice
+   */
   createAdapter() {
     const rawAdapter = new MicroPythonDevice();
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
@@ -149,6 +163,9 @@ class Device {
     return adapter;
   }
 
+  /**
+   * Creates a log file for streaming out
+   */
   createTerminalLogFile() {
     const logFileName =
       this.pymakr.context.logUri.fsPath + ["/device", this.protocol, this.address, Date.now() + ".log"].join("-");
@@ -182,6 +199,7 @@ class Device {
     }
   }
 
+  // todo should be handleConnecting, handleFailedConnect and handleDisconnect
   _onConnectingHandler() {
     this.log.info("connecting...");
     this.connecting = true;
@@ -227,6 +245,9 @@ class Device {
     }
   }
 
+  /**
+   * saves state and refreshes views
+   */
   onChanged() {
     this.state.save();
     this.pymakr.devicesProvider.refresh();

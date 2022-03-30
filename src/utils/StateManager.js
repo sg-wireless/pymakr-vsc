@@ -3,19 +3,27 @@
  */
 class StateManager {
   /**
+   * State object that can be saved to VSCode's workspaceState
+   * Uses callback to generate state object when save is called()
    * @param {PyMakr} pymakr
-   * @param {string} id
-   * @param {()=>R} cb
+   * @param {string} id namespace of state object
+   * @param {()=>R} cb callback that fetches data to be saved whenever save() is called
    * */
   constructor(pymakr, id, cb) {
+    /** @private */
     this.pymakr = pymakr;
+    /** @private */
     this.log = pymakr.log.createChild("stateManager");
+    /** @private */
     this._context = pymakr.context;
+    /** @private */
     this._cb = cb;
+    /** @private */
     this._id = `pymakr.${id}`;
   }
 
   /**
+   * Fetches the state from the provided callback and saves it to VSCode's workspaceState
    * @returns {R}
    */
   save() {
@@ -27,6 +35,7 @@ class StateManager {
   }
 
   /**
+   * Loads the state from VSCode's workspaceState
    * @returns {R}
    */
   load() {
