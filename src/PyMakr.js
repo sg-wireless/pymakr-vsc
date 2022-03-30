@@ -9,7 +9,6 @@ const { Server } = require("./terminal/Server");
 const { resolve } = require("path");
 const { FileSystemProvider } = require("./providers/filesystemProvider");
 const { createLogger } = require("./utils/createLogger");
-const { StatusBar } = require("./StatusBar");
 const { writable } = require("./utils/store");
 const { coerceDisposable } = require("./utils/misc");
 const manifest = require("../package.json");
