@@ -44,8 +44,7 @@ class PyMakr {
 
     this.projectsProvider = new ProjectsProvider(this);
     this.devicesProvider = new DevicesProvider(this);
-    this.fileSystem = new FileSystemProvider(this);
-    // this.statusBar = new StatusBar(this);
+    this.fileSystemProvider = new FileSystemProvider(this);
 
     this.registerWithIde();
     this.setup();
@@ -56,8 +55,8 @@ class PyMakr {
       vscode.workspace.onDidChangeConfiguration((e) => {
         if (e.affectsConfiguration("pymakr")) this.config.set(vscode.workspace.getConfiguration("pymakr"));
       }),
-      vscode.workspace.registerFileSystemProvider("serial", this.fileSystem, { isCaseSensitive: true }),
-      vscode.workspace.registerFileSystemProvider("telnet", this.fileSystem, { isCaseSensitive: true }),
+      vscode.workspace.registerFileSystemProvider("serial", this.fileSystemProvider, { isCaseSensitive: true }),
+      vscode.workspace.registerFileSystemProvider("telnet", this.fileSystemProvider, { isCaseSensitive: true }),
       vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider),
       vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider),
       vscode.workspace.onDidChangeConfiguration(this.updateConfig.bind(this)),
