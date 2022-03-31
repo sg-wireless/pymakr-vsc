@@ -304,10 +304,6 @@
         "title": "Upload to device"
       },
       {
-        "command": "pymakr.download",
-        "title": "Pymakr > Download project"
-      },
-      {
         "command": "pymakr.runEditor",
         "title": "Run on device",
         "shortTitle": "Run"
@@ -320,61 +316,18 @@
       {
         "command": "pymakr.toggleAdvancedMode",
         "title": "Toggle advanced mode"
-      },
-      {
-        "command": "pymakr.projectSettings",
-        "title": "Pymakr > Project settings"
-      },
-      {
-        "command": "pymakr.globalSettings",
-        "title": "Pymakr > Global settings"
-      },
-      {
-        "command": "pymakr.extra.getVersion",
-        "title": "Pymakr > Extra's > Get firmware version"
-      },
-      {
-        "command": "pymakr.extra.getWifiMac",
-        "title": "Pymakr > Extra's > Get WiFi AP SSID"
-      },
-      {
-        "command": "pymakr.extra.getSerial",
-        "title": "Pymakr > Extra's > List serial ports"
-      },
-      {
-        "command": "pymakr.help",
-        "title": "Pymakr > Help"
-      },
-      {
-        "command": "pymakr.listCommands",
-        "title": "Pymakr > List all Commands"
       }
     ],
     "keybindings": [
-      {
-        "command": "",
-        "key": "ctrl+e",
-        "when": "terminalFocus"
-      },
       {
         "command": "pymakr.uploadPrompt",
         "key": "ctrl+shift+s",
         "mac": "cmd+shift+s"
       },
       {
-        "command": "pymakr.uploadFile",
-        "key": "ctrl+shift+s",
-        "mac": "ctrl+shift+s"
-      },
-      {
         "command": "pymakr.runEditor",
         "key": "ctrl+shift+r",
         "mac": "cmd+shift+r"
-      },
-      {
-        "command": "pymakr.globalSettings",
-        "key": "ctrl+shift+g",
-        "mac": "cmd+shift+g"
       }
     ],
     "submenus": [
