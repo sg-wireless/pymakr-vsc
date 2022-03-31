@@ -1,3 +1,10 @@
+## [2.8.3](https://github.com/pycom/pymakr-vsc/compare/v2.8.2...v2.8.3) (2022-03-31)
+
+
+### Bug Fixes
+
+* terminal didn't open ([bfc09f6](https://github.com/pycom/pymakr-vsc/commit/bfc09f626de2fd71e6dafb721e40be21108a2f1f))
+
 ## [2.8.2](https://github.com/pycom/pymakr-vsc/compare/v2.8.1...v2.8.2) (2022-03-31)
 
 
