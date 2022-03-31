@@ -11,7 +11,7 @@ const {
   serializeKeyValuePairs,
 } = require("./utils/misc");
 const { writable } = require("./utils/store");
-const { StateManager } = require("./utils/stateManager");
+const { StateManager } = require("./utils/StateManager");
 const picomatch = require("picomatch");
 const { msgs } = require("./utils/msgs");
 
