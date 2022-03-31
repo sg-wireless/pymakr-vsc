@@ -15,7 +15,7 @@ class Terminal {
     this.pyMakr = pyMakr;
     this.device = device;
     this.log = this.pyMakr.log.createChild("Terminal");
-    const clientFile = resolve(__dirname, "client.js");
+    const clientFile = resolve(__dirname, "bin/client.js");
 
     const shellArgs = [clientFile, device.protocol, device.address];
     const shellPath = "node";
