@@ -1,3 +1,13 @@
+## [2.8.2](https://github.com/pycom/pymakr-vsc/compare/v2.8.1...v2.8.2) (2022-03-31)
+
+
+### Bug Fixes
+
+* debug log filter ([82a8ed0](https://github.com/pycom/pymakr-vsc/commit/82a8ed0d5e53b066b1490dd426c5a708953dfbbc))
+* logging errors ([28ec008](https://github.com/pycom/pymakr-vsc/commit/28ec0083f906504080a069c257bf943896035c4a))
+* removed deprecated commands ([6dcec1f](https://github.com/pycom/pymakr-vsc/commit/6dcec1fadb5cd1a800a25d355ac017d18f6ebee2))
+* Statemanager didn't work on Mac/Linux ([c2b69ec](https://github.com/pycom/pymakr-vsc/commit/c2b69ece4ab0eba9e151f4e9e41cad520c7c7dba))
+
 ## [2.8.1](https://github.com/pycom/pymakr-vsc/compare/v2.8.0...v2.8.1) (2022-03-28)
 
 
