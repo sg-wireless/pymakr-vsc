@@ -3,7 +3,8 @@ const vscode = require("vscode");
 const PORT = 5364; // todo abstract
 
 /**
- * This is the terminal server. It handles all client terminal connections.
+ * This is the terminal server. It's mounted as a singleton at `pymakr.server`.
+ * It handles all client terminal connections.
  */
 class Server {
   /**

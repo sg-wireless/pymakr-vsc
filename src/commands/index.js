@@ -44,12 +44,14 @@ class Commands {
 
   commands = {
     /**
+     * Reboot device
      * @param {DeviceTreeItem} treeItem
      */
     resetDevice: async ({ device }) => {
       device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: false });
     },
     /**
+     * Soft reboot device
      * @param {DeviceTreeItem} treeItem
      */
     softResetDevice: async ({ device }) => {
@@ -57,6 +59,7 @@ class Commands {
       device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: true });
     },
     /**
+     * Erases device and prompts for choice of template
      * @param {DeviceTreeItem} treeItem
      */
     eraseDevicePrompt: async ({ device }) => {
@@ -68,6 +71,7 @@ class Commands {
       if (picked) return this.commands.eraseDevice({ device }, picked._path);
     },
     /**
+     * Erases device and applies specified template
      * @param {Partial<DeviceTreeItem>} treeItem
      */
     eraseDevice: async ({ device }, templateId) =>
@@ -86,8 +90,13 @@ class Commands {
           }
         })
       ),
-    /** provides pymakr to the callback - for testing purposes */
+    /**
+     * provides pymakr to the callback - Required for accessing Pymakr from the test suite.
+     **/
     getPymakr: (cb) => cb(this.pymakr),
+    /**
+     * Restore a previously hidden device.
+     */
     unhideDevice: async () => {
       const devices = this.pymakr.devicesStore.get().filter((device) => device.config.hidden);
       const picks = devices.map((device) => ({ label: device.name, description: device.id, device }));
@@ -103,6 +112,7 @@ class Commands {
       }
     },
     /**
+     * Hide a device from the device list
      * @param {DeviceTreeItem} treeItem
      */
     hideDevice: ({ device }) => {
@@ -112,6 +122,7 @@ class Commands {
       this.pymakr.projectsProvider.refresh();
     },
     /**
+     * Opens the log history
      * @param {DeviceTreeItem} treeItem
      */
     showTerminalLog: (treeItem) => {
@@ -119,6 +130,9 @@ class Commands {
       vscode.commands.executeCommand("vscode.open", vscode.Uri.file(treeItem.device.terminalLogFile.path));
     },
 
+    /**
+     * Prompt where to create a project
+     */
     createProjectPrompt: async () => {
       const folders = await vscode.window.showOpenDialog({
         canSelectFolders: true,
@@ -133,7 +147,7 @@ class Commands {
     },
 
     /**
-     * Creates a new Pymakr project in a folder
+     * Creates a new Pymakr project in the specified folder
      * @param {vscode.Uri} uri
      * @param {any} fluff
      * @param {boolean} addToWorkspace
@@ -195,6 +209,7 @@ class Commands {
     },
 
     /**
+     * Menu for updating device configuration
      * @param {DeviceTreeItem} treeItem
      */
     configureDevice: async (treeItem) => {
@@ -237,16 +252,24 @@ class Commands {
         menu = await menus[menu](device.config);
       }
     },
+    /**
+     * todo remove
+     * @deprecated
+     */
     toggleAdvancedMode: async () => {
       const advancedMode = vscode.workspace.getConfiguration("pymakr").get("advancedMode");
       this.pymakr.config.get().update("advancedMode", !advancedMode);
     },
+    /**
+     * Runs the currently selected editor code on the device. If no code is selected, all code is ran.
+     */
     runEditor: async () => {
       const editor = vscode.window.activeTextEditor;
       const text = editor.document.getText(editor.selection) || editor.document.getText();
       return this.commands.runScriptPrompt(text, editor.document.uri);
     },
     /**
+     * Prompts what device(s) to execute a script on
      * @param {string} text
      * @param {vscode.Uri} uri
      */
@@ -255,6 +278,7 @@ class Commands {
       await Promise.all(devices.map((device) => this.commands.runScript(text, device)));
     },
     /**
+     * Runs a script on provided device
      * @param {string} text
      * @param {import("../Device.js").Device} device
      */
@@ -273,6 +297,7 @@ class Commands {
       });
     },
     /**
+     * Calls runScriptPrompt with with the content of the selected file
      * @param {vscode.Uri} uri
      */
     runFile: (uri) => {
@@ -280,18 +305,22 @@ class Commands {
       return this.commands.runScriptPrompt(text, uri);
     },
     /**
+     * Connects a device
      * @param {ProjectDeviceTreeItem} treeItem
      */
     connect: ({ device }) => {
       device.connect();
     },
     /**
+     * Disconnects a device
      * @param {ProjectDeviceTreeItem} treeItem
      */
     disconnect: ({ device }) => {
       device.disconnect();
     },
     /**
+     * Creates a new terminal. If a terminal already exists for the given device, prompt 
+     * the user if they want to to open a new shared terminal or the existing terminal
      * @param {ProjectDeviceTreeItem} treeItem
      */
     createTerminalPrompt: async ({ device }) => {
@@ -314,6 +343,9 @@ class Commands {
       }
     },
 
+    /**
+     * Not currently in supported
+     */
     newDeviceTelnet: async () => {
       const address = await vscode.window.showInputBox({
         placeHolder: "192.168.0.x",
@@ -336,6 +368,9 @@ class Commands {
       this.pymakr.devicesStore.upsert({ address, protocol, name, username, password });
     },
 
+    /**
+     * Create a serial device manually
+     */
     newDeviceSerial: async () => {
       const address = await vscode.window.showInputBox({
         placeHolder: process.platform === "win32" ? "COM3" : "/dev/tty-usbserial3",
@@ -349,14 +384,17 @@ class Commands {
       this.pymakr.devicesStore.upsert({ address, protocol, name });
     },
 
+    // todo remove
     newDeviceRecover: async () => {},
 
     /**
+     * Uploads parent project to the device. Can only be accessed from devices in the projects view.
      * @param {ProjectDeviceTreeItem} treeItem
      */
     uploadProject: ({ device, project }) => device.upload(project.folder, "/"),
 
     /**
+     * Prompts for a device and destination for uploading a file or folder
      * @param {vscode.Uri} uri
      */
     uploadPrompt: async (uri) => {
@@ -373,6 +411,7 @@ class Commands {
     },
 
     /**
+     * Uploads a file/folder to a device
      * @param {vscode.Uri} uri
      * @param {import('../Device.js').Device} device
      * @param {string} destination not including /flash
@@ -391,6 +430,8 @@ class Commands {
     },
 
     /**
+     * Downloads content from a device to the parent project.
+     * Command only accessible for devices in the projects view.
      * @param {ProjectDeviceTreeItem} treeItem
      */
     downloadProject: async (treeItem) => {
@@ -415,6 +456,7 @@ class Commands {
     },
 
     /**
+     * Prompts which devices to attach/detach from project
      * @param {projectRef} treeItemOrProject
      */
     selectDevicesForProjectPrompt: async (treeItemOrProject) => {
@@ -440,6 +482,8 @@ class Commands {
     },
 
     /**
+     * todo use selectDevicesForProjectPrompt instead
+     * @deprecated
      * @param {ProjectDeviceTreeItem} treeItem
      */
     removeDeviceFromProject: async (treeItem) => {
@@ -448,6 +492,7 @@ class Commands {
     },
 
     /**
+     * Mounts a device to the file explorer view
      * @param {ProjectDeviceTreeItem} treeItem
      */
     addDeviceToFileExplorer: async ({ device }) => {

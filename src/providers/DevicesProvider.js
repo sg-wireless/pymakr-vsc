@@ -19,8 +19,6 @@ class DevicesProvider {
   }
 
   getTreeItem(element) {
-    // console.log({ element });
-    // console.log(element.label.name);
     return element;
   }
 

@@ -11,7 +11,9 @@ const host = "127.0.0.1";
 const port = 5364;
 const logFile = __dirname + "/info.log";
 
-const createConnection = () => {
+createConnection();
+
+function createConnection() {
   const socket = new net.Socket();
 
   let [_1, _2, protocol, address] = process.argv;
@@ -20,6 +22,7 @@ const createConnection = () => {
     // first message contains available devices
     socket.once("data", async (data) => {
       const availableDevices = JSON.parse(data.toString());
+      // if no device is specified, prompt the user to select one and then connect
       if (!protocol || !address) ({ protocol, address } = await prompt(availableDevices));
       startClient(protocol, address);
     });
@@ -48,6 +51,7 @@ const createConnection = () => {
     // proxy data from the device to the terminal
     socket.on("data", (data) => process.stdout.write(data));
 
+    // on errors, try to reconnect every second
     socket.on("error", (err) => {
       const reconnectInterval = setInterval(() => {
         try {
@@ -64,7 +68,7 @@ const createConnection = () => {
   }
 
   /**
-   * if no device is specified, ask the user and then connect
+   * Prompts the user to select a device
    * @param {ProtocolAndAddress[]} availableDevices
    */
   async function prompt(availableDevices) {
@@ -76,6 +80,4 @@ const createConnection = () => {
     });
     return connection;
   }
-};
-
-createConnection();
+}
