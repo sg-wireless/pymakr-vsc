@@ -228,8 +228,9 @@ class Commands {
             const result = await vscode.window.showQuickPick(
               [
                 { label: "autoConnect", description: config.autoConnect },
-                { label: "username", description: config.username || "" },
-                { label: "password", description: config.password || "" },
+                // todo are we adding telnet?
+                // { label: "username", description: config.username || "" },
+                // { label: "password", description: config.password || "" },
               ],
               {}
             );
