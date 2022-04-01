@@ -20,7 +20,7 @@ To contribute, please see [CONTRIBUTE.md](./CONTRIBUTE.md).
 
 Pymakr has gotten its own extension tab. Here projects and devices can be accessed.
 
-It's possible to drag these two views to the explorer tab for better accessibility (please see [Move PyMakr to the explorer tab](./README.md#move-pymakr-to-the-explorer-tab)).
+It's possible to drag these two views to the explorer tab for better accessibility (please see [Move PyMakr to the explorer tab](./GET_STARTED.md#move-pymakr-to-the-explorer-tab)).
 
 <img src="./media/readme/design.png">
 
