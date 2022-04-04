@@ -139,7 +139,7 @@ class Device {
     options = Object.assign({}, runScriptDefaults, options);
 
     this.log.debugShort(`runScript:\n\n${script}\n\n`);
-    return this.adapter.runScript(script + "\n", options);
+    return this.adapter.runScript(script + "\n\r\n\r\n", options);
   }
 
   /**

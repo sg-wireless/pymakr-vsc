@@ -229,8 +229,8 @@
         "title": "Hide device"
       },
       {
-        "command": "pymakr.showTerminalLog",
-        "title": "Open terminal log"
+        "command": "pymakr.showTerminalHistory",
+        "title": "Open terminal history"
       },
       {
         "command": "pymakr.createProjectInFolderPrompt",
@@ -393,7 +393,7 @@
           "group": "2-config"
         },
         {
-          "command": "pymakr.showTerminalLog",
+          "command": "pymakr.showTerminalHistory",
           "group": "5-debug"
         }
       ],
