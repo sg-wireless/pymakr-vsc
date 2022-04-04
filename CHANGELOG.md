@@ -1,3 +1,10 @@
+## [2.8.4](https://github.com/pycom/pymakr-vsc/compare/v2.8.3...v2.8.4) (2022-04-01)
+
+
+### Bug Fixes
+
+* README.md had broken link ([d6accad](https://github.com/pycom/pymakr-vsc/commit/d6accadb6735ff824c80a4cebdc775468bfd90c3))
+
 ## [2.8.3](https://github.com/pycom/pymakr-vsc/compare/v2.8.2...v2.8.3) (2022-03-31)
 
 
