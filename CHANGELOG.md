@@ -1,3 +1,10 @@
+## [2.8.5](https://github.com/pycom/pymakr-vsc/compare/v2.8.4...v2.8.5) (2022-04-04)
+
+
+### Bug Fixes
+
+* disable unused username/password config ([518c8f0](https://github.com/pycom/pymakr-vsc/commit/518c8f0109067fe2baa41e75ba3cad5348ebca36))
+
 ## [2.8.4](https://github.com/pycom/pymakr-vsc/compare/v2.8.3...v2.8.4) (2022-04-01)
 
 
