@@ -1,6 +1,5 @@
 const vscode = require('vscode');
 const { execSync } = require('child_process');
-const { prepareSerialPort } = require('./lib/serialport')
 const destroyHandles = []
 
 /**
@@ -20,7 +19,6 @@ const batchRegisterCommands = (context, commands) => {
  * @param {vscode.ExtensionContext} context 
  */
 async function activate(context) {
-    await prepareSerialPort()
 
     /**
      * we have to import SettingsWrapper after prepareSerialPort
