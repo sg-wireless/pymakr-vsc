@@ -499,7 +499,7 @@
     "test": "node ./test/runTest.js",
     "test:unit": "probs src",
     "test-watch:unit": "npx nodemon --exec npm run test:unit",
-    "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/rewrite/"
+    "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
