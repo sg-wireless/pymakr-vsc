@@ -49,6 +49,8 @@ To run the extension, we need to open the project in VSCode and run the source c
 
 Testing is done in the same way we run the extension. Instead of clicking Run PyMakr, we click the dropdown arrow and choose `Integration Tests` or `Unit Tests`.
 
+Currently the tests require two Pycom devices to be connected.
+
 _Hint: <kbd>F5</kbd> can be used to start the last executed task._
 
 ---
