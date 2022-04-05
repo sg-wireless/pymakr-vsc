@@ -494,7 +494,6 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "mctl": "mctl",
     "build:docs": "typedoc src/pymakr.js --media media",
     "pretest.bak": "npm run lint",
     "test": "node ./test/runTest.js",
