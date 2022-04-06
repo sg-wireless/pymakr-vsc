@@ -20,13 +20,14 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-          
       - run: npm ci
 
       - name: Publish
         # for testing, add -- --dry-run --debug
         run: npm run semantic-release
         env:
-          VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN }}
-          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN2 }}
+          # Personal token. Has access to merge commits (for changelog.md and package.json versioning)
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          # Repo token. Can create a new release
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
