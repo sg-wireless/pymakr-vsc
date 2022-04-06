@@ -30,7 +30,6 @@
   "main": "./pymakr",
   "@script comments": {
     "test": "run integration tests",
-    "rm-binding": "remove binding to prevent Electron from using Node bindings",
     "package": "create vsix file",
     "deploy": "publish extensions to extension store"
   },
@@ -38,11 +37,7 @@
     "package": "vsce package",
     "deploy": "vsce publish",
     "test": "node ./test/runTest.js",
-    "rm-binding": "rimraf -f ./node_modules/@serialport/bindings/build/Release",
-    "postinstall": "npm run rm-binding",
-    "pretest": "npm run rm-binding",
-    "prepackage": "npm run rm-binding",
-    "vscode:prepublish": "npm ci && npm prune && npm run rm-binding",
+    "vscode:prepublish": "npm ci && npm prune",
     "semantic-release": "semantic-release"
   },
   "@release comment": [
@@ -222,7 +217,7 @@
     "node-abi": "^2.30.1",
     "prebuild-install": "^6.1.4",
     "rimraf": "^3.0.2",
-    "serialport": "^9.2.4"
+    "serialport": "^10.4.0"
   },
   "devDependencies": {
     "@vscode/test-electron": "^1.6.2",
