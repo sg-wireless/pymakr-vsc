@@ -1,3 +1,10 @@
+## [2.8.6](https://github.com/pycom/pymakr-vsc/compare/v2.8.5...v2.8.6) (2022-04-07)
+
+
+### Bug Fixes
+
+* "open-terminal-log" > "open terminal history" ([b962677](https://github.com/pycom/pymakr-vsc/commit/b962677343309e8d9fa9da1bda505a79439d5638))
+
 ## [2.8.5](https://github.com/pycom/pymakr-vsc/compare/v2.8.4...v2.8.5) (2022-04-04)
 
 
