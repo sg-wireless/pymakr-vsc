@@ -16,7 +16,8 @@ _Hint: For `Node`, we recommend using a version manager like `volta` or `nvm`_
 The plugin is written in JavaScript with Type Hints via JSDoc.
 
 Due to this it is not needed (or possible) to use a TypeScript compiler to transpile the code before running as it's already Javascript. 
-Typescript is only by typedoc when generating the API docs.
+Typescript is only used to validate the types an by typedoc when generating the API docs.
+In this project `tsc` should vever be run , and the outDir in tsconfig.json is specified only to avoid distracting errors from the TypeScript compiler.
 
 Refs: 
 - https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html
