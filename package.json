@@ -3,7 +3,7 @@
   "displayName": "Pymakr - Preview",
   "publisher": "Pycom",
   "description": "Tech preview of the upcoming v2",
-  "version": "2.8.5",
+  "version": "2.8.6",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
@@ -229,8 +229,8 @@
         "title": "Hide device"
       },
       {
-        "command": "pymakr.showTerminalLog",
-        "title": "Open terminal log"
+        "command": "pymakr.showTerminalHistory",
+        "title": "Open terminal history"
       },
       {
         "command": "pymakr.createProjectInFolderPrompt",
@@ -393,7 +393,7 @@
           "group": "2-config"
         },
         {
-          "command": "pymakr.showTerminalLog",
+          "command": "pymakr.showTerminalHistory",
           "group": "5-debug"
         }
       ],
@@ -494,13 +494,12 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "mctl": "mctl",
     "build:docs": "typedoc src/pymakr.js --media media",
     "pretest.bak": "npm run lint",
     "test": "node ./test/runTest.js",
     "test:unit": "probs src",
     "test-watch:unit": "npx nodemon --exec npm run test:unit",
-    "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/rewrite/"
+    "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
@@ -513,7 +512,7 @@
     "eslint": "^8.1.0",
     "glob": "^7.1.7",
     "mocha": "^9.1.3",
-    "probs": "^1.1.0-5",
+    "probs": "^1.1.0-6",
     "semantic-release": "^19.0.2",
     "semantic-release-vsce": "^5.0.8",
     "typedoc": "^0.22.13",

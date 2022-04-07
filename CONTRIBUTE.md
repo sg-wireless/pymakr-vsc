@@ -69,6 +69,8 @@ Tests can be run directly from the terminal by typing
 
 To develop or debug tests use the same way to run/debug the extension. Instead of clicking Run PyMakr, we click the dropdown arrow and choose `Integration Tests` or `Unit Tests`.
 
+Currently the tests require two Pycom devices to be connected.
+
 _Hint: <kbd>F5</kbd> can be used to start the last executed task._
 
 ---

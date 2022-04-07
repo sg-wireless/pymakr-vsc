@@ -125,7 +125,7 @@ class Commands {
      * Opens the log history
      * @param {DeviceTreeItem} treeItem
      */
-    showTerminalLog: (treeItem) => {
+    showTerminalHistory: (treeItem) => {
       // @ts-ignore
       vscode.commands.executeCommand("vscode.open", vscode.Uri.file(treeItem.device.terminalLogFile.path));
     },
