@@ -1,9 +1,15 @@
-.vscode/**
-.vscode-test/**
-test/**
-.gitignore
-.yarnrc
+.*/**
+**/test/**
+src/test/**
 vsc-extension-quickstart.md
 **/jsconfig.json
 **/*.map
 **/.eslintrc.json
+docs/**
+types/**
+
+#avoid including earlier local vsix builds
+pymakr-*.vsix
+pymakr-*.zip
+
+# example/**
