@@ -9,7 +9,8 @@
 			"ES2020"
 		],
 		"resolveJsonModule": true,
-		"rootDir": "."
+		"rootDir": ".",
+		"outDir": "./not_actually_used",
 	},
 	"include": [
 		"src/**/*.js",

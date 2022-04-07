@@ -495,7 +495,7 @@
   "scripts": {
     "lint": "eslint .",
     "mctl": "mctl",
-    "build:docs": "typedoc src/pymakr.js --tsconfig tsconfig_doc.json --media media",
+    "build:docs": "typedoc src/pymakr.js --media media",
     "pretest.bak": "npm run lint",
     "test": "node ./test/runTest.js",
     "test:unit": "probs src",
