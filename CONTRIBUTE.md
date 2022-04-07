@@ -4,11 +4,23 @@ Thank you for reading this document. We hope it will aid you in creating one or 
 
 #### Requirements
 
-- `VSCode`
-- `Node`
+- `VSCode`, 
+- `NodeJS` - LTS version 16.14.2, 14.19.1 or later
 
 _Hint: For `Node`, we recommend using a version manager like `volta` or `nvm`_
+  - [volta](https://docs.volta.sh/guide/getting-started) 
+  - [nvm for windows](https://github.com/coreybutler/nvm-windows#readme)
+  - [nvm for linux](https://github.com/nvm-sh/nvm#readme)
+  - [NodeJS.org](https://nodejs.org/en/download/)
+## Language used in this project
+The plugin is written in JavaScript with Type Hints via JSDoc.
 
+Due to this it is not needed (or possible) to use a TypeScript compiler to transpile the code before running as it's already Javascript. 
+Typescript is only by typedoc when generating the API docs.
+
+Refs: 
+- https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html
+- https://www.typescriptlang.org/docs/handbook/jsdoc-supported-types.html
 ## Setup
 
 To work on Pymakr VSC, we first need to clone the repo and install its dependencies.
@@ -35,7 +47,7 @@ To run the extension, we need to open the project in VSCode and run the source c
 
    _Hint: We can do this directly from the terminal by typing `code .`_
 
-2. Run the extension
+2. Run/Debug the extension
 
    Click `Run and Debug` _(Ctrl+Shift+D)_ -> `Run Pymakr`
 
@@ -46,8 +58,15 @@ To run the extension, we need to open the project in VSCode and run the source c
 ---
 
 ## Testing the extension
+Hardware requirements: 
+- The test suite expects two MicroPython devices to be connected to the computer using a USB cable / serial port connection.
+- currently only device tests are hardcoded to expect `Pycom MicroPython 1.20.2.r6` on `WiPy with ESP32`
 
-Testing is done in the same way we run the extension. Instead of clicking Run PyMakr, we click the dropdown arrow and choose `Integration Tests` or `Unit Tests`.
+Tests can be run directly from the terminal by typing 
+- `npm run test:unit`, to run the unit tests.
+- `npm run test`, to run the integration tests.
+
+To develop or debug tests use the same way to run/debug the extension. Instead of clicking Run PyMakr, we click the dropdown arrow and choose `Integration Tests` or `Unit Tests`.
 
 _Hint: <kbd>F5</kbd> can be used to start the last executed task._
 
@@ -67,6 +86,16 @@ _Hint: <kbd>F5</kbd> can be used to start the last executed task._
 
 ---
 
+## Create a local package [Optional]
+
+You may want to simply package the extension for testing on multiple systems without publishing them to the store. 
+Extensions will always be packaged into a .vsix file. 
+Here's how:
+  `vsce package` 
+
+This will package your extension into a .vsix file and place it in the current directory. It's possible to install .vsix files into Visual Studio Code. See [Installing Extensions](https://vscode-docs.readthedocs.io/docs/extensions/install-extension.md) for more details.
+
+ref: https://vscode-docs.readthedocs.io/en/latest/tools/vscecli/
 ## API
 
 For API documentation, please see [Pymakr API](https://htmlpreview.github.io/?https://raw.githubusercontent.com/pycom/pymakr-vsc/next/docs/classes/PyMakr.html).
