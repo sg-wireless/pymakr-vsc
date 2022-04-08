@@ -3,13 +3,11 @@
  * It is executed in the shell by Terminal.js
  */
 
-const { appendFileSync } = require("fs");
 const net = require("net");
 const prompts = require("prompts");
 const readline = require("readline");
 const host = "127.0.0.1";
 const port = 5364;
-const logFile = __dirname + "/info.log";
 
 createConnection();
 
@@ -63,7 +61,6 @@ function createConnection() {
           console.log(err);
         }
       }, 1000);
-      appendFileSync(logFile, "\r\n" + err.toString());
     });
   }
 
