@@ -13,6 +13,7 @@ const { writable } = require("./utils/store");
 const { coerceDisposable } = require("./utils/misc");
 const manifest = require("../package.json");
 const { createVSCodeHelpers } = require("./utils/vscodeHelpers");
+const { TextDocumentProvider } = require("./providers/TextDocumentProvider");
 
 /**
  * Pymakr is the root class and scope of the extension.
@@ -58,6 +59,8 @@ class PyMakr {
     /** Provides device access for the file explorer */
     this.fileSystemProvider = new FileSystemProvider(this);
 
+    this.textDocumentProvider = new TextDocumentProvider(this)
+
     this.registerWithIde();
     this.setup();
   }
@@ -74,6 +77,7 @@ class PyMakr {
       vscode.workspace.registerFileSystemProvider("telnet", this.fileSystemProvider, { isCaseSensitive: true }),
       vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider),
       vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider),
+      vscode.workspace.registerTextDocumentContentProvider("pymakrDocument", this.textDocumentProvider),
       vscode.workspace.onDidChangeConfiguration(this.onUpdatedConfig.bind(this)),
       vscode.window.registerTerminalProfileProvider("pymakr.terminal-profile", {
         provideTerminalProfile: () => ({
@@ -98,7 +102,7 @@ class PyMakr {
   /**
    * Registers usb devices and scans for projects in workspace
    */
-   async setup() {
+  async setup() {
     await Promise.all([this.devicesStore.registerUSBDevices(), this.registerProjects()]);
     await this.recoverProjects();
     this.projectsProvider.refresh(); // tell the provider that projects were updated

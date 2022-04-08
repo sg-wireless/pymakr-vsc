@@ -2,7 +2,7 @@ const { mkdirSync, readFileSync, writeFileSync } = require("fs");
 const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
-const { mapEnumsToQuickPick, getRelativeFromNearestParent } = require("../utils/misc");
+const { mapEnumsToQuickPick } = require("../utils/misc");
 const { relative } = require("path");
 
 /**
@@ -43,6 +43,12 @@ class Commands {
   }
 
   commands = {
+    // todo link to this command from configuration's "Devices: Include" section
+    listDevices: async () => {
+      let uri = vscode.Uri.parse("pymakrDocument:" + "Pymakr: available devices");
+      let doc = await vscode.workspace.openTextDocument(uri); // calls back into the provider
+      await vscode.window.showTextDocument(doc, { preview: false });
+    },
     /**
      * Reboot device
      * @param {DeviceTreeItem} treeItem
@@ -320,7 +326,7 @@ class Commands {
       device.disconnect();
     },
     /**
-     * Creates a new terminal. If a terminal already exists for the given device, prompt 
+     * Creates a new terminal. If a terminal already exists for the given device, prompt
      * the user if they want to to open a new shared terminal or the existing terminal
      * @param {ProjectDeviceTreeItem} treeItem
      */

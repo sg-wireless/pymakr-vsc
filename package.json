@@ -63,7 +63,8 @@
               ".git",
               "env",
               "venv"
-            ]
+            ],
+            "description": "Files to be ignored by Pymakr."
           },
           "pymakr.advancedMode": {
             "type": "boolean",
@@ -135,9 +136,15 @@
               "type": "string"
             },
             "default": [
-              ".*"
+              "manufacturer=Pycom",
+              "manufacturer=Pycom Ltd.",
+              "manufacturer=FTDI",
+              "manufacturer=Microsoft",
+              "manufacturer=Microchip Technology, Inc.",
+              "manufacturer=1a86"
             ],
-            "description": "Filter devices to include in the devices list. Uses regular expression. Will not include devices that match the exclude list."
+
+            "description": "Filter devices to include in the devices list. Uses regular expression. Matches can be done against any property, eg. \"Microsoft\" or against a specific property, eg. \"manufacturer=Microsoft\r\n\r\nFor a list of available devices, run the command \"list devices\"."            
           },
           "pymakr.devices.exclude": {
             "type": "array",
@@ -145,7 +152,7 @@
               "type": "string"
             },
             "default": [],
-            "description": "Filter devices to exclude from the devices list. Uses regular expression. Takes precedence over includes."
+            "description": "Same as Devices: Include, but for exclude. Excluded devices will not show, even if listed in the include list."
           }
         }
       },
@@ -208,6 +215,10 @@
       ]
     },
     "commands": [
+      {
+        "command": "pymakr.listDevices",
+        "title": "List devices"
+      },
       {
         "command": "pymakr.resetDevice",
         "title": "Hard reset device"
