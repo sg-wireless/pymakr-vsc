@@ -112,7 +112,8 @@ class ProxyMeta {
     /** @type {BlockingProxyQueueItem} */
     this.lastCall = null;
 
-    this.ready = resolvablePromise();
+    // processQueue replaces this.idle with a resolveable promise
+    this.idle = { then: (cb) => cb() };
 
     /**@type {BlockingProxyQueueItem[]} */
     this.history = [];
@@ -139,7 +140,7 @@ class ProxyMeta {
   shiftLastToFront(num = 1) {
     const items = this.queue.splice(-num, 0);
     items.reverse().forEach((item) => this.queue.unshift(item));
-    return this
+    return this;
   }
 
   /**
@@ -148,7 +149,7 @@ class ProxyMeta {
   async processQueue() {
     if (this.isBusy || this.isPaused) return;
 
-    this.ready = resolvablePromise();
+    this.idle = resolvablePromise();
     this.isBusy = true;
 
     while (this.queue.length) {
@@ -163,7 +164,7 @@ class ProxyMeta {
       }
     }
 
-    this.ready.resolve();
+    this.idle.resolve();
     this.isBusy = false;
   }
 }
