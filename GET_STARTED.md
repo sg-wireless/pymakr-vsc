@@ -17,7 +17,7 @@ Please make sure to backup any projects that you use with this extension!
 
 If you prefer to keep your Pymakr projects and devices next to your file explorer, you can move them to them to the file explorer tab.
 
-<img src="./media/readme/pymakr-move-to-explorer.gif">
+<img src="./media/readme/pymakr-move-view.gif">
 
 ### Add a device to a project
 
