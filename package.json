@@ -522,7 +522,7 @@
   "dependencies": {
     "@serialport/bindings": "^10.0.1",
     "cheap-watch": "^1.0.4",
-    "consolite": "^0.3.6",
+    "consolite": "^0.3.8",
     "micropython-ctl-cont": "^1.13.9",
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
