@@ -207,8 +207,10 @@ class Device {
 
   _onFailedConnectHandler(err) {
     this.connecting = false;
-    const error = [`Failed to connect to ${this.address}.`, err.message, this.adapter];
+    const error = [`Failed to connect to ${this.address}.`, err.message];
     this.log.error(...error);
+    // details to debug log
+    this.log.debug(this.adapter)
     throw error;
   }
 

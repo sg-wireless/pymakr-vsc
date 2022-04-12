@@ -1,21 +1,55 @@
 const { createLogger: _createLogger } = require("consolite");
 const vscode = require("vscode");
+const util = require('util');
+
+
+/**
+ * turn log data into a printable string.
+ * @param {any} data
+ * @returns {string}
+ */
+function data2string(data) {
+  if (data instanceof Error) {
+    return data.message || data.stack || util.inspect(data);
+  }
+  if (data.success === false && data.message) {
+    return data.message;
+  }
+  if (data instanceof Array) {
+    return data.map(data2string).join(" ");
+  }
+  return util.format(data);
+}
+
 
 /**
  * Creates Consolite instance to handle all logging
  * @param {string} name
  */
 const createLogger = (name) => {
-  const outputChannel = vscode.window.createOutputChannel("PyMakr");
+  const outputChannel = vscode.window.createOutputChannel("PyMakr", "log");
 
   const log = _createLogger(
     {
       methods: {
         debugShort: console.log,
         traceShort: console.log,
-        info: (...str) => {
-          console.log("info: ", ...str); // in case we need a copy/paste of the console
-          outputChannel.appendLine(str.join(" "));
+        //todo: add test to check writing to vscode output channel
+        info: (...data) => {
+          console.log("info: ", ...data); // in case we need a copy/paste of the console
+          outputChannel.appendLine("info: " + data2string(data));
+        },
+        warning: (...data) => {
+          console.log("warning: ", ...data); // in case we need a copy/paste of the console
+          outputChannel.appendLine("warning: " + data2string(data));
+        },
+        error: (...data) => {
+          console.log("error: ", ...data); // in case we need a copy/paste of the console
+          outputChannel.appendLine("error: " + data2string(data));
+        },
+        debug: (...data) => {
+          console.log("error: ", ...data); // in case we need a copy/paste of the console
+          outputChannel.appendLine("debug: " + data2string(data));
         },
       },
     },

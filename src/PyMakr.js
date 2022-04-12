@@ -36,6 +36,8 @@ class PyMakr {
 
     /** Extendable logger. */
     this.log = createLogger("PyMakr");
+    this.log.info(`${manifest.name} v${manifest.version}`);
+
     this.onUpdatedConfig("silent");
     this.context = context;
 
