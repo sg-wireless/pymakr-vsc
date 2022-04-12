@@ -519,7 +519,7 @@
     "@types/glob": "^7.2.0",
     "@types/mocha": "^9.0.0",
     "@types/node": "16.x",
-    "@types/vscode": "^1.63.1",
+    "@types/vscode": "^1.66.0",
     "@vscode/test-electron": "^2.0.3",
     "eslint": "^8.1.0",
     "glob": "^7.1.7",
