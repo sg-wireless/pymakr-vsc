@@ -8,7 +8,7 @@ Please make sure to backup any projects that you use with this extension!
 
 ## Getting Started
 
-If you have a Pycom device, you just need to install this extension and you're ready to go.
+If you have a Pycom device, you can install this extension and you're ready to go.
 
 [GET_STARTED.md](./GET_STARTED.md)
 
