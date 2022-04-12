@@ -10,7 +10,7 @@ const util = require('util');
  */
 function data2string(data) {
   if (data instanceof Error) {
-    return data.stack || data.message;
+    return data.message || data.stack || util.inspect(data);
   }
   if (data.success === false && data.message) {
     return data.message;
@@ -46,6 +46,10 @@ const createLogger = (name) => {
         error: (...data) => {
           console.log("error: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("error: " + data2string(data));
+        },
+        debug: (...data) => {
+          console.log("error: ", ...data); // in case we need a copy/paste of the console
+          outputChannel.appendLine("debug: " + data2string(data));
         },
       },
     },
