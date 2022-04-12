@@ -140,8 +140,8 @@
               "manufacturer=FTDI",
               "manufacturer=Microsoft",
               "manufacturer=Microchip Technology.*",
-              "friendlyName=.*CH340.*",
-              "friendlyName=.*CP210.*"
+              "friendlyName=.*CH34[0|1].*",
+              "friendlyName=.*CP21.*"
             ],
             "description": "Filter devices to include in the devices list. Uses regular expression. Matches can be done against any property, eg. \"Microsoft\" or against a specific property, eg. \"manufacturer=Microsoft\r\n\r\nFor a list of available devices, run the command \"list devices\"."
           },
