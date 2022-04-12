@@ -99,7 +99,7 @@
               "Trace without stacktrace",
               "Trace with stacktrace"
             ],
-            "description": "Defaults to 'info'. Logs can be read in the developer tools (ctrl + shift i)."
+            "description": "Defaults to 'info'. Logs can be read the PyMakr Output Channel (ctrl + shift u), or in the developer tools (ctrl + shift i)."
           },
           "pymakr.debug.logFilter": {
             "type": "string",
