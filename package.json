@@ -531,7 +531,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@serialport/bindings": "^10.0.1",
+    "@serialport/bindings-cpp": "^10.7.0",
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.8",
     "micropython-ctl-cont": "^1.13.9",
