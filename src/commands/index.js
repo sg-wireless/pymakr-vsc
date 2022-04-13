@@ -398,7 +398,10 @@ class Commands {
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    uploadProject: ({ device, project }) => device.upload(project.folder, "/"),
+    uploadProject: async ({ device, project }) => {
+      await device.adapter.remove("/flash", true);
+      device.upload(project.folder, "/");
+    },
 
     /**
      * Prompts for a device and destination for uploading a file or folder

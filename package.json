@@ -296,7 +296,7 @@
       {
         "command": "pymakr.uploadProject",
         "shortTitle": "Upload",
-        "title": "Upload project to device",
+        "title": "Sync project to device",
         "icon": "$(cloud-upload)"
       },
       {
