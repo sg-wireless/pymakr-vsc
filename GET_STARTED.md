@@ -1,38 +1,38 @@
-# Pymakr 2 - Preview
+# Getting Started
 
-### This is an alpha preview of the upcoming Pymakr 2
+1. First [download and install Visual Studio Code](https://code.visualstudio.com/).
+2. Install the [Pymakr VSCode Extension](https://marketplace.visualstudio.com/items?itemName=pycom.Pymakr)
+    
+    _(We're installing the preview, but once the project reaches "stable" we'll, be using the regular extension.)_
 
-Please make sure to backup any projects that you use with this extension!
+    <img src="./media/readme/install-pymakr.gif" />
 
+3. That's it! You've installed the Pymakr Extension for VSCode
+
+## Creating a project
+
+Pymakr revolves around projects that can be uploaded to your devices. To create your first project click the `+` icon and select a folder for your project:
+
+![](./media/readme/create-project.gif)
+
+_Note: If a project is created outside the current workspace(s), its folder will be mounted as a new workspace._
+
+## Creating a script
+
+Below we add a `main.py`. This file will run whenever the device is reset.
+
+![](./media/readme/saving-a-file.gif)
+
+## Upload the project to a device
+
+Once the project is ready to run, it needs to be uploaded to a device.
+
+![](./media/readme/connect-device-and-sync-up.gif)
 
 ---
 
-## Getting Started
+## Hint: Organizing your setup
 
-### Create a new project
-<img src="./media/readme/pymakr-create-project.gif">
+Having to switch between different tabs can be cumbersome. To solve this, you can drag your devices and projects to the file explorer view.
 
-
-### Move PyMakr to the explorer tab
-
-If you prefer to keep your Pymakr projects and devices next to your file explorer, you can move them to them to the file explorer tab.
-
-<img src="./media/readme/pymakr-move-view.gif">
-
-### Add a device to a project
-
-Linking devices to projects can speed up development when working on multiple projects and devices.
-
-<img src="./media/readme/pymakr-add-device-to-project.gif">
-
-### Connect a device
-
-Before we can use a device, we need to connect it.
-
-<img src="./media/readme/pymakr-connect-a-device.gif">
-
-### Add a device to the file explorer
-
-To access our devices directly, we can add it to the file explorer. From here we can create/edit/delete files and folders.
-
-<img src="./media/readme/pymakr-add-device-to-file-explorer.gif">
+![](./media/readme/move-view.gif)
