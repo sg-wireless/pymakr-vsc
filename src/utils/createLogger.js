@@ -48,7 +48,7 @@ const createLogger = (name) => {
           outputChannel.appendLine("error: " + data2string(data));
         },
         debug: (...data) => {
-          console.log("error: ", ...data); // in case we need a copy/paste of the console
+          console.log("debug: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("debug: " + data2string(data));
         },
       },
