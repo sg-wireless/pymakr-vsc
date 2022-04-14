@@ -38,6 +38,9 @@ class PyMakr {
     this.log = createLogger("PyMakr");
     this.log.info(`${manifest.name} v${manifest.version}`);
 
+    // avoid port collisions between multiple vscode instances running on the same machine
+    this.terminalPort = 5364 + (Math.random() * 10240 | 0);
+
     this.onUpdatedConfig("silent");
     this.context = context;
 

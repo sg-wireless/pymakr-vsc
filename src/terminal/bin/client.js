@@ -7,14 +7,20 @@ const net = require("net");
 const prompts = require("prompts");
 const readline = require("readline");
 const host = "127.0.0.1";
-const port = 5364;
+const defaultPort = 5364;
+var port;
 
 createConnection();
 
 function createConnection() {
   const socket = new net.Socket();
 
-  let [_1, _2, protocol, address] = process.argv;
+  let [_1, _2, protocol, address, _port] = process.argv;
+  if (_port) {
+    port = parseInt(_port);
+  } else {
+    port = defaultPort;
+  }
 
   socket.connect(port, host, async () => {
     // first message contains available devices

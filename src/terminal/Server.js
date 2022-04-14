@@ -1,6 +1,5 @@
 const { createServer } = require("net");
 const vscode = require("vscode");
-const PORT = 5364; // todo abstract
 
 /**
  * This is the terminal server. It's mounted as a singleton at `pymakr.server`.
@@ -47,8 +46,8 @@ class Server {
           else this.log.debug("client disconnected");
         });
       });
-    }).listen(PORT);
-    console.log("listening on", PORT);
+    }).listen(this.pymakr.terminalPort);
+    this.log.debug("Listening on port: ", this.pymakr.terminalPort);
   }
 }
 
