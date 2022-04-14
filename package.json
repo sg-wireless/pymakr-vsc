@@ -3,13 +3,14 @@
   "displayName": "Pymakr - Preview",
   "publisher": "Pycom",
   "description": "Tech preview of the upcoming v2",
-  "version": "2.8.6",
+  "version": "2.8.7",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
   "preview": true,
   "engines": {
-    "vscode": "^1.63.0"
+    "vscode": "^1.66.0",
+    "node": "^14.19.1"
   },
   "categories": [
     "Other"
