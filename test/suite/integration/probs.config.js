@@ -1,6 +1,7 @@
 const vscode = require("vscode");
+const { join } = require("path");
 
-const workspaceDir = __dirname + "/../../workspaces/integration";
+const workspaceDir = join( __dirname , "/../../workspaces/integration");
 const PROJECT_STORE_TIMEOUT = 3000;
 
 module.exports = {

@@ -1,7 +1,8 @@
 const { existsSync, readFileSync } = require("fs");
 const vscode = require("vscode");
+const { join } = require("path");
 
-const projectPath1 = workspaceDir + "/project-1";
+const projectPath1 = join(workspaceDir, "project-1");
 
 test("can find 0 projects and 1 workspace", () => {
   assert.equal(pymakr.projectsStore.get().length, 0);

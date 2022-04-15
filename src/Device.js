@@ -1,4 +1,4 @@
-const { dirname, relative } = require("path");
+const { dirname, relative, posix, win32 } = require("path");
 const { readFileSync, statSync, readdirSync, mkdirSync, createWriteStream } = require("fs");
 const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
@@ -103,14 +103,14 @@ class Device {
    * Can be wrapped and extended
    * @param {string} data
    */
-  onTerminalData(data) {}
+  onTerminalData(data) { }
 
   /**
    * Server.js will reactively assign this callback to the currently active terminal
    * Therefore any wrapping or extending of this method will be lost whenever a terminal is used
    * @param {string} data
    */
-  __onTerminalDataExclusive(data) {}
+  __onTerminalDataExclusive(data) { }
 
   /**
    * Auto connects device if required by user preferences
@@ -288,9 +288,13 @@ class Device {
     };
 
     const _upload = (source, destination) => {
-      const relativePath = relative(projectDir, source).replace(/\\/g, "/");
+      // BUG: upload c:\develop\vscode\pymakr-vsc\templates\empty to /
+      //  'The "from" argument must be of type string. Received null'
+      const relativePath = relative(projectDir, source);
       if (!isIgnore(relativePath))
-        return statSync(source).isDirectory() ? _uploadDir(source, destination) : _uploadFile(source, destination);
+        return statSync(source).isDirectory()
+          ? _uploadDir(source, destination)
+          : _uploadFile(source, destination);
     };
 
     this.log.info("upload", source, "to", destination);

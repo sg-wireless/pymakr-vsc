@@ -3,7 +3,7 @@ const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
 const { mapEnumsToQuickPick } = require("../utils/misc");
-const { relative } = require("path");
+const { relative, join } = require("path");
 
 /**
  * Commands contains all commands that can be accessed through VSCode.
@@ -30,8 +30,7 @@ class Commands {
           await value.bind(this)(...params);
         } catch (err) {
           vscode.window.showErrorMessage(
-            `[Pymakr] Failed to run command: ${key}. Reason: ${
-              err.message || err.name || err
+            `[Pymakr] Failed to run command: ${key}. Reason: ${err.message || err.name || err
             }. Please see logs for info.`
           );
           this.log.error(`Failed to run command: ${key} with params:`, params);
@@ -85,12 +84,13 @@ class Commands {
         vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
           progress.report({ message: "Erasing device" });
           try {
-            const templatePath = `${__dirname}/../../templates/${templateId}`;
+            const templatePath = join(__dirname, `../../templates/${templateId}`);
+            // BUG assumes that '/flash'root path exists and is a directory
             await device.adapter.remove("/flash", true);
             await device.upload(templatePath, "/");
             resolve();
           } catch (err) {
-            console.log("er,", err.message);
+            this.log.error(err);
             vscode.window.showErrorMessage("Could not erase device. Reason: " + err);
             reject(err);
           }
@@ -392,7 +392,7 @@ class Commands {
     },
 
     // todo remove
-    newDeviceRecover: async () => {},
+    newDeviceRecover: async () => { },
 
     /**
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.

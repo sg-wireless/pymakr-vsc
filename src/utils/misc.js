@@ -1,5 +1,5 @@
 const { existsSync, readFileSync } = require("fs");
-const { relative, resolve, dirname } = require("path");
+const { relative, resolve, dirname, join } = require("path");
 
 /**
  * creates a function that can only be called once
@@ -86,7 +86,7 @@ const mapEnumsToQuickPick = (descriptions) => (_enum, index) => ({
  * @returns {{[P in K]: T[P]}}
  */
 const cherryPick = (obj, props) =>
-  props.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), /** @type {obj} */ ({}));
+  props.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), /** @type {obj} */({}));
 
 /**
  * Curried function.Returns the nearest parent from an array of folders
@@ -136,13 +136,19 @@ const readJsonFile = (path) => JSON.parse(readFileSync(path, "utf8"));
  * @returns {PymakrConfFile}
  */
 const getNearestPymakrConfig = (path) => {
+  if (!path) return null;
   const projectPath = getNearestPymakrProjectDir(path);
-  if (projectPath) return readJsonFile(`${projectPath}/pymakr.conf`);
+  if (projectPath) return readJsonFile(join(projectPath, 'pymakr.conf'));
   else return null;
 };
 
+/**
+ * resolves the path to the nearest folder containing pymakr.conf
+ * @param {string} path
+ * @returns {string}
+ */
 const getNearestPymakrProjectDir = (path) => {
-  const configPath = `${path}/pymakr.conf`;
+  const configPath = join(path, 'pymakr.conf');
   if (existsSync(configPath)) return path;
   else {
     const parentDir = dirname(path);

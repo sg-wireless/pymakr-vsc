@@ -1,4 +1,5 @@
 const vscode = require("vscode");
+const { join } = require("path");
 
 test("file management", async ({ test }) => {
   const device = pymakr.devicesStore.get()[0];
@@ -9,7 +10,7 @@ test("file management", async ({ test }) => {
     assert.deepEqual(files, []);
   });
   test("can upload a file", async () => {
-    const uri = vscode.Uri.file(__dirname + "/_sample/sample-file-1.md");
+    const uri = vscode.Uri.file( join(__dirname, "_sample/sample-file-1.md"));
     await pymakr.commands.upload(uri, device, "/sample-file-1.md");
     const files = await device.adapter.listFiles("/flash", { recursive: false });
     assert.equal(files.length, 1);
