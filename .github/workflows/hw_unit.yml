@@ -1,0 +1,35 @@
+# This workflow will do a clean installation of node dependencies, cache/restore themand run tests using node
+# assumes that there are sufficient 
+
+name: Node.js CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - next-jv
+      - next-testing
+  pull_request:
+    branches: 
+      - next-staging
+
+jobs:
+  test:
+    runs-on: MicroPython
+    steps:
+      - run: |
+          echo "Log level: $LEVEL"
+          echo "Tags: $TAGS"
+          echo "Environment: $ENVIRONMENT"
+        env:
+          LEVEL: ${{ github.event.inputs.logLevel }}
+          TAGS: ${{ github.event.inputs.tags }}
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+
+    - uses: actions/checkout@v1
+    # - run : 
+    #   - nvm install 14.19.0
+    #   - nvm use 14.9.0
+    # ? - run: npm install prebuild-install -g
+    - run: npm ci
+    - run: npm run test:unit
