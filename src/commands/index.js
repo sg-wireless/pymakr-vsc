@@ -84,9 +84,8 @@ class Commands {
         vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
           progress.report({ message: "Erasing device" });
           try {
-            const templatePath = join(__dirname, `../../templates/${templateId}`);
-            // BUG assumes that '/flash'root path exists and is a directory
-            await device.adapter.remove("/flash", true);
+            const templatePath = `${__dirname}/../../templates/${templateId}`;
+            await device.adapter.remove(device.rootPath, true);
             await device.upload(templatePath, "/");
             resolve();
           } catch (err) {
@@ -424,7 +423,7 @@ class Commands {
      * Uploads a file/folder to a connected device
      * @param {vscode.Uri} uri the file/folder to upload
      * @param {import('../Device.js').Device} device
-     * @param {string} destination not including /flash
+     * @param {string} destination not including the device.rootPath ( /flash or / )
      */
     upload: async ({ fsPath }, device, destination) => {
       try {
@@ -448,6 +447,7 @@ class Commands {
       const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
       const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
         ...fad,
+        // fixme: use device.rootPath
         destination: treeItem.project.folder + fad.filename.replace(/^\/flash/, ""),
       }));
       const files = filesAndDirs.filter((f) => !f.isDir);
@@ -510,7 +510,7 @@ class Commands {
         scheme: device.protocol,
         // vscode doesn't like "/" in the authority name
         authority: device.address.replace(/\//g, "%2F"),
-        path: "/flash",
+        path: device.rootPath,
       });
 
       const name = `${device.protocol}:/${device.address}`;
