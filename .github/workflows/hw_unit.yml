@@ -14,7 +14,7 @@ on:
       - next-staging
 
 jobs:
-  test:
+  build:
     runs-on: MicroPython
     steps:
       - run: |
