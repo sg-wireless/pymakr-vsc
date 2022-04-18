@@ -17,15 +17,6 @@ jobs:
   build:
     runs-on: MicroPython
     steps:
-      - run: |
-          echo "Log level: $LEVEL"
-          echo "Tags: $TAGS"
-          echo "Environment: $ENVIRONMENT"
-        env:
-          LEVEL: ${{ github.event.inputs.logLevel }}
-          TAGS: ${{ github.event.inputs.tags }}
-          ENVIRONMENT: ${{ github.event.inputs.environment }}
-
     - uses: actions/checkout@v1
     # - run : 
     #   - nvm install 14.19.0
@@ -33,3 +24,4 @@ jobs:
     # ? - run: npm install prebuild-install -g
     - run: npm ci
     - run: npm run test:unit
+    
