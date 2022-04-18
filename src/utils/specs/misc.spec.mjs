@@ -64,11 +64,22 @@ test("cherryPick", () => {
 });
 
 test("getNearestParent + relative", () => {
-  const parents = ["c:\\some\\folder\\path", "c:\\some\\folder", "c:\\some"];
-  const child = "c:\\some\\folder\\child\\path";
-  assert.equal(getNearestParent(parents)(child), "c:\\some\\folder");
-  assert.equal(getRelativeFromNearestParent(parents)(child), "child\\path");
-  assert.equal(getRelativeFromNearestParentPosix(parents)(child), "child/path");
+  // use different test paths on windows / linux
+  if (process.platform === "win32"){
+    const parents = ["c:\\some\\folder\\path", "c:\\some\\folder", "c:\\some"];
+    const child = "c:\\some\\folder\\child\\path";
+
+    assert.equal(getNearestParent(parents)(child), "c:\\some\\folder");
+    assert.equal(getRelativeFromNearestParent(parents)(child), "child\\path");
+    assert.equal(getRelativeFromNearestParentPosix(parents)(child), "child/path");
+    
+  } else{
+    const parents = ["/some/folder/path", "/some/folder", "/some"];
+    const child = "/some/folder/child/path";
+
+    assert.equal(getNearestParent(parents)(child), "/some/folder");
+    assert.equal(getRelativeFromNearestParent(parents)(child), "child/path");
+  }
 });
 
 test("getNearestPymakrConfig", () => {

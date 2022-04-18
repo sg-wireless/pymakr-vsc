@@ -89,7 +89,8 @@ const cherryPick = (obj, props) =>
   props.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), /** @type {obj} */({}));
 
 /**
- * Curried function.Returns the nearest parent from an array of folders
+ * Curried function. Returns the nearest parent from an array of folders
+ * as the path is resolved, it should be in the correct format for the platform (windows/posix)
  * @param {string[]} parents
  * @returns {(child:string)=>string}
  */
