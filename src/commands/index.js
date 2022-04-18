@@ -421,8 +421,8 @@ class Commands {
     },
 
     /**
-     * Uploads a file/folder to a device
-     * @param {vscode.Uri} uri
+     * Uploads a file/folder to a connected device
+     * @param {vscode.Uri} uri the file/folder to upload
      * @param {import('../Device.js').Device} device
      * @param {string} destination not including /flash
      */

@@ -290,6 +290,10 @@ class Device {
     const _upload = (source, destination) => {
       // BUG: upload c:\develop\vscode\pymakr-vsc\templates\empty to /
       //  'The "from" argument must be of type string. Received null'
+      if (!projectDir){
+        this.log.error("No project directory found. Cannot upload.")
+        return
+      }
       const relativePath = relative(projectDir, source);
       if (!isIgnore(relativePath))
         return statSync(source).isDirectory()

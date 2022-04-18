@@ -31,12 +31,14 @@ test("Can find devices", async ({ test }) => {
         //   "\r\nPycom MicroPython 1.20.2.r6 [v1.11-c5a0a97] on 2021-10-28; WiPy with ESP32" +
         //     '\r\nType "help()" for more information.' +
         //     "\r\n>>> "
-        assert.match(msg , /MicroPython/ , "Could not detect a MicroPython device")
+                // BUG: welcome message (nextTerminalData) does not contain the welcome message (win64)
+                assert.match(msg, /MicroPython/, "Could not detect a MicroPython device")
         // todo: low-prio - >>> test fails on esp8266 as the welcomesting is truncated
-        assert.match(msg , /\r\n>>>/ , "No repl prompt")
+                assert.match(msg, /\r\n>>>/, "No repl prompt")
       });
 
       test("can use print command", async () => {
+        //BUG: nextTerminalData does not return the next terminal data (win64)
         const receivedFromTerminal = nextTerminalData(device);
         terminal.sendText('print("foo")\n');
         assert.equal(await receivedFromTerminal, 'print("foo")' + "\r\nfoo" + "\r\n>>> ");
