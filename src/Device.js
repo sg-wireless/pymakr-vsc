@@ -105,14 +105,14 @@ class Device {
    * Can be wrapped and extended
    * @param {string} data
    */
-  onTerminalData(data) { }
+  onTerminalData(data) {}
 
   /**
    * Server.js will reactively assign this callback to the currently active terminal
    * Therefore any wrapping or extending of this method will be lost whenever a terminal is used
    * @param {string} data
    */
-  __onTerminalDataExclusive(data) { }
+  __onTerminalDataExclusive(data) {}
 
   /**
    * Auto connects device if required by user preferences
@@ -212,7 +212,7 @@ class Device {
     const error = [`Failed to connect to ${this.address}.`, err.message];
     this.log.error(...error);
     // details to debug log
-    this.log.debug(this.adapter)
+    this.log.debug(this.adapter);
     throw error;
   }
 
@@ -229,9 +229,9 @@ class Device {
     this.connecting = false;
     this.lostConnection = false;
     this.changed();
-    const boardInfoPromise = this.adapter.getBoardInfo()
+    const boardInfoPromise = this.adapter.getBoardInfo();
     // move getBoardInfo to front of queue and start the proxy
-    this.adapter.__proxyMeta.shiftLastToFront().run()
+    this.adapter.__proxyMeta.shiftLastToFront().run();
     this.info = await waitFor(boardInfoPromise, 10000, msgs.boardInfoTimedOutErr(this.adapter));
     this.log.debug("boardInfo", this.info);
   }
@@ -264,43 +264,37 @@ class Device {
    * @param {string} destination
    */
   async upload(source, destination) {
+    destination = posix.join(this.rootPath, `/${destination}`.replace(/\/+/g, "/"));
+    const root = source;
     const ignores = this.pymakr.config.get().get("ignore");
-    const projectDir = getNearestPymakrProjectDir(source);
-    const pymakrConfig = getNearestPymakrConfig(projectDir);
+    const pymakrConfig = getNearestPymakrConfig(source);
     if (pymakrConfig) ignores.push(...pymakrConfig.py_ignore);
 
     const isIgnore = picomatch(ignores);
 
     const _uploadFile = async (file, destination) => {
-      const _destination = posix.join(this.rootPath, `/${destination}`.replace(/\/+/g, "/"));
-      const destinationDir = dirname(_destination);
-      this.log.traceShort("uploadFile", file, "to", _destination);
+      this.log.traceShort("uploadFile", file, "to", destination);
       const data = Buffer.from(readFileSync(file));
-      // todo move mkdir logic to micropython-ctl-cont
-      try {
-        await this.adapter.mkdir(destinationDir);
-      } catch (err) {
-        if (!err.message.match("OSError: \\[Errno 17\\] EEXIST")) throw err;
-      }
-      return this.adapter.putFile(_destination, data, { checkIfSimilarBeforeUpload: true });
+      return this.adapter.putFile(destination, data, { checkIfSimilarBeforeUpload: true });
     };
 
     const _uploadDir = async (dir, destination) => {
-      for (const file of readdirSync(dir)) await _upload(`${dir}/${file}`, `${destination}/${file}`);
+      try {
+        await this.adapter.mkdir(destination);
+      } catch (err) {
+        if (!err.message.match("OSError: \\[Errno 17\\] EEXIST")) throw err;
+      }
+      for (const file of readdirSync(dir)) {
+        await _upload(`${dir}/${file}`, `${destination}/${file}`);
+      }
     };
 
     const _upload = (source, destination) => {
       // BUG: upload c:\develop\vscode\pymakr-vsc\templates\empty to /
       //  'The "from" argument must be of type string. Received null'
-      if (!projectDir) {
-        this.log.error("No project directory found. Cannot upload.")
-        return
-      }
-      const relativePath = relative(projectDir, source);
+      const relativePath = relative(root, source);
       if (!isIgnore(relativePath))
-        return statSync(source).isDirectory()
-          ? _uploadDir(source, destination)
-          : _uploadFile(source, destination);
+        return statSync(source).isDirectory() ? _uploadDir(source, destination) : _uploadFile(source, destination);
     };
 
     this.log.info("upload", source, "to", destination);
