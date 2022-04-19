@@ -3,7 +3,7 @@ const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
 const { mapEnumsToQuickPick } = require("../utils/misc");
-const { relative, join } = require("path");
+const { relative } = require("path");
 
 /**
  * Commands contains all commands that can be accessed through VSCode.
@@ -30,7 +30,8 @@ class Commands {
           await value.bind(this)(...params);
         } catch (err) {
           vscode.window.showErrorMessage(
-            `[Pymakr] Failed to run command: ${key}. Reason: ${err.message || err.name || err
+            `[Pymakr] Failed to run command: ${key}. Reason: ${
+              err.message || err.name || err
             }. Please see logs for info.`
           );
           this.log.error(`Failed to run command: ${key} with params:`, params);
@@ -391,7 +392,7 @@ class Commands {
     },
 
     // todo remove
-    newDeviceRecover: async () => { },
+    newDeviceRecover: async () => {},
 
     /**
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.
@@ -408,9 +409,13 @@ class Commands {
      */
     uploadPrompt: async (uri) => {
       const project = this.pymakr.vscodeHelpers.coerceProject(uri);
-      const devices = await this.pymakr.vscodeHelpers.devicePickerByProject(project);
+      const devices = await this.pymakr.vscodeHelpers.devicePicker(project?.devices);
 
-      const relativePathFromProject = relative(project.folder, uri.fsPath).replace(/\\+/, "/");
+      const getRelativeFromProject = () => relative(project.folder, uri.fsPath).replace(/\\+/, "/");
+      const getBasename = () => `/${uri.fsPath.replace(/.*[/\\]/g, "")}`;
+
+      const relativePathFromProject = project ? getRelativeFromProject() : getBasename();
+
       const destination = await vscode.window.showInputBox({
         title: "destination",
         value: relativePathFromProject,
@@ -426,9 +431,11 @@ class Commands {
      * @param {string} destination not including the device.rootPath ( /flash or / )
      */
     upload: async ({ fsPath }, device, destination) => {
+      const friendlySource = fsPath.replace(/.*[/\\]/g, "");
+      if (!device.connected) await device.connect();
       try {
         await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-          progress.report({ message: `copying...}` });
+          progress.report({ message: `Uploading "${friendlySource}" to "${device.name}"...` });
           await device.upload(fsPath, destination);
         });
       } catch (err) {

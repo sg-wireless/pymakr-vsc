@@ -1,6 +1,7 @@
 const vscode = require("vscode");
 const { Project } = require("../Project.js");
 const { ProjectDeviceTreeItem, ProjectTreeItem } = require("../providers/ProjectsProvider.js");
+const errors = require("./errors.js");
 const { getNearestPymakrProjectDir } = require("./misc.js");
 
 /**
@@ -34,14 +35,27 @@ const createVSCodeHelpers = (pymakr) => {
     /**
      * @param {vscode.Uri | import('../Project.js').Project} projectOrUri
      */
-    devicePickerByProject: async (projectOrUri) => {
-      if (!projectOrUri) throw new Error("projectOrUri can't be undefined");
+    devicesByProject: (projectOrUri) => {
+      if (!projectOrUri) throw new errors.MissingProjectError();
       const project = helpers.coerceProject(projectOrUri);
+      return project.devices;
+    },
 
+    /**
+     * @param {vscode.Uri | import('../Project.js').Project} projectOrUri
+     */
+    devicePickerByProject: (projectOrUri) => {
+      return helpers.devicePicker(helpers.devicesByProject(projectOrUri));
+    },
+
+    /**
+     * @param {Device[]} preselectedDevices
+     */
+    devicePicker: async (preselectedDevices = []) => {
       const answers = await vscode.window.showQuickPick(
         pymakr.devicesStore.get().map((device) => ({
           label: device.name,
-          picked: project.devices.includes(device),
+          picked: preselectedDevices.includes(device),
           _device: device,
         })),
         { canPickMany: true }
@@ -60,12 +74,12 @@ const createVSCodeHelpers = (pymakr) => {
         }
       }
     },
-    showAddDeviceToFileExplorerProgressBar: ()=>{
+    showAddDeviceToFileExplorerProgressBar: () => {
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (token) => {
         token.report({ message: "Adding device to explorer..." });
       });
       return new Promise((resolve) => vscode.workspace.onDidChangeWorkspaceFolders(resolve));
-    }
+    },
   };
   return helpers;
 };
