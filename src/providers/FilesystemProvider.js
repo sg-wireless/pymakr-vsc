@@ -33,7 +33,7 @@ class FileSystemProvider {
 
   watch(uri, options) {
     // todo?
-    return new vscode.Disposable(() => {});
+    return new vscode.Disposable(() => { });
   }
 
   async rename(oldUri, newUri) {
@@ -97,7 +97,8 @@ class FileSystemProvider {
   async readDirectory(uri) {
     this.log.traceShort("read dir", uri.path);
     const device = this._getDevice(uri);
-    const path = uri.path.startsWith("/flash") ? uri.path : "/flash";
+    // fixme: MCU rootPath is not always /flash , can also be / or /sd
+    const path = uri.path.startsWith(device.rootPath) ? uri.path : device.rootPath;
 
     try {
       const files = await device.adapter.listFiles(path, { recursive: false });

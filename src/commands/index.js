@@ -3,7 +3,7 @@ const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
 const { mapEnumsToQuickPick } = require("../utils/misc");
-const { relative } = require("path");
+const { relative, join } = require("path");
 
 /**
  * Commands contains all commands that can be accessed through VSCode.
@@ -30,8 +30,7 @@ class Commands {
           await value.bind(this)(...params);
         } catch (err) {
           vscode.window.showErrorMessage(
-            `[Pymakr] Failed to run command: ${key}. Reason: ${
-              err.message || err.name || err
+            `[Pymakr] Failed to run command: ${key}. Reason: ${err.message || err.name || err
             }. Please see logs for info.`
           );
           this.log.error(`Failed to run command: ${key} with params:`, params);
@@ -86,11 +85,11 @@ class Commands {
           progress.report({ message: "Erasing device" });
           try {
             const templatePath = `${__dirname}/../../templates/${templateId}`;
-            await device.adapter.remove("/flash", true);
+            await device.adapter.remove(device.rootPath, true);
             await device.upload(templatePath, "/");
             resolve();
           } catch (err) {
-            console.log("er,", err.message);
+            this.log.error(err);
             vscode.window.showErrorMessage("Could not erase device. Reason: " + err);
             reject(err);
           }
@@ -392,7 +391,7 @@ class Commands {
     },
 
     // todo remove
-    newDeviceRecover: async () => {},
+    newDeviceRecover: async () => { },
 
     /**
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.
@@ -421,10 +420,10 @@ class Commands {
     },
 
     /**
-     * Uploads a file/folder to a device
-     * @param {vscode.Uri} uri
+     * Uploads a file/folder to a connected device
+     * @param {vscode.Uri} uri the file/folder to upload
      * @param {import('../Device.js').Device} device
-     * @param {string} destination not including /flash
+     * @param {string} destination not including the device.rootPath ( /flash or / )
      */
     upload: async ({ fsPath }, device, destination) => {
       try {
@@ -448,6 +447,7 @@ class Commands {
       const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
       const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
         ...fad,
+        // fixme: use device.rootPath
         destination: treeItem.project.folder + fad.filename.replace(/^\/flash/, ""),
       }));
       const files = filesAndDirs.filter((f) => !f.isDir);
@@ -510,7 +510,7 @@ class Commands {
         scheme: device.protocol,
         // vscode doesn't like "/" in the authority name
         authority: device.address.replace(/\//g, "%2F"),
-        path: "/flash",
+        path: device.rootPath,
       });
 
       const name = `${device.protocol}:/${device.address}`;
