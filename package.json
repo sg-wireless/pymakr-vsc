@@ -510,7 +510,7 @@
     "test": "npm run test:types && npm run test:unit && echo please run integration tests from debugger",
     "test:types": "tsc --noEmit",
     "test:unit": "probs src",
-    "test:integration": "node test/utils/setup.js --run-setup && node ./test/runTest.js test/workspaces/integration --disable-extensions --extensionTestsPath=test/suite/index",
+    "test:integration": "node ./test/runTest.js",
     "test-watch:unit": "npx nodemon --exec npm run test:unit",
     "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
   },
