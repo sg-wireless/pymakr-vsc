@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: [self-hosted, micropython]
     steps:
       - uses: actions/checkout@v1
       # - run :
