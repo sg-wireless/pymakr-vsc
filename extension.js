@@ -1,5 +1,8 @@
 const { PyMakr } = require("./src/PyMakr");
 
+/** @type {PyMakr} */
+let pymakr;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 
@@ -7,13 +10,11 @@ const { PyMakr } = require("./src/PyMakr");
  * @param {import('vscode').ExtensionContext} context
  */
 async function activate(context) {
-  new PyMakr(context);
+  pymakr = new PyMakr(context);
 }
 
 // this method is called when your extension is deactivated
-function deactivate() {
-  //todo: close any open terminals to avoid them hanging when VScode is restarted at a later stage.
-}
+function deactivate() {}
 
 module.exports = {
   activate,
