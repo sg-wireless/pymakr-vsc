@@ -54,7 +54,11 @@ class Commands {
      * @param {DeviceTreeItem} treeItem
      */
     resetDevice: async ({ device }) => {
-      device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: false });
+      // resetting the device should also reset the waiting calls
+      device.adapter.__proxyMeta.clearQueue();
+      // we don't want a stalled call to block the device
+      device.adapter.__proxyMeta.skipCurrent();
+      device.adapter.__proxyMeta.target.reset({ broadcastOutputAsTerminalData: true, softReset: false });
     },
     /**
      * Soft reboot device

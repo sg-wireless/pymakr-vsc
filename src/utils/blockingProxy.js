@@ -24,7 +24,7 @@ const friendlyProxyQueueItem = (item) => {
  * @template T
  * @param {T} _target
  * @param {Object} [_options]
- * @param {(string|symbol)[]} _options.exceptions methods that should not be queued
+ * @param {(string|symbol)[]=} _options.exceptions methods that should not be queued
  * @param {BeforeEachCall<T>} _options.beforeEachCall
  * @returns {BlockingProxy<T>}
  */
@@ -82,12 +82,16 @@ class BlockingProxyQueueItem {
   }
 
   async exec() {
-    this.startedAt = new Date();
-    const { target, field, args } = this;
-    await this.options.beforeEachCall(target, field, args);
-    const result = await target[field].bind(target)(...args);
-    this.finishedAt = new Date();
-    return result;
+    try {
+      this.startedAt = new Date();
+      const { target, field, args } = this;
+      await this.options.beforeEachCall(target, field, args);
+      const result = await target[field].bind(target)(...args);
+      this.finishedAt = new Date();
+      this.resolve(result);
+    } catch (err) {
+      this.reject(err);
+    }
   }
 
   get waitDuration() {
@@ -112,8 +116,11 @@ class ProxyMeta {
     /** @type {BlockingProxyQueueItem} */
     this.lastCall = null;
 
-    // processQueue replaces this.idle with a resolveable promise
-    this.idle = { then: (cb) => cb() };
+    this.idle = resolvablePromise();
+    
+    // Proxy starts in idle mode. 
+    // Calls to processQueue will replace the idle prop with a new promise.
+    this.idle.resolve();
 
     /**@type {BlockingProxyQueueItem[]} */
     this.history = [];
@@ -153,19 +160,31 @@ class ProxyMeta {
     this.isBusy = true;
 
     while (this.queue.length) {
+      this.skipQueue = resolvablePromise();
       const queueItem = this.queue.shift();
       this.history.push(queueItem);
       this.lastCall = queueItem;
-      try {
-        const result = await queueItem.exec();
-        queueItem.resolve(result);
-      } catch (err) {
-        queueItem.reject(err);
-      }
+      // continue once this call is resolved or proxy receives a skipQueue call
+      await Promise.race([queueItem.exec(), this.skipQueue]);
     }
 
     this.idle.resolve();
     this.isBusy = false;
+  }
+
+  /** Clears the queue. */
+  clearQueue() {
+    this.queue.length = 0;
+  }
+
+  /**
+   * Skips the current running call
+   * The skipped call will continue as normal,
+   * but will be removed from the queue.
+   * Only unskipped calls affect the idle status of the proxy.
+   */
+  skipCurrent() {
+    this.skipQueue.resolve();
   }
 }
 

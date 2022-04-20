@@ -1,8 +1,17 @@
 import { createBlockingProxy } from "../blockingProxy.js";
 
+const wait = (time) => new Promise((resolve) => setTimeout(resolve, time));
+
 const createTestObj = () => {
   const obj = {
     events: [],
+    runCallback: (callback, delay) =>
+      new Promise((resolve) =>
+        setTimeout(() => {
+          callback();
+          resolve();
+        }, delay)
+      ),
     async20: () =>
       new Promise((resolve) =>
         setTimeout(() => {
@@ -21,6 +30,7 @@ const createTestObj = () => {
   return obj;
 };
 
+// this doesn't test blockingProxy, just the test object
 test("unblocked object runs methods in parallel", async () => {
   const obj = createTestObj();
   const startStamp = Date.now();
@@ -42,9 +52,9 @@ test("blocked object runs methods in sequence", async () => {
   const proxied = createBlockingProxy(obj);
   const promises = [proxied.async20(), proxied.async20(), proxied.async20(), proxied.async20(), proxied.async20()];
   Promise.all(promises).then(() => (finishedLastTestStamp = Date.now()));
-  
+
   // start proxy
-  proxied.__proxyMeta.run()  
+  proxied.__proxyMeta.run();
   proxied.__proxyMeta.idle.then(() => (isReadyTestStamp = Date.now()));
   await Promise.all([...promises, proxied.__proxyMeta.idle]);
 
@@ -75,9 +85,9 @@ test("blocked object can have beforeEachCall hook and exceptions", async () => {
   ];
 
   Promise.all(promises).then(() => (finishedLastTestStamp = Date.now()));
-  
+
   // start proxy
-  proxied.__proxyMeta.run()
+  proxied.__proxyMeta.run();
   proxied.__proxyMeta.idle.then(() => (isReadyTestStamp = Date.now()));
 
   await Promise.all([...promises, proxied.__proxyMeta.idle]);
@@ -101,4 +111,59 @@ test("blocked object can have beforeEachCall hook and exceptions", async () => {
     "before async10",
     "async10",
   ]);
+});
+
+test("can clear queue", async () => {
+  const obj = createTestObj();
+  const proxied = createBlockingProxy(obj);
+
+  const messages = [];
+
+  proxied.runCallback(() => messages.push("hello"), 20);
+  proxied.runCallback(() => messages.push("world"), 20);
+  proxied.runCallback(() => messages.push("how are you"), 20);
+
+  proxied.__proxyMeta.run();
+
+  // clear queue in the middle of the second call
+  await wait(30);
+  proxied.__proxyMeta.clearQueue();
+  await proxied.__proxyMeta.idle;
+
+  assert.deepEqual(messages, ["hello", "world"]);
+});
+
+test("can skip current call", async () => {
+  const obj = createTestObj();
+  const proxied = createBlockingProxy(obj);
+
+  const messages = [];
+
+  proxied.runCallback(() => messages.push("hello"), 60);
+  proxied.runCallback(() => messages.push("world"), 20);
+  proxied.runCallback(() => messages.push("how"), 20);
+  proxied.runCallback(() => messages.push("are"), 20);
+  proxied.runCallback(() => messages.push("you"), 20);
+
+  proxied.__proxyMeta.run();
+  proxied.__proxyMeta.skipCurrent();
+  await proxied.__proxyMeta.idle;
+  assert.deepEqual(messages, ["world", "how", "hello", "are", "you"]);
+});
+
+test("a skipped call doesnt keep the queue active", async () => {
+  const obj = createTestObj();
+  const proxied = createBlockingProxy(obj);
+
+  const messages = [];
+
+  proxied.runCallback(() => messages.push("hello"), 20);
+
+  proxied.__proxyMeta.run();
+  proxied.__proxyMeta.skipCurrent();
+  await proxied.__proxyMeta.idle;
+  assert.deepEqual(messages, []);
+
+  await wait(20);
+  assert.deepEqual(messages, ["hello"]);
 });
