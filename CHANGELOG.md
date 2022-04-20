@@ -1,3 +1,17 @@
+## [2.8.7](https://github.com/pycom/pymakr-vsc/compare/v2.8.6...v2.8.7) (2022-04-20)
+
+
+### Bug Fixes
+
+* hard reset should clear pending commands ([94940cb](https://github.com/pycom/pymakr-vsc/commit/94940cba2af5f9185d1e620129685d94bb91d0f4))
+* info should log to the output tab ([4b4b8a1](https://github.com/pycom/pymakr-vsc/commit/4b4b8a1015234fe6509674193decdd7169d7d788))
+* missing tab icon for orphaned views ([6d798c9](https://github.com/pycom/pymakr-vsc/commit/6d798c919771a8db9686adf04025566570d7b5b5))
+* set default for supported manufacturers ([4dcaa19](https://github.com/pycom/pymakr-vsc/commit/4dcaa19ef146732211b7ebe5429e10d5bf93f4cc))
+* should not be logging to src folder ([b1e031c](https://github.com/pycom/pymakr-vsc/commit/b1e031cdacfe494289bc0b9621f4b4b693c85722))
+* upload didn't work without project ([493aaf8](https://github.com/pycom/pymakr-vsc/commit/493aaf87527b11e6d2eecc460dd5f65a1c2714bb))
+* upload failed with empty nested folders ([82380a8](https://github.com/pycom/pymakr-vsc/commit/82380a8ebc82ab0fc17e3f9447dac8b36420ddcd))
+* upload project should be sync project ([3207e12](https://github.com/pycom/pymakr-vsc/commit/3207e120159d15d461d63aa875e381738ff0dbff))
+
 ## [2.8.6](https://github.com/pycom/pymakr-vsc/compare/v2.8.5...v2.8.6) (2022-04-07)
 
 
