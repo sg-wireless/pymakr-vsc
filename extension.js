@@ -4,7 +4,7 @@ const { PyMakr } = require("./src/PyMakr");
 // your extension is activated the very first time the command is executed
 
 /**
- * @param {vscode.ExtensionContext} context
+ * @param {import('vscode').ExtensionContext} context
  */
 async function activate(context) {
   new PyMakr(context);
