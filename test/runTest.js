@@ -1,26 +1,44 @@
-const path = require('path');
+const path = require("path");
 
-const { runTests } = require('@vscode/test-electron');
+const { runTests } = require("@vscode/test-electron");
+const { createFixture } = require("./utils");
 
 async function main() {
-	try {
-		// clear the workspaces folders for lingering files
-		require('./utils/setup').setup()		
+  try {
+    // The folder containing the Extension Manifest package.json
+    // Passed to `--extensionDevelopmentPath`
+    const extensionDevelopmentPath = path.resolve(__dirname, "../");
 
-		// The folder containing the Extension Manifest package.json
-		// Passed to `--extensionDevelopmentPath`
-		const extensionDevelopmentPath = path.resolve(__dirname, '../');
+    {
+      const extensionTestsPath = path.resolve(__dirname, "./suite/runIntegrationTests");
+      const fixturePath = createFixture("empty");
+      await runTests({
+        extensionDevelopmentPath,
+        extensionTestsPath,
+        launchArgs: [fixturePath],
+        extensionTestsEnv: { fixturePath },
+      });
+    }
 
-		// The path to the extension test script
-		// Passed to --extensionTestsPath
-		const extensionTestsPath = path.resolve(__dirname, './suite/index');
-
-		// Download VS Code, unzip it and run the integration test
-		await runTests({ extensionDevelopmentPath, extensionTestsPath, launchArgs: [`${__dirname}/workspaces/integration`] });
-	} catch (err) {
-		console.error('Failed to run tests');
-		process.exit(1);
-	}
+	// /**
+	//  * Another test
+	//  */
+    // {
+	//   // The test script to run
+    //   const extensionTestsPath = path.resolve(__dirname, "./suite/runIntegrationTests");
+	//   // The fixture to be used for the tests
+    //   const fixturePath = createFixture("empty");
+    //   await runTests({
+    //     extensionDevelopmentPath,
+    //     extensionTestsPath,
+    //     launchArgs: [fixturePath],
+    //     extensionTestsEnv: { fixturePath },
+    //   });
+    // }
+  } catch (err) {
+    console.error("Failed to run tests", err);
+    process.exit(1);
+  }
 }
 
 main();
