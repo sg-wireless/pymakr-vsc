@@ -3,12 +3,12 @@ const vscode = require("vscode");
 
 const { disconnectAllDevices, nextTerminalData } = require("./utils");
 
-test("Can find devices", async ({ test }) => {
+test("Can find devices", async () => {
   assert(pymakr.devicesStore.get().length >= 2);
 
   await disconnectAllDevices();
 
-  test("device", async ({ test }) => {
+  test("device", async () => {
     const device = pymakr.devicesStore.get()[0];
     await device.connect();
 
@@ -16,7 +16,7 @@ test("Can find devices", async ({ test }) => {
       assert(device.connected);
     });
 
-    test("can create REPL", async ({ test }) => {
+    test("can create REPL", async () => {
       const welcomeMsg = nextTerminalData(device);
       pymakr.terminalsStore.create(device);
       const terminal = [...vscode.window.terminals].pop();

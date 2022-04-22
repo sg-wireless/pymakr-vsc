@@ -1,7 +1,7 @@
 const vscode = require("vscode");
 const { posix, join } = require("path");
 
-test("file management", async ({ test }) => {
+test("file management", async () => {
   // FIXME: dependency on other tests that are run before this one
   const device = pymakr.devicesStore.get()[0];
   // fixme: if (!device) return skip test ; // skip device tests if no device is connected
