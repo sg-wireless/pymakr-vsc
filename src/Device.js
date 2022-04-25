@@ -266,7 +266,7 @@ class Device {
   async upload(source, destination) {
     destination = posix.join(this.rootPath, `/${destination}`.replace(/\/+/g, "/"));
     const root = source;
-    const ignores = this.pymakr.config.get().get("ignore");
+    const ignores = [...this.pymakr.config.get().get("ignore")];
     const pymakrConfig = getNearestPymakrConfig(source);
     if (pymakrConfig) ignores.push(...pymakrConfig.py_ignore);
 
