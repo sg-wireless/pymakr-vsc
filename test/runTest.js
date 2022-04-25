@@ -10,23 +10,24 @@ async function main() {
     const extensionDevelopmentPath = path.resolve(__dirname, "../");
 
     {
-      const extensionTestsPath = path.resolve(__dirname, "./suite/runIntegrationTests");
-      const fixturePath = createFixture("empty");
+      const fixtureName = "empty";
+      const extensionTestsPath = path.resolve(__dirname, "./suite/runIntegrationTests.js");
+      const fixturePath = createFixture(fixtureName);
       await runTests({
         extensionDevelopmentPath,
         extensionTestsPath,
         launchArgs: [fixturePath],
-        extensionTestsEnv: { fixturePath },
+        extensionTestsEnv: { fixturePath, fixtureName },
       });
     }
 
-	// /**
-	//  * Another test
-	//  */
+    // /**
+    //  * Another test
+    //  */
     // {
-	//   // The test script to run
+    //   // The test script to run
     //   const extensionTestsPath = path.resolve(__dirname, "./suite/runIntegrationTests");
-	//   // The fixture to be used for the tests
+    //   // The fixture to be used for the tests
     //   const fixturePath = createFixture("empty");
     //   await runTests({
     //     extensionDevelopmentPath,
