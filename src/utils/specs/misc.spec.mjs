@@ -4,6 +4,7 @@ import {
   arrayToRegexStr,
   cherryPick,
   createIsIncluded,
+  createThrottledFunction,
   getDifference,
   getNearestParent,
   getNearestPymakrConfig,
@@ -65,15 +66,14 @@ test("cherryPick", () => {
 
 test("getNearestParent + relative", () => {
   // use different test paths on windows / linux
-  if (process.platform === "win32"){
+  if (process.platform === "win32") {
     const parents = ["c:\\some\\folder\\path", "c:\\some\\folder", "c:\\some"];
     const child = "c:\\some\\folder\\child\\path";
 
     assert.equal(getNearestParent(parents)(child), "c:\\some\\folder");
     assert.equal(getRelativeFromNearestParent(parents)(child), "child\\path");
     assert.equal(getRelativeFromNearestParentPosix(parents)(child), "child/path");
-    
-  } else{
+  } else {
     const parents = ["/some/folder/path", "/some/folder", "/some"];
     const child = "/some/folder/child/path";
 
@@ -121,9 +121,18 @@ test("createIsIncluded", () => {
   });
 
   test("specific excludes excludes only specific matches", () => {
-    const result = items.filter(
-      createIsIncluded([".*"], ["someField=exclude-me"], serializeKeyValuePairs)
-    );
+    const result = items.filter(createIsIncluded([".*"], ["someField=exclude-me"], serializeKeyValuePairs));
     assert.deepEqual(result, [items[0], items[1]]);
   });
+});
+
+test("createThrottledFunction", async () => {
+  const getRandom = () => Math.random();
+  const throttledRandom = createThrottledFunction(getRandom);
+  const call1 = throttledRandom()
+  const call2 = throttledRandom()
+  const call3 = throttledRandom()
+  const [r1, r2, r3] = await Promise.all([call1, call2, call3])
+  assert.equal(r1, r2)
+  assert.equal(r2, r3)
 });

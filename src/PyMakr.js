@@ -10,7 +10,7 @@ const { resolve } = require("path");
 const { FileSystemProvider } = require("./providers/FilesystemProvider");
 const { createLogger } = require("./utils/createLogger");
 const { writable } = require("./utils/store");
-const { coerceDisposable } = require("./utils/misc");
+const { coerceDisposable, createThrottledFunction } = require("./utils/misc");
 const manifest = require("../package.json");
 const { createVSCodeHelpers } = require("./utils/vscodeHelpers");
 const { TextDocumentProvider } = require("./providers/TextDocumentProvider");
@@ -28,6 +28,8 @@ class PyMakr {
    * @param {vscode.ExtensionContext} context
    */
   constructor(context) {
+    this.refreshProvidersThrottled = createThrottledFunction(this.refreshProviders.bind(this));
+
     /** Reactive Pymakr user configuration */
     this.config = writable(vscode.workspace.getConfiguration("pymakr"));
 
@@ -39,7 +41,7 @@ class PyMakr {
     this.log.info(`${manifest.name} v${manifest.version}`);
 
     // avoid port collisions between multiple vscode instances running on the same machine
-    this.terminalPort = 5364 + (Math.random() * 10240 | 0);
+    this.terminalPort = 5364 + ((Math.random() * 10240) | 0);
 
     this.onUpdatedConfig("silent");
     this.context = context;
@@ -64,7 +66,7 @@ class PyMakr {
     /** Provides device access for the file explorer */
     this.fileSystemProvider = new FileSystemProvider(this);
 
-    this.textDocumentProvider = new TextDocumentProvider(this)
+    this.textDocumentProvider = new TextDocumentProvider(this);
 
     this.registerWithIde();
     this.setup();
@@ -127,6 +129,11 @@ class PyMakr {
    */
   async registerProjects() {
     await this.projectsStore.refresh();
+  }
+
+  refreshProviders() {
+    this.devicesProvider.refresh();
+    this.projectsProvider.refresh();
   }
 }
 

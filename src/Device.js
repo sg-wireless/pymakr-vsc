@@ -81,14 +81,17 @@ class Device {
     this.updateHideStatus();
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
+    this.pymakr.config.subscribe(() => this.updateHideStatus());
   }
 
   /**
    * Hides / unhides this device depending on how it matches user's config.devices.include and config.devices.exclude
    */
   updateHideStatus() {
+    const oldStatus = this.config.hidden;
     const { include, exclude } = this.pymakr.config.get().get("devices");
     this.config.hidden = !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw));
+    if (oldStatus != this.config.hidden) this.onChanged();
   }
 
   /**
@@ -254,8 +257,7 @@ class Device {
    */
   onChanged() {
     this.state.save();
-    this.pymakr.devicesProvider.refresh();
-    this.pymakr.projectsProvider.refresh();
+    this.pymakr.refreshProvidersThrottled();
   }
 
   /**
