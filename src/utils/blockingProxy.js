@@ -118,6 +118,8 @@ class ProxyMeta {
 
     this.idle = resolvablePromise();
     
+    this.skipQueue = resolvablePromise();
+    
     // Proxy starts in idle mode. 
     // Calls to processQueue will replace the idle prop with a new promise.
     this.idle.resolve();
@@ -174,7 +176,9 @@ class ProxyMeta {
 
   /** Clears the queue. */
   clearQueue() {
+    console.log('clearing')
     this.queue.length = 0;
+    console.log('cleared')
   }
 
   /**
@@ -184,7 +188,9 @@ class ProxyMeta {
    * Only unskipped calls affect the idle status of the proxy.
    */
   skipCurrent() {
+    console.log('skip')
     this.skipQueue.resolve();
+    console.log('skipped')
   }
 }
 
