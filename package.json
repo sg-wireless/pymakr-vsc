@@ -331,6 +331,16 @@
     ],
     "keybindings": [
       {
+        "key": "ctrl+e",
+        "command": "",
+        "when": "terminalFocus"
+      },
+      {
+        "key": "ctrl+f",
+        "command": "",
+        "when": "terminalFocus"
+      },
+      {
         "command": "pymakr.uploadPrompt",
         "key": "ctrl+shift+s",
         "mac": "cmd+shift+s"
