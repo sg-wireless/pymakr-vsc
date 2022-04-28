@@ -38,7 +38,7 @@ const createVSCodeHelpers = (pymakr) => {
     devicesByProject: (projectOrUri) => {
       if (!projectOrUri) throw new errors.MissingProjectError();
       const project = helpers.coerceProject(projectOrUri);
-      return project.devices;
+      return project?.devices || [];
     },
 
     /**
