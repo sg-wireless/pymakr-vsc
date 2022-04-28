@@ -1,3 +1,19 @@
+# [2.9.0](https://github.com/pycom/pymakr-vsc/compare/v2.8.7...v2.9.0) (2022-04-28)
+
+
+### Bug Fixes
+
+* close terminals when closing vscode ([fc23a1c](https://github.com/pycom/pymakr-vsc/commit/fc23a1c3962dfc323236db34f1bb9d4edef320cb))
+* ctrl+e & ctrl+f keybindings ([b7cd367](https://github.com/pycom/pymakr-vsc/commit/b7cd36726d3e4ffe399a3b4f34f856085696eddf))
+* listed devices didn't refresh after config update ([82da7c1](https://github.com/pycom/pymakr-vsc/commit/82da7c18ae314a9a8fde54fe84131af0fb8639e0)), closes [#221](https://github.com/pycom/pymakr-vsc/issues/221)
+* pymakr.conf's ignore list could spill over ([6c974d1](https://github.com/pycom/pymakr-vsc/commit/6c974d19daad6567d15e8fec6ddedc5c537bf2f7))
+* running script without a project could fail ([d9a054a](https://github.com/pycom/pymakr-vsc/commit/d9a054a96c3fb0cbf914cab81dea61b21531cb71))
+
+
+### Features
+
+* safe boot, busy tags, better connections ([22ea26e](https://github.com/pycom/pymakr-vsc/commit/22ea26e9b1877a1529ca2bc0a762c2990f8d8e12))
+
 ## [2.8.7](https://github.com/pycom/pymakr-vsc/compare/v2.8.6...v2.8.7) (2022-04-20)
 
 
