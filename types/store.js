@@ -24,6 +24,7 @@
 /**
  * @template T
  * @typedef {Object} storeOptions
+ * @prop {boolean} lazy only call listeners if value has changed
  * @prop {function(Writable<T>):void} onSub called when a listener subscribes
  * @prop {function(Writable<T>):void} onUnsub called when a listener unsubscribes
  * @prop {function(Writable<T>):void} onFirstSub called when the first listener subscribes

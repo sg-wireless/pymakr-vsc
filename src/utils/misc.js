@@ -86,7 +86,7 @@ const mapEnumsToQuickPick = (descriptions) => (_enum, index) => ({
  * @returns {{[P in K]: T[P]}}
  */
 const cherryPick = (obj, props) =>
-  props.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), /** @type {obj} */({}));
+  props.reduce((newObj, key) => ({ ...newObj, [key]: obj[key] }), /** @type {obj} */ ({}));
 
 /**
  * Curried function. Returns the nearest parent from an array of folders
@@ -139,7 +139,7 @@ const readJsonFile = (path) => JSON.parse(readFileSync(path, "utf8"));
 const getNearestPymakrConfig = (path) => {
   if (!path) return null;
   const projectPath = getNearestPymakrProjectDir(path);
-  if (projectPath) return readJsonFile(join(projectPath, 'pymakr.conf'));
+  if (projectPath) return readJsonFile(join(projectPath, "pymakr.conf"));
   else return null;
 };
 
@@ -149,7 +149,7 @@ const getNearestPymakrConfig = (path) => {
  * @returns {string}
  */
 const getNearestPymakrProjectDir = (path) => {
-  const configPath = join(path, 'pymakr.conf');
+  const configPath = join(path, "pymakr.conf");
   if (existsSync(configPath)) return path;
   else {
     const parentDir = dirname(path);
@@ -189,7 +189,7 @@ const createIsIncluded = (includes, excludes, cb = (x) => x) => {
  * Serializes flat object
  * @example default behavior
  * ```javascript
- * serializeKeyValuePairs ({foo: 123, bar: 'bar'}) 
+ * serializeKeyValuePairs ({foo: 123, bar: 'bar'})
  * // foo=123
  * // bar=bar
  * ```
@@ -216,6 +216,40 @@ const resolvablePromise = () => {
   return Object.assign(origPromise, { resolve, reject });
 };
 
+/**
+ * Subsequent calls to an active throttled function will return the same promise as the first call.
+ * A function is active until it's first call is resolved
+ * @template {Function} T
+ * @param {T} fn callback
+ * @param {number=} time leave at 0 to only throttle calls made within the same cycle
+ * @returns {(...params: Parameters<T>)=>Promise<ReturnType<T>>}
+ */
+const createThrottledFunction = (fn, time) => {
+  let isRunning = false;
+  /** @type {{resolve: any, reject: any}[]} */
+  const subs = [];
+  const fnWrapper = (...params) =>
+    new Promise((resolve, reject) => {
+      subs.push({ resolve, reject });
+      if (!isRunning) {
+        isRunning = true;
+        setTimeout(async () => {
+          this._isRefreshingProviders = false;
+          try {
+            const result = await fn(...params);
+            subs.forEach((sub) => sub.resolve(result));
+          } catch (err) {
+            subs.forEach((sub) => sub.reject(err));
+          }
+          subs.splice(0)
+          isRunning = false
+        }, time);
+      }
+    });
+  return fnWrapper;
+};
+
+
 module.exports = {
   once,
   coerceArray,
@@ -234,4 +268,5 @@ module.exports = {
   createIsIncluded,
   arrayToRegexStr,
   resolvablePromise,
+  createThrottledFunction
 };

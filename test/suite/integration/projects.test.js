@@ -9,7 +9,7 @@ test("can find 0 projects and 1 workspace", () => {
   assert.equal(vscode.workspace.workspaceFolders.length, 1);
 });
 
-test("can create project", async ({ test }) => {
+test("can create project", async () => {
   await pymakr.commands.createProject(vscode.Uri.parse(projectPath1), { name: "my project" });
   assert(existsSync(projectPath1));
 

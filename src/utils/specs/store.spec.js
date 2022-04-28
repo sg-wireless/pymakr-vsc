@@ -1,4 +1,4 @@
-import { writable, derived, chainDerived } from "../store.js";
+const { writable, derived, chainDerived } = require("../store.js");
 
 test("plain store", () => {
   let store;
@@ -108,4 +108,23 @@ test("next", () => {
   myStore.set("c");
   assert.deepEqual(subVals, ["a", "b", "c"]);
   assert.deepEqual(nextVals, ["a"]);
+});
+
+test("lazy", () => {
+  test("non lazy always calls subs", () => {
+    let count = 0;
+    const myStore = writable("initial");
+    myStore.subscribe(() => count++);
+    myStore.set("initial");
+    myStore.set("initial");
+    assert.deepEqual(count, 2);
+  });
+  test("non lazy always calls subs", () => {
+    let count = 0;
+    const myStore = writable("initial", { lazy: true });
+    myStore.subscribe(() => count++);
+    myStore.set("initial");
+    myStore.set("initial");
+    assert.deepEqual(count, 0);
+  });
 });

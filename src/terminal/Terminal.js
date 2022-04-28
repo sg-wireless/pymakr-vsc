@@ -25,6 +25,9 @@ class Terminal {
 
     this.term = vscode.window.createTerminal({ name, shellPath, shellArgs });
     this.term.show();
+
+    // dispose of the terminal when closing VSCode
+    this.pyMakr.context.subscriptions.push(this.term)
   }
 }
 

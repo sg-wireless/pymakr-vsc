@@ -5,7 +5,7 @@ async function run() {
     concurrency: 1,
     reporter: "consoleReporter",
     // watch: true,
-    // pattern: ["busy"],
+    // pattern: ["busy-devices.test.js // some test // some nested test"],
   });
 }
 

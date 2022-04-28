@@ -4,4 +4,4 @@ node_modules
 test/workspaces/**
 
 *.vsix
-temp
+test/temp

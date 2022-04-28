@@ -42,8 +42,10 @@ const writable = (initialValue, options) => {
     get: () => _value,
     /** @param {T} value */
     set: (value) => {
-      _value = value;
-      listeners.forEach((listener) => listener(_value));
+      if (!_options.lazy || value !== _value) {
+        _value = value;
+        listeners.forEach((listener) => listener(_value));
+      }
     },
     update: (callback) => store.set(callback(_value)),
     /**

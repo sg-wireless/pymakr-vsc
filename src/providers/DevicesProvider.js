@@ -27,7 +27,7 @@ class DevicesProvider {
       return this.PyMakr.devicesStore
         .get()
         .filter((device) => !device.config.hidden)
-        .map((device) => new DeviceTreeItem(device));
+        .map((device) => new DeviceTreeItem(device, this));
     }
     return element.children;
   }
@@ -39,9 +39,10 @@ class DeviceTreeItem extends vscode.TreeItem {
 
   /**
    * @param {import('../Device').Device} device
+   * @param {DevicesProvider} tree
    */
-  constructor(device) {
-    super(device.name, vscode.TreeItemCollapsibleState.None);
+  constructor(device, tree) {
+    super(device.name + (device.busy.get() ? " [BUSY]" : ""), vscode.TreeItemCollapsibleState.None);
     this.contextValue = device.connected ? "connectedDevice" : "device";
     this.device = device;
     const filename = device.connected ? "lightning.svg" : "lightning-muted.svg";
@@ -49,6 +50,11 @@ class DeviceTreeItem extends vscode.TreeItem {
       dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
       light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
     };
+    device.busy.subscribe((isBusy) =>
+      setTimeout(() => {
+        if (device.busy.get() === isBusy) tree.refresh();
+      }, 100)
+    );
   }
 }
 
