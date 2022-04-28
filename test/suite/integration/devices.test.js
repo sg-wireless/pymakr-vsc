@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require("assert");
 const vscode = require("vscode");
 
 const { disconnectAllDevices, nextTerminalData } = require("./utils");
@@ -17,9 +17,16 @@ test("Can find devices", async () => {
     });
 
     test("can create REPL", async () => {
-      const welcomeMsg = nextTerminalData(device);
+      const welcomeMsgPromise = new Promise((resolve) =>
+        device.onTerminalData((data) => {
+          if (data.match(/MicroPython/)) resolve(data);
+        })
+      );
+
       pymakr.terminalsStore.create(device);
       const terminal = [...vscode.window.terminals].pop();
+
+      const welcomeMsg = await welcomeMsgPromise;
 
       /**@type {vscode.TerminalOptions} */
       const creationOptions = terminal.creationOptions;
@@ -27,19 +34,14 @@ test("Can find devices", async () => {
       test("created REPL is last terminal", () => assert(creationOptions.shellArgs.includes("serial")));
 
       test("created repl shows welcome msg", async () => {
-        const msg = await welcomeMsg
-        //   "\r\nPycom MicroPython 1.20.2.r6 [v1.11-c5a0a97] on 2021-10-28; WiPy with ESP32" +
-        //     '\r\nType "help()" for more information.' +
-        //     "\r\n>>> "
-                // BUG: welcome message (nextTerminalData) does not contain the welcome message (win64)
-                assert.match(msg, /MicroPython/, "Could not detect a MicroPython device")
+        assert.match(welcomeMsg, /MicroPython/, "Could not detect a MicroPython device: " + welcomeMsg);
+        assert.match(welcomeMsg, /\r\n>>>/, "No repl prompt");
         // todo: low-prio - >>> test fails on esp8266 as the welcomesting is truncated
-                assert.match(msg, /\r\n>>>/, "No repl prompt")
       });
 
       test("can use print command", async () => {
         //BUG: nextTerminalData does not return the next terminal data (win64)
-        const receivedFromTerminal = nextTerminalData(device);
+        const receivedFromTerminal = new Promise((resolve) => device.onTerminalData(resolve));
         terminal.sendText('print("foo")\n');
         assert.equal(await receivedFromTerminal, 'print("foo")' + "\r\nfoo" + "\r\n>>> ");
       });

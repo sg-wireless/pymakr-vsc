@@ -49,25 +49,36 @@ class Commands {
       let doc = await vscode.workspace.openTextDocument(uri); // calls back into the provider
       await vscode.window.showTextDocument(doc, { preview: false });
     },
+
+    /**
+     * Safe boots device. Starts device without running scripts
+     * @param {DeviceTreeItem} treeItem
+     */
+    safeBootDevice: async ({ device }) => {
+      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+        progress.report({ message: "Safe booting" });
+        await device.safeBoot();
+      });
+    },
+
     /**
      * Reboot device
      * @param {DeviceTreeItem} treeItem
      */
     resetDevice: async ({ device }) => {
       // resetting the device should also reset the waiting calls
-      device.adapter.__proxyMeta.clearQueue();
-      // we don't want a stalled call to block the device
-      device.adapter.__proxyMeta.skipCurrent();
+      device.adapter.__proxyMeta.reset();
       device.adapter.__proxyMeta.target.reset({ broadcastOutputAsTerminalData: true, softReset: false });
     },
+
     /**
      * Soft reboot device
      * @param {DeviceTreeItem} treeItem
      */
     softResetDevice: async ({ device }) => {
-      console.log("soft reset");
       device.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: true });
     },
+
     /**
      * Erases device and prompts for choice of template
      * @param {DeviceTreeItem} treeItem
@@ -80,6 +91,7 @@ class Commands {
       const picked = await vscode.window.showQuickPick(picks, { title: "How would you like to provision your device" });
       if (picked) return this.commands.eraseDevice({ device }, picked._path);
     },
+
     /**
      * Erases device and applies specified template
      * @param {Partial<DeviceTreeItem>} treeItem
@@ -297,15 +309,21 @@ class Commands {
       /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
       const options = {};
 
-      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-        progress.report({ message: `Run script on ${device.name}` });
-        try {
-          return await device.runScript(text, options);
-        } catch (err) {
-          console.log("er,", err.message);
-          vscode.window.showErrorMessage("Could not run script. Reason: " + err);
+      vscode.window.withProgress(
+        { location: vscode.ProgressLocation.Notification },
+        async (progress) => {
+          progress.report({ message: `Run script on ${device.name}` })
+          setTimeout(() => progress.report({ message: "Closing popup in 5s. Script will continue in background." }), 5000);
+          try {
+            const scriptPromise = device.runScript(text, options);
+            const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 10000));
+            return Promise.race([scriptPromise, timeoutPromise]);
+          } catch (err) {
+            console.log("er,", err.message);
+            vscode.window.showErrorMessage("Could not run script. Reason: " + err);
+          }
         }
-      });
+      );
     },
     /**
      * Calls runScriptPrompt with with the content of the selected file
@@ -319,9 +337,25 @@ class Commands {
      * Connects a device
      * @param {ProjectDeviceTreeItem} treeItem
      */
-    connect: ({ device }) => {
-      device.connect();
+    connect: async ({ device }) => {
+      await device.connect();
+      setTimeout(() => this.commands.handleBusyDevice(device), 2000);
     },
+
+    /**
+     * @param {Device} device
+     */
+    handleBusyDevice: async (device) => {
+      if (device.busy.get()) {
+        const options = { restart: "Restart in safe mode" };
+        const answer = await vscode.window.showInformationMessage(
+          `${device.name} seems to be busy. Do you wish restart it in safe mode?`,
+          options.restart
+        );
+        if (answer === options.restart) device.adapter.sendData("\x06");
+      }
+    },
+
     /**
      * Disconnects a device
      * @param {ProjectDeviceTreeItem} treeItem
@@ -351,6 +385,7 @@ class Commands {
         } else existingTerminal.term.show();
       } else {
         this.pymakr.terminalsStore.create(device);
+        this.commands.handleBusyDevice(device);
       }
     },
 

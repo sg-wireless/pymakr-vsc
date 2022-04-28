@@ -189,6 +189,11 @@ class ProxyMeta {
   skipCurrent() {
     this.skipQueue.resolve();
   }
+
+  reset(){
+    this.clearQueue()
+    this.skipCurrent()
+  }
 }
 
 module.exports = { createBlockingProxy, friendlyProxyQueueItem };

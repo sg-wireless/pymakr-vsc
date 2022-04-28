@@ -6,14 +6,13 @@ const {
   waitFor,
   cherryPick,
   getNearestPymakrConfig,
-  getNearestPymakrProjectDir,
   createIsIncluded,
   serializeKeyValuePairs,
 } = require("./utils/misc");
 const { writable } = require("./utils/store");
 const { StateManager } = require("./utils/StateManager");
 const picomatch = require("picomatch");
-const { msgs } = require("./utils/msgs");
+const { createSequenceHooksCollection } = require("hookar");
 
 /**
  * @typedef {Object} DeviceConfig
@@ -36,12 +35,10 @@ const runScriptDefaults = {
   disableDedent: true,
   broadcastOutputAsTerminalData: true,
   runGcCollectBeforeCommand: true,
-  resolveBeforeResult: true,
+  resolveBeforeResult: false,
 };
 
 class Device {
-  __connectingPromise = null;
-
   /**
    * All devices are instances of this class
    * @param {PyMakr} pymakr
@@ -49,12 +46,15 @@ class Device {
    */
   constructor(pymakr, deviceInput) {
     const { subscribe, set } = writable(this);
+    this.busy = writable(false, { lazy: true });
+    this.onTerminalData = createSequenceHooksCollection("");
     this.subscribe = subscribe;
     /** call whenever device changes need to be onChanged to subscriptions */
     this.changed = () => set(this);
     const { address, name, protocol, raw, password, id } = deviceInput;
     this.id = id || `${protocol}://${address}`;
 
+    this.__connectingPromise = null;
     this.pymakr = pymakr;
     this.protocol = protocol;
     this.address = address;
@@ -82,6 +82,8 @@ class Device {
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
     this.pymakr.config.subscribe(() => this.updateHideStatus());
+
+    this.busy.subscribe((val) => this.log.info(`Device: "${this.name}" is ${val ? "busy" : "idle"}`));
   }
 
   /**
@@ -104,11 +106,35 @@ class Device {
   }
 
   /**
-   * Proxies data from this.adapter.onTerminalData
-   * Can be wrapped and extended
-   * @param {string} data
+   * traces terminal data till pattern is found
+   * @param {string|RegExp} pattern
    */
-  onTerminalData(data) {}
+  readUntil(pattern = /^\r\n>>> $/) {
+    return new Promise((resolve) => {
+      const unsub = this.onTerminalData((str) => {
+        if (str.match(pattern)) {
+          resolve();
+          unsub();
+        }
+      });
+    });
+  }
+
+  safeBoot() {
+    // resetting the device should also reset the waiting calls
+    this.log.info("safe booting...");
+    this.adapter.__proxyMeta.reset();
+    this.busy.set(true);
+    this.adapter.sendData("\x06");
+    return new Promise((resolve) => {
+      // store is lazy, so next value can't be `true`
+      this.busy.next(() => {
+        this.log.info("safe booting complete!");
+        resolve()
+      }); 
+
+    });
+  }
 
   /**
    * Server.js will reactively assign this callback to the currently active terminal
@@ -144,7 +170,10 @@ class Device {
     options = Object.assign({}, runScriptDefaults, options);
 
     this.log.debugShort(`runScript:\n\n${script}\n\n`);
-    return this.adapter.runScript(script + "\n\r\n\r\n", options);
+    this.busy.set(true);
+    const result = await this.adapter.runScript(script + "\n\r\n\r\n", options);
+    this.busy.set(false);
+    return result;
   }
 
   /**
@@ -152,6 +181,7 @@ class Device {
    */
   createAdapter() {
     const rawAdapter = new MicroPythonDevice();
+
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
     const adapter = createBlockingProxy(rawAdapter, {
@@ -159,9 +189,9 @@ class Device {
       beforeEachCall: () => this.connect(),
     });
 
-    adapter.onTerminalData = (data) => {
+    rawAdapter.onTerminalData = (data) => {
       this.__onTerminalDataExclusive(data);
-      this.onTerminalData(data);
+      this.onTerminalData.run(data);
       this.terminalLogFile.write(data);
     };
 
@@ -206,7 +236,7 @@ class Device {
 
   // todo should be handleConnecting, handleFailedConnect and handleDisconnect
   _onConnectingHandler() {
-    this.log.info("connecting...");
+    this.log.info(`connecting to "${this.name}"...`);
     this.connecting = true;
   }
 
@@ -222,6 +252,7 @@ class Device {
   _onDisconnected() {
     this.connected = false;
     this.lostConnection = false;
+    this.busy.set(false);
     this.changed();
   }
 
@@ -232,11 +263,30 @@ class Device {
     this.connecting = false;
     this.lostConnection = false;
     this.changed();
-    const boardInfoPromise = this.adapter.getBoardInfo();
-    // move getBoardInfo to front of queue and start the proxy
-    this.adapter.__proxyMeta.shiftLastToFront().run();
-    this.info = await waitFor(boardInfoPromise, 10000, msgs.boardInfoTimedOutErr(this.adapter));
-    this.log.debug("boardInfo", this.info);
+
+    // let the user know if this device is busy
+    this.updateIdleStatus();
+
+    // start the proxy queue or all calls will be left hanging
+    this.adapter.__proxyMeta.run();
+  }
+
+  /**
+   * Idle checker. Optimized for performance, not readability.
+   */
+  async updateIdleStatus() {
+    this.busy.set(true);
+    let lastLine = "";
+    this.onTerminalData((newString) => {
+      const breakAt = newString.lastIndexOf("\n");
+      lastLine = breakAt > -1 ? newString.substring(breakAt + 1) : lastLine + newString;
+
+      const isBusy = !lastLine.match(/^>>> /);
+      this.busy.set(isBusy);
+    });
+
+    // check if we can connect
+    this.adapter.sendData("\r\x02\x02");
   }
 
   /** @private */
@@ -247,6 +297,7 @@ class Device {
 
   async disconnect() {
     if (this.connected) {
+      this.adapter.__proxyMeta.reset();
       await waitFor(this.adapter.disconnect(), 2000, "Timed out while disconnecting.");
       this._onDisconnected();
     }

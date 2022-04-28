@@ -220,6 +220,10 @@
         "title": "List devices"
       },
       {
+        "command": "pymakr.safeBootDevice",
+        "title": "Safe boot device"
+      },
+      {
         "command": "pymakr.resetDevice",
         "title": "Hard reset device"
       },
@@ -380,6 +384,11 @@
         }
       ],
       "pymakr.projectDeviceMenu": [
+        {
+          "command": "pymakr.safeBootDevice",
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "group": "1-primary"
+        },
         {
           "command": "pymakr.resetDevice",
           "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
@@ -545,6 +554,7 @@
     "@serialport/bindings-cpp": "^10.7.0",
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.8",
+    "hookar": "^0.0.7-0",
     "micropython-ctl-cont": "^1.13.9",
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",

@@ -12,4 +12,5 @@ module.exports = {
       Object.assign(global, { pymakr, workspaceDir, PROJECT_STORE_TIMEOUT });
     });
   },
+  timeout: 5000
 };

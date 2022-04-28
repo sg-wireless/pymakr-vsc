@@ -25,7 +25,7 @@ class ProjectsProvider {
 
   getChildren(element) {
     if (element === undefined) {
-      return this.PyMakr.projectsStore.get().map((project) => new ProjectTreeItem(project));
+      return this.PyMakr.projectsStore.get().map((project) => new ProjectTreeItem(project, this));
     }
     return element.children;
   }
@@ -34,13 +34,14 @@ class ProjectsProvider {
 class ProjectTreeItem extends vscode.TreeItem {
   /**
    * @param {import('../Project').Project} project
+   * @param {ProjectsProvider} tree
    */
-  constructor(project) {
+  constructor(project, tree) {
     super(project.name, 2);
     this.project = project;
     this.children = project.devices
       .filter((device) => !device.config.hidden)
-      .map((device) => new ProjectDeviceTreeItem(device, project));
+      .map((device) => new ProjectDeviceTreeItem(device, project, tree));
     this.contextValue = "project";
   }
 }
@@ -50,9 +51,10 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
    *
    * @param {import('../Device').Device} device
    * @param {import('../Project').Project} project
+   * @param {ProjectsProvider} tree
    */
-  constructor(device, project) {
-    super(device.name, vscode.TreeItemCollapsibleState.None);
+  constructor(device, project, tree) {
+    super(device.name + (device.busy.get() ? " [BUSY]" : ""), vscode.TreeItemCollapsibleState.None);
     this.project = project;
     this.device = device;
     this.contextValue = device.connected ? "connectedProjectDevice" : "projectDevice";
@@ -61,6 +63,11 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
       dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
       light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
     };
+    device.busy.subscribe((isBusy) =>
+      setTimeout(() => {
+        if (device.busy.get() === isBusy) tree.refresh();
+      }, 100)
+    );
   }
 }
 
