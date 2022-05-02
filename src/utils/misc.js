@@ -1,5 +1,7 @@
-const { existsSync, readFileSync } = require("fs");
+const { existsSync, readFileSync, readdirSync, cpSync } = require("fs");
 const { relative, resolve, dirname, join } = require("path");
+
+const TEMPLATES_PATH = resolve(__dirname, "../../templates");
 
 /**
  * creates a function that can only be called once
@@ -241,14 +243,17 @@ const createThrottledFunction = (fn, time) => {
           } catch (err) {
             subs.forEach((sub) => sub.reject(err));
           }
-          subs.splice(0)
-          isRunning = false
+          subs.splice(0);
+          isRunning = false;
         }, time);
       }
     });
   return fnWrapper;
 };
 
+const getTemplates = () => readdirSync(TEMPLATES_PATH).map((name) => ({ name, path: resolve(TEMPLATES_PATH, name) }));
+const copyTemplateByName = (name, destination) => copyTemplateByPath(resolve(TEMPLATES_PATH, name), destination);
+const copyTemplateByPath = (path, destination) => cpSync(path, destination, { recursive: true });
 
 module.exports = {
   once,
@@ -268,5 +273,8 @@ module.exports = {
   createIsIncluded,
   arrayToRegexStr,
   resolvablePromise,
-  createThrottledFunction
+  createThrottledFunction,
+  getTemplates,
+  copyTemplateByName,
+  copyTemplateByPath,
 };

@@ -2,7 +2,7 @@ const { mkdirSync, readFileSync, writeFileSync } = require("fs");
 const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
-const { mapEnumsToQuickPick } = require("../utils/misc");
+const { mapEnumsToQuickPick, getTemplates, copyTemplateByName } = require("../utils/misc");
 const { relative } = require("path");
 
 /**
@@ -198,6 +198,8 @@ class Commands {
       const document = await vscode.workspace.openTextDocument(uri.fsPath + "/pymakr.conf");
       await vscode.window.showTextDocument(document);
 
+      await this.commands.projectCopyTemplatePrompt(uri);
+
       if (addToWorkspace) {
         const wsPos = vscode.workspace.workspaceFolders?.length || 0;
         await vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri });
@@ -211,6 +213,30 @@ class Commands {
         return new Promise((resolve) =>
           this.pymakr.projectsStore.next(() => resolve(this.commands.selectDevicesForProjectPrompt(uri)))
         );
+    },
+
+    /**
+     * Prompts user for a template or device to copy to a project folder
+     * @param {vscode.Uri} projectUri
+     */
+    projectCopyTemplatePrompt: async (projectUri) => {
+      const templateName = await vscode.window.showQuickPick(
+        [
+          ...getTemplates().map((t) => t.name),
+          ...this.pymakr.devicesStore
+            .get()
+            .filter((d) => !d.busy.get() && d.connected)
+            .map((d) => `import from device: ${d.name}`),
+        ],
+        { title: "Please select a template for your project" }
+      );
+
+      const match = templateName.match(/import from device: (.+)/);
+      if (match) {
+        const device = this.pymakr.devicesStore.get().find((d) => d.name === match[1]);
+        const project = /** @type {Project} */ ({ folder: projectUri.fsPath });
+        this.commands.downloadProject({ device, project });
+      } else copyTemplateByName(templateName, projectUri.fsPath);
     },
 
     /**
@@ -309,21 +335,21 @@ class Commands {
       /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
       const options = {};
 
-      vscode.window.withProgress(
-        { location: vscode.ProgressLocation.Notification },
-        async (progress) => {
-          progress.report({ message: `Run script on ${device.name}` })
-          setTimeout(() => progress.report({ message: "Closing popup in 5s. Script will continue in background." }), 5000);
-          try {
-            const scriptPromise = device.runScript(text, options);
-            const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 10000));
-            return Promise.race([scriptPromise, timeoutPromise]);
-          } catch (err) {
-            console.log("er,", err.message);
-            vscode.window.showErrorMessage("Could not run script. Reason: " + err);
-          }
+      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+        progress.report({ message: `Run script on ${device.name}` });
+        setTimeout(
+          () => progress.report({ message: "Closing popup in 5s. Script will continue in background." }),
+          5000
+        );
+        try {
+          const scriptPromise = device.runScript(text, options);
+          const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 10000));
+          return Promise.race([scriptPromise, timeoutPromise]);
+        } catch (err) {
+          console.log("er,", err.message);
+          vscode.window.showErrorMessage("Could not run script. Reason: " + err);
         }
-      );
+      });
     },
     /**
      * Calls runScriptPrompt with with the content of the selected file
@@ -487,7 +513,7 @@ class Commands {
     /**
      * Downloads content from a device to the parent project.
      * Command only accessible for devices in the projects view.
-     * @param {ProjectDeviceTreeItem} treeItem
+     * @param {Partial<ProjectDeviceTreeItem>} treeItem
      */
     downloadProject: async (treeItem) => {
       const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
