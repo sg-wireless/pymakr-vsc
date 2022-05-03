@@ -1,3 +1,17 @@
+# [2.10.0](https://github.com/pycom/pymakr-vsc/compare/v2.9.0...v2.10.0) (2022-05-03)
+
+
+### Bug Fixes
+
+* hidden devices reappeared after vscode reload ([ebc3421](https://github.com/pycom/pymakr-vsc/commit/ebc3421f26e77af566146b8a756a0ea456d0c5ff))
+
+
+### Features
+
+* added walkthrough ([b2a38e2](https://github.com/pycom/pymakr-vsc/commit/b2a38e2dcbd9665293be3142227e310994b26e9c))
+* project wizard includes templates & devices ([ba074ee](https://github.com/pycom/pymakr-vsc/commit/ba074ee1553dae7262ef3b6a66e14ffd1d65fa5c))
+* welcome views to projects and devices views ([a89695b](https://github.com/pycom/pymakr-vsc/commit/a89695b671915e2defe67ccdd60900e593937236))
+
 # [2.9.0](https://github.com/pycom/pymakr-vsc/compare/v2.8.7...v2.9.0) (2022-04-28)
 
 
