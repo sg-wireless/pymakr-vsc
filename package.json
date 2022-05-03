@@ -214,6 +214,16 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+      "view":"pymakr-projects-tree",
+      "contents": "You have no Pymakr projects in your workspace.\n\n[Create project](command:pymakr.createProjectPrompt)"
+    },
+      {
+      "view":"pymakr-devices-tree",
+      "contents": "Found no devices.\n\nIf you wish to unhide a previously hidden device, select this box and click the ellipsis menu (...). Then select \"Unhide a device\"."
+    }
+  ],
     "commands": [
       {
         "command": "pymakr.listDevices",
