@@ -214,16 +214,81 @@
         }
       ]
     },
+    "walkthroughs": [
+      {
+        "id": "pymakr-get-started",
+        "title": "Pymakr 2 - Getting Started",
+        "description": "A small walkthrough for getting started with Pymakr 2",
+        "steps": [
+          {
+            "id": "createProject",
+            "title": "Create a Project",
+            "description": "Projects are folders that are optimized for synchronizing your codebase to your devices.\n\n[Create project](command:pymakr.createProjectPrompt)",
+            "media": {
+              "image": "media/readme/create-project.gif",
+              "altText": "Create project"
+            },
+            "completionEvents": [
+              "onCommand:pymakr.createProject",
+              "onCommand:pymakr.createProjectInFolderPrompt",
+              "onCommand:pymakr.createProjectPrompt"
+            ]
+          },
+          {
+            "id": "connectDevice",
+            "title": "Connect a Device",
+            "description": "Connecting a device will allow us to open its terminal, sync files and mount it as a storage device.",
+            "media": {
+              "image": "media/readme/connect-device.gif",
+              "altText": "Connect devices"
+            },
+            "completionEvents": [
+              "onCommand:pymakr.connect"
+            ]
+          },
+          {
+            "id": "uploadProject",
+            "title": "Sync a Project to a Device",
+            "description": "To get the code onto the device, we need to sync the project. If you have already connected a device you can skip the relevant steps.",
+            "media": {
+              "image": "media/readme/connect-device-and-sync-up.gif",
+              "altText": "Upload project"
+            },
+            "completionEvents": [
+              "onCommand:pymakr.uploadProject"
+            ]
+          },
+          {
+            "id": "organizeViews",
+            "title": "Organize Pymakr views",
+            "description": "By default, Pymakr's views reside in the Pymakr tab. We recommend moving these to a tab that fits your workflow. You can also move the entire tab.",
+            "media": {
+              "image": "media/readme/move-view.gif",
+              "altText": "Connect devices"
+            }
+          },
+          {
+            "id": "readyToRock",
+            "title": "Ready to rock",
+            "description": "This concludes our short walkthrough. If you have questions or would like to follow the development, come visit us on our [repo](https://github.com/pycom/pymakr-vsc).",
+            "media": {
+              "image": "media/readme/move-view.gif",
+              "altText": "Connect devices"
+            }
+          }
+        ]
+      }
+    ],
     "viewsWelcome": [
       {
-      "view":"pymakr-projects-tree",
-      "contents": "You have no Pymakr projects in your workspace.\n\n[Create project](command:pymakr.createProjectPrompt)"
-    },
+        "view": "pymakr-projects-tree",
+        "contents": "You have no Pymakr projects in your workspace.\n\n[Create project](command:pymakr.createProjectPrompt)"
+      },
       {
-      "view":"pymakr-devices-tree",
-      "contents": "Found no devices.\n\nIf you wish to unhide a previously hidden device, select this box and click the ellipsis menu (...). Then select \"Unhide a device\"."
-    }
-  ],
+        "view": "pymakr-devices-tree",
+        "contents": "Found no devices.\n\nIf you wish to unhide a previously hidden device, select this box and click the ellipsis menu (...). Then select \"Unhide a device\"."
+      }
+    ],
     "commands": [
       {
         "command": "pymakr.listDevices",
