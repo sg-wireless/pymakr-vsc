@@ -68,6 +68,8 @@ class PyMakr {
 
     this.textDocumentProvider = new TextDocumentProvider(this);
 
+    this.config.subscribe(() => this.refreshProvidersThrottled());
+
     this.registerWithIde();
     this.setup();
   }

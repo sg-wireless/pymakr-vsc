@@ -78,22 +78,15 @@ class Device {
     /** @type {import("micropython-ctl-cont").BoardInfo} */
     this.info = null;
 
-    this.updateHideStatus();
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
-    this.pymakr.config.subscribe(() => this.updateHideStatus());
 
     this.busy.subscribe((val) => this.log.info(`Device: "${this.name}" is ${val ? "busy" : "idle"}`));
   }
 
-  /**
-   * Hides / unhides this device depending on how it matches user's config.devices.include and config.devices.exclude
-   */
-  updateHideStatus() {
-    const oldStatus = this.config.hidden;
+  get isHidden() {
     const { include, exclude } = this.pymakr.config.get().get("devices");
-    this.config.hidden = !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw));
-    if (oldStatus != this.config.hidden) this.onChanged();
+    return this.config.hidden || !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw));
   }
 
   /**
@@ -130,9 +123,8 @@ class Device {
       // store is lazy, so next value can't be `true`
       this.busy.next(() => {
         this.log.info("safe booting complete!");
-        resolve()
-      }); 
-
+        resolve();
+      });
     });
   }
 

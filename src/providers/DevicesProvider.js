@@ -26,7 +26,7 @@ class DevicesProvider {
     if (element === undefined) {
       return this.PyMakr.devicesStore
         .get()
-        .filter((device) => !device.config.hidden)
+        .filter((device) => !device.isHidden)
         .map((device) => new DeviceTreeItem(device, this));
     }
     return element.children;
