@@ -255,7 +255,21 @@ const getTemplates = () => readdirSync(TEMPLATES_PATH).map((name) => ({ name, pa
 const copyTemplateByName = (name, destination) => copyTemplateByPath(resolve(TEMPLATES_PATH, name), destination);
 const copyTemplateByPath = (path, destination) => cpSync(path, destination, { recursive: true });
 
+/**
+ * converts {foo:FOO, bar:BAR} to ['foo=FOO', 'bar=BAR']
+ * @param {Object} obj
+ */
+const objToSerializedEntries = (obj) => Object.entries(obj).map((entr) => entr.join("="));
+
+/**
+ * converts ['foo=FOO', 'bar=BAR'] to {foo:FOO, bar:BAR}
+ * @param {string[]} serializedEntries 
+ */
+const serializedEntriesToObj = (serializedEntries) => Object.fromEntries(serializedEntries.map((n) => n.split("=")));
+
 module.exports = {
+  objToSerializedEntries,
+  serializedEntriesToObj,
   once,
   coerceArray,
   timeoutAndReject,

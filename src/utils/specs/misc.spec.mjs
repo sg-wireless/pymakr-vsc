@@ -11,7 +11,9 @@ import {
   getRelativeFromNearestParent,
   getRelativeFromNearestParentPosix,
   mapEnumsToQuickPick,
+  objToSerializedEntries,
   once,
+  serializedEntriesToObj,
   serializeKeyValuePairs,
 } from "../misc.js";
 
@@ -129,10 +131,18 @@ test("createIsIncluded", () => {
 test("createThrottledFunction", async () => {
   const getRandom = () => Math.random();
   const throttledRandom = createThrottledFunction(getRandom);
-  const call1 = throttledRandom()
-  const call2 = throttledRandom()
-  const call3 = throttledRandom()
-  const [r1, r2, r3] = await Promise.all([call1, call2, call3])
-  assert.equal(r1, r2)
-  assert.equal(r2, r3)
+  const call1 = throttledRandom();
+  const call2 = throttledRandom();
+  const call3 = throttledRandom();
+  const [r1, r2, r3] = await Promise.all([call1, call2, call3]);
+  assert.equal(r1, r2);
+  assert.equal(r2, r3);
+});
+
+test("serialized entries", () => {
+  const obj = {foo: 'FOO', bar: 'BAR'}
+  const entries = ['foo=FOO', 'bar=BAR']
+
+  assert.deepEqual(objToSerializedEntries(obj), entries)
+  assert.deepEqual(serializedEntriesToObj(entries), obj)
 });
