@@ -110,6 +110,19 @@ test("next", () => {
   assert.deepEqual(nextVals, ["a"]);
 });
 
+test("next with multiple subscribers", async () => {
+  const subVals = [];
+  const nextVals = [];
+  const myStore = writable("");
+  myStore.subscribe((v) => subVals.push(v));
+  myStore.next((v) => nextVals.push(v));
+  myStore.next((v) => nextVals.push(v));
+  myStore.next((v) => nextVals.push(v));
+  myStore.next((v) => nextVals.push(v));
+  myStore.set("a");
+  assert.deepEqual(nextVals, ["a", "a", "a", "a"]);
+});
+
 test("lazy", () => {
   test("non lazy always calls subs", () => {
     let count = 0;

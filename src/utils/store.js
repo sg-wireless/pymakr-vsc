@@ -44,7 +44,9 @@ const writable = (initialValue, options) => {
     set: (value) => {
       if (!_options.lazy || value !== _value) {
         _value = value;
-        listeners.forEach((listener) => listener(_value));
+        [...listeners].forEach((listener) => {
+          listener(_value);
+        });
       }
     },
     update: (callback) => store.set(callback(_value)),
