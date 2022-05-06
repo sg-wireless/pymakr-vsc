@@ -28,6 +28,7 @@ function data2string(data) {
  */
 const createLogger = (name) => {
   const outputChannel = vscode.window.createOutputChannel("PyMakr", "log");
+  const now = Date.now()
 
   const log = _createLogger(
     {
@@ -53,7 +54,7 @@ const createLogger = (name) => {
         },
       },
     },
-    name
+    ()=> `${name} (${Date.now() - now})`
   );
 
   log.levels = {
