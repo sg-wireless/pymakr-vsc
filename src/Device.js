@@ -370,7 +370,7 @@ class Device {
     const root = source;
     const ignores = [...this.pymakr.config.get().get("ignore")];
     const pymakrConfig = getNearestPymakrConfig(source);
-    if (pymakrConfig) ignores.push(...pymakrConfig.py_ignore);
+    if (pymakrConfig) ignores.push(...(pymakrConfig.py_ignore || []));
 
     const isIgnore = picomatch(ignores);
 
