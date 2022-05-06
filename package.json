@@ -651,5 +651,11 @@
   },
   "volta": {
     "node": "16.14.2"
+  },
+  "__metadata": {
+    "id": "a15a8fb0-6dbf-4a0c-8701-21ffb9bb4c64",
+    "publisherDisplayName": "Pycom",
+    "publisherId": "d3cdb74f-f67b-47fb-957a-d550bc26b6ba",
+    "isPreReleaseVersion": false
   }
 }
