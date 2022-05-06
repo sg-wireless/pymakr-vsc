@@ -2,7 +2,13 @@ const { mkdirSync, readFileSync, writeFileSync } = require("fs");
 const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
-const { mapEnumsToQuickPick, getTemplates, copyTemplateByName } = require("../utils/misc");
+const {
+  mapEnumsToQuickPick,
+  getTemplates,
+  copyTemplateByName,
+  serializedEntriesToObj,
+  objToSerializedEntries,
+} = require("../utils/misc");
 const { relative } = require("path");
 
 /**
@@ -275,6 +281,7 @@ class Commands {
           main: async (config) => {
             const result = await vscode.window.showQuickPick(
               [
+                { label: "name", description: config.name },
                 { label: "autoConnect", description: config.autoConnect },
                 // todo are we adding telnet?
                 // { label: "username", description: config.username || "" },
@@ -283,6 +290,19 @@ class Commands {
               {}
             );
             return result?.label || "_DONE_";
+          },
+          name: async () => {
+            const name = await vscode.window.showInputBox({ placeHolder: device.name });
+
+            const namesMap = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
+
+            if (name) namesMap[device.raw.serialNumber] = name;
+            else delete namesMap[device.raw.serialNumber];
+
+            const entries = objToSerializedEntries(namesMap);
+            await this.pymakr.config.get().update("devices.names", entries, vscode.ConfigurationTarget.Global);
+
+            return "main";
           },
           autoConnect: async () => {
             const { enum: enums, enumDescriptions } = manifestConfig["pymakr.devices.autoConnect"];

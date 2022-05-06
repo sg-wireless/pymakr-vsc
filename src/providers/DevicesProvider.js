@@ -42,7 +42,7 @@ class DeviceTreeItem extends vscode.TreeItem {
    * @param {DevicesProvider} tree
    */
   constructor(device, tree) {
-    super(device.name + (device.busy.get() ? " [BUSY]" : ""), vscode.TreeItemCollapsibleState.None);
+    super(device.displayName + (device.busy.get() ? " [BUSY]" : ""), vscode.TreeItemCollapsibleState.None);
     this.contextValue = device.connected ? "connectedDevice" : "device";
     this.device = device;
     const filename = device.connected ? "lightning.svg" : "lightning-muted.svg";

@@ -31,7 +31,7 @@ class Server {
           .find((_device) => _device.protocol === protocol && _device.address === address);
 
         // rename terminal name for this instance
-        vscode.commands.executeCommand("workbench.action.terminal.renameWithArg", { name: `${protocol}://${address}` });
+        vscode.commands.executeCommand("workbench.action.terminal.renameWithArg", { name: device.displayName });
 
         // listen to keystrokes from client
         socket.on("data", (data) => {

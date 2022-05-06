@@ -54,7 +54,7 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
    * @param {ProjectsProvider} tree
    */
   constructor(device, project, tree) {
-    super(device.name + (device.busy.get() ? " [BUSY]" : ""), vscode.TreeItemCollapsibleState.None);
+    super(device.displayName + (device.busy.get() ? " [BUSY]" : ""), vscode.TreeItemCollapsibleState.None);
     this.project = project;
     this.device = device;
     this.contextValue = device.connected ? "connectedProjectDevice" : "projectDevice";

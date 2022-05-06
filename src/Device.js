@@ -8,6 +8,7 @@ const {
   getNearestPymakrConfig,
   createIsIncluded,
   serializeKeyValuePairs,
+  serializedEntriesToObj,
 } = require("./utils/misc");
 const { writable } = require("./utils/store");
 const { StateManager } = require("./utils/StateManager");
@@ -17,6 +18,7 @@ const { createSequenceHooksCollection } = require("hookar");
 /**
  * @typedef {Object} DeviceConfig
  * @prop {'always'|'never'|'onLostConnection'|'lastState'} autoConnect
+ * @prop {string} name
  * @prop {string} username defaults to "micro"
  * @prop {string} password defaults to "python"
  * @prop {boolean} hidden
@@ -25,6 +27,7 @@ const { createSequenceHooksCollection } = require("hookar");
 /** @type {DeviceConfig} */
 const configDefaults = {
   autoConnect: "onLostConnection",
+  name: "",
   username: "micro",
   password: "python",
   hidden: false,
@@ -81,7 +84,17 @@ class Device {
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
 
-    this.busy.subscribe((val) => this.log.info(`Device: "${this.name}" is ${val ? "busy" : "idle"}`));
+  get displayName() {
+    const nameTemplate = this.pymakr.config.get().get("devices.nameTemplate");
+    const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
+
+    const words = {
+      ...this.raw,
+      displayName: names[this.raw.serialNumber] || this.name,
+      projectName: this.pymakrConf.name ? this.pymakrConf.name : "unknown",
+    };
+
+    return nameTemplate.replace(/\{(.+?)\}/g, (_all, key) => words[key]);
   }
 
   get isHidden() {
