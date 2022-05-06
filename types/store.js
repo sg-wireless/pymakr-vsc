@@ -9,7 +9,7 @@
  * @prop {function():T} get Returns the current store value
  * @prop {function(T):void} set Set the store value
  * @prop {function(function(T):T):void} update Update the store value
- * @prop {function(function(T):void):Unsubscribe} subscribe Subscribe to the store value
+ * @prop {function((payload: T, unsub: Unsubscribe)=>void):Unsubscribe} subscribe Subscribe to the store value
  * @prop {function(function(T):void):void} next Subscribe to the store value for a single update
  */
 
@@ -17,7 +17,7 @@
  * @template T
  * @typedef {object} Readable
  * @prop {function():T} get
- * @prop {function(function(T):void):Unsubscribe} subscribe Subscribe to the store value
+ * @prop {function((payload: T, unsub: Unsubscribe)=>void):Unsubscribe} subscribe Subscribe to the store value
  * @prop {function(function(T):void):void} next to the store value for a single update
  */
 

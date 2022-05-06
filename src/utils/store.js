@@ -45,13 +45,14 @@ const writable = (initialValue, options) => {
       if (!_options.lazy || value !== _value) {
         _value = value;
 
-        for (const listener of [...listeners]) listener(_value);
+        for (const listener of [...listeners]) {
+          const index = listeners.indexOf(listener);
+          const unsub = () => listeners.splice(index, 1);
+          listener(_value, unsub);
+        }
       }
     },
     update: (callback) => store.set(callback(_value)),
-    /**
-     * @param {function(T)} listener
-     */
     subscribe: (listener) => {
       if (!listeners.length) _options.onFirstSub(store);
       _options.onSub(store);
@@ -102,11 +103,6 @@ const derived = (stores, callback) => {
   emit();
   return {
     get: () => value,
-    /**
-     *
-     * @param {function(value)} listener
-     * @returns
-     */
     subscribe: (listener) => {
       listeners.push(listener);
       const unsub = () => {

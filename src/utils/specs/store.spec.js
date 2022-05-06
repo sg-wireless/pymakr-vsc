@@ -120,6 +120,7 @@ test("next with multiple subscribers", async () => {
   myStore.next((v) => nextVals.push(v));
   myStore.next((v) => nextVals.push(v));
   myStore.set("a");
+  myStore.set("b");
   assert.deepEqual(nextVals, ["a", "a", "a", "a"]);
 });
 
@@ -130,7 +131,7 @@ test("lazy", () => {
     myStore.subscribe(() => count++);
     myStore.set("initial");
     myStore.set("initial");
-    assert.deepEqual(count, 2);
+    assert.equal(count, 2);
   });
   test("non lazy always calls subs", () => {
     let count = 0;
@@ -138,6 +139,18 @@ test("lazy", () => {
     myStore.subscribe(() => count++);
     myStore.set("initial");
     myStore.set("initial");
-    assert.deepEqual(count, 0);
+    assert.equal(count, 0);
   });
+});
+
+test("can unsub self", () => {
+  let received = null;
+  const myStore = writable("initial");
+  myStore.subscribe((val, unsub) => {
+    received = val
+    unsub()
+  })
+  myStore.set("foo");
+  myStore.set("bar");
+  assert.equal(received, 'foo');
 });
