@@ -44,9 +44,8 @@ const writable = (initialValue, options) => {
     set: (value) => {
       if (!_options.lazy || value !== _value) {
         _value = value;
-        [...listeners].forEach((listener) => {
-          listener(_value);
-        });
+
+        for (const listener of [...listeners]) listener(_value);
       }
     },
     update: (callback) => store.set(callback(_value)),
@@ -68,8 +67,8 @@ const writable = (initialValue, options) => {
     },
     next: (listener) => {
       const unsub = store.subscribe((value) => {
-        listener(value);
         unsub();
+        listener(value);
       });
     },
   };
