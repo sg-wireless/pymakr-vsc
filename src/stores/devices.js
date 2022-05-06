@@ -5,12 +5,12 @@ const { SerialPort } = require("serialport");
 
 /**
  * converts serial.PortInfo to { address, name, protocol, raw }
- * @param {import("@serialport/bindings-cpp").PortInfo & {friendlyName: string}} raw
+ * @param {DeviceInputRaw} raw
  * @returns {DeviceInput}
  */
 const rawSerialToDeviceInput = (raw) => ({
   address: raw.path,
-  name: raw.friendlyName || raw.path,
+  name: raw.friendlyName || raw.path.replace(/^\/dev\//, ''),
   protocol: "serial",
   id: raw.serialNumber,
   raw,

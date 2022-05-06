@@ -10,6 +10,10 @@
  */
 
 /**
+ * @typedef {import("@serialport/bindings-cpp").PortInfo & {friendlyName: string}} DeviceInputRaw
+ */
+
+/**
  * @typedef {Object} DeviceInput
  * @prop {string} name
  * @prop {'serial'|'telnet'} protocol
@@ -17,7 +21,7 @@
  * @prop {string=} username
  * @prop {string=} password
  * @prop {string=} id if not specified, "<protocol>://<address>" will be used
- * @prop {any=} raw
+ * @prop {DeviceInputRaw=} raw
  */
 
 /**
