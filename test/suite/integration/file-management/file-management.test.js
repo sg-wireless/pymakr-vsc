@@ -27,11 +27,12 @@ test("file management", async () => {
     const files = await device.adapter.listFiles(device.rootPath, { recursive: false });
     assert.deepEqual(
       files.map((f) => f.filename),
-      [posix.join(device.rootPath, "includeme"),
-      posix.join(device.rootPath, "main.py"),
-      posix.join(device.rootPath, "pymakr.conf"),
-      posix.join(device.rootPath, "sample-file-1.md"),
-      posix.join(device.rootPath, "sample-file-2.md")
+      [
+        posix.join(device.rootPath, "includeme"),
+        posix.join(device.rootPath, "main.py"),
+        posix.join(device.rootPath, "pymakr.conf"),
+        posix.join(device.rootPath, "sample-file-1.md"),
+        posix.join(device.rootPath, "sample-file-2.md"),
       ]
     );
   });
@@ -39,11 +40,14 @@ test("file management", async () => {
   test("can erase and provision a device", async () => {
     await pymakr.commands.eraseDevice({ device }, "empty");
     const files = await device.adapter.listFiles(device.rootPath, { recursive: false });
-    assert.equal(files.length, 2);
+    assert.equal(files.length, 3);
     assert.deepEqual(
       files.map((f) => f.filename),
-      [posix.join(device.rootPath, "boot.py"), posix.join(device.rootPath, "main.py")]
+      [
+        posix.join(device.rootPath, "boot.py"),
+        posix.join(device.rootPath, "main.py"),
+        posix.join(device.rootPath, "pymakr.conf"),
+      ]
     );
   });
-
 });

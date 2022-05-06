@@ -40,9 +40,11 @@ test("Can find devices", async () => {
       });
 
       test("can use print command", async () => {
-        //BUG: nextTerminalData does not return the next terminal data (win64)
         const receivedFromTerminal = new Promise((resolve) => device.onTerminalData(resolve));
+        if (device.busy.get()) await new Promise(device.busy.next);
+
         terminal.sendText('print("foo")\n');
+        await new Promise((resolve) => setTimeout(resolve, 140));
         assert.equal(await receivedFromTerminal, 'print("foo")' + "\r\nfoo" + "\r\n>>> ");
       });
 
