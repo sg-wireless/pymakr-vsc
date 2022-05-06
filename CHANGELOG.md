@@ -1,3 +1,17 @@
+# [2.11.0](https://github.com/pycom/pymakr-vsc/compare/v2.10.0...v2.11.0) (2022-05-06)
+
+
+### Bug Fixes
+
+* busy status and related bugs ([81664f4](https://github.com/pycom/pymakr-vsc/commit/81664f401163e98a5a03c131b59f59c50298aace))
+* infinite loop in "next" subscription ([c520e3d](https://github.com/pycom/pymakr-vsc/commit/c520e3dcdb22983c2a488ba3c31f0a87638c9351))
+* pymakr.conf without py_ignore would error ([6b655e2](https://github.com/pycom/pymakr-vsc/commit/6b655e2e859c058e9b82bdfe51adf77fcb52dcb1))
+
+
+### Features
+
+* custom device names ([8c5e3e7](https://github.com/pycom/pymakr-vsc/commit/8c5e3e7789a9b5c711132c6fee4b0c296f698768))
+
 # [2.10.0](https://github.com/pycom/pymakr-vsc/compare/v2.9.0...v2.10.0) (2022-05-03)
 
 
