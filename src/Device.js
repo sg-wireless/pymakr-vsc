@@ -56,7 +56,7 @@ class Device {
     this.changed = () => set(this);
     const { address, name, protocol, raw, password, id } = deviceInput;
     this.id = id || `${protocol}://${address}`;
-
+    this.pymakrConf = {};
     this.__connectingPromise = null;
     this.pymakr = pymakr;
     this.protocol = protocol;
@@ -84,6 +84,10 @@ class Device {
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
 
+    this.busy.subscribe((val) => this.log.info(val ? "busy..." : "idle."));
+    this.busyStatusUpdater();
+  }
+
   get displayName() {
     const nameTemplate = this.pymakr.config.get().get("devices.nameTemplate");
     const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
@@ -100,6 +104,16 @@ class Device {
   get isHidden() {
     const { include, exclude } = this.pymakr.config.get().get("devices");
     return this.config.hidden || !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw));
+  }
+
+  async readPymakrConf() {
+    try {
+      const file = await this.adapter.getFile(`${this.rootPath}/pymakr.conf`);
+      const pymakrConf = JSON.parse(file.toString());
+      const isChanged = JSON.stringify(pymakrConf) !== JSON.stringify(this.pymakrConf);
+      this.pymakrConf = pymakrConf;
+      return isChanged;
+    } catch (err) {}
   }
 
   /**
@@ -127,17 +141,20 @@ class Device {
   }
 
   safeBoot() {
-    // resetting the device should also reset the waiting calls
-    this.log.info("safe booting...");
-    this.adapter.__proxyMeta.reset();
-    this.busy.set(true);
-    this.adapter.sendData("\x06");
     return new Promise((resolve) => {
-      // store is lazy, so next value can't be `true`
-      this.busy.next(() => {
-        this.log.info("safe booting complete!");
-        resolve();
+      this.log.info("safe booting...");
+      this.busy.set(true);
+      this.busy.subscribe((isBusy, unsub) => {
+        if (!isBusy) {
+          unsub();
+          this.log.info("safe booting complete!", isBusy);
+          resolve();
+        }
       });
+      // resetting the device should also reset the waiting calls
+      this.adapter.__proxyMeta.reset();
+      this.log.info("send \\x06 (safeboot)");
+      this.adapter.sendData("\x06"); // safeboot
     });
   }
 
@@ -173,11 +190,14 @@ class Device {
    */
   async runScript(script, options) {
     options = Object.assign({}, runScriptDefaults, options);
-
-    this.log.debugShort(`runScript:\n\n${script}\n\n`);
+    this.log.info(`runScript:\n\n${script}\n\n`);
     this.busy.set(true);
     const result = await this.adapter.runScript(script + "\n\r\n\r\n", options);
-    this.busy.set(false);
+    if (this.busy.get()) {
+      this.adapter.sendData("\r\n");
+      // if user wants to wait for script to be resolved, wait for device to be idle
+      if (!options.resolveBeforeResult) return new Promise((resolve) => this.busy.subscribe(() => resolve(result)));
+    }
     return result;
   }
 
@@ -215,6 +235,7 @@ class Device {
 
   async connect() {
     if (!this.connecting && !this.connected) {
+      this.busy.set(true);
       /* connectingPromise is used by other classes to detect when a device is connected.
          should maybe be changed to a subscribable */
       this.__connectingPromise = new Promise(async (resolve, reject) => {
@@ -263,35 +284,58 @@ class Device {
 
   /** @private */
   async _onConnectedHandler() {
-    this.log.info("connected.");
-    this.connected = true;
-    this.connecting = false;
-    this.lostConnection = false;
-    this.changed();
+    return new Promise((resolve) => {
+      // we need to set it to true again cause it could be idle after we connected
+      this.busy.set(true);
+      this.log.info("Connected.");
+      this.log.info("Waiting for access...");
+      this.connected = true;
+      this.connecting = false;
+      this.lostConnection = false;
+      this.changed();
 
-    // let the user know if this device is busy
-    this.updateIdleStatus();
+      // should take about 20 ms
+      const timeoutHandle = setTimeout(resolve, 200);
 
-    // start the proxy queue or all calls will be left hanging
-    this.adapter.__proxyMeta.run();
+      this.busy.subscribe(async (isBusy, unsub) => {
+        if (!isBusy && this.connected) {
+          unsub();
+          clearTimeout(timeoutHandle);
+          this.busy.set(true);
+          this.log.info("Got access.");
+          this.log.info("Getting device info.");
+          this.info = await this.adapter.getBoardInfo();
+          if (await this.readPymakrConf()) this.changed();
+          this.busy.set(false);
+          resolve();
+        }
+      });
+
+      // start the proxy queue or all calls will be left hanging
+      this.adapter.__proxyMeta.run();
+
+      this.openRepl();
+    });
+  }
+
+  openRepl() {
+    this.adapter.sendData("\r\x02");
   }
 
   /**
    * Idle checker. Optimized for performance, not readability.
    */
-  async updateIdleStatus() {
-    this.busy.set(true);
+  async busyStatusUpdater() {
     let lastLine = "";
     this.onTerminalData((newString) => {
       const breakAt = newString.lastIndexOf("\n");
       lastLine = breakAt > -1 ? newString.substring(breakAt + 1) : lastLine + newString;
 
       const isBusy = !lastLine.match(/^>>> /);
+      // todo try this for raw repl support?
+      // const isBusy = !lastLine.match(/^(>>> )|>/); 
       this.busy.set(isBusy);
     });
-
-    // check if we can connect
-    this.adapter.sendData("\r\x02\x02");
   }
 
   /** @private */
