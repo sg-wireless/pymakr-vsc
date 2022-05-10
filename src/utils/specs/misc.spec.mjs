@@ -15,6 +15,7 @@ import {
   once,
   serializedEntriesToObj,
   serializeKeyValuePairs,
+  waitFor,
 } from "../misc.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -140,9 +141,45 @@ test("createThrottledFunction", async () => {
 });
 
 test("serialized entries", () => {
-  const obj = {foo: 'FOO', bar: 'BAR'}
-  const entries = ['foo=FOO', 'bar=BAR']
+  const obj = { foo: "FOO", bar: "BAR" };
+  const entries = ["foo=FOO", "bar=BAR"];
 
-  assert.deepEqual(objToSerializedEntries(obj), entries)
-  assert.deepEqual(serializedEntriesToObj(entries), obj)
+  assert.deepEqual(objToSerializedEntries(obj), entries);
+  assert.deepEqual(serializedEntriesToObj(entries), obj);
+});
+
+test("waitFor", () => {
+  const fallbackAction = () => "fallback";
+  test("can use adequate literal allowance", async () => {
+    const resolvesIn50 = new Promise((resolve) => setTimeout(() => resolve("primary"), 50));
+    const result = await waitFor(resolvesIn50, 100, fallbackAction);
+    assert.equal(result, "primary");
+  });
+  test("can use inadequate literal allowance", async () => {
+    const resolvesIn100 = new Promise((resolve) => setTimeout(() => resolve("primary"), 100));
+    const result = await waitFor(resolvesIn100, 50, fallbackAction);
+    assert.equal(result, "fallback");
+  });
+  test("can use adequate promise allowance", async () => {
+    const resolvesIn50 = new Promise((resolve) => setTimeout(() => resolve("primary"), 50));
+    const promiseAllowance = new Promise((resolve) => setTimeout(resolve, 100));
+    const result = await waitFor(resolvesIn50, promiseAllowance, fallbackAction);
+    assert.equal(result, "primary");
+  });
+  test("can use inadequate promise allowance", async () => {
+    const resolvesIn100 = new Promise((resolve) => setTimeout(() => resolve("primary"), 100));
+    const promiseAllowance = new Promise((resolve) => setTimeout(resolve, 50));
+    const result = await waitFor(resolvesIn100, promiseAllowance, fallbackAction);
+    assert.equal(result, "fallback");
+  });
+  test("triggering literal fallback throws error", async () => {
+    const resolvesIn100 = new Promise((resolve) => setTimeout(() => resolve("primary"), 100));
+    let error;
+    try {
+      await waitFor(resolvesIn100, 50, "im an error");
+    } catch (err) {
+      error = err;
+    }
+    assert.equal(error, "im an error");
+  });
 });

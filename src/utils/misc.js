@@ -29,26 +29,50 @@ const once = (fn, context) => {
 const coerceArray = (input) => (Array.isArray(input) ? input : [input]);
 
 /**
- * creates a promise that will return a rejection after <time> has expired
- * used in Promise.race()
- * @param {number} time
- * @param {string} msg
- * @returns
- */
-const timeoutAndReject = (time, msg = "operation timed out") =>
-  new Promise((_res, rej) => setTimeout(() => rej(msg), time));
-
-/**
- * promise wrapper that returns a rejection if the promise didn't resolve within <time>
- * @example
+ * Promise wrapper with a time allowance. If the time runs out, the fallback action or error will be returned
+ * @example literal time allowance
  * const body = await waitFor(fetchFile('hello.txt'), 3000, 'file failed to fetch in 3 seconds.')
- * @template T
- * @param {Promise<T>} promise
- * @param {number} time
- * @param {string} msg
- * @returns {Promise<T>}
+ * @example promise time allowance
+ * const promise = new Promise(resolve => setTimeout(resolve, 3000))
+ * const body = await waitFor(fetchFile('hello.txt'), promise, 'file failed to fetch in 3 seconds.')
+ * // throws error
+ * @example fallback action
+ * const body = await waitFor(fetchFile('hello.txt'), 3000, ()=>'hello world.')
+ * console.log(body) // hello world.
+ * // throws error
+ * @template T, F
+ * @param {Promise<T>} primaryPromise
+ * @param {number | promise} timeAllowance if resolved before the primary promise, will call fallbackActionOrError
+ * @param {string | Error | (()=>(F|Promise<F>))} fallbackActionOrErr if string or error, will return rejection. If function, will return resolved function
+ * @returns {Promise<T | F>} if timeAllowance has expired, will return the resolved fallbackActionOrError, otherwise returns the resolved primaryPromise
  */
-const waitFor = (promise, time, msg) => Promise.race([promise, timeoutAndReject(time, msg)]);
+const waitFor = async (primaryPromise, timeAllowance, fallbackActionOrErr) => {
+  // create a fallback promise that runs after the provided time
+  const fallbackPromise = new Promise((res, rej) => {
+    const action =
+      typeof fallbackActionOrErr != "function"
+        ? () => rej(fallbackActionOrErr)
+        : async () => {
+            try {
+              const result = await fallbackActionOrErr();
+              res(result);
+            } catch (err) {
+              rej(err);
+            }
+          };
+
+    if (typeof timeAllowance === "number") {
+      const timeout = setTimeout(action, timeAllowance);
+      primaryPromise.then(() => clearTimeout(timeout));
+    } else {
+      let resolved = false;
+      primaryPromise.finally(() => (resolved = true));
+      timeAllowance.finally(() => !resolved && action());
+    }
+  });
+
+  return Promise.race([primaryPromise, fallbackPromise]);
+};
 
 /**
  * Coerce functions to {dispose: function}
@@ -263,7 +287,7 @@ const objToSerializedEntries = (obj) => Object.entries(obj).map((entr) => entr.j
 
 /**
  * converts ['foo=FOO', 'bar=BAR'] to {foo:FOO, bar:BAR}
- * @param {string[]} serializedEntries 
+ * @param {string[]} serializedEntries
  */
 const serializedEntriesToObj = (serializedEntries) => Object.fromEntries(serializedEntries.map((n) => n.split("=")));
 
@@ -272,7 +296,6 @@ module.exports = {
   serializedEntriesToObj,
   once,
   coerceArray,
-  timeoutAndReject,
   waitFor,
   coerceDisposable,
   getDifference,
