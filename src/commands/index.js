@@ -8,6 +8,7 @@ const {
   copyTemplateByName,
   serializedEntriesToObj,
   objToSerializedEntries,
+  waitFor,
 } = require("../utils/misc");
 const { relative } = require("path");
 
@@ -58,12 +59,18 @@ class Commands {
 
     /**
      * Safe boots device. Starts device without running scripts
-     * @param {DeviceTreeItem} treeItem
+     * @param {{device: Device}} treeItem
      */
     safeBootDevice: async ({ device }) => {
+      const timeout = 10000
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
         progress.report({ message: "Safe booting" });
-        await device.safeBoot();
+        const error = () => {
+          const msg = "Could not safeboot device. Please hard reset the device and verify that a shield is installed.";
+          device.log.warn(`Error for "${device.name}": ${msg}`);
+          vscode.window.showWarningMessage(msg);
+        };
+        await waitFor(device.safeBoot(), timeout, error);
       });
     },
 
@@ -398,7 +405,7 @@ class Commands {
           `${device.name} seems to be busy. Do you wish restart it in safe mode?`,
           options.restart
         );
-        if (answer === options.restart) device.adapter.sendData("\x06");
+        if (answer === options.restart) this.commands.safeBootDevice({ device });
       }
     },
 
