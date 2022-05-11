@@ -1,3 +1,4 @@
+const { createSequenceHooksCollection } = require("hookar");
 const { resolvablePromise } = require("./misc");
 
 /**
@@ -47,7 +48,9 @@ const createBlockingProxy = (_target, _options) => {
       else if (target[field] instanceof Function) {
         const promise = (...args) => {
           return new Promise((resolve, reject) => {
-            proxyMeta.queue.push(new BlockingProxyQueueItem(target, field, args, options, resolve, reject));
+            const item = new BlockingProxyQueueItem(target, field, args, options, resolve, reject);
+            proxyMeta.queue.push(item);
+            proxyMeta.onAddedCall.run({ item, proxy: proxyMeta });
             proxyMeta.processQueue();
           });
         };
@@ -117,11 +120,11 @@ class ProxyMeta {
     this.lastCall = null;
 
     this.idle = resolvablePromise();
-    
+
     /** @private */
     this.skipQueue = resolvablePromise();
-    
-    // Proxy starts in idle mode. 
+
+    // Proxy starts in idle mode.
     // Calls to processQueue will replace the idle prop with a new promise.
     this.idle.resolve();
 
@@ -134,6 +137,13 @@ class ProxyMeta {
     this.isBusy = false;
 
     this.isPaused = true;
+
+    /** @type {import("hookar").CollectionAsyncVoid<{item: BlockingProxyQueueItem, proxy: ProxyMeta}>} */
+    this.onAddedCall = createSequenceHooksCollection();
+    /** @type {import("hookar").CollectionAsyncVoid<{item: BlockingProxyQueueItem, proxy: ProxyMeta}>} */
+    this.beforeEachCall = createSequenceHooksCollection();
+    /** @type {import("hookar").CollectionAsyncVoid<{item: BlockingProxyQueueItem, proxy: ProxyMeta, result: any}>} */
+    this.afterEachCall = createSequenceHooksCollection();
   }
 
   run() {
@@ -167,8 +177,10 @@ class ProxyMeta {
       const queueItem = this.queue.shift();
       this.history.push(queueItem);
       this.lastCall = queueItem;
+      await this.beforeEachCall.run({ item: queueItem, proxy: this });
       // continue once this call is resolved or proxy receives a skipQueue call
-      await Promise.race([queueItem.exec(), this.skipQueue]);
+      const result = await Promise.race([queueItem.exec(), this.skipQueue]);
+      await this.afterEachCall.run({ item: queueItem, proxy: this, result });
     }
 
     this.idle.resolve();
@@ -190,9 +202,9 @@ class ProxyMeta {
     this.skipQueue.resolve();
   }
 
-  reset(){
-    this.clearQueue()
-    this.skipCurrent()
+  reset() {
+    this.clearQueue();
+    this.skipCurrent();
   }
 }
 
