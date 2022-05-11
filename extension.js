@@ -9,7 +9,7 @@ let pymakr;
 /**
  * @param {import('vscode').ExtensionContext} context
  */
-async function activate(context) {
+function activate(context) {
   pymakr = new PyMakr(context);
 }
 
