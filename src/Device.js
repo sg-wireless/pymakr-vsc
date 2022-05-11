@@ -235,6 +235,7 @@ class Device {
 
   async connect() {
     if (!this.connecting && !this.connected) {
+      this.adapter.__proxyMeta.isPaused = true;
       this.busy.set(true);
       /* connectingPromise is used by other classes to detect when a device is connected.
          should maybe be changed to a subscribable */
@@ -299,6 +300,8 @@ class Device {
 
       this.busy.subscribe(async (isBusy, unsub) => {
         if (!isBusy && this.connected) {
+          // start the proxy queue or all calls will be left hanging
+          this.adapter.__proxyMeta.run();
           unsub();
           clearTimeout(timeoutHandle);
           this.busy.set(true);
@@ -310,9 +313,6 @@ class Device {
           resolve();
         }
       });
-
-      // start the proxy queue or all calls will be left hanging
-      this.adapter.__proxyMeta.run();
 
       this.openRepl();
     });
