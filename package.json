@@ -379,7 +379,8 @@
       },
       {
         "command": "pymakr.disconnect",
-        "title": "Disconnect device"
+        "title": "Disconnect device",
+        "icon": "$(debug-disconnect)"
       },
       {
         "command": "pymakr.downloadProject",
@@ -572,6 +573,11 @@
           "command": "pymakr.connect",
           "when": "viewItem == device || viewItem == projectDevice",
           "group": "inline"
+        },
+        {
+          "command": "pymakr.disconnect",
+          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "group": "inline@50"
         },
         {
           "submenu": "pymakr.projectDeviceMenu",
