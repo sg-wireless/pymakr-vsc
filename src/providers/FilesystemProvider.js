@@ -70,8 +70,6 @@ class FileSystemProvider {
    */
   async stat(uri) {
     const device = this._getDevice(uri);
-    if (device.connecting) await device.__connectingPromise;
-    if (!device.connected) throw vscode.FileSystemError.Unavailable("Device is offline");
 
     try {
       this.log.traceShort("stat file", uri);

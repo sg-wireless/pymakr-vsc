@@ -65,6 +65,8 @@ class Device {
     this.name = name;
     this.raw = raw;
     this.state = this.createState();
+    /** If true, device will disconnect at the end of execution queue */
+    this.temporaryConnection = false;
     // TODO: determine the rootpath of a device when connecting. https://github.com/pycom/pymakr-vsc/discussions/224
     this.rootPath = "/flash"; // TODO: make this configurable
 
@@ -77,6 +79,7 @@ class Device {
 
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
+    this.autoConnectOnCommand();
     this.terminalLogFile = this.createTerminalLogFile();
     /** @type {import("micropython-ctl-cont").BoardInfo} */
     this.info = null;
@@ -224,6 +227,27 @@ class Device {
   }
 
   /**
+   * If a disconnected device receives commands,
+   * it will automatically create a temporary connection
+   */
+  autoConnectOnCommand() {
+    this.adapter.__proxyMeta.onAddedCall(async ({ proxy }) => {
+      if (!this.connecting && !this.connected) {
+        this.temporaryConnection = true;
+        await this.connect();
+        await proxy.processQueue();
+      }
+    });
+
+    this.adapter.__proxyMeta.afterEachCall(async ({ proxy }) => {
+      if (this.temporaryConnection && !proxy.queue.length) {
+        this.temporaryConnection = false;
+        await this.disconnect();
+      }
+    });
+  }
+
+  /**
    * Creates a log file for streaming out
    */
   createTerminalLogFile() {
@@ -333,7 +357,7 @@ class Device {
 
       const isBusy = !lastLine.match(/^>>> /);
       // todo try this for raw repl support?
-      // const isBusy = !lastLine.match(/^(>>> )|>/); 
+      // const isBusy = !lastLine.match(/^(>>> )|>/);
       this.busy.set(isBusy);
     });
   }
@@ -347,7 +371,8 @@ class Device {
   async disconnect() {
     if (this.connected) {
       this.adapter.__proxyMeta.reset();
-      await waitFor(this.adapter.disconnect(), 2000, "Timed out while disconnecting.");
+      this.adapter.__proxyMeta.isPaused = true;
+      await waitFor(this.adapter.__proxyMeta.target.disconnect(), 2000, "Timed out while disconnecting.");
       this._onDisconnected();
     }
   }
