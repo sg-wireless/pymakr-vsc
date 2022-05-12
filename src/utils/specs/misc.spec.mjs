@@ -5,6 +5,7 @@ import {
   cherryPick,
   createIsIncluded,
   createThrottledFunction,
+  dynamicPromiseAll,
   getDifference,
   getNearestParent,
   getNearestPymakrConfig,
@@ -18,6 +19,7 @@ import {
   waitFor,
 } from "../misc.js";
 
+const wait = (time) => new Promise((resolve) => setTimeout(resolve, time));
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 test("once functions can only be called once", () => {
@@ -181,5 +183,52 @@ test("waitFor", () => {
       error = err;
     }
     assert.equal(error, "im an error");
+  });
+});
+
+test("dynamicPromiseAll", () => {
+  let counter = 0;
+  let callbackTriggerCount = 0; // how many times was the callback executed
+  let result = null;
+  const callback = () => {
+    result = counter;
+    callbackTriggerCount++;
+  };
+  const dynamicPromises = dynamicPromiseAll(callback);
+
+  const createPromise = (callback, time) =>
+    new Promise((resolve) =>
+      setTimeout(() => {
+        callback();
+        resolve();
+      }, time)
+    );
+
+  test("should only run callback when the last added promise is resolved", async () => {
+    dynamicPromises.push(createPromise(() => counter++, 50));
+    dynamicPromises.push(createPromise(() => counter++, 100));
+    dynamicPromises.push(createPromise(() => counter++, 150));
+    dynamicPromises.push(createPromise(() => counter++, 200));
+
+    await wait(150)
+    assert.equal(callbackTriggerCount, 0);
+    assert.equal(result, null)
+    await wait(50);
+    assert.equal(callbackTriggerCount, 1);
+    assert.equal(result, 4);
+  });
+
+  test("reactivates after idle when new promises are added", async () => {
+    dynamicPromises.push(createPromise(() => counter++, 50));
+    dynamicPromises.push(createPromise(() => counter++, 100));
+    dynamicPromises.push(createPromise(() => counter++, 150));
+    dynamicPromises.push(createPromise(() => counter++, 200));
+
+    await wait(150)
+    assert.equal(callbackTriggerCount, 1);
+    assert.equal(result, 4)
+    await wait(50);
+    assert.equal(callbackTriggerCount, 2);
+    assert.equal(result, 8);
   });
 });

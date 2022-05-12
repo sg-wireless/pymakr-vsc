@@ -60,16 +60,15 @@ To run the extension, we need to open the project in VSCode and run the source c
 
 ## Testing the extension
 Hardware requirements: 
-- The test suite expects two MicroPython devices to be connected to the computer using a USB cable / serial port connection.
-- currently only device tests are hardcoded to expect `Pycom MicroPython 1.20.2.r6` on `WiPy with ESP32`
+- The integration tests expect two MicroPython devices to be connected to the computer using a USB cable / serial port connection.
 
 Tests can be run directly from the terminal by typing 
+- `npm run test:types`, to test type safety.
 - `npm run test:unit`, to run the unit tests.
-- `npm run test`, to run the integration tests.
+- `npm run test:integration`, to run the integration tests.
+- `npm run test`, to run all tests.
 
 To develop or debug tests use the same way to run/debug the extension. Instead of clicking Run PyMakr, we click the dropdown arrow and choose `Integration Tests` or `Unit Tests`.
-
-Currently the tests require two Pycom devices to be connected.
 
 _Hint: <kbd>F5</kbd> can be used to start the last executed task._
 
@@ -99,6 +98,13 @@ Here's how:
 This will package your extension into a .vsix file and place it in the current directory. It's possible to install .vsix files into Visual Studio Code. See [Installing Extensions](https://vscode-docs.readthedocs.io/docs/extensions/install-extension.md) for more details.
 
 ref: https://vscode-docs.readthedocs.io/en/latest/tools/vscecli/
+
+## Submitting a PR
+
+Please submit PRs to the `next-staging` branch.
+
+We encourage commit messages to follow [Angular's Commit Message Format](https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format). Eg. `fix: some bug`, `feat: some new feature` etc.
+
 ## API
 
 For API documentation, please see [Pymakr API](https://htmlpreview.github.io/?https://raw.githubusercontent.com/pycom/pymakr-vsc/next/docs/classes/PyMakr.html).

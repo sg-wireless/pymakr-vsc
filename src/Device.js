@@ -214,7 +214,7 @@ class Device {
     // run in sequence rather in in parallel. See JSDoc comment for more info.
     const adapter = createBlockingProxy(rawAdapter, {
       exceptions: ["sendData", "reset", "connectSerial"],
-      beforeEachCall: () => this.connect(),
+      beforeEachCall: () => this.busy.set(true),
     });
 
     rawAdapter.onTerminalData = (data) => {
@@ -238,6 +238,7 @@ class Device {
         await proxy.processQueue();
       }
     });
+    this.adapter.__proxyMeta.onIdle(() => this.busy.set(false));
 
     this.adapter.__proxyMeta.afterEachCall(async ({ proxy }) => {
       if (this.temporaryConnection && !proxy.queue.length) {

@@ -1,13 +1,13 @@
 {
-  "name": "pymakr-preview",
-  "displayName": "Pymakr - Preview",
+  "name": "pymakr",
+  "displayName": "Pymakr",
   "publisher": "Pycom",
   "description": "Tech preview of the upcoming v2",
   "version": "2.12.0",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
-  "preview": true,
+  "preview": false,
   "engines": {
     "vscode": "^1.66.0",
     "node": "^14.19.1"
@@ -626,6 +626,7 @@
     "test:unit": "probs src",
     "test:integration": "node ./test/runTest.js",
     "test-watch:unit": "npx nodemon --exec npm run test:unit",
+    "prepackage": "node .github/workflows/preparePackage.js",
     "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
   },
   "devDependencies": {
