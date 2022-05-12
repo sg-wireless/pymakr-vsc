@@ -1,3 +1,17 @@
+# [2.12.0](https://github.com/pycom/pymakr-vsc/compare/v2.11.0...v2.12.0) (2022-05-12)
+
+
+### Bug Fixes
+
+* better safe booting ([d4de628](https://github.com/pycom/pymakr-vsc/commit/d4de62878ec456fedd112abd4a69e1e07009f8f9))
+* mounted devices were shown as busy ([90be9c9](https://github.com/pycom/pymakr-vsc/commit/90be9c94257e701c5f29ef5a04cb4ba423b30e69))
+
+
+### Features
+
+* disconnect button ([4f5a9aa](https://github.com/pycom/pymakr-vsc/commit/4f5a9aae068f6ca3f50b9e97bbafd9d893f8b650))
+* sending commands to disconnected device will create temporary connection ([0478c5d](https://github.com/pycom/pymakr-vsc/commit/0478c5d8c19274677450580e62d5c207ea68f4d5))
+
 # [2.11.0](https://github.com/pycom/pymakr-vsc/compare/v2.10.0...v2.11.0) (2022-05-06)
 
 
