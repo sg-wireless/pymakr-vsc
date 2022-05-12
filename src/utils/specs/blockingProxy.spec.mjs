@@ -77,11 +77,11 @@ test("blocked object can have beforeEachCall hook and exceptions", async () => {
     },
   });
   const promises = [
-    proxied.async20(),
+    proxied.async20(), // skip, exception
     proxied.async10(), // run queued
-    proxied.async20(),
+    proxied.async20(), // skip, exception
     proxied.async10(), // and queued
-    proxied.async20(),
+    proxied.async20(), // skip, exception
   ];
 
   Promise.all(promises).then(() => (finishedLastTestStamp = Date.now()));
