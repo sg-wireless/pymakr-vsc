@@ -18,6 +18,8 @@ const resetFixture = (path) => {
 
 module.exports = { createFixture, resetFixture };
 
+// executes scripts from command line
+// eg.: utils/index.js createFixture led-example temp/test/integration-test
 (function execFromArg() {
   const [_bin, _script, fn, ...params] = process.argv;
   if (fn && module.exports[fn]) module.exports[fn](...params);
