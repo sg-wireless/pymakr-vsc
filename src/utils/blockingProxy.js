@@ -47,12 +47,11 @@ const createBlockingProxy = (_target, _options) => {
       // else if field is a method, queue the call in the proxy helper queue
       else if (target[field] instanceof Function) {
         const promise = (...args) => {
-          return new Promise((resolve, reject) => {
-            const item = new BlockingProxyQueueItem(target, field, args, options, resolve, reject);
-            proxyMeta.queue.push(item);
-            proxyMeta.onAddedCall.run({ item, proxy: proxyMeta });
-            proxyMeta.processQueue();
-          });
+          const item = new BlockingProxyQueueItem(target, field, args, options);
+          proxyMeta.queue.push(item);
+          proxyMeta.onAddedCall.run({ item, proxy: proxyMeta });
+          proxyMeta.processQueue();
+          return item.promise;
         };
         return promise;
       } else return target[field];
@@ -67,34 +66,39 @@ class BlockingProxyQueueItem {
    * @param {string | symbol} field
    * @param {any[]} args
    * @param {*} options
-   * @param {function} resolve
-   * @param {function} reject
    */
-  constructor(target, field, args, options, resolve, reject) {
+  constructor(target, field, args, options) {
     this.target = target;
     this.field = field;
     this.args = args;
     this.options = options;
-    this.resolve = resolve;
-    this.reject = reject;
     this.result = null;
     this.error = null;
     this.queuedAt = new Date();
     this.startedAt = null;
     this.finishedAt = null;
-  }
 
-  async exec() {
-    try {
-      this.startedAt = new Date();
-      const { target, field, args } = this;
-      await this.options.beforeEachCall(target, field, args);
-      const result = await target[field].bind(target)(...args);
-      this.finishedAt = new Date();
-      this.resolve(result);
-    } catch (err) {
-      this.reject(err);
-    }
+    this.promise = new Promise((resolve, reject) => {
+      // allows us to skip a call
+      this.skip = resolve;
+
+      this.exec = async () => {
+        (async () => {
+          try {
+            console.log('calling', this.field, this.args)
+            this.startedAt = new Date();
+            const { target, field, args } = this;
+            await this.options.beforeEachCall(target, field, args);
+            this.result = await target[field].bind(target)(...args);
+            this.finishedAt = new Date();
+            resolve(this.result);
+          } catch (err) {
+            resolve(err);
+          }
+        })();
+        return this.promise;
+      };
+    });
   }
 
   get waitDuration() {
@@ -144,6 +148,8 @@ class ProxyMeta {
     this.beforeEachCall = createSequenceHooksCollection();
     /** @type {import("hookar").CollectionAsyncVoid<{item: BlockingProxyQueueItem, proxy: ProxyMeta, result: any}>} */
     this.afterEachCall = createSequenceHooksCollection();
+    /** @type {import("hookar").CollectionAsyncVoid<void>} */
+    this.onIdle = createSequenceHooksCollection();
   }
 
   run() {
@@ -173,17 +179,17 @@ class ProxyMeta {
     this.isBusy = true;
 
     while (this.queue.length) {
-      this.skipQueue = resolvablePromise();
       const queueItem = this.queue.shift();
       this.history.push(queueItem);
       this.lastCall = queueItem;
       await this.beforeEachCall.run({ item: queueItem, proxy: this });
-      // continue once this call is resolved or proxy receives a skipQueue call
-      const result = await Promise.race([queueItem.exec(), this.skipQueue]);
+
+      const result = await queueItem.exec();
       await this.afterEachCall.run({ item: queueItem, proxy: this, result });
     }
 
     this.idle.resolve();
+    this.onIdle.run()
     this.isBusy = false;
   }
 
@@ -199,7 +205,7 @@ class ProxyMeta {
    * Only unskipped calls affect the idle status of the proxy.
    */
   skipCurrent() {
-    this.skipQueue.resolve();
+    this.lastCall.skip();
   }
 
   reset() {
