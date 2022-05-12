@@ -291,30 +291,7 @@ const objToSerializedEntries = (obj) => Object.entries(obj).map((entr) => entr.j
  */
 const serializedEntriesToObj = (serializedEntries) => Object.fromEntries(serializedEntries.map((n) => n.split("=")));
 
-/**
- * Takes a callback that will be called whenever all promises have been resolved
- * @param {Function} callback 
- */
-const dynamicPromiseAll = (callback) => {
-  /** @type {Promise<any>} */
-  let promisePyramid = null;
-
-  let claim = null;
-
-  return {
-    /** @param {Promise<any>} promise */
-    async push(promise) {
-      const id = Symbol()
-      claim = id;
-      promisePyramid = Promise.all([promisePyramid, promise]);
-      await promisePyramid;
-      if (claim === id) callback();
-    },
-  };
-};
-
 module.exports = {
-  dynamicPromiseAll,
   objToSerializedEntries,
   serializedEntriesToObj,
   once,

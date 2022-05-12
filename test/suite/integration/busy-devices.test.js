@@ -28,7 +28,7 @@ test("busy devices", async () => {
     });
     test("can run a hanging script", async () => {
       await device.runScript("import time\r\nwhile True: time.sleep(1)", { resolveBeforeResult: true });
-      await sleep(200);
+      await sleep(100);
       assert(device.connected);
       assert(device.busy.get());
     });

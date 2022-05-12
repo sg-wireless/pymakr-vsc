@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "test:setup:createIntegrationFixture",
+      "label": "test:setup:workspaces",
       "type": "process",
       "command": "node",
       "presentation": {
@@ -13,12 +13,7 @@
         "showReuseMessage": true,
         "clear": false
       },
-      "args": [
-        "${workspaceFolder}/test/utils/index.js",
-        "createFixture",
-        "empty",
-        "${workspaceFolder}/test/temp/integration-test-empty"
-      ]
+      "args": ["${workspaceFolder}/test/utils/setup.js", "--run-setup"]
     }
   ]
 }

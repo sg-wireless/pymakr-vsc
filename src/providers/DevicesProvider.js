@@ -42,19 +42,14 @@ class DeviceTreeItem extends vscode.TreeItem {
    * @param {DevicesProvider} tree
    */
   constructor(device, tree) {
-    super(device.displayName, vscode.TreeItemCollapsibleState.None);
+    super(device.displayName + (device.busy.get() ? " [BUSY]" : ""), vscode.TreeItemCollapsibleState.None);
     this.contextValue = device.connected ? "connectedDevice" : "device";
     this.device = device;
     const filename = device.connected ? "lightning.svg" : "lightning-muted.svg";
-
-    if (device.busy.get()) this.tooltip = "Busy";
-
-    this.iconPath = device.busy.get()
-      ? new vscode.ThemeIcon("lock-small")
-      : {
-          dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
-          light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
-        };
+    this.iconPath = {
+      dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
+      light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
+    };
     device.busy.subscribe((isBusy) =>
       setTimeout(() => {
         if (device.busy.get() === isBusy) tree.refresh();

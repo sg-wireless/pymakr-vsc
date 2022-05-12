@@ -3,38 +3,42 @@
 // Hover to view descriptions of existing attributes.
 // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Run Pymakr",
-      "type": "extensionHost",
-      "request": "launch",
-      "args": [
-        "${workspaceFolder}/example/workspace/multi",
-        "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}"
-      ]
-    },
-    {
-      "name": "Integration Tests",
-      "type": "extensionHost",
-      "request": "launch",
-      "preLaunchTask": "test:setup:createIntegrationFixture",
-      "args": [
-        "${workspaceFolder}/test/temp/integration-test-empty",
-        "--disable-extensions",
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/test/suite/runIntegrationTests.js"
-      ],
-      "env": { "fixturePath": "${workspaceFolder}/test/temp/integration-test-empty", "fixtureName": "empty" }
-    },
-    {
-      "name": "Unit Tests",
-      "request": "launch",
-      "runtimeArgs": ["run", "test:unit"],
-      "runtimeExecutable": "npm",
-      "skipFiles": ["<node_internals>/**"],
-      "type": "pwa-node"
-    }
-  ]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Run Pymakr",
+			"type": "extensionHost",
+			"request": "launch",
+			"args": [
+				"${workspaceFolder}/example/workspace/multi",
+				"--disable-extensions",
+				"--extensionDevelopmentPath=${workspaceFolder}"
+			]
+		},
+		{
+			"name": "Integration Tests",
+			"type": "extensionHost",
+			"request": "launch",
+			"preLaunchTask": "test:setup:workspaces",
+			"args": [
+				"${workspaceFolder}/test/workspaces/integration",
+				"--disable-extensions",
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionTestsPath=${workspaceFolder}/test/suite/index"
+			]
+		},
+		{
+			"name": "Unit Tests",
+			"request": "launch",
+			"runtimeArgs": [
+				"run",
+				"test:unit"
+			],
+			"runtimeExecutable": "npm",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"type": "pwa-node"		
+		}
+	]
 }

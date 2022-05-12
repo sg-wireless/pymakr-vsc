@@ -1,4 +1,8 @@
-# Pymakr 2
+# Pymakr 2 - Preview
+
+### This is an alpha preview of the upcoming Pymakr 2
+
+Please make sure to backup any projects that you use with this extension!
 
 ---
 
@@ -27,14 +31,3 @@ Maintainability and scalability have been key focuses for Pymakr 2. To achieve t
 This provides full type completion and type safety without imposing TS on contributors.
 
 [CONTRIBUTE.md](./CONTRIBUTE.md).
-
----
-
-## Support
-
-We hope you won't need it, but should you come across an issue, feel free to open an issue.
-
-To help us help you, please include:
-- a step-by-step walkthrough of what you did.
-- what you expected to happen.
-- what actually happened.

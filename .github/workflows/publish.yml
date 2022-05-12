@@ -26,10 +26,6 @@ jobs:
           
       - run: npm ci
 
-        # convert package to preview if branch is not master or main
-      - name: preparePackage
-        run: npm run prepackage
-
       - name: Publish
         # for testing, add --dry-run --debug
         run: npx semantic-release
@@ -37,4 +33,3 @@ jobs:
           VSCE_PAT: ${{ secrets.PUBLISHER_TOKEN2 }}
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 

@@ -41,13 +41,7 @@ Project management is finally here and among the highlights are:
 Mount your device inside VSCode and access it like a USB storage device. You can even save files directly to the device.
 <img src="./media/readme/device-file-explorer.gif">
 
-### Realtime updates
-It is now possible to see if a script is currently running on your device.
-<img src="./media/readme/insights.gif">
-
 ### Codebase (for contributors)
 Pymakr 2 was written completely from scratch and the codebase is now fully typed JS. On top of that we now have unit and integration tests.
 
 <img src="./media/readme/typed.gif">
-
-
