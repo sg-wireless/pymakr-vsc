@@ -19,7 +19,7 @@ _Note: If a project is created outside the current workspace(s), its folder will
 
 ## Creating a script
 
-Below we add a `main.py`. This file will run whenever the device is reset.
+Below we add a `main.py`. Once uploaded to a device, this file will run whenever the device is reset.
 
 ![](./media/readme/saving-a-file.gif)
 
