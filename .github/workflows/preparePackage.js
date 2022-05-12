@@ -11,7 +11,6 @@ function convertToPreview() {
     ...pkg,
     name: "pymakr-preview",
     displayName: "Pymakr - Preview",
-    publisher: "Pycom",
     preview: true,
   };
   writeFileSync('package.json', JSON.stringify(updatedPkg, null, 2))
