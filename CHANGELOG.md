@@ -1,3 +1,11 @@
+## [2.12.1](https://github.com/pycom/pymakr-vsc/compare/v2.12.0...v2.12.1) (2022-05-12)
+
+
+### Bug Fixes
+
+* devices were sometimes wrongly shown as idle ([081bc83](https://github.com/pycom/pymakr-vsc/commit/081bc834401b07f209d5aee97e1ea4a1f4b5f5f8))
+* replace [BUSY] text with a proper icon ([e820fa0](https://github.com/pycom/pymakr-vsc/commit/e820fa09900712231c441ff3bcde4b9fa6020d9e))
+
 # [2.12.0](https://github.com/pycom/pymakr-vsc/compare/v2.11.0...v2.12.0) (2022-05-12)
 
 
