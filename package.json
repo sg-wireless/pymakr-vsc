@@ -3,7 +3,7 @@
   "displayName": "Pymakr - Preview",
   "publisher": "Pycom",
   "description": "Official Pymakr plugin for Pycom devices.",
-  "version": "2.12.2",
+  "version": "2.12.3",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },

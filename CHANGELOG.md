@@ -1,3 +1,10 @@
+## [2.12.3](https://github.com/pycom/pymakr-vsc/compare/v2.12.2...v2.12.3) (2022-05-13)
+
+
+### Bug Fixes
+
+* preview channel was commited to package.json ([c611964](https://github.com/pycom/pymakr-vsc/commit/c611964637365c92a26b89e3f3e30081ef01ba9c))
+
 ## [2.12.2](https://github.com/pycom/pymakr-vsc/compare/v2.12.1...v2.12.2) (2022-05-13)
 
 
