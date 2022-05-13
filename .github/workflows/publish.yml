@@ -29,6 +29,8 @@ jobs:
         # convert package to preview if branch is not master or main
       - name: preparePackage
         run: npm run prepackage
+        env:
+          BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
 
       - name: Publish
         # for testing, add --dry-run --debug
