@@ -1,3 +1,10 @@
+## [2.12.2](https://github.com/pycom/pymakr-vsc/compare/v2.12.1...v2.12.2) (2022-05-13)
+
+
+### Bug Fixes
+
+* busy icon was missing in projects view ([e3af48e](https://github.com/pycom/pymakr-vsc/commit/e3af48e95560958723846397efb380d62192ae6c))
+
 ## [2.12.1](https://github.com/pycom/pymakr-vsc/compare/v2.12.0...v2.12.1) (2022-05-12)
 
 
