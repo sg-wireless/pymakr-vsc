@@ -17,6 +17,9 @@ const stablePkg = {
 
 const pkgUpdate = isMaster ? stablePkg : previewPkg;
 
+console.log(`Branch is ${BRANCH}`);
+console.log(`Patching package.json with`, pkgUpdate);
+
 const updatedPkg = {
   ...require("../../package.json"),
   ...pkgUpdate,
