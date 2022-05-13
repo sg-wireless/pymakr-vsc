@@ -10,7 +10,7 @@
   "preview": true,
   "engines": {
     "vscode": "^1.66.0",
-    "node": "^14.19.1"
+    "node": "^16.13.0"
   },
   "categories": [
     "Other"
