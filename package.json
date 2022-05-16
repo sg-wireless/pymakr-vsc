@@ -1,13 +1,13 @@
 {
-  "name": "pymakr",
-  "displayName": "Pymakr",
+  "name": "pymakr-preview",
+  "displayName": "Pymakr - Preview",
   "publisher": "Pycom",
   "description": "Official Pymakr plugin for Pycom devices.",
-  "version": "2.12.3",
+  "version": "2.13.0",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
-  "preview": false,
+  "preview": true,
   "engines": {
     "vscode": "^1.66.0",
     "node": "^16.13.0"
@@ -209,7 +209,6 @@
                 "value": "/custom/path"
               }
             ],
-            
             "markdownDescription": "Override device config. Each override consists of a match, a field and a value.\n\n**match:** key=value (eg. `manufacturer=\"Micr.*\"` will match all devices with a Manufacturer starting with \"Micr\")\n\n\n**field:** the property that should be updated.\n\n**value:** the new value."
           }
         }

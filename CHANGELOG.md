@@ -1,3 +1,15 @@
+# [2.13.0](https://github.com/pycom/pymakr-vsc/compare/v2.12.3...v2.13.0) (2022-05-16)
+
+
+### Bug Fixes
+
+* flaky busy status ([5fb5411](https://github.com/pycom/pymakr-vsc/commit/5fb5411beaa9bc4b743b7b2bdb9c493af27aa9ad))
+
+
+### Features
+
+* make device properties customizable ([78dad4a](https://github.com/pycom/pymakr-vsc/commit/78dad4a4e9b2587f6ba545eb0c10f6afd4a648f9))
+
 ## [2.12.3](https://github.com/pycom/pymakr-vsc/compare/v2.12.2...v2.12.3) (2022-05-13)
 
 
