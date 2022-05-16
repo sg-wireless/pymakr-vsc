@@ -85,7 +85,6 @@ class BlockingProxyQueueItem {
       this.exec = async () => {
         (async () => {
           try {
-            console.log('calling', this.field, this.args)
             this.startedAt = new Date();
             const { target, field, args } = this;
             await this.options.beforeEachCall(target, field, args);
