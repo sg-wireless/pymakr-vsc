@@ -91,6 +91,11 @@ class Device {
     this.busyStatusUpdater();
   }
 
+
+  get serialized(){
+    return serializeKeyValuePairs(this.raw)
+  }
+
   get displayName() {
     const nameTemplate = this.pymakr.config.get().get("devices.nameTemplate");
     const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
@@ -106,7 +111,7 @@ class Device {
 
   get isHidden() {
     const { include, exclude } = this.pymakr.config.get().get("devices");
-    return this.config.hidden || !createIsIncluded(include, exclude)(serializeKeyValuePairs(this.raw));
+    return this.config.hidden || !createIsIncluded(include, exclude)(this.serialized);
   }
 
   async readPymakrConf() {
