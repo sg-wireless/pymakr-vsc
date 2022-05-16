@@ -91,9 +91,8 @@ class Device {
     this.busyStatusUpdater();
   }
 
-
-  get serialized(){
-    return serializeKeyValuePairs(this.raw)
+  get serialized() {
+    return serializeKeyValuePairs(this.raw);
   }
 
   get displayName() {
@@ -201,11 +200,11 @@ class Device {
     this.log.info(`runScript:\n\n${script}\n\n`);
     this.busy.set(true);
     const result = await this.adapter.runScript(script + "\n\r\n\r\n", options);
-    if (this.busy.get()) {
-      this.adapter.sendData("\r\n");
-      // if user wants to wait for script to be resolved, wait for device to be idle
-      if (!options.resolveBeforeResult) return new Promise((resolve) => this.busy.subscribe(() => resolve(result)));
-    }
+
+    // to avoid a race condition, only return the result once "busy" is false
+    if (this.busy.get() && !options.resolveBeforeResult)
+      return new Promise((resolve) => this.busy.next(() => resolve(result)));
+
     return result;
   }
 
@@ -221,6 +220,9 @@ class Device {
       exceptions: ["sendData", "reset", "connectSerial"],
       beforeEachCall: () => this.busy.set(true),
     });
+
+    // emit line break to trigger a `>>>`. This triggers the `busyStatusUpdater`
+    adapter.__proxyMeta.onIdle(() => this.adapter.sendData("\r\n"));
 
     rawAdapter.onTerminalData = (data) => {
       this.__onTerminalDataExclusive(data);
@@ -243,7 +245,6 @@ class Device {
         await proxy.processQueue();
       }
     });
-    this.adapter.__proxyMeta.onIdle(() => this.busy.set(false));
 
     this.adapter.__proxyMeta.afterEachCall(async ({ proxy }) => {
       if (this.temporaryConnection && !proxy.queue.length) {

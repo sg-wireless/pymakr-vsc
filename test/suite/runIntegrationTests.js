@@ -4,9 +4,9 @@ async function run() {
     runner: "main",
     concurrency: 1,
     reporter: "consoleReporter",
-    timeout: 5000,
+    timeout: 7500,
     // watch: true,
-    // pattern: ["busy-devices.test.js // some test // some nested test"],
+    // pattern: ["file-management.test.js"],
   });
 }
 
