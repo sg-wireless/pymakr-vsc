@@ -187,9 +187,9 @@ class ProxyMeta {
       await this.afterEachCall.run({ item: queueItem, proxy: this, result });
     }
 
+    this.isBusy = false;
     this.idle.resolve();
     this.onIdle.run()
-    this.isBusy = false;
   }
 
   /** Clears the queue. */
@@ -210,6 +210,8 @@ class ProxyMeta {
   reset() {
     this.clearQueue();
     this.skipCurrent();
+    this.isBusy = false
+    this.idle.resolve()
   }
 }
 
