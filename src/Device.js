@@ -84,11 +84,24 @@ class Device {
     /** @type {import("micropython-ctl-cont").BoardInfo} */
     this.info = null;
 
+    this.applyCustomDeviceConfig();
+
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
 
     this.busy.subscribe((val) => this.log.info(val ? "busy..." : "idle."));
     this.busyStatusUpdater();
+  }
+
+  applyCustomDeviceConfig() {
+    /** @type {{field: string, match: string, value: string}[]} */
+    const cfgs = this.pymakr.config.get().get("devices.config");
+    cfgs.forEach((cfg) => {
+      if (this.serialized.match(new RegExp(cfg.match, "gi"))) {
+        const target = Reflect.has(this, cfg.field) ? this : this.adapter
+        target[cfg.field] = cfg.value
+      }
+    });
   }
 
   get serialized() {
@@ -388,7 +401,9 @@ class Device {
    * saves state and refreshes views
    */
   onChanged() {
+    this.applyCustomDeviceConfig();
     this.state.save();
+    // throttle the UI refresh call. This makes sure that multiple devices doesn't trigger the same call.
     this.pymakr.refreshProvidersThrottled();
   }
 

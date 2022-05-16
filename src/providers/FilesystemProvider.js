@@ -95,7 +95,6 @@ class FileSystemProvider {
   async readDirectory(uri) {
     this.log.traceShort("read dir", uri.path);
     const device = this._getDevice(uri);
-    // fixme: MCU rootPath is not always /flash , can also be / or /sd
     const path = uri.path.startsWith(device.rootPath) ? uri.path : device.rootPath;
 
     try {

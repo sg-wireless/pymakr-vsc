@@ -62,7 +62,7 @@ class Commands {
      * @param {{device: Device}} treeItem
      */
     safeBootDevice: async ({ device }) => {
-      const timeout = 10000
+      const timeout = 10000;
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
         progress.report({ message: "Safe booting" });
         const error = () => {
@@ -491,7 +491,7 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     uploadProject: async ({ device, project }) => {
-      await device.adapter.remove("/flash", true);
+      await device.adapter.remove(device.rootPath, true);
       device.upload(project.folder, "/");
     },
 
@@ -543,11 +543,11 @@ class Commands {
      * @param {Partial<ProjectDeviceTreeItem>} treeItem
      */
     downloadProject: async (treeItem) => {
+      const regex = new RegExp(`^${treeItem.device.rootPath}`);
       const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
       const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
         ...fad,
-        // fixme: use device.rootPath
-        destination: treeItem.project.folder + fad.filename.replace(/^\/flash/, ""),
+        destination: treeItem.project.folder + fad.filename.replace(regex, ""),
       }));
       const files = filesAndDirs.filter((f) => !f.isDir);
       const dirs = filesAndDirs.filter((f) => f.isDir);
