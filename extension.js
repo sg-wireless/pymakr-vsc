@@ -10,6 +10,7 @@ let pymakr;
  * @param {import('vscode').ExtensionContext} context
  */
 function activate(context) {
+  console.log('--- Starting Pymakr ---')
   pymakr = new PyMakr(context);
 }
 
