@@ -19,31 +19,6 @@
     "onStartupFinished"
   ],
   "main": "./extension.js",
-  "release": {
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      [
-        "semantic-release-vsce",
-        {
-          "packageVsix": true
-        }
-      ],
-      [
-        "@semantic-release/github",
-        {
-          "assets": [
-            {
-              "path": "*.vsix",
-              "label": "Extension File"
-            }
-          ]
-        }
-      ],
-      "@semantic-release/git"
-    ]
-  },
   "icon": "media/pycom.png",
   "vsce": {
     "baseImagesUrl": "https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
@@ -694,7 +669,7 @@
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.8",
     "hookar": "^0.0.7-0",
-    "micropython-ctl-cont": "^1.13.9",
+    "micropython-ctl-cont": "^1.13.10",
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
     "serialport": "^10.2.2"
