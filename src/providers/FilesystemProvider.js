@@ -8,7 +8,7 @@ class FileSystemProvider {
    */
   constructor(pymakr) {
     this.pymakr = pymakr;
-    this.log = pymakr.log.createChild("filesystemProvider >");
+    this.log = pymakr.log.createChild("filesystemProvider");
 
     /** @private */
     this._emitter = new vscode.EventEmitter();
@@ -50,7 +50,7 @@ class FileSystemProvider {
    * @param {vscode.Uri} uri
    */
   async readFile(uri) {
-    // this.log.debug('read file', uri)
+    this.log.debug('read file', uri)
     const device = this._getDevice(uri);
     return device.adapter.getFile(uri.path);
   }
@@ -72,7 +72,7 @@ class FileSystemProvider {
     const device = this._getDevice(uri);
 
     try {
-      this.log.traceShort("stat file", uri);
+      this.log.debug("stat file", uri);
       const stat = await device.adapter.statPath(uri.path);
       this.log.debug("stat for", uri.path, stat);
 
@@ -93,7 +93,7 @@ class FileSystemProvider {
    * @param {vscode.Uri} uri
    */
   async readDirectory(uri) {
-    this.log.traceShort("read dir", uri.path);
+    this.log.debug("read dir", uri.path);
     const device = this._getDevice(uri);
     const path = uri.path.startsWith(device.rootPath) ? uri.path : device.rootPath;
 
