@@ -50,11 +50,11 @@ class DeviceTreeItem extends vscode.TreeItem {
     if (device.busy.get()) this.tooltip = "Busy";
 
     this.iconPath = device.busy.get()
-      ? new vscode.ThemeIcon("lock-small")
+      ? new vscode.ThemeIcon("sync~spin")
       : {
-          dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
-          light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
-        };
+        dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
+        light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
+      };
     device.busy.subscribe((isBusy) =>
       setTimeout(() => {
         if (device.busy.get() === isBusy) tree.refresh();
