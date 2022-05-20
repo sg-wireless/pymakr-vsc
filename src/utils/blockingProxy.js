@@ -26,11 +26,10 @@ const friendlyProxyQueueItem = (item) => {
  * @param {T} _target
  * @param {Object} [_options]
  * @param {(string|symbol)[]=} _options.exceptions methods that should not be queued
- * @param {BeforeEachCall<T>} _options.beforeEachCall
  * @returns {BlockingProxy<T>}
  */
 const createBlockingProxy = (_target, _options) => {
-  const options = { exceptions: [], beforeEachCall: () => {}, ..._options };
+  const options = { exceptions: [], ..._options };
 
   const proxyMeta = new ProxyMeta(_target);
 
@@ -47,7 +46,7 @@ const createBlockingProxy = (_target, _options) => {
       // else if field is a method, queue the call in the proxy helper queue
       else if (target[field] instanceof Function) {
         const promise = (...args) => {
-          const item = new BlockingProxyQueueItem(target, field, args, options);
+          const item = new BlockingProxyQueueItem(target, field, args, proxyMeta);
           proxyMeta.queue.push(item);
           proxyMeta.onAddedCall.run({ item, proxy: proxyMeta });
           proxyMeta.processQueue();
@@ -65,13 +64,13 @@ class BlockingProxyQueueItem {
    * @param {any} target
    * @param {string | symbol} field
    * @param {any[]} args
-   * @param {*} options
+   * @param {ProxyMeta} proxy
    */
-  constructor(target, field, args, options) {
+  constructor(target, field, args, proxy) {
     this.target = target;
     this.field = field;
     this.args = args;
-    this.options = options;
+    this.proxy = proxy;
     this.result = null;
     this.error = null;
     this.queuedAt = new Date();
@@ -87,7 +86,6 @@ class BlockingProxyQueueItem {
           try {
             this.startedAt = new Date();
             const { target, field, args } = this;
-            await this.options.beforeEachCall(target, field, args);
             this.result = await target[field].bind(target)(...args);
             this.finishedAt = new Date();
             resolve(this.result);
@@ -182,7 +180,6 @@ class ProxyMeta {
       this.history.push(queueItem);
       this.lastCall = queueItem;
       await this.beforeEachCall.run({ item: queueItem, proxy: this });
-
       const result = await queueItem.exec();
       await this.afterEachCall.run({ item: queueItem, proxy: this, result });
     }
@@ -220,12 +217,4 @@ module.exports = { createBlockingProxy, friendlyProxyQueueItem };
 /**
  * @template T
  * @typedef {T  & { __proxyMeta: ProxyMeta<T> }} BlockingProxy
- */
-
-/**
- * @template T
- * @callback BeforeEachCall
- * @param {T} target
- * @param {string|symbol} field
- * @param {any[]} params
  */

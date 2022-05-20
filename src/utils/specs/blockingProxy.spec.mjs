@@ -69,13 +69,13 @@ test("blocked object can have beforeEachCall hook and exceptions", async () => {
   let finishedLastTestStamp = 0;
   let isReadyTestStamp = 0;
 
-  const proxied = createBlockingProxy(obj, {
-    exceptions: ["async20"],
-    beforeEachCall: async (target, field) => {
-      await new Promise((resolve) => setTimeout(resolve, 30));
-      target.events.push("before " + field.toString());
-    },
+  const proxied = createBlockingProxy(obj, { exceptions: ["async20"] });
+
+  proxied.__proxyMeta.beforeEachCall(async ({ item }) => {
+    await new Promise((resolve) => setTimeout(resolve, 30));
+    item.target.events.push("before " + item.field.toString());
   });
+
   const promises = [
     proxied.async20(), // skip, exception
     proxied.async10(), // run queued

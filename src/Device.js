@@ -229,10 +229,8 @@ class Device {
 
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
-    const adapter = createBlockingProxy(rawAdapter, {
-      exceptions: ["sendData", "reset", "connectSerial"],
-      beforeEachCall: () => this.busy.set(true),
-    });
+    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "reset", "connectSerial"] });
+    adapter.__proxyMeta.beforeEachCall(() => this.busy.set(true));
 
     // emit line break to trigger a `>>>`. This triggers the `busyStatusUpdater`
     adapter.__proxyMeta.onIdle(() => this.adapter.sendData("\r\n"));
