@@ -452,8 +452,9 @@
       },
       {
         "command": "pymakr.runEditor",
-        "title": "Run on device",
+        "title": "Run file or selection on device",
         "shortTitle": "Run",
+        "enablement": "editorFocus",
         "category": "PyMakr"
       },
       {
