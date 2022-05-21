@@ -342,7 +342,7 @@ class Commands {
      * @param {ProjectTreeItem} treeItem
      * @returns {Promise<any>}
      */
-    openProjectSettings: async (treeItem) => {
+    configureProject: async (treeItem) => {
       if (!treeItem) {
         return;
       }
@@ -350,7 +350,7 @@ class Commands {
       const uri = vscode.Uri.file(project.folder + "/pymakr.conf");
       this.log.debug(`Revealing ${uri.fsPath} in explorer`);
       await vscode.commands.executeCommand("revealInExplorer", uri);
-      await vscode.commands.executeCommand("vscode.open", uri,);
+      await vscode.commands.executeCommand("vscode.open", uri);
     },
 
     /**
@@ -630,6 +630,7 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     addDeviceToFileExplorer: async ({ device }) => {
+      // Todo: move to utlis
       const uri = vscode.Uri.from({
         scheme: device.protocol,
         // vscode doesn't like "/" in the authority name
@@ -642,9 +643,28 @@ class Commands {
       const wsPos = vscode.workspace.workspaceFolders?.length || 0;
       vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri, name });
 
+      vscode.commands.executeCommand("revealInExplorer", uri);
       return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar();
     },
+
+    /**
+     * Navigate to a mounted device in the explorer view
+     * @param {ProjectDeviceTreeItem} treeItem
+     */
+    revealDeviceInSidebar: async ({ device }) => {
+      // Todo: move to utlis
+      const uri = vscode.Uri.from({
+        scheme: device.protocol,
+        // vscode doesn't like "/" in the authority name
+        authority: device.address.replace(/\//g, "%2F"),
+        path: device.rootPath,
+      });
+      // todo: this does not reliably set 
+      vscode.commands.executeCommand("revealInExplorer", uri);
+    },
   };
+
+
 }
 
 module.exports = { Commands };
