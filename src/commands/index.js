@@ -11,6 +11,7 @@ const {
   waitFor,
 } = require("../utils/misc");
 const { relative } = require("path");
+const { Project } = require("../Project");
 
 /**
  * Commands contains all commands that can be accessed through VSCode.
@@ -37,8 +38,7 @@ class Commands {
           await value.bind(this)(...params);
         } catch (err) {
           vscode.window.showErrorMessage(
-            `[Pymakr] Failed to run command: ${key}. Reason: ${
-              err.message || err.name || err
+            `[Pymakr] Failed to run command: ${key}. Reason: ${err.message || err.name || err
             }. Please see logs for info.`
           );
           this.log.error(`Failed to run command: ${key} with params:`, params);
@@ -336,6 +336,25 @@ class Commands {
       const advancedMode = vscode.workspace.getConfiguration("pymakr").get("advancedMode");
       this.pymakr.config.get().update("advancedMode", !advancedMode);
     },
+
+    /**
+     * Opens the selected project settins in the editor
+     * @param {ProjectTreeItem} treeItem
+     * @returns {Promise<any>}
+     */
+    openProjectSettings: async (treeItem) => {
+      if (!treeItem) {
+        return;
+      }
+      if (!treeItem.project.folder) {
+        return;
+      }
+      let uri = vscode.Uri.file(treeItem.project.folder + "/pymakr.conf");
+      this.log.debug(`Revealing ${uri.fsPath} in explorer`);
+      await vscode.commands.executeCommand("revealInExplorer", uri);
+      await vscode.commands.executeCommand("vscode.open", uri, );
+    },
+
     /**
      * Runs the currently selected editor code on the device. If no code is selected, all code is ran.
      */
@@ -484,7 +503,7 @@ class Commands {
     },
 
     // todo remove
-    newDeviceRecover: async () => {},
+    newDeviceRecover: async () => { },
 
     /**
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.

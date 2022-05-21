@@ -439,6 +439,10 @@
       {
         "command": "pymakr.toggleAdvancedMode",
         "title": "Toggle advanced mode"
+      {
+        "command": "pymakr.openProjectSettings",
+        "title": "Open the project settings",
+        "category": "PyMakr"
       }
     ],
     "keybindings": [
@@ -474,6 +478,11 @@
         "label": "device"
       },
       {
+        "id": "pymakr.projectMenu",
+        "icon": "$(ellipsis)",
+        "label": "project"
+      },
+      {
         "id": "pymakr.editorContextMenu",
         "label": "pymakr"
       },
@@ -489,6 +498,17 @@
         },
         {
           "command": "pymakr.newDeviceTelnet"
+        }
+      ],
+      "pymakr.projectMenu": [
+        {
+          "command": "pymakr.selectDevicesForProjectPrompt",
+          "group": "1-primary",
+          "when": "viewItem == project"
+        },
+        {
+          "command": "pymakr.openProjectSettings",
+          "group": "1-primary"
         }
       ],
       "pymakr.projectDeviceMenu": [
@@ -568,11 +588,6 @@
           "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice"
         },
         {
-          "command": "pymakr.selectDevicesForProjectPrompt",
-          "group": "inline",
-          "when": "viewItem == project"
-        },
-        {
           "command": "pymakr.downloadProject",
           "when": "viewItem == connectedProjectDevice",
           "group": "inline@8"
@@ -600,6 +615,11 @@
         {
           "submenu": "pymakr.projectDeviceMenu",
           "when": "viewItem != project",
+          "group": "inline@100"
+        },
+        {
+          "submenu": "pymakr.projectMenu",
+          "when": "viewItem == project",
           "group": "inline@100"
         }
       ],
