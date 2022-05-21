@@ -117,7 +117,8 @@
               "manufacturer=Microsoft",
               "manufacturer=Microchip Technology.*",
               "friendlyName=.*CH34[01].*",
-              "friendlyName=.*CP21.*"
+              "friendlyName=.*CP21.*",
+              "manufacturer=(?!undefined)"
             ],
             "description": "Filter devices to include in the devices list. Uses regular expression. Matches can be done against any property, eg. \"Microsoft\" or against a specific property, eg. \"manufacturer=Microsoft\r\n\r\nFor a list of available devices, run the command \"list devices\"."
           },
