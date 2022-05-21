@@ -318,7 +318,7 @@
       },
       {
         "view": "pymakr-devices-tree",
-        "contents": "Found no devices.\n\nIf you wish to unhide a previously hidden device, select this box and click the ellipsis menu (...). Then select \"Unhide a device\"."
+        "contents": "No devices could be found.\n\n[Unhide a hidden device](command:pymakr.unhideDevice)\n\n[List all devices](command:pymakr.listDevices)"
       }
     ],
     "commands": [
