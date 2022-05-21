@@ -314,7 +314,7 @@
     "viewsWelcome": [
       {
         "view": "pymakr-projects-tree",
-        "contents": "You have no Pymakr projects in your workspace.\n\n[Create project](command:pymakr.createProjectPrompt)"
+        "contents": "Pymakr 2 uses [multi-root workspaces](https://code.visualstudio.com/docs/editor/workspaces#_multiroot-workspaces) to allow easy access to both project files and devices.\nNo Pymakr projects were found in the current workspace. Please add a project or open an existing workspace.\n\n[Create project](command:pymakr.createProjectPrompt)\n\n[Open Workspace](command:workbench.action.openWorkspace)"
       },
       {
         "view": "pymakr-devices-tree",
