@@ -346,13 +346,11 @@ class Commands {
       if (!treeItem) {
         return;
       }
-      if (!treeItem.project.folder) {
-        return;
-      }
-      let uri = vscode.Uri.file(treeItem.project.folder + "/pymakr.conf");
+      const project = this.pymakr.vscodeHelpers.coerceProject(treeItem);
+      const uri = vscode.Uri.file(project.folder + "/pymakr.conf");
       this.log.debug(`Revealing ${uri.fsPath} in explorer`);
       await vscode.commands.executeCommand("revealInExplorer", uri);
-      await vscode.commands.executeCommand("vscode.open", uri, );
+      await vscode.commands.executeCommand("vscode.open", uri,);
     },
 
     /**
