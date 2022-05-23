@@ -35,17 +35,14 @@ test("Can find devices", async () => {
 
       test("created repl shows welcome msg", async () => {
         assert.match(welcomeMsg, /MicroPython/, "Could not detect a MicroPython device: " + welcomeMsg);
-        assert.match(welcomeMsg, /\r\n>>>/, "No repl prompt");
+        assert.match(welcomeMsg, /\r\n>>>/, "No repl prompt. Received: " + welcomeMsg);
         // todo: low-prio - >>> test fails on esp8266 as the welcomesting is truncated
       });
 
       test("can use print command", async () => {
-        const receivedFromTerminal = new Promise((resolve) => device.onTerminalData(resolve));
         if (device.busy.get()) await new Promise(device.busy.next);
-
         terminal.sendText('print("foo")\n');
-        await new Promise((resolve) => setTimeout(resolve, 140));
-        assert.equal(await receivedFromTerminal, 'print("foo")' + "\r\nfoo" + "\r\n>>> ");
+        await new Promise((resolve) => device.readUntil(['print\\("foo"\\)', "foo", ">>> "].join("\r\n"), resolve));
       });
 
       test("can disconnect", async () => {

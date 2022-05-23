@@ -14,6 +14,7 @@ const { writable } = require("./utils/store");
 const { StateManager } = require("./utils/StateManager");
 const picomatch = require("picomatch");
 const { createSequenceHooksCollection } = require("hookar");
+const { createReadUntil } = require("./utils/readUntil");
 
 /**
  * @typedef {Object} DeviceConfig
@@ -90,7 +91,9 @@ class Device {
     subscribe(() => this.onChanged());
 
     this.busy.subscribe((val) => this.log.info(val ? "busy..." : "idle."));
-    this.busyStatusUpdater();
+
+    this.readUntil = createReadUntil();
+    this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
   }
 
   applyCustomDeviceConfig() {
@@ -98,8 +101,8 @@ class Device {
     const cfgs = this.pymakr.config.get().get("devices.config");
     cfgs.forEach((cfg) => {
       if (this.serialized.match(new RegExp(cfg.match, "gi"))) {
-        const target = Reflect.has(this, cfg.field) ? this : this.adapter
-        target[cfg.field] = cfg.value
+        const target = Reflect.has(this, cfg.field) ? this : this.adapter;
+        target[cfg.field] = cfg.value;
       }
     });
   }
@@ -143,21 +146,6 @@ class Device {
   createState() {
     const createState = () => cherryPick(this, ["connected", "name", "id", "config"]);
     return new StateManager(this.pymakr, `devices.${this.id}`, createState);
-  }
-
-  /**
-   * traces terminal data till pattern is found
-   * @param {string|RegExp} pattern
-   */
-  readUntil(pattern = /^\r\n>>> $/) {
-    return new Promise((resolve) => {
-      const unsub = this.onTerminalData((str) => {
-        if (str.match(pattern)) {
-          resolve();
-          unsub();
-        }
-      });
-    });
   }
 
   safeBoot() {
@@ -237,6 +225,7 @@ class Device {
 
     rawAdapter.onTerminalData = (data) => {
       this.__onTerminalDataExclusive(data);
+      this.readUntil.push(data);
       this.onTerminalData.run(data);
       this.terminalLogFile.write(data);
     };
@@ -362,22 +351,6 @@ class Device {
 
   openRepl() {
     this.adapter.sendData("\r\x02");
-  }
-
-  /**
-   * Idle checker. Optimized for performance, not readability.
-   */
-  async busyStatusUpdater() {
-    let lastLine = "";
-    this.onTerminalData((newString) => {
-      const breakAt = newString.lastIndexOf("\n");
-      lastLine = breakAt > -1 ? newString.substring(breakAt + 1) : lastLine + newString;
-
-      const isBusy = !lastLine.match(/^>>> /);
-      // todo try this for raw repl support?
-      // const isBusy = !lastLine.match(/^(>>> )|>/);
-      this.busy.set(isBusy);
-    });
   }
 
   /** @private */
