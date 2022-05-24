@@ -111,14 +111,20 @@ class Device {
     return serializeKeyValuePairs(this.raw);
   }
 
+  /** the user provided name */
+  get customName() {
+    const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
+    return names[this.raw.serialNumber] || '';
+  }
+
+  /** the full device name using the naming template */
   get displayName() {
     const nameTemplate = this.pymakr.config.get().get("devices.nameTemplate");
-    const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
 
     const words = {
       ...this.raw,
       protocol: this.protocol,
-      displayName: names[this.raw.serialNumber] || this.name,
+      displayName: this.customName || this.name,
       projectName: this.pymakrConf.name ? this.pymakrConf.name : "unknown",
     };
 
