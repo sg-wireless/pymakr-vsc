@@ -40,8 +40,8 @@ const createLogger = (name) => {
           console.log("info: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("info: " + data2string(data));
         },
-        warning: (...data) => {
-          console.log("warning: ", ...data); // in case we need a copy/paste of the console
+        warn: (...data) => {
+          console.warn("warning: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("warning: " + data2string(data));
         },
         error: (...data) => {
