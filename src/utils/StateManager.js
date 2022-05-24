@@ -29,7 +29,6 @@ class StateManager {
   save() {
     const value = this._cb();
     this._context.workspaceState.update(this._id, value);
-    // todo: avoid logging passwords in the output channel
     this.log.debugShort("save", this._id, value);
     return this.load();
   }
@@ -40,7 +39,6 @@ class StateManager {
    */
   load() {
     const value = this._context.workspaceState.get(this._id) || {};
-    // todo: avoid logging passwords in the output channel
     this.log.debugShort("load", this._id, value);
     return value;
   }

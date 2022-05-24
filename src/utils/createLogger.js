@@ -18,7 +18,8 @@ function data2string(data) {
   if (data instanceof Array) {
     return data.map(data2string).join(" ");
   }
-  return util.format(data);
+  // replace passwords in json with ****
+  return util.format(data).replace(/password: '.*?'/g, "password: '****'");
 }
 
 
@@ -29,12 +30,12 @@ function data2string(data) {
 const createLogger = (name) => {
   const outputChannel = vscode.window.createOutputChannel("PyMakr", "log");
   const now = Date.now()
-
+  // todo: add test to check writing to vscode output channel
+  // todo: avoid logging passwords in the console log
   const log = _createLogger(
     {
       methods: {
         traceShort: console.log,
-        //todo: add test to check writing to vscode output channel
         info: (...data) => {
           console.log("info: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("info: " + data2string(data));
