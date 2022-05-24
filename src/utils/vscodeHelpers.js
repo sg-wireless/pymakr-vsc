@@ -54,7 +54,7 @@ const createVSCodeHelpers = (pymakr) => {
     devicePicker: async (preselectedDevices = []) => {
       const answers = await vscode.window.showQuickPick(
         pymakr.devicesStore.get().map((device) => ({
-          label: device.name,
+          label: device.displayName,
           picked: preselectedDevices.includes(device),
           _device: device,
         })),

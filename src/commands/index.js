@@ -67,7 +67,7 @@ class Commands {
         progress.report({ message: "Safe booting" });
         const error = () => {
           const msg = "Could not safeboot device. Please hard reset the device and verify that a shield is installed.";
-          device.log.warn(`Error for "${device.name}": ${msg}`);
+          device.log.warn(`Error for "${device.displayName}": ${msg}`);
           vscode.window.showWarningMessage(msg);
         };
         await waitFor(device.safeBoot(), timeout, error);
@@ -134,7 +134,7 @@ class Commands {
      */
     unhideDevice: async () => {
       const devices = this.pymakr.devicesStore.get().filter((device) => device.config.hidden);
-      const picks = devices.map((device) => ({ label: device.name, description: device.id, device }));
+      const picks = devices.map((device) => ({ label: device.displayName, description: device.id, device }));
       const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to unhide" });
 
       if (picked && picked.length) {
@@ -363,7 +363,7 @@ class Commands {
       const options = {};
 
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-        progress.report({ message: `Run script on ${device.name}` });
+        progress.report({ message: `Run script on ${device.displayName}` });
         setTimeout(
           () => progress.report({ message: "Closing popup in 5s. Script will continue in background." }),
           5000
@@ -402,7 +402,7 @@ class Commands {
       if (device.busy.get()) {
         const options = { restart: "Restart in safe mode" };
         const answer = await vscode.window.showInformationMessage(
-          `${device.name} seems to be busy. Do you wish restart it in safe mode?`,
+          `${device.displayName} seems to be busy. Do you wish restart it in safe mode?`,
           options.restart
         );
         if (answer === options.restart) this.commands.safeBootDevice({ device });
@@ -428,7 +428,7 @@ class Commands {
       const existingTerminal = this.pymakr.terminalsStore.get().find((t) => t.device === device);
       if (existingTerminal) {
         const answer = await vscode.window.showInformationMessage(
-          `A terminal for ${device.name} already exists.`,
+          `A terminal for ${device.displayName} already exists.`,
           sharedTerm,
           openExistingTerm
         );
@@ -527,7 +527,7 @@ class Commands {
       if (!device.connected) await device.connect();
       try {
         await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-          progress.report({ message: `Uploading "${friendlySource}" to "${device.name}"...` });
+          progress.report({ message: `Uploading "${friendlySource}" to "${device.displayName}"...` });
           await device.upload(fsPath, destination);
         });
       } catch (err) {
@@ -577,7 +577,7 @@ class Commands {
             ...devices
               .filter((d) => !d.config.hidden)
               .map((_device) => ({
-                label: _device.name,
+                label: _device.displayName,
                 device: _device,
                 picked: project.devices.includes(_device),
               })),
