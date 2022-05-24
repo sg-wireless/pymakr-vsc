@@ -116,7 +116,7 @@ class Commands {
           try {
             const templatePath = `${__dirname}/../../templates/${templateId}`;
             await device.adapter.remove(device.rootPath, true);
-            await device.upload(templatePath, "/");
+            await this.commands.upload({ fsPath: templatePath }, device, "/");
             resolve();
           } catch (err) {
             this.log.error(err);
@@ -492,7 +492,7 @@ class Commands {
      */
     uploadProject: async ({ device, project }) => {
       await device.adapter.remove(device.rootPath, true);
-      device.upload(project.folder, "/");
+      this.commands.upload({ fsPath: project.folder }, device, "/");
     },
 
     /**
@@ -518,7 +518,7 @@ class Commands {
 
     /**
      * Uploads a file/folder to a connected device
-     * @param {vscode.Uri} uri the file/folder to upload
+     * @param {{fsPath: string}} uri the file/folder to upload
      * @param {import('../Device.js').Device} device
      * @param {string} destination not including the device.rootPath ( /flash or / )
      */
@@ -528,7 +528,15 @@ class Commands {
       try {
         await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
           progress.report({ message: `Uploading "${friendlySource}" to "${device.displayName}"...` });
-          await device.upload(fsPath, destination);
+          let filesAmount = 0;
+          await device.upload(fsPath, destination, {
+            onScanComplete: (files) => (filesAmount = files.length),
+            onUpload: (file) =>
+              progress.report({
+                message: `Uploading "${file}" to "${device.displayName}"...`,
+                increment: 100 / filesAmount,
+              }),
+          });
         });
       } catch (err) {
         const errors = ["failed to upload", fsPath, "to", destination, "\r\nReason:", err];
