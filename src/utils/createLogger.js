@@ -33,7 +33,6 @@ const createLogger = (name) => {
   const log = _createLogger(
     {
       methods: {
-        debugShort: console.log,
         traceShort: console.log,
         //todo: add test to check writing to vscode output channel
         info: (...data) => {
@@ -48,13 +47,17 @@ const createLogger = (name) => {
           console.log("error: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("error: " + data2string(data));
         },
+        debugShort: (...data) => {
+          console.log("debug: ", ...data); // in case we need a copy/paste of the console
+          outputChannel.appendLine("debug: " + data2string(data));
+        },
         debug: (...data) => {
           console.log("debug: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("debug: " + data2string(data));
         },
       },
     },
-    ()=> `${name} (${Date.now() - now})`
+    () => `${name} (${Date.now() - now})`
   );
 
   log.levels = {
