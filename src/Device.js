@@ -117,6 +117,7 @@ class Device {
 
     const words = {
       ...this.raw,
+      protocol: this.protocol,
       displayName: names[this.raw.serialNumber] || this.name,
       projectName: this.pymakrConf.name ? this.pymakrConf.name : "unknown",
     };
