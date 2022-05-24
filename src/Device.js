@@ -111,13 +111,20 @@ class Device {
     return serializeKeyValuePairs(this.raw);
   }
 
+  /** the user provided name */
+  get customName() {
+    const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
+    return names[this.raw.serialNumber] || '';
+  }
+
+  /** the full device name using the naming template */
   get displayName() {
     const nameTemplate = this.pymakr.config.get().get("devices.nameTemplate");
-    const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
 
     const words = {
       ...this.raw,
-      displayName: names[this.raw.serialNumber] || this.name,
+      protocol: this.protocol,
+      displayName: this.customName || this.name,
       projectName: this.pymakrConf.name ? this.pymakrConf.name : "unknown",
     };
 
@@ -382,8 +389,12 @@ class Device {
    * Uploads file or folder to device
    * @param {string} source
    * @param {string} destination
+   * @param {{
+   *   onScanComplete: (files: string[]) => void,
+   *   onUpload: (file: string) => void,
+   * }} options
    */
-  async upload(source, destination) {
+  async upload(source, destination, options) {
     destination = posix.join(this.rootPath, `/${destination}`.replace(/\/+/g, "/"));
     const root = source;
     const ignores = [...this.pymakr.config.get().get("ignore")];
@@ -391,6 +402,9 @@ class Device {
     if (pymakrConfig) ignores.push(...(pymakrConfig.py_ignore || []));
 
     const isIgnore = picomatch(ignores);
+
+    /** @type {{source: string, destination: string}[]} */
+    const queue = [];
 
     const _uploadFile = async (file, destination) => {
       this.log.traceShort("uploadFile", file, "to", destination);
@@ -414,11 +428,16 @@ class Device {
       //  'The "from" argument must be of type string. Received null'
       const relativePath = relative(root, source);
       if (!isIgnore(relativePath))
-        return statSync(source).isDirectory() ? _uploadDir(source, destination) : _uploadFile(source, destination);
+        return statSync(source).isDirectory() ? _uploadDir(source, destination) : queue.push({ source, destination });
     };
 
     this.log.info("upload", source, "to", destination);
     await _upload(source, destination);
+    options.onScanComplete(queue.map((entry) => entry.source));
+    for (const file of queue) {
+      options.onUpload(relative(root, file.source));
+      await _uploadFile(file.source, file.destination);
+    }
     this.log.info("upload completed");
   }
 }

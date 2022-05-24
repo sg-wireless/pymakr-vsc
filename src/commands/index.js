@@ -67,7 +67,7 @@ class Commands {
         progress.report({ message: "Safe booting" });
         const error = () => {
           const msg = "Could not safeboot device. Please hard reset the device and verify that a shield is installed.";
-          device.log.warn(`Error for "${device.name}": ${msg}`);
+          device.log.warn(`Error for "${device.displayName}": ${msg}`);
           vscode.window.showWarningMessage(msg);
         };
         await waitFor(device.safeBoot(), timeout, error);
@@ -116,7 +116,7 @@ class Commands {
           try {
             const templatePath = `${__dirname}/../../templates/${templateId}`;
             await device.adapter.remove(device.rootPath, true);
-            await device.upload(templatePath, "/");
+            await this.commands.upload({ fsPath: templatePath }, device, "/");
             resolve();
           } catch (err) {
             this.log.error(err);
@@ -134,7 +134,7 @@ class Commands {
      */
     unhideDevice: async () => {
       const devices = this.pymakr.devicesStore.get().filter((device) => device.config.hidden);
-      const picks = devices.map((device) => ({ label: device.name, description: device.id, device }));
+      const picks = devices.map((device) => ({ label: device.displayName, description: device.id, device }));
       const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to unhide" });
 
       if (picked && picked.length) {
@@ -288,7 +288,7 @@ class Commands {
           main: async (config) => {
             const result = await vscode.window.showQuickPick(
               [
-                { label: "name", description: config.name },
+                { label: "name", description: device.customName || device.name },
                 { label: "autoConnect", description: config.autoConnect },
                 // todo are we adding telnet?
                 // { label: "username", description: config.username || "" },
@@ -299,7 +299,7 @@ class Commands {
             return result?.label || "_DONE_";
           },
           name: async () => {
-            const name = await vscode.window.showInputBox({ placeHolder: device.name });
+            const name = await vscode.window.showInputBox({ placeHolder: device.name, value: device.customName });
 
             const namesMap = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
 
@@ -363,7 +363,7 @@ class Commands {
       const options = {};
 
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-        progress.report({ message: `Run script on ${device.name}` });
+        progress.report({ message: `Run script on ${device.displayName}` });
         setTimeout(
           () => progress.report({ message: "Closing popup in 5s. Script will continue in background." }),
           5000
@@ -402,7 +402,7 @@ class Commands {
       if (device.busy.get()) {
         const options = { restart: "Restart in safe mode" };
         const answer = await vscode.window.showInformationMessage(
-          `${device.name} seems to be busy. Do you wish restart it in safe mode?`,
+          `${device.displayName} seems to be busy. Do you wish restart it in safe mode?`,
           options.restart
         );
         if (answer === options.restart) this.commands.safeBootDevice({ device });
@@ -428,7 +428,7 @@ class Commands {
       const existingTerminal = this.pymakr.terminalsStore.get().find((t) => t.device === device);
       if (existingTerminal) {
         const answer = await vscode.window.showInformationMessage(
-          `A terminal for ${device.name} already exists.`,
+          `A terminal for ${device.displayName} already exists.`,
           sharedTerm,
           openExistingTerm
         );
@@ -492,7 +492,7 @@ class Commands {
      */
     uploadProject: async ({ device, project }) => {
       await device.adapter.remove(device.rootPath, true);
-      device.upload(project.folder, "/");
+      this.commands.upload({ fsPath: project.folder }, device, "/");
     },
 
     /**
@@ -518,7 +518,7 @@ class Commands {
 
     /**
      * Uploads a file/folder to a connected device
-     * @param {vscode.Uri} uri the file/folder to upload
+     * @param {{fsPath: string}} uri the file/folder to upload
      * @param {import('../Device.js').Device} device
      * @param {string} destination not including the device.rootPath ( /flash or / )
      */
@@ -527,8 +527,16 @@ class Commands {
       if (!device.connected) await device.connect();
       try {
         await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-          progress.report({ message: `Uploading "${friendlySource}" to "${device.name}"...` });
-          await device.upload(fsPath, destination);
+          progress.report({ message: `Uploading "${friendlySource}" to "${device.displayName}"...` });
+          let filesAmount = 0;
+          await device.upload(fsPath, destination, {
+            onScanComplete: (files) => (filesAmount = files.length),
+            onUpload: (file) =>
+              progress.report({
+                message: `Uploading "${file}" to "${device.displayName}"...`,
+                increment: 100 / filesAmount,
+              }),
+          });
         });
       } catch (err) {
         const errors = ["failed to upload", fsPath, "to", destination, "\r\nReason:", err];
@@ -577,7 +585,7 @@ class Commands {
             ...devices
               .filter((d) => !d.config.hidden)
               .map((_device) => ({
-                label: _device.name,
+                label: _device.displayName,
                 device: _device,
                 picked: project.devices.includes(_device),
               })),
