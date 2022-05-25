@@ -29,7 +29,6 @@ class StateManager {
   save() {
     const value = this._cb();
     this._context.workspaceState.update(this._id, value);
-
     this.log.debugShort("save", this._id, value);
     return this.load();
   }

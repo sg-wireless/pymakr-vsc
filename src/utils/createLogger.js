@@ -18,7 +18,8 @@ function data2string(data) {
   if (data instanceof Array) {
     return data.map(data2string).join(" ");
   }
-  return util.format(data);
+  // replace passwords in json with ****
+  return util.format(data).replace(/password: '.*?'/g, "password: '****'");
 }
 
 
@@ -29,13 +30,12 @@ function data2string(data) {
 const createLogger = (name) => {
   const outputChannel = vscode.window.createOutputChannel("PyMakr", "log");
   const now = Date.now()
-
+  // todo: add test to check writing to vscode output channel
+  // todo: avoid logging passwords in the console log
   const log = _createLogger(
     {
       methods: {
-        debugShort: console.log,
         traceShort: console.log,
-        //todo: add test to check writing to vscode output channel
         info: (...data) => {
           console.log("info: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("info: " + data2string(data));
@@ -48,13 +48,17 @@ const createLogger = (name) => {
           console.log("error: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("error: " + data2string(data));
         },
+        debugShort: (...data) => {
+          console.log("debug: ", ...data); // in case we need a copy/paste of the console
+          outputChannel.appendLine("debug: " + data2string(data));
+        },
         debug: (...data) => {
           console.log("debug: ", ...data); // in case we need a copy/paste of the console
           outputChannel.appendLine("debug: " + data2string(data));
         },
       },
     },
-    ()=> `${name} (${Date.now() - now})`
+    () => `${name} (${Date.now() - now})`
   );
 
   log.levels = {

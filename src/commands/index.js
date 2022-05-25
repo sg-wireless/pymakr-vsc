@@ -11,6 +11,7 @@ const {
   waitFor,
 } = require("../utils/misc");
 const { relative } = require("path");
+const { Project } = require("../Project");
 
 /**
  * Commands contains all commands that can be accessed through VSCode.
@@ -37,8 +38,7 @@ class Commands {
           await value.bind(this)(...params);
         } catch (err) {
           vscode.window.showErrorMessage(
-            `[Pymakr] Failed to run command: ${key}. Reason: ${
-              err.message || err.name || err
+            `[Pymakr] Failed to run command: ${key}. Reason: ${err.message || err.name || err
             }. Please see logs for info.`
           );
           this.log.error(`Failed to run command: ${key} with params:`, params);
@@ -336,6 +336,23 @@ class Commands {
       const advancedMode = vscode.workspace.getConfiguration("pymakr").get("advancedMode");
       this.pymakr.config.get().update("advancedMode", !advancedMode);
     },
+
+    /**
+     * Opens the selected project settins in the editor
+     * @param {ProjectTreeItem} treeItem
+     * @returns {Promise<any>}
+     */
+    configureProject: async (treeItem) => {
+      if (!treeItem) {
+        return;
+      }
+      const project = this.pymakr.vscodeHelpers.coerceProject(treeItem);
+      const uri = vscode.Uri.file(project.folder + "/pymakr.conf");
+      this.log.debug(`Revealing ${uri.fsPath} in explorer`);
+      await vscode.commands.executeCommand("revealInExplorer", uri);
+      await vscode.commands.executeCommand("vscode.open", uri);
+    },
+
     /**
      * Runs the currently selected editor code on the device. If no code is selected, all code is ran.
      */
@@ -484,7 +501,7 @@ class Commands {
     },
 
     // todo remove
-    newDeviceRecover: async () => {},
+    newDeviceRecover: async () => { },
 
     /**
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.
@@ -613,6 +630,7 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     addDeviceToFileExplorer: async ({ device }) => {
+      // Todo: move to utlis
       const uri = vscode.Uri.from({
         scheme: device.protocol,
         // vscode doesn't like "/" in the authority name
@@ -625,9 +643,28 @@ class Commands {
       const wsPos = vscode.workspace.workspaceFolders?.length || 0;
       vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri, name });
 
+      vscode.commands.executeCommand("revealInExplorer", uri);
       return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar();
     },
+
+    /**
+     * Navigate to a mounted device in the explorer view
+     * @param {ProjectDeviceTreeItem} treeItem
+     */
+    revealDeviceInSidebar: async ({ device }) => {
+      // Todo: move to utlis
+      const uri = vscode.Uri.from({
+        scheme: device.protocol,
+        // vscode doesn't like "/" in the authority name
+        authority: device.address.replace(/\//g, "%2F"),
+        path: device.rootPath,
+      });
+      // todo: this does not reliably set 
+      vscode.commands.executeCommand("revealInExplorer", uri);
+    },
   };
+
+
 }
 
 module.exports = { Commands };
