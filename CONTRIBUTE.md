@@ -108,3 +108,6 @@ We encourage commit messages to follow [Angular's Commit Message Format](https:/
 ## API
 
 For API documentation, please see [Pymakr API](https://htmlpreview.github.io/?https://raw.githubusercontent.com/pycom/pymakr-vsc/next/docs/classes/PyMakr.html).
+
+## Release flow
+<img src="./media/contribute/release-flow.png">
