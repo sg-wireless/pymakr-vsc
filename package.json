@@ -175,11 +175,6 @@
             },
             "default": [
               {
-                "match": "manufacturer=.*",
-                "field": "rootPath",
-                "value": "/flash"
-              },
-              {
                 "match": "serialNumber=Example1234",
                 "field": "rootPath",
                 "value": "/custom/path"

@@ -69,7 +69,6 @@ class Device {
     /** If true, device will disconnect at the end of execution queue */
     this.temporaryConnection = false;
     // TODO: determine the rootpath of a device when connecting. https://github.com/pycom/pymakr-vsc/discussions/224
-    this.rootPath = "/flash"; // TODO: make this configurable
 
     this.connected = false;
     this.connecting = false;
@@ -77,6 +76,7 @@ class Device {
     this.lostConnection = false;
     /** @type {DeviceConfig} */
     this.config = { ...configDefaults, ...this.stateManager.load().config };
+    this.rootPath = this.stateManager.load().rootPath;
 
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
@@ -94,7 +94,6 @@ class Device {
 
     this.readUntil = createReadUntil();
     this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
-
   }
 
   applyCustomDeviceConfig() {
@@ -144,7 +143,7 @@ class Device {
       const isChanged = JSON.stringify(pymakrConf) !== JSON.stringify(this.pymakrConf);
       this.pymakrConf = pymakrConf;
       return isChanged;
-    } catch (err) { }
+    } catch (err) {}
   }
 
   /**
@@ -152,7 +151,7 @@ class Device {
    * The saved data is determined by the callback provided to the StateManager constructor
    */
   createStateManager() {
-    const createStateCallback = () => cherryPick(this, ["connected", "name", "id", "config"]);
+    const createStateCallback = () => cherryPick(this, ["connected", "name", "id", "config", "rootPath"]);
     return new StateManager(this.pymakr, `devices.${this.id}`, createStateCallback);
   }
 
@@ -179,7 +178,7 @@ class Device {
    * Therefore any wrapping or extending of this method will be lost whenever a terminal is used
    * @param {string} data
    */
-  __onTerminalDataExclusive(data) { }
+  __onTerminalDataExclusive(data) {}
 
   /**
    * Auto connects device if required by user preferences
@@ -347,6 +346,7 @@ class Device {
           this.log.info("Got access.");
           this.log.info("Getting device info.");
           this.info = await this.adapter.getBoardInfo();
+          this.rootPath = this.rootPath || (await this.getRootPath());
           if (await this.readPymakrConf()) this.changed();
           this.busy.set(false);
           resolve();
@@ -355,6 +355,13 @@ class Device {
 
       this.openRepl();
     });
+  }
+
+  async getRootPath() {
+    const files = (await this.adapter.listFiles("/")).map((file) => file.filename);
+    const rootPath = files.includes("/flash") ? "/flash" : files.includes("/sd") ? "/sd" : "/sd";
+    this.log.info("Detected root path:", rootPath);
+    return rootPath;
   }
 
   openRepl() {
