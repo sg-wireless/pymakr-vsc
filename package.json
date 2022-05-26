@@ -117,7 +117,8 @@
               "manufacturer=Microsoft",
               "manufacturer=Microchip Technology.*",
               "friendlyName=.*CH34[01].*",
-              "friendlyName=.*CP21.*"
+              "friendlyName=.*CP21.*",
+              "manufacturer=(?!undefined)"
             ],
             "description": "Filter devices to include in the devices list. Uses regular expression. Matches can be done against any property, eg. \"Microsoft\" or against a specific property, eg. \"manufacturer=Microsoft\r\n\r\nFor a list of available devices, run the command \"list devices\"."
           },
@@ -314,131 +315,168 @@
     "viewsWelcome": [
       {
         "view": "pymakr-projects-tree",
-        "contents": "You have no Pymakr projects in your workspace.\n\n[Create project](command:pymakr.createProjectPrompt)"
+        "contents": "No Pymakr projects were found in the current workspace. Please add a project or open an existing workspace.\nPymakr 2 uses [multi-root workspaces](https://code.visualstudio.com/docs/editor/workspaces#_multiroot-workspaces) to allow easy access to both project files and devices.\n\n[Create project](command:pymakr.createProjectPrompt)\n\n[Open Workspace](command:workbench.action.openWorkspace)"
       },
       {
         "view": "pymakr-devices-tree",
-        "contents": "Found no devices.\n\nIf you wish to unhide a previously hidden device, select this box and click the ellipsis menu (...). Then select \"Unhide a device\"."
+        "contents": "No devices could be found.\n\n[Unhide a hidden device](command:pymakr.unhideDevice)\n\n[List all devices](command:pymakr.listDevices)"
       }
     ],
     "commands": [
       {
         "command": "pymakr.listDevices",
-        "title": "List devices"
+        "title": "List devices",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.safeBootDevice",
-        "title": "Safe boot device"
+        "title": "Safe boot device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.resetDevice",
-        "title": "Hard reset device"
+        "title": "Hard reset device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.softResetDevice",
-        "title": "Soft reset device"
+        "title": "Soft reset device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.eraseDevicePrompt",
-        "title": "Erase device"
+        "title": "Erase device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.getPymakr",
-        "title": "get Pymakr instance (for extension development)"
+        "title": "get Pymakr instance (for extension development)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.hideDevice",
-        "title": "Hide device"
+        "title": "Hide device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.showTerminalHistory",
-        "title": "Open terminal history"
+        "title": "Open terminal history",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.createProjectInFolderPrompt",
         "title": "Create project in folder",
-        "icon": "$(plus)"
+        "icon": "$(plus)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.createProjectPrompt",
         "title": "Create new project",
-        "icon": "$(plus)"
+        "icon": "$(plus)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.configureDevice",
-        "title": "Configure device"
+        "title": "Configure device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.connect",
         "title": "Connect device",
-        "icon": "$(zap)"
+        "icon": "$(zap)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.addDeviceToFileExplorer",
         "title": "Open device in file explorer",
-        "icon": "$(folder)"
+        "icon": "$(folder)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.newDeviceSerial",
-        "title": "Serial"
+        "title": "Serial",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.newDeviceTelnet",
-        "title": "Telnet"
+        "title": "Telnet",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.unhideDevice",
-        "title": "Unhide a device"
+        "title": "Unhide a device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.createTerminalPrompt",
         "title": "Create terminal",
-        "icon": "$(terminal-view-icon)"
+        "icon": "$(terminal-view-icon)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.disconnect",
         "title": "Disconnect device",
-        "icon": "$(debug-disconnect)"
+        "icon": "$(debug-disconnect)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.downloadProject",
         "shortTitle": "Download",
         "title": "Download project from device",
-        "icon": "$(cloud-download)"
+        "icon": "$(cloud-download)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.uploadProject",
         "shortTitle": "Upload",
         "title": "Sync project to device",
-        "icon": "$(cloud-upload)"
+        "icon": "$(cloud-upload)",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.selectDevicesForProjectPrompt",
         "shortTitle": "$(plus)device",
-        "title": "Select devices"
+        "title": "Select devices",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.removeDeviceFromProject",
         "title": "Remove device from project",
-        "shortTitle": "Remove device"
+        "shortTitle": "Remove device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.uploadPrompt",
-        "title": "Upload to device"
+        "title": "Upload to device",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.runEditor",
-        "title": "Run on device",
-        "shortTitle": "Run"
+        "title": "Run file or selection on device",
+        "shortTitle": "Run",
+        "enablement": "editorFocus",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.runFile",
         "title": "Run file on device",
-        "shortTitle": "Run"
+        "shortTitle": "Run",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.toggleAdvancedMode",
-        "title": "Toggle advanced mode"
+        "title": "Toggle advanced mode",
+        "category": "PyMakr"
+      },
+      {
+        "command": "pymakr.configureProject",
+        "title": "Configure project",
+        "category": "PyMakr"
+      },
+      {
+        "command": "pymakr.revealDeviceInSidebar",
+        "title": "Show device content in sidebar",
+        "category": "PyMakr"
       }
     ],
     "keybindings": [
@@ -474,6 +512,11 @@
         "label": "device"
       },
       {
+        "id": "pymakr.projectMenu",
+        "icon": "$(ellipsis)",
+        "label": "project"
+      },
+      {
         "id": "pymakr.editorContextMenu",
         "label": "pymakr"
       },
@@ -483,12 +526,142 @@
       }
     ],
     "menus": {
+      "commandPalette": [
+        {
+          "command": "pymakr.toggleAdvancedMode"
+        },
+        {
+          "command": "pymakr.listDevices"
+        },
+        {
+          "command": "pymakr.createProjectPrompt"
+        },
+        {
+          "command": "pymakr.eraseDevicePrompt",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.createTerminalPrompt",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.createProjectInFolderPrompt",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.getPymakr",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.uploadPrompt",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.runEditor",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.safeBootDevice",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.resetDevice",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.softResetDevice",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.hideDevice",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.showTerminalHistory",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.configureDevice",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.connect",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.addDeviceToFileExplorer",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.newDeviceSerial",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.newDeviceTelnet",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.unhideDevice",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.disconnect",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.downloadProject",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.uploadProject",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.selectDevicesForProjectPrompt",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.removeDeviceFromProject",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.uploadPrompt",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.runEditor",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.runFile",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.configureProject",
+          "when": "false"
+        },
+        {
+          "command": "pymakr.revealDeviceInSidebar",
+          "when": "false"
+        }
+      ],
       "pymakr.newDeviceMenu": [
         {
           "command": "pymakr.newDeviceSerial"
         },
         {
           "command": "pymakr.newDeviceTelnet"
+        }
+      ],
+      "pymakr.projectMenu": [
+        {
+          "command": "pymakr.selectDevicesForProjectPrompt",
+          "group": "1-primary",
+          "when": "viewItem == project"
+        },
+        {
+          "command": "pymakr.configureProject",
+          "group": "1-primary"
         }
       ],
       "pymakr.projectDeviceMenu": [
@@ -524,6 +697,10 @@
         },
         {
           "command": "pymakr.configureDevice",
+          "group": "2-config"
+        },
+        {
+          "command": "pymakr.revealDeviceInSidebar",
           "group": "2-config"
         },
         {
@@ -568,11 +745,6 @@
           "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice"
         },
         {
-          "command": "pymakr.selectDevicesForProjectPrompt",
-          "group": "inline",
-          "when": "viewItem == project"
-        },
-        {
           "command": "pymakr.downloadProject",
           "when": "viewItem == connectedProjectDevice",
           "group": "inline@8"
@@ -600,6 +772,11 @@
         {
           "submenu": "pymakr.projectDeviceMenu",
           "when": "viewItem != project",
+          "group": "inline@100"
+        },
+        {
+          "submenu": "pymakr.projectMenu",
+          "when": "viewItem == project",
           "group": "inline@100"
         }
       ],

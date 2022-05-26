@@ -90,10 +90,11 @@ class Device {
     if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
 
-    this.busy.subscribe((val) => this.log.info(val ? "busy..." : "idle."));
+    this.busy.subscribe((val) => this.log.debugShort(val ? "busy..." : "idle."));
 
     this.readUntil = createReadUntil();
     this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
+
   }
 
   applyCustomDeviceConfig() {
@@ -143,7 +144,7 @@ class Device {
       const isChanged = JSON.stringify(pymakrConf) !== JSON.stringify(this.pymakrConf);
       this.pymakrConf = pymakrConf;
       return isChanged;
-    } catch (err) {}
+    } catch (err) { }
   }
 
   /**
@@ -178,7 +179,7 @@ class Device {
    * Therefore any wrapping or extending of this method will be lost whenever a terminal is used
    * @param {string} data
    */
-  __onTerminalDataExclusive(data) {}
+  __onTerminalDataExclusive(data) { }
 
   /**
    * Auto connects device if required by user preferences
