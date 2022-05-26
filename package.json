@@ -568,10 +568,6 @@
           "when": "false"
         },
         {
-          "command": "pymakr.hideDevice",
-          "when": "false"
-        },
-        {
           "command": "pymakr.showTerminalHistory",
           "when": "false"
         },
@@ -696,10 +692,6 @@
         },
         {
           "command": "pymakr.revealDeviceInSidebar",
-          "group": "2-config"
-        },
-        {
-          "command": "pymakr.hideDevice",
           "group": "2-config"
         },
         {
