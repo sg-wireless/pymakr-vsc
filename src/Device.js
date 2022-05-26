@@ -382,6 +382,7 @@ class Device {
   onChanged() {
     this.applyCustomDeviceConfig();
     this.stateManager.save();
+    this.log.traceShort("Changed. Refreshing providers.");
     // throttle the UI refresh call. This makes sure that multiple devices doesn't trigger the same call.
     this.pymakr.refreshProvidersThrottled();
   }
