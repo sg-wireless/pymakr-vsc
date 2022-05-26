@@ -658,32 +658,32 @@
       "pymakr.projectDeviceMenu": [
         {
           "command": "pymakr.safeBootDevice",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "when": "viewItem =~ /(idle|busy)#.+#device/",
           "group": "1-primary"
         },
         {
           "command": "pymakr.resetDevice",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "when": "viewItem =~ /(idle|busy)#.+#device/",
           "group": "1-primary"
         },
         {
           "command": "pymakr.softResetDevice",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "when": "viewItem =~ /(idle|busy)#.+#device/",
           "group": "1-primary"
         },
         {
           "command": "pymakr.disconnect",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "when": "viewItem =~ /(idle|busy)#.+#device/",
           "group": "1-primary"
         },
         {
           "command": "pymakr.removeDeviceFromProject",
-          "when": "viewItem == connectedProjectDevice || viewItem == projectDevice",
+          "when": "viewItem =~ /(idle|busy)#project#device/",
           "group": "2-config"
         },
         {
           "command": "pymakr.eraseDevicePrompt",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "when": "viewItem =~ /(idle)#.+#device/",
           "group": "2-config"
         },
         {
@@ -729,36 +729,36 @@
         {
           "command": "pymakr.addDeviceToFileExplorer",
           "group": "inline@10",
-          "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice"
+          "when": "viewItem =~ /idle#.+#device/"
         },
         {
           "command": "pymakr.downloadProject",
-          "when": "viewItem == connectedProjectDevice",
+          "when": "viewItem =~ /idle#project#device/",
           "group": "inline@8"
         },
         {
           "command": "pymakr.uploadProject",
-          "when": "viewItem == connectedProjectDevice",
+          "when": "viewItem =~ /idle#project#device/",
           "group": "inline@6"
         },
         {
           "command": "pymakr.createTerminalPrompt",
-          "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice",
+          "when": "viewItem =~ /(idle|busy)#.+#device/",
           "group": "inline"
         },
         {
           "command": "pymakr.connect",
-          "when": "viewItem == device || viewItem == projectDevice",
+          "when": "viewItem =~ /offline#.+#device/",
           "group": "inline"
         },
         {
           "command": "pymakr.disconnect",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "when": "viewItem =~ /(idle|busy)#.+#device/",
           "group": "inline@50"
         },
         {
           "submenu": "pymakr.projectDeviceMenu",
-          "when": "viewItem != project",
+          "when": "viewItem =~ /.+#.+#device/",
           "group": "inline@100"
         },
         {

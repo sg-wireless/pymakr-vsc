@@ -57,9 +57,10 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
     super(device.displayName, vscode.TreeItemCollapsibleState.None);
     this.project = project;
     this.device = device;
-    this.contextValue = device.connected ? "connectedProjectDevice" : "projectDevice";
+    const state = device.connected ? (device.busy.get() ? "busy" : "idle") : "offline";
+    this.contextValue = `${state}#project#device`;
     const filename = device.connected ? "lightning.svg" : "lightning-muted.svg";
-    if (device.busy.get()) this.tooltip = "Busy";
+    this.tooltip = state;
     this.iconPath = device.busy.get()
       ? new vscode.ThemeIcon("sync~spin")
       : {
