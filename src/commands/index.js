@@ -140,7 +140,7 @@ class Commands {
       if (picked && picked.length) {
         picked.forEach(({ device }) => {
           device.config.hidden = false;
-          device.state.save();
+          device.stateManager.save();
         });
         this.pymakr.devicesProvider.refresh();
         this.pymakr.projectsProvider.refresh();
@@ -152,7 +152,7 @@ class Commands {
      */
     hideDevice: ({ device }) => {
       device.config.hidden = true;
-      device.state.save();
+      device.stateManager.save();
       this.pymakr.devicesProvider.refresh();
       this.pymakr.projectsProvider.refresh();
     },
@@ -320,7 +320,7 @@ class Commands {
             let { label, clear } = await vscode.window.showQuickPick(options);
             if (clear) label = null;
             device.config.autoConnect = label;
-            device.state.save();
+            device.stateManager.save();
             return "main";
           },
         };

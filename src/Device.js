@@ -65,7 +65,7 @@ class Device {
     this.password = password;
     this.name = name;
     this.raw = raw;
-    this.state = this.createState();
+    this.stateManager = this.createStateManager();
     /** If true, device will disconnect at the end of execution queue */
     this.temporaryConnection = false;
     // TODO: determine the rootpath of a device when connecting. https://github.com/pycom/pymakr-vsc/discussions/224
@@ -76,7 +76,7 @@ class Device {
     this.online = false;
     this.lostConnection = false;
     /** @type {DeviceConfig} */
-    this.config = { ...configDefaults, ...this.state.load().config };
+    this.config = { ...configDefaults, ...this.stateManager.load().config };
 
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
@@ -115,7 +115,7 @@ class Device {
   /** the user provided name */
   get customName() {
     const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
-    return names[this.raw.serialNumber] || '';
+    return names[this.raw.serialNumber] || "";
   }
 
   /** the full device name using the naming template */
@@ -151,9 +151,9 @@ class Device {
    * Creates a state manager, that can save and load device state from VSCode's workspace state
    * The saved data is determined by the callback provided to the StateManager constructor
    */
-  createState() {
-    const createState = () => cherryPick(this, ["connected", "name", "id", "config"]);
-    return new StateManager(this.pymakr, `devices.${this.id}`, createState);
+  createStateManager() {
+    const createStateCallback = () => cherryPick(this, ["connected", "name", "id", "config"]);
+    return new StateManager(this.pymakr, `devices.${this.id}`, createStateCallback);
   }
 
   safeBoot() {
@@ -189,7 +189,7 @@ class Device {
     if (this.online && !this.connected) {
       const autoConnect = this.config.autoConnect || this.pymakr.config.get().get("devices").autoConnect;
       const shouldConnect = autoConnect === "always";
-      const shouldResume = autoConnect === "lastState" && this.state.load().connected;
+      const shouldResume = autoConnect === "lastState" && this.stateManager.load().connected;
       const shouldReconnect = autoConnect === "onLostConnection" && this.lostConnection;
       if (shouldConnect || shouldResume || shouldReconnect) await this.connect();
     } else {
@@ -381,7 +381,7 @@ class Device {
    */
   onChanged() {
     this.applyCustomDeviceConfig();
-    this.state.save();
+    this.stateManager.save();
     // throttle the UI refresh call. This makes sure that multiple devices doesn't trigger the same call.
     this.pymakr.refreshProvidersThrottled();
   }
