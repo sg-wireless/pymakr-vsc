@@ -129,32 +129,26 @@ class Commands {
      * provides pymakr to the callback - Required for accessing Pymakr from the test suite.
      **/
     getPymakr: (cb) => cb(this.pymakr),
+    
     /**
-     * Restore a previously hidden device.
+     * Set visible status for devices
      */
-    unhideDevice: async () => {
-      const devices = this.pymakr.devicesStore.get().filter((device) => device.config.hidden);
-      const picks = devices.map((device) => ({ label: device.displayName, description: device.id, device }));
-      const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to unhide" });
+    setVisibleDevices: async () => {
+      const allDevices = this.pymakr.devicesStore.get();
+      const picks = allDevices.map((device) => ({
+        label: device.displayName,
+        description: device.id,
+        device,
+        picked: !device.config.hidden,
+      }));
+      const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to show" });
+      const visibleDevices = picked.map((pick) => pick.device);
 
-      if (picked && picked.length) {
-        picked.forEach(({ device }) => {
-          device.config.hidden = false;
-          device.state.save();
-        });
-        this.pymakr.devicesProvider.refresh();
-        this.pymakr.projectsProvider.refresh();
-      }
-    },
-    /**
-     * Hide a device from the device list
-     * @param {DeviceTreeItem} treeItem
-     */
-    hideDevice: ({ device }) => {
-      device.config.hidden = true;
-      device.state.save();
-      this.pymakr.devicesProvider.refresh();
-      this.pymakr.projectsProvider.refresh();
+      allDevices.forEach((device) => {
+        device.config.hidden = !visibleDevices.includes(device);
+        device.state.save();
+      });
+      this.pymakr.refreshProvidersThrottled();
     },
     /**
      * Opens the log history

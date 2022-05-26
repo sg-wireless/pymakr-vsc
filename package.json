@@ -319,7 +319,7 @@
       },
       {
         "view": "pymakr-devices-tree",
-        "contents": "No devices could be found.\n\n[Unhide a hidden device](command:pymakr.unhideDevice)\n\n[List all devices](command:pymakr.listDevices)"
+        "contents": "No devices could be found.\n\n[Unhide a hidden device](command:pymakr.setVisibleDevices)\n\n[List all devices](command:pymakr.listDevices)"
       }
     ],
     "commands": [
@@ -351,11 +351,6 @@
       {
         "command": "pymakr.getPymakr",
         "title": "get Pymakr instance (for extension development)",
-        "category": "PyMakr"
-      },
-      {
-        "command": "pymakr.hideDevice",
-        "title": "Hide device",
         "category": "PyMakr"
       },
       {
@@ -403,8 +398,8 @@
         "category": "PyMakr"
       },
       {
-        "command": "pymakr.unhideDevice",
-        "title": "Unhide a device",
+        "command": "pymakr.setVisibleDevices",
+        "title": "Set visible devices",
         "category": "PyMakr"
       },
       {
@@ -601,7 +596,7 @@
           "when": "false"
         },
         {
-          "command": "pymakr.unhideDevice",
+          "command": "pymakr.setVisibleDevices",
           "when": "false"
         },
         {
@@ -786,7 +781,7 @@
           "when": "view == pymakr-devices-tree"
         },
         {
-          "command": "pymakr.unhideDevice",
+          "command": "pymakr.setVisibleDevices",
           "when": "view == pymakr-devices-tree"
         },
         {
