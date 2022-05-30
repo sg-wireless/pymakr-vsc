@@ -417,7 +417,7 @@
         "title": "Create terminal",
         "icon": "$(terminal-view-icon)",
         "category": "PyMakr",
-        "enablement": "viewItem =~ /(idle|busy)#project#device/"
+        "enablement": "viewItem =~ /(idle|busy)#.+#device/"
       },
       {
         "command": "pymakr.disconnect",
