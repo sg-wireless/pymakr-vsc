@@ -476,11 +476,6 @@
         "command": "pymakr.configureProject",
         "title": "Configure project",
         "category": "PyMakr"
-      },
-      {
-        "command": "pymakr.revealDeviceInSidebar",
-        "title": "Show device content in sidebar",
-        "category": "PyMakr"
       }
     ],
     "keybindings": [
@@ -636,10 +631,6 @@
         {
           "command": "pymakr.configureProject",
           "when": "false"
-        },
-        {
-          "command": "pymakr.revealDeviceInSidebar",
-          "when": "false"
         }
       ],
       "pymakr.newDeviceMenu": [
@@ -689,10 +680,6 @@
         },
         {
           "command": "pymakr.configureDevice",
-          "group": "2-config"
-        },
-        {
-          "command": "pymakr.revealDeviceInSidebar",
           "group": "2-config"
         },
         {

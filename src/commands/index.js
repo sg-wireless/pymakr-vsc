@@ -38,7 +38,8 @@ class Commands {
           await value.bind(this)(...params);
         } catch (err) {
           vscode.window.showErrorMessage(
-            `[Pymakr] Failed to run command: ${key}. Reason: ${err.message || err.name || err
+            `[Pymakr] Failed to run command: ${key}. Reason: ${
+              err.message || err.name || err
             }. Please see logs for info.`
           );
           this.log.error(`Failed to run command: ${key} with params:`, params);
@@ -129,7 +130,7 @@ class Commands {
      * provides pymakr to the callback - Required for accessing Pymakr from the test suite.
      **/
     getPymakr: (cb) => cb(this.pymakr),
-    
+
     /**
      * Set visible status for devices
      */
@@ -488,7 +489,7 @@ class Commands {
     },
 
     // todo remove
-    newDeviceRecover: async () => { },
+    newDeviceRecover: async () => {},
 
     /**
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.
@@ -633,25 +634,7 @@ class Commands {
       vscode.commands.executeCommand("revealInExplorer", uri);
       return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar();
     },
-
-    /**
-     * Navigate to a mounted device in the explorer view
-     * @param {ProjectDeviceTreeItem} treeItem
-     */
-    revealDeviceInSidebar: async ({ device }) => {
-      // Todo: move to utlis
-      const uri = vscode.Uri.from({
-        scheme: device.protocol,
-        // vscode doesn't like "/" in the authority name
-        authority: device.address.replace(/\//g, "%2F"),
-        path: device.rootPath,
-      });
-      // todo: this does not reliably set 
-      vscode.commands.executeCommand("revealInExplorer", uri);
-    },
   };
-
-
 }
 
 module.exports = { Commands };
