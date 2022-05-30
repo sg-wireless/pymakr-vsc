@@ -663,12 +663,12 @@
         },
         {
           "command": "pymakr.resetDevice",
-          "when": "viewItem =~ /(idle|busy)#.+#device/",
+          "when": "viewItem =~ /(idle)#.+#device/",
           "group": "1-primary"
         },
         {
           "command": "pymakr.softResetDevice",
-          "when": "viewItem =~ /(idle|busy)#.+#device/",
+          "when": "viewItem =~ /(idle)#.+#device/",
           "group": "1-primary"
         },
         {
