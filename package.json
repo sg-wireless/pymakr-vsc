@@ -459,11 +459,6 @@
         "category": "PyMakr"
       },
       {
-        "command": "pymakr.toggleAdvancedMode",
-        "title": "Toggle advanced mode",
-        "category": "PyMakr"
-      },
-      {
         "command": "pymakr.configureProject",
         "title": "Configure project",
         "category": "PyMakr"
@@ -522,9 +517,6 @@
     ],
     "menus": {
       "commandPalette": [
-        {
-          "command": "pymakr.toggleAdvancedMode"
-        },
         {
           "command": "pymakr.listDevices"
         },

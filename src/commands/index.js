@@ -322,14 +322,7 @@ class Commands {
         menu = await menus[menu](device.config);
       }
     },
-    /**
-     * todo remove
-     * @deprecated
-     */
-    toggleAdvancedMode: async () => {
-      const advancedMode = vscode.workspace.getConfiguration("pymakr").get("advancedMode");
-      this.pymakr.config.get().update("advancedMode", !advancedMode);
-    },
+
 
     /**
      * Opens the selected project settins in the editor
