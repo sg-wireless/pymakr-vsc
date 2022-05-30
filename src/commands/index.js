@@ -324,6 +324,30 @@ class Commands {
       }
     },
 
+    logState: () => {
+      this.pymakr.log.info("[ PYMAKR STATE DUMP ]");
+      this.pymakr.devicesStore.get().forEach((device) => {
+        this.pymakr.log.info(
+          device.name,
+          "history",
+          device.adapter.__proxyMeta.history.reduce(
+            (last, next) =>
+              (last += `  \r\n${next.field.toString()}(${next.args.map((v) => JSON.stringify(v)).join(", ")})`),
+            ""
+          )
+        );
+
+        this.pymakr.log.info(
+          device.name,
+          "queue",
+          device.adapter.__proxyMeta.queue.reduce(
+            (last, next) =>
+              (last += `  \r\n${next.field.toString()}(${next.args.map((v) => JSON.stringify(v)).join(", ")})`),
+            ""
+          )
+        );
+      });
+    },
 
     /**
      * Opens the selected project settins in the editor
