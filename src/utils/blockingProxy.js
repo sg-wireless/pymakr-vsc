@@ -117,9 +117,6 @@ class ProxyMeta {
   constructor(target) {
     this.target = target;
 
-    /** @type {BlockingProxyQueueItem} */
-    this.lastCall = null;
-
     this.idle = resolvablePromise();
 
     /** @private */
@@ -178,7 +175,6 @@ class ProxyMeta {
     while (this.queue.length) {
       const queueItem = this.queue.shift();
       this.history.push(queueItem);
-      this.lastCall = queueItem;
       await this.beforeEachCall.run({ item: queueItem, proxy: this });
       const result = await queueItem.exec();
       await this.afterEachCall.run({ item: queueItem, proxy: this, result });
@@ -186,7 +182,7 @@ class ProxyMeta {
 
     this.isBusy = false;
     this.idle.resolve();
-    this.onIdle.run()
+    this.onIdle.run();
   }
 
   /** Clears the queue. */
@@ -201,14 +197,14 @@ class ProxyMeta {
    * Only unskipped calls affect the idle status of the proxy.
    */
   skipCurrent() {
-    this.lastCall.skip();
+    this.history.length && [...this.history].pop().skip();
   }
 
   reset() {
     this.clearQueue();
     this.skipCurrent();
-    this.isBusy = false
-    this.idle.resolve()
+    this.isBusy = false;
+    this.idle.resolve();
   }
 }
 
