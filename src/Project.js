@@ -57,26 +57,6 @@ class Project {
     this.pymakr.projectsProvider.refresh();
     this.state.save();
   }
-
-  /**
-   * @deprecated
-   * @param {import('./Device').Device} device
-   */
-  addDevice(device) {
-    this.devices.push(device);
-    this.pymakr.projectsProvider.refresh();
-    this.state.save();
-  }
-
-  /**
-   * @deprecated
-   * @param {import('./Device').Device} device
-   */
-  removeDevice(device) {
-    this.devices = this.devices.filter((_device) => _device !== device);
-    this.pymakr.projectsProvider.refresh();
-    this.state.save();
-  }
 }
 
 module.exports = { Project };

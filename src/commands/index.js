@@ -628,16 +628,6 @@ class Commands {
     },
 
     /**
-     * todo use selectDevicesForProjectPrompt instead
-     * @deprecated
-     * @param {ProjectDeviceTreeItem} treeItem
-     */
-    removeDeviceFromProject: async (treeItem) => {
-      const { project, device } = treeItem;
-      project.removeDevice(device);
-    },
-
-    /**
      * Mounts a device to the file explorer view
      * @param {ProjectDeviceTreeItem} treeItem
      */
