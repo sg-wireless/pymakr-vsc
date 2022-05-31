@@ -38,7 +38,8 @@ class Commands {
           await value.bind(this)(...params);
         } catch (err) {
           vscode.window.showErrorMessage(
-            `[Pymakr] Failed to run command: ${key}. Reason: ${err.message || err.name || err
+            `[Pymakr] Failed to run command: ${key}. Reason: ${
+              err.message || err.name || err
             }. Please see logs for info.`
           );
           this.log.error(`Failed to run command: ${key} with params:`, params);
@@ -129,32 +130,26 @@ class Commands {
      * provides pymakr to the callback - Required for accessing Pymakr from the test suite.
      **/
     getPymakr: (cb) => cb(this.pymakr),
-    /**
-     * Restore a previously hidden device.
-     */
-    unhideDevice: async () => {
-      const devices = this.pymakr.devicesStore.get().filter((device) => device.config.hidden);
-      const picks = devices.map((device) => ({ label: device.displayName, description: device.id, device }));
-      const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to unhide" });
 
-      if (picked && picked.length) {
-        picked.forEach(({ device }) => {
-          device.config.hidden = false;
-          device.state.save();
-        });
-        this.pymakr.devicesProvider.refresh();
-        this.pymakr.projectsProvider.refresh();
-      }
-    },
     /**
-     * Hide a device from the device list
-     * @param {DeviceTreeItem} treeItem
+     * Set visible status for devices
      */
-    hideDevice: ({ device }) => {
-      device.config.hidden = true;
-      device.state.save();
-      this.pymakr.devicesProvider.refresh();
-      this.pymakr.projectsProvider.refresh();
+    setVisibleDevices: async () => {
+      const allDevices = this.pymakr.devicesStore.get();
+      const picks = allDevices.map((device) => ({
+        label: device.displayName,
+        description: device.id,
+        device,
+        picked: !device.config.hidden,
+      }));
+      const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to show" });
+      const visibleDevices = picked.map((pick) => pick.device);
+
+      allDevices.forEach((device) => {
+        device.config.hidden = !visibleDevices.includes(device);
+        device.state.save();
+      });
+      this.pymakr.refreshProvidersThrottled();
     },
     /**
      * Opens the log history
@@ -328,13 +323,30 @@ class Commands {
         menu = await menus[menu](device.config);
       }
     },
-    /**
-     * todo remove
-     * @deprecated
-     */
-    toggleAdvancedMode: async () => {
-      const advancedMode = vscode.workspace.getConfiguration("pymakr").get("advancedMode");
-      this.pymakr.config.get().update("advancedMode", !advancedMode);
+
+    logState: () => {
+      this.pymakr.log.info("[ PYMAKR STATE DUMP ]");
+      this.pymakr.devicesStore.get().forEach((device) => {
+        this.pymakr.log.info(
+          device.name,
+          "history",
+          device.adapter.__proxyMeta.history.reduce(
+            (last, next) =>
+              (last += `  \r\n${next.field.toString()}(${next.args.map((v) => JSON.stringify(v)).join(", ")})`),
+            ""
+          )
+        );
+
+        this.pymakr.log.info(
+          device.name,
+          "queue",
+          device.adapter.__proxyMeta.queue.reduce(
+            (last, next) =>
+              (last += `  \r\n${next.field.toString()}(${next.args.map((v) => JSON.stringify(v)).join(", ")})`),
+            ""
+          )
+        );
+      });
     },
 
     /**
@@ -501,7 +513,7 @@ class Commands {
     },
 
     // todo remove
-    newDeviceRecover: async () => { },
+    newDeviceRecover: async () => {},
 
     /**
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.
@@ -646,25 +658,7 @@ class Commands {
       vscode.commands.executeCommand("revealInExplorer", uri);
       return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar();
     },
-
-    /**
-     * Navigate to a mounted device in the explorer view
-     * @param {ProjectDeviceTreeItem} treeItem
-     */
-    revealDeviceInSidebar: async ({ device }) => {
-      // Todo: move to utlis
-      const uri = vscode.Uri.from({
-        scheme: device.protocol,
-        // vscode doesn't like "/" in the authority name
-        authority: device.address.replace(/\//g, "%2F"),
-        path: device.rootPath,
-      });
-      // todo: this does not reliably set 
-      vscode.commands.executeCommand("revealInExplorer", uri);
-    },
   };
-
-
 }
 
 module.exports = { Commands };

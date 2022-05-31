@@ -319,10 +319,15 @@
       },
       {
         "view": "pymakr-devices-tree",
-        "contents": "No devices could be found.\n\n[Unhide a hidden device](command:pymakr.unhideDevice)\n\n[List all devices](command:pymakr.listDevices)"
+        "contents": "No devices could be found.\n\n[Unhide a hidden device](command:pymakr.setVisibleDevices)\n\n[List all devices](command:pymakr.listDevices)"
       }
     ],
     "commands": [
+      {
+        "command": "pymakr.logState",
+        "title": "[DEBUG] Logs current state to the terminal",
+        "category": "PyMakr"
+      },
       {
         "command": "pymakr.listDevices",
         "title": "List devices",
@@ -331,31 +336,30 @@
       {
         "command": "pymakr.safeBootDevice",
         "title": "Safe boot device",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /(idle|busy)#.+#device/"
       },
       {
         "command": "pymakr.resetDevice",
         "title": "Hard reset device",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /(idle)#.+#device/"
       },
       {
         "command": "pymakr.softResetDevice",
         "title": "Soft reset device",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /(idle)#.+#device/"
       },
       {
         "command": "pymakr.eraseDevicePrompt",
         "title": "Erase device",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /(idle)#.+#device/"
       },
       {
         "command": "pymakr.getPymakr",
         "title": "get Pymakr instance (for extension development)",
-        "category": "PyMakr"
-      },
-      {
-        "command": "pymakr.hideDevice",
-        "title": "Hide device",
         "category": "PyMakr"
       },
       {
@@ -390,7 +394,8 @@
         "command": "pymakr.addDeviceToFileExplorer",
         "title": "Open device in file explorer",
         "icon": "$(folder)",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /idle#.+#device/"
       },
       {
         "command": "pymakr.newDeviceSerial",
@@ -403,35 +408,39 @@
         "category": "PyMakr"
       },
       {
-        "command": "pymakr.unhideDevice",
-        "title": "Unhide a device",
+        "command": "pymakr.setVisibleDevices",
+        "title": "Set visible devices",
         "category": "PyMakr"
       },
       {
         "command": "pymakr.createTerminalPrompt",
         "title": "Create terminal",
         "icon": "$(terminal-view-icon)",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /(idle|busy)#.+#device/"
       },
       {
         "command": "pymakr.disconnect",
         "title": "Disconnect device",
         "icon": "$(debug-disconnect)",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /(idle|busy)#.+#device/"
       },
       {
         "command": "pymakr.downloadProject",
         "shortTitle": "Download",
         "title": "Download project from device",
         "icon": "$(cloud-download)",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /idle#project#device/"
       },
       {
         "command": "pymakr.uploadProject",
         "shortTitle": "Upload",
         "title": "Sync project to device",
         "icon": "$(cloud-upload)",
-        "category": "PyMakr"
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /idle#project#device/"
       },
       {
         "command": "pymakr.selectDevicesForProjectPrompt",
@@ -464,18 +473,8 @@
         "category": "PyMakr"
       },
       {
-        "command": "pymakr.toggleAdvancedMode",
-        "title": "Toggle advanced mode",
-        "category": "PyMakr"
-      },
-      {
         "command": "pymakr.configureProject",
         "title": "Configure project",
-        "category": "PyMakr"
-      },
-      {
-        "command": "pymakr.revealDeviceInSidebar",
-        "title": "Show device content in sidebar",
         "category": "PyMakr"
       }
     ],
@@ -528,9 +527,6 @@
     "menus": {
       "commandPalette": [
         {
-          "command": "pymakr.toggleAdvancedMode"
-        },
-        {
           "command": "pymakr.listDevices"
         },
         {
@@ -573,10 +569,6 @@
           "when": "false"
         },
         {
-          "command": "pymakr.hideDevice",
-          "when": "false"
-        },
-        {
           "command": "pymakr.showTerminalHistory",
           "when": "false"
         },
@@ -601,7 +593,7 @@
           "when": "false"
         },
         {
-          "command": "pymakr.unhideDevice",
+          "command": "pymakr.setVisibleDevices",
           "when": "false"
         },
         {
@@ -639,10 +631,6 @@
         {
           "command": "pymakr.configureProject",
           "when": "false"
-        },
-        {
-          "command": "pymakr.revealDeviceInSidebar",
-          "when": "false"
         }
       ],
       "pymakr.newDeviceMenu": [
@@ -667,44 +655,31 @@
       "pymakr.projectDeviceMenu": [
         {
           "command": "pymakr.safeBootDevice",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
           "group": "1-primary"
         },
         {
           "command": "pymakr.resetDevice",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
           "group": "1-primary"
         },
         {
           "command": "pymakr.softResetDevice",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
           "group": "1-primary"
         },
         {
           "command": "pymakr.disconnect",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
           "group": "1-primary"
         },
         {
           "command": "pymakr.removeDeviceFromProject",
-          "when": "viewItem == connectedProjectDevice || viewItem == projectDevice",
+          "when": "viewItem =~ /.+#project#device/",
           "group": "2-config"
         },
         {
           "command": "pymakr.eraseDevicePrompt",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
           "group": "2-config"
         },
         {
           "command": "pymakr.configureDevice",
-          "group": "2-config"
-        },
-        {
-          "command": "pymakr.revealDeviceInSidebar",
-          "group": "2-config"
-        },
-        {
-          "command": "pymakr.hideDevice",
           "group": "2-config"
         },
         {
@@ -742,36 +717,36 @@
         {
           "command": "pymakr.addDeviceToFileExplorer",
           "group": "inline@10",
-          "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice"
+          "when": "viewItem =~ /.+#.+#device/"
         },
         {
           "command": "pymakr.downloadProject",
-          "when": "viewItem == connectedProjectDevice",
+          "when": "viewItem =~ /.+#project#device/",
           "group": "inline@8"
         },
         {
           "command": "pymakr.uploadProject",
-          "when": "viewItem == connectedProjectDevice",
+          "when": "viewItem =~ /.+#project#device/",
           "group": "inline@6"
         },
         {
           "command": "pymakr.createTerminalPrompt",
-          "when": "viewItem == connectedDevice || viewItem == connectedProjectDevice",
+          "when": "viewItem =~ /.+#.+#device/",
           "group": "inline"
         },
         {
           "command": "pymakr.connect",
-          "when": "viewItem == device || viewItem == projectDevice",
-          "group": "inline"
+          "when": "viewItem =~ /offline#.+#device/",
+          "group": "inline@50"
         },
         {
           "command": "pymakr.disconnect",
-          "when": "viewItem == connectedProjectDevice || viewItem == connectedDevice",
+          "when": "viewItem =~ /(idle|busy)#.+#device/",
           "group": "inline@50"
         },
         {
           "submenu": "pymakr.projectDeviceMenu",
-          "when": "viewItem != project",
+          "when": "viewItem =~ /.+#.+#device/",
           "group": "inline@100"
         },
         {
@@ -786,7 +761,7 @@
           "when": "view == pymakr-devices-tree"
         },
         {
-          "command": "pymakr.unhideDevice",
+          "command": "pymakr.setVisibleDevices",
           "when": "view == pymakr-devices-tree"
         },
         {
@@ -828,18 +803,16 @@
     "@semantic-release/changelog": "^6.0.1",
     "@semantic-release/git": "^10.0.1",
     "@types/glob": "^7.2.0",
-    "@types/mocha": "^9.0.0",
-    "@types/node": "16.x",
-    "@types/vscode": "^1.66.0",
-    "@vscode/test-electron": "^2.0.3",
-    "eslint": "^8.1.0",
-    "glob": "^7.1.7",
-    "mocha": "^9.1.3",
-    "probs": "^1.1.0-12",
+    "@types/node": "17.x",
+    "@types/vscode": "^1.67.0",
+    "@vscode/test-electron": "^2.1.3",
+    "eslint": "^8.16.0",
+    "glob": "^8.0.3",
+    "probs": "^1.1.0-16",
     "semantic-release": "^19.0.2",
-    "semantic-release-vsce": "^5.0.8",
-    "typedoc": "^0.22.13",
-    "typescript": "^4.6.3"
+    "semantic-release-vsce": "^5.0.13",
+    "typedoc": "^0.22.16",
+    "typescript": "^4.7.2"
   },
   "dependencies": {
     "@serialport/bindings-cpp": "^10.7.0",
@@ -849,7 +822,7 @@
     "micropython-ctl-cont": "^1.13.10",
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
-    "serialport": "^10.2.2"
+    "serialport": "^10.4.0"
   },
   "volta": {
     "node": "16.14.2"
