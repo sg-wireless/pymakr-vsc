@@ -22,8 +22,8 @@ class Project {
       this.pymakr.log.error("could not parse config:", configFile.fsPath);
       vscode.window.showErrorMessage(this.err);
     }
-    (this.deviceIds = createStateObject(pymakr.context.globalState, `project.${this.folder}`, [])),
-      (this.name = this.config.name || basename(this.folder));
+    this.deviceIds = createStateObject(pymakr.context.globalState, `project.${this.folder}`, []);
+    this.name = this.config.name || basename(this.folder);
     this.log = pymakr.log.createChild("project: " + this.name);
   }
 
