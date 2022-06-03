@@ -9,6 +9,7 @@ const util = require('util');
  * @returns {string}
  */
 function data2string(data) {
+  if (!data) return JSON.stringify(data);
   if (data instanceof Error) {
     return data.message || data.stack || util.inspect(data);
   }
