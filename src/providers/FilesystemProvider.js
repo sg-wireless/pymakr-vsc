@@ -95,7 +95,7 @@ class FileSystemProvider {
   async readDirectory(uri) {
     this.log.debug("read dir", uri.path);
     const device = this._getDevice(uri);
-    const path = uri.path.startsWith(device.rootPath) ? uri.path : device.rootPath;
+    const path = uri.path.startsWith(device.config.rootPath) ? uri.path : device.config.rootPath;
 
     try {
       const files = await device.adapter.listFiles(path, { recursive: false });

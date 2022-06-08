@@ -4,14 +4,13 @@ const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
 const {
   waitFor,
-  cherryPick,
   getNearestPymakrConfig,
   createIsIncluded,
   serializeKeyValuePairs,
   serializedEntriesToObj,
 } = require("./utils/misc");
 const { writable } = require("./utils/store");
-const { StateManager } = require("./utils/StateManager");
+const { createStateObject, createListedConfigObject } = require("./utils/storageObj");
 const picomatch = require("picomatch");
 const { createSequenceHooksCollection } = require("hookar");
 const { createReadUntil } = require("./utils/readUntil");
@@ -23,6 +22,7 @@ const { createReadUntil } = require("./utils/readUntil");
  * @prop {string} username defaults to "micro"
  * @prop {string} password defaults to "python"
  * @prop {boolean} hidden
+ * @prop {string} rootPath
  */
 
 /** @type {DeviceConfig} */
@@ -32,6 +32,7 @@ const configDefaults = {
   username: "micro",
   password: "python",
   hidden: false,
+  rootPath: null,
 };
 
 /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
@@ -41,6 +42,9 @@ const runScriptDefaults = {
   runGcCollectBeforeCommand: true,
   resolveBeforeResult: false,
 };
+
+/** @type {Partial<PymakrConfFile>} */
+const pymakrConfType = {};
 
 class Device {
   /**
@@ -57,7 +61,6 @@ class Device {
     this.changed = () => set(this);
     const { address, name, protocol, raw, password, id } = deviceInput;
     this.id = id || `${protocol}://${address}`;
-    this.pymakrConf = {};
     this.__connectingPromise = null;
     this.pymakr = pymakr;
     this.protocol = protocol;
@@ -65,46 +68,66 @@ class Device {
     this.password = password;
     this.name = name;
     this.raw = raw;
-    this.state = this.createState();
+
+    this.state = {
+      wasConnected: createStateObject(pymakr.context.workspaceState, `pymakr.devices.${this.id}.wasConnected`, true),
+      pymakrConf: createStateObject(pymakr.context.globalState, `pymakr.devices.${this.id}.pymakrConf`, pymakrConfType),
+      /** @type {import("./utils/storageObj").GetterSetter<import("micropython-ctl-cont").BoardInfo>} */
+      info: createStateObject(pymakr.context.globalState, `pymakr.devices.${this.id}.info`),
+    };
+    this._config = createListedConfigObject("pymakr.devices", "configs", this.id, configDefaults);
+
     /** If true, device will disconnect at the end of execution queue */
     this.temporaryConnection = false;
-    // TODO: determine the rootpath of a device when connecting. https://github.com/pycom/pymakr-vsc/discussions/224
-    this.rootPath = "/flash"; // TODO: make this configurable
-
-    this.connected = false;
     this.connecting = false;
     this.online = false;
     this.lostConnection = false;
-    /** @type {DeviceConfig} */
-    this.config = { ...configDefaults, ...this.state.load().config };
 
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
     this.autoConnectOnCommand();
     this.terminalLogFile = this.createTerminalLogFile();
-    /** @type {import("micropython-ctl-cont").BoardInfo} */
-    this.info = null;
 
     this.applyCustomDeviceConfig();
 
-    if (!this.config.hidden) this.updateConnection();
     subscribe(() => this.onChanged());
 
     this.busy.subscribe((val) => this.log.debugShort(val ? "busy..." : "idle."));
 
     this.readUntil = createReadUntil();
     this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
+  }
 
+  get connected() {
+    return this.adapter.__proxyMeta.target.isConnected();
+  }
+
+  get config() {
+    return this._config.get();
+  }
+
+  set config(value) {
+    this._config.set(value);
+  }
+
+  get info() {
+    return this.state.info.get();
+  }
+  
+  get configOverride() {
+    const customConfig = {};
+    /** @type {{field: string, match: string, value: string}[]} */
+    const cfgs = this.pymakr.config.get().get("devices.config");
+    cfgs
+      .filter((cfg) => this.serialized.match(new RegExp(cfg.match, "gi")))
+      .forEach((cfg) => (customConfig[cfg.field] = cfg.value));
+    return customConfig;
   }
 
   applyCustomDeviceConfig() {
-    /** @type {{field: string, match: string, value: string}[]} */
-    const cfgs = this.pymakr.config.get().get("devices.config");
-    cfgs.forEach((cfg) => {
-      if (this.serialized.match(new RegExp(cfg.match, "gi"))) {
-        const target = Reflect.has(this, cfg.field) ? this : this.adapter;
-        target[cfg.field] = cfg.value;
-      }
+    Object.keys(this.configOverride).forEach((key) => {
+      const target = Reflect.has(this, key) ? this : this.adapter;
+      target[key] = this.configOverride[key];
     });
   }
 
@@ -115,7 +138,7 @@ class Device {
   /** the user provided name */
   get customName() {
     const names = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
-    return names[this.raw.serialNumber] || '';
+    return names[this.raw.serialNumber] || "";
   }
 
   /** the full device name using the naming template */
@@ -125,8 +148,8 @@ class Device {
     const words = {
       ...this.raw,
       protocol: this.protocol,
-      displayName: this.customName || this.name,
-      projectName: this.pymakrConf.name ? this.pymakrConf.name : "unknown",
+      displayName: this.config.name || this.name,
+      projectName: this.state.pymakrConf.get().name || "unknown",
     };
 
     return nameTemplate.replace(/\{(.+?)\}/g, (_all, key) => words[key]);
@@ -137,23 +160,15 @@ class Device {
     return this.config.hidden || !createIsIncluded(include, exclude)(this.serialized);
   }
 
-  async readPymakrConf() {
+  async updatePymakrConf() {
+    /** @type {Partial<PymakrConfFile>} */
+    let conf = {};
     try {
-      const file = await this.adapter.getFile(`${this.rootPath}/pymakr.conf`);
-      const pymakrConf = JSON.parse(file.toString());
-      const isChanged = JSON.stringify(pymakrConf) !== JSON.stringify(this.pymakrConf);
-      this.pymakrConf = pymakrConf;
-      return isChanged;
-    } catch (err) { }
-  }
-
-  /**
-   * Creates a state manager, that can save and load device state from VSCode's workspace state
-   * The saved data is determined by the callback provided to the StateManager constructor
-   */
-  createState() {
-    const createState = () => cherryPick(this, ["connected", "name", "id", "config"]);
-    return new StateManager(this.pymakr, `devices.${this.id}`, createState);
+      const file = await this.adapter.getFile(`${this.config.rootPath}/pymakr.conf`);
+      conf = JSON.parse(file.toString());
+    } catch (err) {}
+    const changed = this.state.pymakrConf.set(conf);
+    if (changed) this.changed();
   }
 
   safeBoot() {
@@ -179,22 +194,22 @@ class Device {
    * Therefore any wrapping or extending of this method will be lost whenever a terminal is used
    * @param {string} data
    */
-  __onTerminalDataExclusive(data) { }
+  __onTerminalDataExclusive(data) {}
 
   /**
    * Auto connects device if required by user preferences
+   * This command gets called by devices.js when a device online status changes
    * If device has lost connection, set lostConnection=true and call this.changed() to save device state and refresh views
    */
-  async updateConnection() {
-    if (this.online && !this.connected) {
-      const autoConnect = this.config.autoConnect || this.pymakr.config.get().get("devices").autoConnect;
-      const shouldConnect = autoConnect === "always";
-      const shouldResume = autoConnect === "lastState" && this.state.load().connected;
-      const shouldReconnect = autoConnect === "onLostConnection" && this.lostConnection;
+  async refreshConnection() {
+    if (this.online && !this.adapter.__proxyMeta.target.isConnected()) {
+      const shouldConnect = this.config.autoConnect === "always";
+      const shouldResume = this.config.autoConnect === "lastState" && this.state.wasConnected.get();
+      const shouldReconnect = this.config.autoConnect === "onLostConnection" && this.lostConnection;
       if (shouldConnect || shouldResume || shouldReconnect) await this.connect();
     } else {
-      this.lostConnection = this.lostConnection || this.connected;
-      this.connected = false;
+      this.lostConnection = this.lostConnection || this.state.wasConnected.get();
+      this.state.wasConnected.set(false);
       this.changed();
     }
   }
@@ -315,13 +330,6 @@ class Device {
     throw error;
   }
 
-  _onDisconnected() {
-    this.connected = false;
-    this.lostConnection = false;
-    this.busy.set(false);
-    this.changed();
-  }
-
   /** @private */
   async _onConnectedHandler() {
     return new Promise((resolve) => {
@@ -329,7 +337,7 @@ class Device {
       this.busy.set(true);
       this.log.info("Connected.");
       this.log.info("Waiting for access...");
-      this.connected = true;
+      this.state.wasConnected.set(true);
       this.connecting = false;
       this.lostConnection = false;
       this.changed();
@@ -346,8 +354,9 @@ class Device {
           this.busy.set(true);
           this.log.info("Got access.");
           this.log.info("Getting device info.");
-          this.info = await this.adapter.getBoardInfo();
-          if (await this.readPymakrConf()) this.changed();
+          this.state.info.set(await this.adapter.getBoardInfo());
+          if (!this.config.rootPath) this.config = { ...this.config, rootPath: await this.getRootPath() };
+          await this.updatePymakrConf();
           this.busy.set(false);
           resolve();
         }
@@ -355,6 +364,13 @@ class Device {
 
       this.openRepl();
     });
+  }
+
+  async getRootPath() {
+    const files = (await this.adapter.listFiles("/")).map((file) => file.filename);
+    const rootPath = files.includes("/flash") ? "/flash" : files.includes("/sd") ? "/sd" : "/sd";
+    this.log.info("Detected root path:", rootPath);
+    return rootPath;
   }
 
   openRepl() {
@@ -372,7 +388,10 @@ class Device {
       this.adapter.__proxyMeta.reset();
       this.adapter.__proxyMeta.isPaused = true;
       await waitFor(this.adapter.__proxyMeta.target.disconnect(), 2000, "Timed out while disconnecting.");
-      this._onDisconnected();
+      this.state.wasConnected.set(false);
+      this.lostConnection = false;
+      this.busy.set(false);
+      this.changed();
     }
   }
 
@@ -381,7 +400,6 @@ class Device {
    */
   onChanged() {
     this.applyCustomDeviceConfig();
-    this.state.save();
     // throttle the UI refresh call. This makes sure that multiple devices doesn't trigger the same call.
     this.pymakr.refreshProvidersThrottled();
   }
@@ -396,7 +414,7 @@ class Device {
    * }} options
    */
   async upload(source, destination, options) {
-    destination = posix.join(this.rootPath, `/${destination}`.replace(/\/+/g, "/"));
+    destination = posix.join(this.config.rootPath, `/${destination}`.replace(/\/+/g, "/"));
     const root = source;
     const ignores = [...this.pymakr.config.get().get("ignore")];
     const pymakrConfig = getNearestPymakrConfig(source);

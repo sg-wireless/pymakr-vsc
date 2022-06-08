@@ -73,7 +73,7 @@ const createDevicesStore = (pymakr) => {
       device.online = inputIds.includes(device.id);
 
       // if status has changed, update connection
-      if (device.online !== _lastOnlineState) device.updateConnection();
+      if (device.online && !device.config.hidden && !_lastOnlineState) device.refreshConnection();
     });
   };
 

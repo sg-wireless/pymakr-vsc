@@ -1,7 +1,8 @@
 const { readFileSync } = require("fs");
 const { dirname, basename } = require("path");
 const vscode = require("vscode");
-const { StateManager } = require("./utils/StateManager");
+const { StateManager2 } = require("./utils/StateManager2");
+const { createStateObject } = require("./utils/storageObj");
 
 class Project {
   /**
@@ -21,31 +22,13 @@ class Project {
       this.pymakr.log.error("could not parse config:", configFile.fsPath);
       vscode.window.showErrorMessage(this.err);
     }
-
-    this.state = this.createState();    
+    this.deviceIds = createStateObject(pymakr.context.globalState, `project.${this.folder}`, []);
     this.name = this.config.name || basename(this.folder);
     this.log = pymakr.log.createChild("project: " + this.name);
-
-    /** @type {import('./Device').Device[]} */
-    this.devices = [];
-    this.recoverProject();
   }
 
-  /**
-   * Restore/reattach devices from last session
-   */
-  recoverProject() {
-    const deviceIds = this.state.load().devices || [];
-    this.devices = this.pymakr.devicesStore.getAllById(deviceIds);
-  }
-
-  /**
-   * Creates a state manager, that can save and load project state from VSCode's workspace state
-   * The saved data is determined by the callback provided to the StateManager constructor
-   */
-  createState() {
-    const createStateObj = () => ({ devices: this.devices.map((device) => device.id) });
-    return new StateManager(this.pymakr, `projects.${this.folder}`, createStateObj);
+  get devices() {
+    return this.pymakr.devicesStore.getAllById(this.deviceIds.get());
   }
 
   /**
@@ -53,9 +36,9 @@ class Project {
    * @param {import('./Device').Device[]} devices
    */
   setDevices(devices) {
-    this.devices = [...devices]
+    const deviceIds = devices.map(({ id }) => id);
+    this.deviceIds.set(deviceIds);
     this.pymakr.projectsProvider.refresh();
-    this.state.save();
   }
 }
 

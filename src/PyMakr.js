@@ -113,17 +113,8 @@ class PyMakr {
    */
   async setup() {
     await Promise.all([this.devicesStore.registerUSBDevices(), this.registerProjects()]);
-    await this.recoverProjects();
     this.projectsProvider.refresh(); // tell the provider that projects were updated
     this.context.subscriptions.push(coerceDisposable(this.devicesStore.watchUSBDevices()));
-  }
-
-  /**
-   * Recovers each project in the store to its state in the last session, if such exists.
-   * This reattaches devices.
-   */
-  async recoverProjects() {
-    return Promise.all(this.projectsStore.get().map((project) => project.recoverProject()));
   }
 
   /**

@@ -116,7 +116,7 @@ class Commands {
           progress.report({ message: "Erasing device" });
           try {
             const templatePath = `${__dirname}/../../templates/${templateId}`;
-            await device.adapter.remove(device.rootPath, true);
+            await device.adapter.remove(device.config.rootPath, true);
             await this.commands.upload({ fsPath: templatePath }, device, "/");
             resolve();
           } catch (err) {
@@ -314,8 +314,7 @@ class Commands {
 
             let { label, clear } = await vscode.window.showQuickPick(options);
             if (clear) label = null;
-            device.config.autoConnect = label;
-            device.state.save();
+            device.config = {...device.config, autoConnect: label}
             return "main";
           },
         };
@@ -520,7 +519,7 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     uploadProject: async ({ device, project }) => {
-      await device.adapter.remove(device.rootPath, true);
+      await device.adapter.remove(device.config.rootPath, true);
       this.commands.upload({ fsPath: project.folder }, device, "/");
     },
 
@@ -580,7 +579,7 @@ class Commands {
      * @param {Partial<ProjectDeviceTreeItem>} treeItem
      */
     downloadProject: async (treeItem) => {
-      const regex = new RegExp(`^${treeItem.device.rootPath}`);
+      const regex = new RegExp(`^${treeItem.device.config.rootPath}`);
       const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
       const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
         ...fad,
@@ -637,7 +636,7 @@ class Commands {
         scheme: device.protocol,
         // vscode doesn't like "/" in the authority name
         authority: device.address.replace(/\//g, "%2F"),
-        path: device.rootPath,
+        path: device.config.rootPath,
       });
 
       const name = `${device.protocol}:/${device.address}`;

@@ -144,6 +144,54 @@
             "type": "string",
             "default": "{displayName} / {projectName}"
           },
+          "pymakr.devices.configs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "autoConnect": {
+                  "type": "string",
+                  "enum": [
+                    "always",
+                    "never",
+                    "onLostConnection",
+                    "lastState"
+                  ],
+                  "enumDescriptions": [
+                    "Always auto connect to devices.",
+                    "Never auto connect to devices.",
+                    "Only auto connect to devices if connection was previously lost.",
+                    "Auto connect to devices that were never manually disconnected."
+                  ],
+                  "description": "When to connect devices automatically. Setting can be superseded on device level, by right clicking the device and selecting 'config'."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "name of device."
+                },
+                "username": {
+                  "type": "string",
+                  "description": "Not currently used."
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Not currently used."
+                },
+                "hidden": {
+                  "type": "boolean",
+                  "description": "Hide device from showing in the devices view."
+                },
+                "rootPath": {
+                  "type": "string",
+                  "description": "Commonly \"/flash\", \"/\" or \"/sd\"."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "ID of device. Do not change unless you know what you're doing."
+                }
+              }
+            }
+          },
           "pymakr.devices.config": {
             "type": "array",
             "items": {
