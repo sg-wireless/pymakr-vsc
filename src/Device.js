@@ -14,6 +14,7 @@ const { createStateObject, createListedConfigObject } = require("./utils/storage
 const picomatch = require("picomatch");
 const { createSequenceHooksCollection } = require("hookar");
 const { createReadUntil } = require("./utils/readUntil");
+const vscode = require("vscode");
 
 /**
  * @typedef {Object} DeviceConfig
@@ -113,7 +114,7 @@ class Device {
   get info() {
     return this.state.info.get();
   }
-  
+
   get configOverride() {
     const customConfig = {};
     /** @type {{field: string, match: string, value: string}[]} */
@@ -246,11 +247,16 @@ class Device {
     // emit line break to trigger a `>>>`. This triggers the `busyStatusUpdater`
     adapter.__proxyMeta.onIdle(() => this.adapter.sendData("\r\n"));
 
+    let outputChannel;
+
     rawAdapter.onTerminalData = (data) => {
+      outputChannel =
+        outputChannel || vscode.window.createOutputChannel(`Pymakr.${this.config.name || this.name}`, "log");
       this.__onTerminalDataExclusive(data);
       this.readUntil.push(data);
       this.onTerminalData.run(data);
       this.terminalLogFile.write(data);
+      outputChannel.append(data);
     };
 
     return adapter;
