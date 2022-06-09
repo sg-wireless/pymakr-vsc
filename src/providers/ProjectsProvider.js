@@ -60,7 +60,7 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
     const state = device.connected ? (device.busy.get() ? "busy" : "idle") : "offline";
     this.contextValue = `${state}#project#device`;
     const filename = device.connected ? "lightning.svg" : "lightning-muted.svg";
-    this.tooltip = state;
+    this.tooltip = device.pymakr.vscodeHelpers.deviceSummary(device)
     this.iconPath = device.busy.get()
       ? new vscode.ThemeIcon("sync~spin")
       : {

@@ -80,6 +80,52 @@ const createVSCodeHelpers = (pymakr) => {
       });
       return new Promise((resolve) => vscode.workspace.onDidChangeWorkspaceFolders(resolve));
     },
+
+    /**
+     * @param {Object} object
+     * @returns
+     */
+    objectToTable: (object) => {
+      const mdString = new vscode.MarkdownString();
+      // mdString.appendMarkdown('\n')
+      mdString.appendMarkdown("\n");
+      mdString.appendMarkdown("|||");
+      mdString.appendMarkdown("\n");
+      mdString.appendMarkdown("|--|--|");
+      mdString.appendMarkdown("\n");
+      Object.keys(object).forEach((key) => mdString.appendMarkdown(`|**${key}**|${object[key]}|\n`));
+      mdString.appendMarkdown("\n");
+      return mdString;
+    },
+
+    /**
+     * Friendly summary of project, device and system
+     * @param {Device} device
+     * @returns
+     */
+    deviceSummary: (device) => {
+      const staleNote = device.stale ? " _$(alert) Stale. Please connect to refresh. $(alert)_\n\n" : "";
+      const projectName = "" + device.state.pymakrConf.get().name || "unknown";
+
+      const mdString = new vscode.MarkdownString("", true);
+      mdString.supportHtml = true;
+      mdString.appendMarkdown("### Project");
+      mdString.appendMarkdown("\n\n");
+      mdString.appendMarkdown(staleNote);
+      mdString.appendMarkdown(helpers.objectToTable({ name: projectName }).value);
+      mdString.appendMarkdown("\n\n");
+      mdString.appendMarkdown("---");
+      mdString.appendMarkdown("\n\n");
+      mdString.appendMarkdown("### Device");
+      mdString.appendMarkdown(helpers.objectToTable(device.raw).value);
+      mdString.appendMarkdown("---");
+      mdString.appendMarkdown("\n\n");
+      mdString.appendMarkdown("### System");
+      mdString.appendMarkdown("\n\n");
+      mdString.appendMarkdown(staleNote);
+      mdString.appendMarkdown(helpers.objectToTable(device.info).value);
+      return mdString;
+    },
   };
   return helpers;
 };

@@ -70,6 +70,8 @@ class Device {
     this.password = password;
     this.name = name;
     this.raw = raw;
+    /** device has not yet been connected and some device info (eg. pymakr.conf) could be stale */
+    this.stale = true;
 
     this.state = {
       wasConnected: createStateObject(pymakr.context.workspaceState, `pymakr.devices.${this.id}.wasConnected`, true),
@@ -151,7 +153,7 @@ class Device {
       ...this.raw,
       protocol: this.protocol,
       displayName: this.config.name || this.name,
-      projectName: this.state.pymakrConf.get().name || "unknown",
+      projectName: (this.state.pymakrConf.get().name || "unknown") + (this.stale ? "?" : ""),
     };
 
     return nameTemplate.replace(/\{(.+?)\}/g, (_all, key) => words[key]);
@@ -176,7 +178,7 @@ class Device {
   safeBoot() {
     return new Promise((resolve) => {
       if (!this.adapter.__proxyMeta.target.isConnected()) throw new DeviceOfflineError();
-      
+
       this.log.info("safe booting...");
       this.busy.set(true);
       this.busy.subscribe((isBusy, unsub) => {
@@ -366,6 +368,7 @@ class Device {
           this.state.info.set(await this.adapter.getBoardInfo());
           if (!this.config.rootPath) this.config = { ...this.config, rootPath: await this.getRootPath() };
           await this.updatePymakrConf();
+          this.stale = false;
           this.busy.set(false);
           resolve();
         }
