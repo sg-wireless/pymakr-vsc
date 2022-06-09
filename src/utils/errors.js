@@ -1,15 +1,24 @@
 class MissingProjectError extends Error {
   /**
-   * @param {string=} message 
+   * @param {string=} message
    */
-    constructor(message) {
-      super(message || 'Project not found');
-      this.name = 'MissingProjectError'
-    }
+  constructor(message) {
+    super(message || "Project not found");
+    this.name = "MissingProjectError";
   }
-  
-const errors = {
-    MissingProjectError
 }
 
-module.exports = errors
+class DeviceOfflineError extends Error {
+  /**
+   * @param {string=} message
+   */
+  constructor(message) {
+    super(message || "cannot safeboot offline device");
+    this.name = "DeviceOffline";
+  }
+}
+
+module.exports = {
+  MissingProjectError,
+  DeviceOfflineError
+};

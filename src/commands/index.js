@@ -63,6 +63,9 @@ class Commands {
      * @param {{device: Device}} treeItem
      */
     safeBootDevice: async ({ device }) => {
+      if (!device.adapter.__proxyMeta.target.isConnected())
+        return vscode.window.showErrorMessage("Cannot safeboot offline device.");
+
       const timeout = 10000;
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
         progress.report({ message: "Safe booting" });
@@ -314,7 +317,7 @@ class Commands {
 
             let { label, clear } = await vscode.window.showQuickPick(options);
             if (clear) label = null;
-            device.config = {...device.config, autoConnect: label}
+            device.config = { ...device.config, autoConnect: label };
             return "main";
           },
         };

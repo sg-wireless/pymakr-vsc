@@ -15,6 +15,7 @@ const picomatch = require("picomatch");
 const { createSequenceHooksCollection } = require("hookar");
 const { createReadUntil } = require("./utils/readUntil");
 const vscode = require("vscode");
+const { DeviceOfflineError } = require("./utils/errors");
 
 /**
  * @typedef {Object} DeviceConfig
@@ -174,6 +175,8 @@ class Device {
 
   safeBoot() {
     return new Promise((resolve) => {
+      if (!this.adapter.__proxyMeta.target.isConnected()) throw new DeviceOfflineError();
+      
       this.log.info("safe booting...");
       this.busy.set(true);
       this.busy.subscribe((isBusy, unsub) => {
