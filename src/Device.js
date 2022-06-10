@@ -380,7 +380,7 @@ class Device {
 
   async getRootPath() {
     const files = (await this.adapter.listFiles("/")).map((file) => file.filename);
-    const rootPath = files.includes("/flash") ? "/flash" : files.includes("/sd") ? "/sd" : "/sd";
+    const rootPath = files.includes("/flash") ? "/flash" : files.includes("/sd") ? "/sd" : "/";
     this.log.info("Detected root path:", rootPath);
     return rootPath;
   }
