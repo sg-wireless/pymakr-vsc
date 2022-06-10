@@ -148,10 +148,7 @@ class Commands {
       const picked = await vscode.window.showQuickPick(picks, { canPickMany: true, title: "Select devices to show" });
       const visibleDevices = picked.map((pick) => pick.device);
 
-      allDevices.forEach((device) => {
-        device.config.hidden = !visibleDevices.includes(device);
-        device.state.save();
-      });
+      allDevices.forEach((device) => (device.config = { ...device.config, hidden: !visibleDevices.includes(device) }));
       this.pymakr.refreshProvidersThrottled();
     },
     /**
