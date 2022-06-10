@@ -123,7 +123,7 @@ const createVSCodeHelpers = (pymakr) => {
       mdString.appendMarkdown("### System");
       mdString.appendMarkdown("\n\n");
       mdString.appendMarkdown(staleNote);
-      mdString.appendMarkdown(helpers.objectToTable(device.info).value);
+      if (device.info) mdString.appendMarkdown(helpers.objectToTable(device.info).value);
       return mdString;
     },
   };
