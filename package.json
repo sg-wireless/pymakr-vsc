@@ -146,6 +146,7 @@
           },
           "pymakr.devices.configs": {
             "type": "array",
+            "description": "Configuration of each individual device.",
             "items": {
               "type": "object",
               "properties": {
