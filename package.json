@@ -809,7 +809,7 @@
     "eslint": "^8.16.0",
     "glob": "^8.0.3",
     "probs": "^1.1.0-16",
-    "semantic-release": "^19.0.2",
+    "semantic-release": "^19.0.3",
     "semantic-release-vsce": "^5.0.13",
     "typedoc": "^0.22.16",
     "typescript": "^4.7.2"
