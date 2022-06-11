@@ -4,6 +4,23 @@ const { ProjectDeviceTreeItem, ProjectTreeItem } = require("../providers/Project
 const errors = require("./errors.js");
 const { getNearestPymakrProjectDir } = require("./misc.js");
 
+
+
+function pick(obj, ...props) {
+  return props.reduce(function (result, prop) {
+    result[prop] = obj[prop];
+    return result;
+  }, {});
+}
+
+function omit(obj, ...props) {
+  const result = { ...obj };
+  props.forEach(function (prop) {
+    delete result[prop];
+  });
+  return result;
+}
+
 /**
  * @param {pymakr} pymakr
  */
@@ -87,14 +104,12 @@ const createVSCodeHelpers = (pymakr) => {
      */
     objectToTable: (object) => {
       const mdString = new vscode.MarkdownString();
-      // mdString.appendMarkdown('\n')
       mdString.appendMarkdown("\n");
       mdString.appendMarkdown("|||");
       mdString.appendMarkdown("\n");
       mdString.appendMarkdown("|--|--|");
       mdString.appendMarkdown("\n");
       Object.keys(object).forEach((key) => mdString.appendMarkdown(`|**${key}**|${object[key]}|\n`));
-      mdString.appendMarkdown("\n");
       return mdString;
     },
 
@@ -104,26 +119,28 @@ const createVSCodeHelpers = (pymakr) => {
      * @returns
      */
     deviceSummary: (device) => {
-      const staleNote = device.stale ? " _$(alert) Stale. Please connect to refresh. $(alert)_\n\n" : "";
+      const staleNote = device.stale ? "<span style='color:#ff0;'> _$(alert) Stale. Please connect to refresh. $(alert)_</span>\n\n" : "";
       const projectName = "" + device.state.pymakrConf.get().name || "unknown";
 
       const mdString = new vscode.MarkdownString("", true);
       mdString.supportHtml = true;
       mdString.appendMarkdown("### Project");
-      mdString.appendMarkdown("\n\n");
+      mdString.appendMarkdown("\n");
       mdString.appendMarkdown(staleNote);
       mdString.appendMarkdown(helpers.objectToTable({ name: projectName }).value);
       mdString.appendMarkdown("\n\n");
       mdString.appendMarkdown("---");
       mdString.appendMarkdown("\n\n");
       mdString.appendMarkdown("### Device");
-      mdString.appendMarkdown(helpers.objectToTable(device.raw).value);
+      mdString.appendMarkdown(helpers.objectToTable(omit(device.raw, "vendorId", "productId")).value);
       mdString.appendMarkdown("---");
       mdString.appendMarkdown("\n\n");
       mdString.appendMarkdown("### System");
       mdString.appendMarkdown("\n\n");
       mdString.appendMarkdown(staleNote);
-      if (device.info) mdString.appendMarkdown(helpers.objectToTable(device.info).value);
+      if (device.info) mdString.appendMarkdown(helpers.objectToTable(omit(device.info, "nodename")).value);
+      // append row to the prior table 
+      if (device.config) mdString.appendMarkdown(`|**Root path**|${device.config.rootPath}|\n`);
       return mdString;
     },
   };
