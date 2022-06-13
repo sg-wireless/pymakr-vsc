@@ -694,7 +694,7 @@
         {
           "command": "pymakr.selectDevicesForProjectPrompt",
           "group": "1-primary",
-          "when": "viewItem == project"
+          "when": "view == pymakr-projects-tree && viewItem == project"
         },
         {
           "command": "pymakr.configureProject",
@@ -800,7 +800,7 @@
         },
         {
           "submenu": "pymakr.projectMenu",
-          "when": "viewItem == project",
+          "when": "view == pymakr-projects-tree && viewItem == project",
           "group": "inline@100"
         }
       ],
