@@ -293,7 +293,7 @@ const serializedEntriesToObj = (serializedEntries) => Object.fromEntries(seriali
 
 /**
  * Takes a callback that will be called whenever all promises have been resolved
- * @param {Function} callback 
+ * @param {Function} callback
  */
 const dynamicPromiseAll = (callback) => {
   /** @type {Promise<any>} */
@@ -304,7 +304,7 @@ const dynamicPromiseAll = (callback) => {
   return {
     /** @param {Promise<any>} promise */
     async push(promise) {
-      const id = Symbol()
+      const id = Symbol();
       claim = id;
       promisePyramid = Promise.all([promisePyramid, promise]);
       await promisePyramid;
@@ -312,6 +312,20 @@ const dynamicPromiseAll = (callback) => {
     },
   };
 };
+
+/**
+ * Returns a cloned project with cherry picked props
+ * @param {Object} obj
+ * @param  {...string} props
+ */
+const pick = (obj, ...props) => props.reduce((result, prop) => ({ ...result, [prop]: obj[prop] }), {});
+
+/**
+ * returns a cloned object with props omitted
+ * @param {Object} obj
+ * @param  {...string} props
+ */
+const omit = (obj, ...props) => props.reduce((result, prop) => delete result[prop] && result, { ...obj });
 
 module.exports = {
   dynamicPromiseAll,
@@ -337,4 +351,6 @@ module.exports = {
   getTemplates,
   copyTemplateByName,
   copyTemplateByPath,
+  pick,
+  omit,
 };

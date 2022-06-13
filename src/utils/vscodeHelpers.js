@@ -2,24 +2,7 @@ const vscode = require("vscode");
 const { Project } = require("../Project.js");
 const { ProjectDeviceTreeItem, ProjectTreeItem } = require("../providers/ProjectsProvider.js");
 const errors = require("./errors.js");
-const { getNearestPymakrProjectDir } = require("./misc.js");
-
-
-
-function pick(obj, ...props) {
-  return props.reduce(function (result, prop) {
-    result[prop] = obj[prop];
-    return result;
-  }, {});
-}
-
-function omit(obj, ...props) {
-  const result = { ...obj };
-  props.forEach(function (prop) {
-    delete result[prop];
-  });
-  return result;
-}
+const { getNearestPymakrProjectDir, omit } = require("./misc.js");
 
 /**
  * @param {pymakr} pymakr
