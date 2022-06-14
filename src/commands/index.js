@@ -283,7 +283,7 @@ class Commands {
           main: async (config) => {
             const result = await vscode.window.showQuickPick(
               [
-                { label: "name", description: device.customName || device.name },
+                { label: "name", description: config.name || device.name },
                 { label: "autoConnect", description: config.autoConnect },
                 // todo are we adding telnet?
                 // { label: "username", description: config.username || "" },
@@ -294,16 +294,8 @@ class Commands {
             return result?.label || "_DONE_";
           },
           name: async () => {
-            const name = await vscode.window.showInputBox({ placeHolder: device.name, value: device.customName });
-
-            const namesMap = serializedEntriesToObj(this.pymakr.config.get().get("devices.names"));
-
-            if (name) namesMap[device.raw.serialNumber] = name;
-            else delete namesMap[device.raw.serialNumber];
-
-            const entries = objToSerializedEntries(namesMap);
-            await this.pymakr.config.get().update("devices.names", entries, vscode.ConfigurationTarget.Global);
-
+            const name = await vscode.window.showInputBox({ placeHolder: device.name, value: device.config.name });
+            device.config = { ...device.config, name };
             return "main";
           },
           autoConnect: async () => {
