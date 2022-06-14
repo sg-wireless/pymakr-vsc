@@ -14,6 +14,7 @@ const { coerceDisposable, createThrottledFunction } = require("./utils/misc");
 const manifest = require("../package.json");
 const { createVSCodeHelpers } = require("./utils/vscodeHelpers");
 const { TextDocumentProvider } = require("./providers/TextDocumentProvider");
+const { createStateObject } = require("./utils/storageObj");
 
 /**
  * Pymakr is the root class and scope of the extension.
@@ -28,6 +29,13 @@ class PyMakr {
    * @param {vscode.ExtensionContext} context
    */
   constructor(context) {
+    /**
+     * @example
+     * this.pendingActions.set([...actions, { target: ["vscode", "window", "showInformationMessage"], args: ["message"] }]) 
+     * @type {import("./utils/storageObj").GetterSetter<{target: string[], args: any[]}[]>}
+     * */
+    this.pendingActions = createStateObject(context.workspaceState, "pendingActions", []);
+
     this.refreshProvidersThrottled = createThrottledFunction(this.refreshProviders.bind(this));
 
     /** Reactive Pymakr user configuration */
@@ -72,6 +80,18 @@ class PyMakr {
 
     this.registerWithIde();
     this.setup();
+    this.handlePendingActions();
+  }
+
+  handlePendingActions() {
+    const pendingActions = this.pendingActions.get();
+    this.pendingActions.set([]);
+
+    pendingActions.forEach((action) => {
+      const target = action.target.reduce((obj, prop) => obj[prop], { ...this, vscode });
+      this.log.debugShort("pending action", target, action.args);
+      target.call(target, ...action.args);
+    });
   }
 
   /**

@@ -642,10 +642,24 @@ class Commands {
       const name = `${device.protocol}:/${device.address}`;
 
       const wsPos = vscode.workspace.workspaceFolders?.length || 0;
+
+      if (wsPos <= 1) {
+        const actions = this.pymakr.pendingActions.get();
+        const msg = [
+          "VSCode restarted because the primary workspace changed.",
+          "VSCode restarted because workspaces were changed to multi.",
+        ];
+        actions.push({ target: ["vscode", "window", "showInformationMessage"], args: [msg[wsPos]] });
+        actions.push({ target: ["vscode", "commands", "executeCommand"], args: ["revealInExplorer", uri] });
+        this.pymakr.pendingActions.set(actions);
+      }
+
       vscode.workspace.updateWorkspaceFolders(wsPos, 0, { uri, name });
 
-      vscode.commands.executeCommand("revealInExplorer", uri);
-      return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar();
+      if (wsPos > 1) {
+        vscode.commands.executeCommand("revealInExplorer", uri);
+        return this.pymakr.vscodeHelpers.showAddDeviceToFileExplorerProgressBar();
+      }
     },
   };
 }
