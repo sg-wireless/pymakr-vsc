@@ -130,16 +130,6 @@
             "default": [],
             "description": "Same as Devices: Include, but for exclude. Excluded devices will not show, even if listed in the include list."
           },
-          "pymakr.devices.names": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "default": [
-              "serial-number=device-name"
-            ],
-            "description": "Override device names by assigning a device serial number to a name.\r\n\r\nFor a list of available devices, run the command \"list devices\""
-          },
           "pymakr.devices.nameTemplate": {
             "type": "string",
             "default": "{displayName} / {projectName}"
