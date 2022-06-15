@@ -571,25 +571,30 @@ class Commands {
      * @param {Partial<ProjectDeviceTreeItem>} treeItem
      */
     downloadProject: async (treeItem) => {
-      const regex = new RegExp(`^${treeItem.device.config.rootPath}`);
-      const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
-      const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
-        ...fad,
-        destination: treeItem.project.folder + fad.filename.replace(regex, ""),
-      }));
-      const files = filesAndDirs.filter((f) => !f.isDir);
-      const dirs = filesAndDirs.filter((f) => f.isDir);
+      await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+        progress.report({ message: `Download from "${treeItem.device.displayName}"...` });
+        const regex = new RegExp(`^${treeItem.device.config.rootPath}`);
+        const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
+        const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
+          ...fad,
+          destination: treeItem.project.folder + fad.filename.replace(regex, ""),
+        }));
+        const files = filesAndDirs.filter((f) => !f.isDir);
+        const dirs = filesAndDirs.filter((f) => f.isDir);
 
-      this.log.debug(...msgs.download(filesAndDirs));
+        this.log.debug(...msgs.download(filesAndDirs));
 
-      dirs.forEach((dir) => mkdirSync(dir.destination, { recursive: true }));
+        dirs.forEach((dir) => mkdirSync(dir.destination, { recursive: true }));
 
-      const writePromises = [];
-      for (const file of files) {
-        const contents = await treeItem.device.adapter.getFile(file.filename);
-        writePromises.push(writeFile(file.destination, contents));
-      }
-      await Promise.all(writePromises);
+        for (const file of files) {
+          progress.report({
+            message: `Downloading "${file.filename}" from "${treeItem.device.displayName}"...`,
+            increment: 100 / files.length,
+          });
+          const contents = await treeItem.device.adapter.getFile(file.filename);
+          writeFileSync(file.destination, contents)
+        }
+      });
     },
 
     /**
