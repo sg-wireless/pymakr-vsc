@@ -397,6 +397,12 @@
         "enablement": "viewItem =~ /(idle)#.+#device/"
       },
       {
+        "command": "pymakr.stopScript",
+        "title": "Stop busy device",
+        "category": "PyMakr",
+        "enablement": "viewItem =~ /(busy)#.+#device/"
+      },
+      {
         "command": "pymakr.eraseDevicePrompt",
         "title": "Erase device",
         "category": "PyMakr",
@@ -717,15 +723,19 @@
       "pymakr.projectDeviceMenu": [
         {
           "command": "pymakr.safeBootDevice",
-          "group": "1-primary"
+          "group": "3-reset"
         },
         {
           "command": "pymakr.resetDevice",
-          "group": "1-primary"
+          "group": "3-reset"
         },
         {
           "command": "pymakr.softResetDevice",
-          "group": "1-primary"
+          "group": "3-reset"
+        },
+        {
+          "command": "pymakr.stopScript",
+          "group": "2-interact"
         },
         {
           "command": "pymakr.disconnect",
@@ -734,15 +744,15 @@
         {
           "command": "pymakr.removeDeviceFromProject",
           "when": "viewItem =~ /.+#project#device/",
-          "group": "2-config"
+          "group": "4-config"
         },
         {
           "command": "pymakr.eraseDevicePrompt",
-          "group": "2-config"
+          "group": "4-config"
         },
         {
           "command": "pymakr.configureDevice",
-          "group": "2-config"
+          "group": "4-config"
         },
         {
           "command": "pymakr.showTerminalHistory",
