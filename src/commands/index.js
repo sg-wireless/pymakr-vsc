@@ -370,7 +370,12 @@ class Commands {
      * @param {vscode.Uri} uri
      */
     runScriptPrompt: async (text, uri) => {
-      const devices = await this.pymakr.vscodeHelpers.devicePickerByProject(uri);
+      let devices = this.pymakr.vscodeHelpers
+        .devicesByProject(uri)
+        .filter((device) => device.adapter.__proxyMeta.target.isConnected());
+
+      if (vscode.workspace.getConfiguration("pymakr").get("projects.runScriptPrompt"))
+        devices = await this.pymakr.vscodeHelpers.devicePicker(devices);
       await Promise.all(devices.map((device) => this.commands.runScript(text, device)));
     },
     /**
@@ -447,7 +452,7 @@ class Commands {
           .map((device) => this.commands.connect({ device }))
       );
     },
-    
+
     /**
      * @param {ProjectTreeItem} ctx
      */
@@ -459,6 +464,31 @@ class Commands {
       );
     },
 
+    /**
+     * @param {{device: Device}} device
+     */
+    stopScript: ({ device }) => {
+      if (device.busy.get()) {
+        vscode.window.withProgress(
+          { title: `Stopping script on "${device.displayName}"`, location: vscode.ProgressLocation.Notification },
+          () =>
+            new Promise((resolve) => {
+              device.busy.subscribe((isBusy, unsub) => {
+                if (!isBusy) {
+                  unsub();
+                  resolve();
+                }
+              });
+              device.adapter.sendData("\x03");
+            })
+        );
+      }
+    },
+
+    /**
+     * @param {ProjectTreeItem} ctx
+     */
+    stopAllInProject: (ctx) => ctx.project.devices.map((device) => this.commands.stopScript({ device })),
     /**
      * Creates a new terminal. If a terminal already exists for the given device, prompt
      * the user if they want to to open a new shared terminal or the existing terminal

@@ -45,9 +45,14 @@ class ProjectTreeItem extends vscode.TreeItem {
 
     const hasOnlineChild = project.devices.find((device) => device.adapter.__proxyMeta.target.isConnected());
     const hasOfflineChild = project.devices.find((device) => !device.adapter.__proxyMeta.target.isConnected());
-    const childStatus =
+    const onlineStatus =
       hasOnlineChild && hasOfflineChild ? "mixed" : hasOnlineChild ? "online" : hasOfflineChild ? "offline" : "no";
-    this.contextValue = `${childStatus}Children#project`;
+
+    const hasBusyChild = project.devices.find((device) => device.busy.get());
+    const hasIdleChild = project.devices.find((device) => !device.busy.get());
+    const busyStatus = hasBusyChild && hasIdleChild ? "mixed" : hasBusyChild ? "busy" : hasIdleChild ? "idle" : "no";
+
+    this.contextValue = `${busyStatus}#${onlineStatus}Children#project`;
   }
 }
 

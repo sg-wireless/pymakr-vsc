@@ -226,6 +226,11 @@
               }
             ],
             "markdownDescription": "**!EXPERIMENTAL! This feature could be changed or removed without notice.**\n\nOverride device config. Each override consists of a match, a field and a value.\n\n**match:** key=value (eg. `manufacturer=\"Micr.*\"` will match all devices with a Manufacturer starting with \"Micr\")\n\n\n**field:** the property that should be updated.\n\n**value:** the new value."
+          },
+          "pymakr.projects.runScriptPrompt": {
+            "type":"boolean",
+            "default": "true",
+            "description": "Prompt which devices to use before running a script in a project. If set to false, scripts will run on all connected devices in a project."
           }
         }
       },
@@ -428,6 +433,12 @@
         "command": "pymakr.connect",
         "title": "Connect device",
         "icon": "$(zap)",
+        "category": "PyMakr"
+      },
+      {
+        "command": "pymakr.stopAllInProject",
+        "title": "Stop all busy devices",
+        "icon": "$(stop)",
         "category": "PyMakr"
       },
       {
@@ -765,6 +776,11 @@
         }
       ],
       "view/item/context": [
+        {
+          "command": "pymakr.stopAllInProject",
+          "group": "inline",
+          "when": "viewItem =~ /(busy|mixed)#.+Children#project$/"
+        },
         {
           "command": "pymakr.connectAllInProject",
           "group": "inline",
