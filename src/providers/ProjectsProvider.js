@@ -39,9 +39,11 @@ class ProjectTreeItem extends vscode.TreeItem {
   constructor(project, tree) {
     super(project.name, 2);
     this.project = project;
-    this.children = project.devices
+    const children = project.devices
       .filter((device) => !device.config.hidden)
       .map((device) => new ProjectDeviceTreeItem(device, project, tree));
+
+    this.children = children.length ? children : [new ProjectEmptyTreeItem(project)];
 
     const hasOnlineChild = project.devices.find((device) => device.adapter.__proxyMeta.target.isConnected());
     const hasOfflineChild = project.devices.find((device) => !device.adapter.__proxyMeta.target.isConnected());
@@ -53,6 +55,21 @@ class ProjectTreeItem extends vscode.TreeItem {
     const busyStatus = hasBusyChild && hasIdleChild ? "mixed" : hasBusyChild ? "busy" : hasIdleChild ? "idle" : "no";
 
     this.contextValue = `${busyStatus}#${onlineStatus}Children#project`;
+  }
+}
+
+class ProjectEmptyTreeItem extends vscode.TreeItem {
+  /**
+   * @param {Project} project
+   */
+  constructor(project) {
+    super("ADD DEVICES", vscode.TreeItemCollapsibleState.None);
+    this.command = {
+      title: 'Select Devices',
+      tooltip: 'Add devices to your project',
+      command: "pymakr.selectDevicesForProjectPrompt",
+      arguments: [project],
+    };
   }
 }
 
