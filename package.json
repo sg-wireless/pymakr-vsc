@@ -594,8 +594,7 @@
           "when": "false"
         },
         {
-          "command": "pymakr.getPymakr",
-          "when": "false"
+          "command": "pymakr.getPymakr"
         },
         {
           "command": "pymakr.uploadPrompt",
