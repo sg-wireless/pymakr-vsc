@@ -1,7 +1,6 @@
 const { readFileSync } = require("fs");
 const { dirname, basename } = require("path");
 const vscode = require("vscode");
-const { StateManager2 } = require("./utils/StateManager2");
 const { createStateObject } = require("./utils/storageObj");
 
 class Project {
