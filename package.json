@@ -132,7 +132,8 @@
           },
           "pymakr.devices.nameTemplate": {
             "type": "string",
-            "default": "{displayName} / {projectName}"
+            "default": "{displayName} / {projectName}",
+            "description": "Available variables: friendlyName, locationId, manufacturer, pnpId, productId, serialNumber, vendorId, protocol, displayName, projectName"
           },
           "pymakr.devices.configs": {
             "type": "array",
