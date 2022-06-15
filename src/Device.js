@@ -121,7 +121,7 @@ class Device {
   get configOverride() {
     const customConfig = {};
     /** @type {{field: string, match: string, value: string}[]} */
-    const cfgs = this.pymakr.config.get().get("devices.config");
+    const cfgs = this.pymakr.config.get().get("devices.configOverride");
     cfgs
       .filter((cfg) => this.serialized.match(new RegExp(cfg.match, "gi")))
       .forEach((cfg) => (customConfig[cfg.field] = cfg.value));

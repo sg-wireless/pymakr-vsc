@@ -193,7 +193,7 @@
               }
             }
           },
-          "pymakr.devices.config": {
+          "pymakr.devices.configOverride": {
             "type": "array",
             "items": {
               "type": "object",
@@ -234,7 +234,7 @@
                 "value": "/custom/path"
               }
             ],
-            "markdownDescription": "**!EXPERIMENTAL!**\n\nOverride device config. Each override consists of a match, a field and a value.\n\n**match:** key=value (eg. `manufacturer=\"Micr.*\"` will match all devices with a Manufacturer starting with \"Micr\")\n\n\n**field:** the property that should be updated.\n\n**value:** the new value."
+            "markdownDescription": "**!EXPERIMENTAL! This feature could be changed or removed without notice.**\n\nOverride device config. Each override consists of a match, a field and a value.\n\n**match:** key=value (eg. `manufacturer=\"Micr.*\"` will match all devices with a Manufacturer starting with \"Micr\")\n\n\n**field:** the property that should be updated.\n\n**value:** the new value."
           }
         }
       },
