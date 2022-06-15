@@ -440,6 +440,18 @@
         "category": "PyMakr"
       },
       {
+        "command": "pymakr.connectAllInProject",
+        "title": "Connect all devices",
+        "icon": "$(zap)",
+        "category": "PyMakr"
+      },
+      {
+        "command": "pymakr.disconnectAllInProject",
+        "title": "Disconnect all devices",
+        "icon": "$(debug-disconnect)",
+        "category": "PyMakr"
+      },
+      {
         "command": "pymakr.addDeviceToFileExplorer",
         "title": "Open device in file explorer",
         "icon": "$(folder)",
@@ -693,7 +705,7 @@
         {
           "command": "pymakr.selectDevicesForProjectPrompt",
           "group": "1-primary",
-          "when": "view == pymakr-projects-tree && viewItem == project"
+          "when": "view == pymakr-projects-tree"
         },
         {
           "command": "pymakr.configureProject",
@@ -763,6 +775,16 @@
       ],
       "view/item/context": [
         {
+          "command": "pymakr.connectAllInProject",
+          "group": "inline",
+          "when": "viewItem =~ /(mixed|offline)Children#project$/"
+        },
+        {
+          "command": "pymakr.disconnectAllInProject",
+          "group": "inline",
+          "when": "viewItem =~ /onlineChildren#project$/"
+        },
+        {
           "command": "pymakr.addDeviceToFileExplorer",
           "group": "inline@10",
           "when": "viewItem =~ /.+#.+#device/"
@@ -799,7 +821,7 @@
         },
         {
           "submenu": "pymakr.projectMenu",
-          "when": "view == pymakr-projects-tree && viewItem == project",
+          "when": "view == pymakr-projects-tree && viewItem =~ /project$/",
           "group": "inline@100"
         }
       ],

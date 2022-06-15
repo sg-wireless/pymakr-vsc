@@ -408,7 +408,7 @@ class Commands {
     },
     /**
      * Connects a device
-     * @param {ProjectDeviceTreeItem} treeItem
+     * @param {{device: Device}} treeItem
      */
     connect: async ({ device }) => {
       await device.connect();
@@ -431,11 +431,34 @@ class Commands {
 
     /**
      * Disconnects a device
-     * @param {ProjectDeviceTreeItem} treeItem
+     * @param {{device: Device}} treeItem
      */
     disconnect: ({ device }) => {
       device.disconnect();
     },
+
+    /**
+     * @param {ProjectTreeItem} ctx
+     */
+    connectAllInProject: async (ctx) => {
+      await Promise.all(
+        ctx.project.devices
+          .filter((device) => !device.adapter.__proxyMeta.target.isConnected())
+          .map((device) => this.commands.connect({ device }))
+      );
+    },
+    
+    /**
+     * @param {ProjectTreeItem} ctx
+     */
+    disconnectAllInProject: async (ctx) => {
+      await Promise.all(
+        ctx.project.devices
+          .filter((device) => device.adapter.__proxyMeta.target.isConnected())
+          .map((device) => this.commands.disconnect({ device }))
+      );
+    },
+
     /**
      * Creates a new terminal. If a terminal already exists for the given device, prompt
      * the user if they want to to open a new shared terminal or the existing terminal
@@ -592,7 +615,7 @@ class Commands {
             increment: 100 / files.length,
           });
           const contents = await treeItem.device.adapter.getFile(file.filename);
-          writeFileSync(file.destination, contents)
+          writeFileSync(file.destination, contents);
         }
       });
     },

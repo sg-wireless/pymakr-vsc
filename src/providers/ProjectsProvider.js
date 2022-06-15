@@ -42,7 +42,12 @@ class ProjectTreeItem extends vscode.TreeItem {
     this.children = project.devices
       .filter((device) => !device.config.hidden)
       .map((device) => new ProjectDeviceTreeItem(device, project, tree));
-    this.contextValue = "project";
+
+    const hasOnlineChild = project.devices.find((device) => device.adapter.__proxyMeta.target.isConnected());
+    const hasOfflineChild = project.devices.find((device) => !device.adapter.__proxyMeta.target.isConnected());
+    const childStatus =
+      hasOnlineChild && hasOfflineChild ? "mixed" : hasOnlineChild ? "online" : hasOfflineChild ? "offline" : "no";
+    this.contextValue = `${childStatus}Children#project`;
   }
 }
 
@@ -60,7 +65,7 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
     const state = device.connected ? (device.busy.get() ? "busy" : "idle") : "offline";
     this.contextValue = `${state}#project#device`;
     const filename = device.connected ? "lightning.svg" : "lightning-muted.svg";
-    this.tooltip = device.pymakr.vscodeHelpers.deviceSummary(device)
+    this.tooltip = device.pymakr.vscodeHelpers.deviceSummary(device);
     this.iconPath = device.busy.get()
       ? new vscode.ThemeIcon("sync~spin")
       : {
