@@ -116,11 +116,20 @@ class Commands {
     eraseDevice: async ({ device }, templateId) =>
       new Promise((resolve, reject) =>
         vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
-          progress.report({ message: "Erasing device" });
           try {
             const templatePath = `${__dirname}/../../templates/${templateId}`;
-            await device.adapter.remove(device.config.rootPath, true);
-            await this.commands.upload({ fsPath: templatePath }, device, "/");
+            if ((await device.adapter.statPath(device.config.rootPath)).exists) {
+              progress.report({ message: "Erasing device..." });
+              await device.adapter.remove(device.config.rootPath, true);
+            }
+            if (templateId) {
+              progress.report({ message: "Erasing device... Copying template" });
+              await this.commands.upload({ fsPath: templatePath }, device, "/");
+            } else {
+              progress.report({ message: "Erasing device... Creating root dir" });
+              await device.adapter.mkdir(device.config.rootPath);
+            }
+
             resolve();
           } catch (err) {
             this.log.error(err);
@@ -132,7 +141,9 @@ class Commands {
     /**
      * provides pymakr to the callback - Required for accessing Pymakr from the test suite.
      **/
-    getPymakr: (cb) => cb(this.pymakr),
+    getPymakr: (cb) => {
+      cb(this.pymakr);
+    },
 
     /**
      * Set visible status for devices
@@ -678,7 +689,7 @@ class Commands {
 
     /**
      * Mounts a device to the file explorer view
-     * @param {ProjectDeviceTreeItem} treeItem
+     * @param {{device}} treeItem
      */
     addDeviceToFileExplorer: async ({ device }) => {
       // Todo: move to utlis
