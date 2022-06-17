@@ -16,7 +16,7 @@ async function main() {
       await runTests({
         extensionDevelopmentPath,
         extensionTestsPath,
-        launchArgs: [fixturePath],
+        launchArgs: [`${fixturePath}/workspace.code-workspace`],
         extensionTestsEnv: { fixturePath, fixtureName },
       });
     }
