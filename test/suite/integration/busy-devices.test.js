@@ -2,8 +2,7 @@ const { disconnectAllDevices, sleep } = require("./utils");
 
 test("busy devices", async () => {
   const device = pymakr.devicesStore.get()[0];
-  await disconnectAllDevices();
-
+  
   test("can disconnect a busy device", async () => {
     test("can connect the device", async () => {
       await device.connect();

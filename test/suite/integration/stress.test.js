@@ -1,7 +1,5 @@
-const { disconnectAllDevices } = require("./utils");
 test("stress test", async () => {
   const device = pymakr.devicesStore.get()[0];
-  await disconnectAllDevices();
 
   test("5x (re)connect", async () => {
     let error;

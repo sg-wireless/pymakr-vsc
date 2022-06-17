@@ -1,12 +1,8 @@
 const assert = require("assert");
 const vscode = require("vscode");
 
-const { disconnectAllDevices } = require("./utils");
-
 test("Can find devices", async () => {
   assert(pymakr.devicesStore.get().length >= 2);
-
-  await disconnectAllDevices();
 
   test("device", async () => {
     const device = pymakr.devicesStore.get()[0];
