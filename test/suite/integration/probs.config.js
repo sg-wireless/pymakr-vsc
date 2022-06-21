@@ -24,5 +24,4 @@ module.exports = {
 
     await Promise.all(pymakr.devicesStore.get().map(prepDevice));
   },
-  timeout: 5000,
 };

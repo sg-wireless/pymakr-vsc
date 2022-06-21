@@ -4,7 +4,7 @@ async function run() {
     runner: "main",
     concurrency: 1,
     reporter: "consoleReporter",
-    timeout: 7500,
+    timeout: 12000,
     // watch: true,
     // use npm run test:integration -- --pattern myfile.test.js for file patterns
     pattern: process.env.pattern ? [process.env.pattern] : [],
