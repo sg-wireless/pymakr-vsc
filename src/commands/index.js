@@ -637,11 +637,11 @@ class Commands {
     downloadProject: async (treeItem) => {
       await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
         progress.report({ message: `Download from "${treeItem.device.displayName}"...` });
-        const regex = new RegExp(`^${treeItem.device.config.rootPath}`);
+        const regex = new RegExp(`^${treeItem.device.config.rootPath}\/*`);
         const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
         const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
           ...fad,
-          destination: treeItem.project.folder + fad.filename.replace(regex, ""),
+          destination: treeItem.project.folder + fad.filename.replace(regex, "/"),
         }));
         const files = filesAndDirs.filter((f) => !f.isDir);
         const dirs = filesAndDirs.filter((f) => f.isDir);
