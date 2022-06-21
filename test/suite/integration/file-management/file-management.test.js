@@ -24,15 +24,19 @@ test("file management", async () => {
   test("can upload a dir", async () => {
     const uri = vscode.Uri.file(__dirname + "/_sample");
     await pymakr.commands.upload(uri, device, "/");
-    const files = await device.adapter.listFiles(device.config.rootPath, { recursive: false });
+    const files = await device.adapter.listFiles(device.config.rootPath, { recursive: true });
     assert.deepEqual(
       files.map((f) => f.filename),
       [
+        posix.join(device.config.rootPath, ""),
+        posix.join(device.config.rootPath, "folder"),
+        posix.join(device.config.rootPath, "folder/large-file.py"),
         posix.join(device.config.rootPath, "includeme"),
+        posix.join(device.config.rootPath, "includeme/includeme-file-1.md"),
+        posix.join(device.config.rootPath, "includeme/includeme-file-2.md"),
         posix.join(device.config.rootPath, "main.py"),
         posix.join(device.config.rootPath, "pymakr.conf"),
         posix.join(device.config.rootPath, "sample-file-1.md"),
-        posix.join(device.config.rootPath, "sample-file-2.md"),
       ]
     );
   });
