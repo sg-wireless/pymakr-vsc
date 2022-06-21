@@ -1,4 +1,5 @@
 const assert = require("assert");
+const { readFileSync } = require("fs");
 const vscode = require("vscode");
 
 test("Can find devices", async () => {
@@ -40,6 +41,11 @@ test("Can find devices", async () => {
         terminal.sendText('print("foo")\n');
         await new Promise((resolve) => device.readUntil(['print\\("foo"\\)', "foo", ">>> "].join("\r\n"), resolve));
       });
+
+      test('can run large script', async ()=> {
+        pymakr.commands.runScript(readFileSync(__dirname+'/file-management/_sample/folder/large-file.py', 'utf8'), device)
+        await new Promise((resolve) => device.readUntil('number is\r\n1000', resolve));        
+      })
 
       test("can disconnect", async () => {
         await device.disconnect();
