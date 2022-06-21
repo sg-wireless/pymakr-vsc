@@ -1,7 +1,7 @@
 const path = require("path");
 
 const { runTests } = require("@vscode/test-electron");
-const { createFixture } = require("./utils");
+const { createFixture, getArg } = require("./utils");
 
 async function main() {
   try {
@@ -17,7 +17,7 @@ async function main() {
         extensionDevelopmentPath,
         extensionTestsPath,
         launchArgs: [`${fixturePath}/workspace.code-workspace`],
-        extensionTestsEnv: { fixturePath, fixtureName },
+        extensionTestsEnv: { fixturePath, fixtureName, pattern: getArg('--pattern') },
       });
     }
 

@@ -6,7 +6,8 @@ async function run() {
     reporter: "consoleReporter",
     timeout: 7500,
     // watch: true,
-    // pattern: ["file-management.test.js"],
+    // use npm run test:integration -- --pattern myfile.test.js for file patterns
+    pattern: process.env.pattern ? [process.env.pattern] : [],
   });
 }
 

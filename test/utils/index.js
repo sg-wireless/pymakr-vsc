@@ -16,7 +16,13 @@ const resetFixture = (path) => {
   writeFileSync(path + "/_FIXTURE_ORIGIN", fixtureOrigin);
 };
 
-module.exports = { createFixture, resetFixture };
+/** returns value of process arguments, like "--pattern some-file.js" */
+const getArg = (name) => {
+  const index = process.argv.indexOf(name) + 1;
+  if (index) return process.argv[index];
+};
+
+module.exports = { createFixture, resetFixture, getArg };
 
 // executes scripts from command line
 // eg.: utils/index.js createFixture led-example temp/test/integration-test
