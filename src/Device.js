@@ -7,7 +7,6 @@ const {
   getNearestPymakrConfig,
   createIsIncluded,
   serializeKeyValuePairs,
-  serializedEntriesToObj,
 } = require("./utils/misc");
 const { writable } = require("./utils/store");
 const { createStateObject, createListedConfigObject } = require("./utils/storageObj");
@@ -100,6 +99,8 @@ class Device {
 
     this.readUntil = createReadUntil();
     this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
+
+    this.config = this.config
   }
 
   get connected() {
