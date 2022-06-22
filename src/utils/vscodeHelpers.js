@@ -102,7 +102,9 @@ const createVSCodeHelpers = (pymakr) => {
      * @returns
      */
     deviceSummary: (device) => {
-      const staleNote = device.stale ? "<span style='color:#ff0;'> _$(alert) Stale. Please connect to refresh. $(alert)_</span>\n\n" : "";
+      const staleNote = device.stale
+        ? "<span style='color:#ff0;'> _$(alert) Stale. Please connect to refresh. $(alert)_</span>\n\n"
+        : "";
       const projectName = "" + device.state.pymakrConf.get().name || "unknown";
 
       const mdString = new vscode.MarkdownString("", true);
@@ -121,9 +123,15 @@ const createVSCodeHelpers = (pymakr) => {
       mdString.appendMarkdown("### System");
       mdString.appendMarkdown("\n\n");
       mdString.appendMarkdown(staleNote);
-      if (device.info) mdString.appendMarkdown(helpers.objectToTable(omit(device.info, "nodename")).value);
-      // append row to the prior table 
-      if (device.config) mdString.appendMarkdown(`|**Root path**|${device.config.rootPath}|\n`);
+      if (typeof device.info === "object") {
+        const info = {
+          ...omit(device.info, "nodename"),
+          "Root path": device.config?.rootPath,
+        };
+        mdString.appendMarkdown(helpers.objectToTable(info).value);
+      }
+      // if info isn't available, show the error instead
+      else if (typeof device.info === "string") mdString.appendMarkdown(device.info);
       return mdString;
     },
   };
