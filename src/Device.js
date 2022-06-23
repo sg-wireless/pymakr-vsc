@@ -2,12 +2,7 @@ const { dirname, relative, posix } = require("path");
 const { readFileSync, statSync, readdirSync, mkdirSync, createWriteStream } = require("fs");
 const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
-const {
-  waitFor,
-  getNearestPymakrConfig,
-  createIsIncluded,
-  serializeKeyValuePairs,
-} = require("./utils/misc");
+const { waitFor, getNearestPymakrConfig, createIsIncluded, serializeKeyValuePairs } = require("./utils/misc");
 const { writable } = require("./utils/store");
 const { createStateObject, createListedConfigObject } = require("./utils/storageObj");
 const picomatch = require("picomatch");
@@ -24,6 +19,9 @@ const { DeviceOfflineError } = require("./utils/errors");
  * @prop {string} password defaults to "python"
  * @prop {boolean} hidden
  * @prop {string} rootPath
+ * @prop {object} adapterOptions
+ * @prop {number=} adapterOptions.chunkSize
+ * @prop {number=} adapterOptions.chunkDelay
  */
 
 /** @type {DeviceConfig} */
@@ -34,6 +32,7 @@ const configDefaults = {
   password: "python",
   hidden: false,
   rootPath: null,
+  adapterOptions: {},
 };
 
 /** @type {import("micropython-ctl-cont/dist-node/src/main").RunScriptOptions} */
@@ -100,7 +99,7 @@ class Device {
     this.readUntil = createReadUntil();
     this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
 
-    this.config = this.config
+    this.config = this.config;
   }
 
   get connected() {
@@ -224,7 +223,9 @@ class Device {
     options = Object.assign({}, runScriptDefaults, options);
     this.log.info(`runScript:\n\n${script}\n\n`);
     this.busy.set(true);
+    const start = Date.now();
     const result = await this.adapter.runScript(script + "\n\r\n\r\n", options);
+    this.log.debug("finished script in", Date.now() - start);
 
     // to avoid a race condition, only return the result once "busy" is false
     if (this.busy.get() && !options.resolveBeforeResult)
@@ -386,7 +387,7 @@ class Device {
 
   /** @private */
   async _connectSerial() {
-    const connectPromise = this.adapter.connectSerial(this.address);
+    const connectPromise = this.adapter.connectSerial(this.address, this.config.adapterOptions);
     await waitFor(connectPromise, 2000, "Timed out while connecting.");
   }
 

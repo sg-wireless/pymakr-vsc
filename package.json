@@ -180,6 +180,22 @@
                 "id": {
                   "type": "string",
                   "description": "ID of device. Do not change unless you know what you're doing."
+                },
+                "adapterOptions": {
+                  "type": "object",
+                  "description": "Options for the device adapter",
+                  "properties": {
+                    "chunkSize": {
+                      "type": "number",
+                      "default": null,
+                      "description": "Large scripts and files are partitioned into smaller chunks when sent to the device. 100-3000 should work for most devices."
+                    },
+                    "chunkDelay": {
+                      "type": "number",
+                      "default": null,
+                      "description": "Some devices need a delay between chunks."
+                    }
+                  }
                 }
               }
             }
@@ -228,7 +244,7 @@
             "markdownDescription": "**!EXPERIMENTAL! This feature could be changed or removed without notice.**\n\nOverride device config. Each override consists of a match, a field and a value.\n\n**match:** key=value (eg. `manufacturer=\"Micr.*\"` will match all devices with a Manufacturer starting with \"Micr\")\n\n\n**field:** the property that should be updated.\n\n**value:** the new value."
           },
           "pymakr.projects.runScriptPrompt": {
-            "type":"boolean",
+            "type": "boolean",
             "default": "true",
             "description": "Prompt which devices to use before running a script in a project. If set to false, scripts will run on all connected devices in a project."
           }
@@ -906,7 +922,7 @@
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.8",
     "hookar": "^0.0.7-0",
-    "micropython-ctl-cont": "^1.13.11",
+    "micropython-ctl-cont": "^1.14.0",
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
     "serialport": "^10.4.0"
