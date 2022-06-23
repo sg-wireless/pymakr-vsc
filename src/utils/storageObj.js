@@ -60,7 +60,6 @@ const createListedConfigObject = (
   defaults,
   configurationTarget = vscode.ConfigurationTarget.Global
 ) => {
-  console.log('set', section, key, id)
   const get = () =>
     vscode.workspace
       .getConfiguration(section)
