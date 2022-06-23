@@ -6,7 +6,7 @@ const vscode = require("vscode");
  * @template T
  * @typedef {Object} GetterSetter
  * @prop {()=>T} get
- * @prop {function(T):Changed} set
+ * @prop {function(T):(Changed|Promise<Changed>)} set
  */
 
 /**
@@ -64,7 +64,7 @@ const createListedConfigObject = (
     vscode.workspace
       .getConfiguration(section)
       .get(key)
-      .find((cfg) => cfg.id === id) || defaults;
+      .find((cfg) => cfg.id === id) || { ...defaults };
   const set = async (value) => {
     /** @type {Array} */
     const all = vscode.workspace.getConfiguration(section).get(key);
