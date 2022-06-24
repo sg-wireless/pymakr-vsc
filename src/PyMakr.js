@@ -110,7 +110,11 @@ class PyMakr {
       vscode.workspace.onDidChangeConfiguration(this.onUpdatedConfig.bind(this)),
       vscode.window.registerTerminalProfileProvider("pymakr.terminal-profile", {
         provideTerminalProfile: () => ({
-          options: { shellPath: "node", shellArgs: [resolve(__dirname, "terminal/bin/client.js")], name: "PyMakr" },
+          options: {
+            shellPath: "node",
+            shellArgs: [resolve(__dirname, "terminal/bin/client.js"), this.terminalPort.toString()],
+            name: "PyMakr",
+          },
         }),
       }),
     ];
