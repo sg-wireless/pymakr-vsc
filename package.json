@@ -914,7 +914,7 @@
     "test:unit": "probs src",
     "test:integration": "node ./test/runTest.js",
     "test-watch:unit": "npx nodemon --exec npm run test:unit",
-    "prepackage": "npm run build && node .github/workflows/preparePackage.js",
+    "prepackage": "npm run build:binary && node .github/workflows/preparePackage.js",
     "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
   },
   "devDependencies": {
