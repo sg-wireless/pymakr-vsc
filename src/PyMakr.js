@@ -30,8 +30,9 @@ class PyMakr {
    */
   constructor(context) {
     /**
+     * Actions to be run at the launch of the plugin
      * @example
-     * this.pendingActions.set([...actions, { target: ["vscode", "window", "showInformationMessage"], args: ["message"] }]) 
+     * this.pendingActions.set([...actions, { target: ["vscode", "window", "showInformationMessage"], args: ["message"] }])
      * @type {import("./utils/storageObj").GetterSetter<{target: string[], args: any[]}[]>}
      * */
     this.pendingActions = createStateObject(context.workspaceState, "pendingActions", []);
