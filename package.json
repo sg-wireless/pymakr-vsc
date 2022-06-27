@@ -46,6 +46,19 @@
             "type": "boolean",
             "default": false,
             "description": "Prompts on actions instead of using defaults."
+          },
+          "pymakr.terminalProfile": {
+            "type": "string",
+            "default": "auto",
+            "description": "Override the default terminal client.",
+            "enum": [
+              "auto",
+              "native"
+            ],
+            "enumDescriptions": [
+              "Defaults to client.js if Node is available, otherwise uses native client file.",
+              "Use a prebuilt native client file"
+            ]
           }
         }
       },
@@ -892,14 +905,16 @@
   },
   "scripts": {
     "lint": "eslint .",
+    "build": "npm run build:docs && npm run build:binary",
     "build:docs": "typedoc src/pymakr.js --media media",
+    "build:binary":"pkg src/terminal/bin/client.js --out-path src/terminal/bin --compress GZIP",
     "pretest.bak": "npm run lint",
     "test": "npm run test:types && npm run test:unit && npm run test:integration",
     "test:types": "tsc --noEmit",
     "test:unit": "probs src",
     "test:integration": "node ./test/runTest.js",
     "test-watch:unit": "npx nodemon --exec npm run test:unit",
-    "prepackage": "node .github/workflows/preparePackage.js",
+    "prepackage": "npm run build && node .github/workflows/preparePackage.js",
     "package": "vsce package --baseImagesUrl https://raw.githubusercontent.com/pycom/pymakr-vsc/next/"
   },
   "devDependencies": {
@@ -911,6 +926,7 @@
     "@vscode/test-electron": "^2.1.3",
     "eslint": "^8.16.0",
     "glob": "^8.0.3",
+    "pkg": "^5.7.0",
     "probs": "^1.1.0-16",
     "semantic-release": "^19.0.3",
     "semantic-release-vsce": "^5.0.13",

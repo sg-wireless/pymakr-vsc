@@ -13,9 +13,13 @@ createConnection();
 function createConnection() {
   const socket = new net.Socket();
 
-  let [_1, _2, _port, protocol, address] = process.argv;
-  if (!_port)
+  const args = process.argv[1].endsWith("client.js") ? process.argv.slice(2) : process.argv.slice(1);
+
+  let [_port, protocol, address] = args;
+  if (!_port) {
+    console.log("got", { _port, protocol, address }, "from", process.argv);
     throw new Error('No port specified. Example: "client.js <protocol> [protocol] [address]"');
+  }
   const port = parseInt(_port);
 
   socket.connect(port, host, async () => {

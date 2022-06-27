@@ -58,6 +58,8 @@ class PyMakr {
     /** The package.json manifest */
     this.manifest = manifest;
 
+    this.getTerminalProfile();
+
     /** Reactive store of projects */
     this.projectsStore = createProjectsStore(this);
     /** Reactive store of devices */
@@ -95,6 +97,42 @@ class PyMakr {
     });
   }
 
+  getTerminalProfile(protocol, address) {
+    const hasNode = () => require("child_process").execSync("node -v").toString().startsWith("v");
+    
+    const binariesPath = resolve(__dirname, "terminal/bin");
+    const userSelection = this.config.get().get("terminalProfile");
+    const profileName = userSelection === "auto" && hasNode() ? "node" : process.platform;
+    const args = [this.terminalPort.toString(), protocol, address].filter(Boolean);
+
+    const profiles = {
+      node: {
+        shellPath: "node",
+        shellArgs: [`${binariesPath}/client.js`, ...args],
+        name: "PyMakr",
+      },
+      win32: {
+        shellPath: `${binariesPath}/client-win.exe`,
+        shellArgs: args,
+        name: "PyMakr",
+      },
+      linux: {
+        shellPath: `${binariesPath}/client-linux`,
+        shellArgs: args,
+        name: "PyMakr",
+      },
+      darwin: {
+        shellPath: `${binariesPath}/client-macos`,
+        shellArgs: args,
+        name: "PyMakr",
+      },
+    };
+
+    const profile = profiles[profileName];
+    this.log.debug("found terminal profile:", profileName, profile);
+    return profile;
+  }
+
   /**
    * Registers listeners and providers with VSCode
    */
@@ -110,13 +148,7 @@ class PyMakr {
       vscode.workspace.registerTextDocumentContentProvider("pymakrDocument", this.textDocumentProvider),
       vscode.workspace.onDidChangeConfiguration(this.onUpdatedConfig.bind(this)),
       vscode.window.registerTerminalProfileProvider("pymakr.terminal-profile", {
-        provideTerminalProfile: () => ({
-          options: {
-            shellPath: "node",
-            shellArgs: [resolve(__dirname, "terminal/bin/client.js"), this.terminalPort.toString()],
-            name: "PyMakr",
-          },
-        }),
+        provideTerminalProfile: () => this.getTerminalProfile(),
       }),
     ];
 

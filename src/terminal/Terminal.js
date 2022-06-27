@@ -8,26 +8,19 @@ const vscode = require("vscode");
  */
 class Terminal {
   /**
-   * @param {PyMakr} pyMakr
+   * @param {PyMakr} pymakr
    * @param {import('../Device').Device} device
    */
-  constructor(pyMakr, device) {
-    this.pyMakr = pyMakr;
+  constructor(pymakr, device) {
+    this.pymakr = pymakr;
     this.device = device;
-    this.log = this.pyMakr.log.createChild("Terminal");
-    const clientFile = resolve(__dirname, "bin/client.js");
+    this.log = this.pymakr.log.createChild("Terminal");
 
-    const shellArgs = [clientFile, pyMakr.terminalPort.toString(), device.protocol, device.address];
-    const shellPath = "node";
-    const name = device.id;
-
-    this.log.debug("exec: node", shellArgs.join(" "));
-
-    this.term = vscode.window.createTerminal({ name, shellPath, shellArgs });
+    this.term = vscode.window.createTerminal(this.pymakr.getTerminalProfile(device.protocol, device.address));
     this.term.show();
 
     // dispose of the terminal when closing VSCode
-    this.pyMakr.context.subscriptions.push(this.term)
+    this.pymakr.context.subscriptions.push(this.term)
   }
 }
 
