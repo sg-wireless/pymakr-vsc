@@ -58,13 +58,13 @@ test("Can find devices", async () => {
         await device.disconnect()
         await device.connect()
         const withChunk = await timer(()=>device.runScript(script))
-        await device._config.set({...device.config, adapterOptions: {}})
+        await device._config.set({...device.config, adapterOptions: {chunkSize: null, chunkDelay: null}})
         await device.disconnect()
         await device.connect()
 
         assert.equal(withChunk.result, 'Hello world. How are you today?')
         assert.equal(withoutChunk.result, 'Hello world. How are you today?')
-        assert(withChunk.time > (withoutChunk.time * 2), `Chunking should be slower ${withChunk.time} > (${withoutChunk.time} * 2)`)
+        assert(withChunk.time > (withoutChunk.time * 1.5), `Chunking should be slower ${withChunk.time} > (${withoutChunk.time} * 1.5)`)
       })
 
       test("can disconnect", async () => {
