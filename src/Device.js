@@ -433,6 +433,11 @@ class Device {
     this.pymakr.refreshProvidersThrottled();
   }
 
+  async remove(source) {
+    source = posix.join(this.config.rootPath, `/${source}`.replace(/\/+/g, "/"));
+    return this.adapter.remove(source);
+  }
+
   /**
    * Uploads file or folder to device
    * @param {string} source
