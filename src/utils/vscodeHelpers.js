@@ -102,7 +102,7 @@ const createVSCodeHelpers = (pymakr) => {
      * @returns
      */
     deviceSummary: (device) => {
-      const staleNote = device.stale
+      const staleNote = device.state.stale
         ? "<span style='color:#ff0;'> _$(alert) Stale. Please connect to refresh. $(alert)_</span>\n\n"
         : "";
       const projectName = "" + device.state.pymakrConf.get().name || "unknown";

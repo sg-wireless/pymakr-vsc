@@ -69,9 +69,9 @@ class Device {
     this.name = name;
     this.raw = raw;
     /** device has not yet been connected and some device info (eg. pymakr.conf) could be stale */
-    this.stale = true;
 
     this.state = {
+      stale: true,
       wasConnected: createStateObject(pymakr.context.workspaceState, `pymakr.devices.${this.id}.wasConnected`, true),
       pymakrConf: createStateObject(pymakr.context.globalState, `pymakr.devices.${this.id}.pymakrConf`, pymakrConfType),
       /** @type {import("./utils/storageObj").GetterSetter<import("micropython-ctl-cont").BoardInfo>} */
@@ -147,7 +147,7 @@ class Device {
       ...this.raw,
       protocol: this.protocol,
       displayName: this.config.name || this.name,
-      projectName: (this.state.pymakrConf.get().name || "unknown") + (this.stale ? "?" : ""),
+      projectName: (this.state.pymakrConf.get().name || "unknown") + (this.state.stale ? "?" : ""),
     };
 
     return nameTemplate.replace(/\{(.+?)\}/g, (_all, key) => words[key]);
@@ -370,7 +370,7 @@ class Device {
           this.state.info.set(await this.adapter.getBoardInfo());
           if (!this.config.rootPath) this.config = { ...this.config, rootPath: await this.getRootPath() };
           await this.updatePymakrConf();
-          this.stale = false;
+          this.state.stale = false;
           this.busy.set(false);
           resolve();
         }
