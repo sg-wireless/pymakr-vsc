@@ -3,7 +3,7 @@ const { readFileSync, statSync, readdirSync, mkdirSync, createWriteStream } = re
 const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
 const { waitFor, getNearestPymakrConfig, createIsIncluded, serializeKeyValuePairs } = require("./utils/misc");
-const { writable } = require("./utils/store");
+const { writable, derived } = require("./utils/store");
 const { createStateObject, createListedConfigObject } = require("./utils/storageObj");
 const picomatch = require("picomatch");
 const { createSequenceHooksCollection } = require("hookar");
@@ -55,6 +55,12 @@ class Device {
   constructor(pymakr, deviceInput) {
     const { subscribe, set } = writable(this);
     this.busy = writable(false, { lazy: true });
+
+    /** @type {Writable<import('./utils/blockingProxy').BlockingProxyQueueItem>} */
+    this.action = writable(null, { lazy: true });
+    this.online = writable(false, { lazy: true });
+    this.connected = writable(false, { lazy: true });
+
     this.onTerminalData = createSequenceHooksCollection("");
     this.subscribe = subscribe;
     /** call whenever device changes need to be onChanged to subscriptions */
@@ -68,25 +74,41 @@ class Device {
     this.password = password;
     this.name = name;
     this.raw = raw;
-    /** device has not yet been connected and some device info (eg. pymakr.conf) could be stale */
 
     this.state = {
+      /** device has not yet been connected and some device info (eg. pymakr.conf) could be stale */
       stale: true,
+      main: derived([this.busy, this.action, this.online, this.connected], ([$busy, $action, $online, $connected]) =>
+        !$online
+          ? "offline"
+          : !$connected
+          ? "disconnected"
+          : $busy && $action
+          ? "action"
+          : $busy && !$action
+          ? "script"
+          : "idle"
+      ),
       wasConnected: createStateObject(pymakr.context.workspaceState, `pymakr.devices.${this.id}.wasConnected`, true),
       pymakrConf: createStateObject(pymakr.context.globalState, `pymakr.devices.${this.id}.pymakrConf`, pymakrConfType),
       /** @type {import("./utils/storageObj").GetterSetter<import("micropython-ctl-cont").BoardInfo>} */
       info: createStateObject(pymakr.context.globalState, `pymakr.devices.${this.id}.info`),
     };
+
+    
+    this.state.main.subscribe(() => this.pymakr.refreshProvidersThrottled());
+
     this._config = createListedConfigObject("pymakr.devices", "configs", this.id, configDefaults);
 
     /** If true, device will disconnect at the end of execution queue */
     this.temporaryConnection = false;
     this.connecting = false;
-    this.online = false;
     this.lostConnection = false;
 
     this.log = pymakr.log.createChild("Device: " + this.name);
     this.adapter = this.createAdapter();
+    this.adapter.onclose = () => this.connected.set(false);
+
     this.autoConnectOnCommand();
     this.terminalLogFile = this.createTerminalLogFile();
 
@@ -100,10 +122,6 @@ class Device {
     this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
 
     this.config = this.config;
-  }
-
-  get connected() {
-    return this.adapter.__proxyMeta.target.isConnected();
   }
 
   get config() {
@@ -171,7 +189,7 @@ class Device {
 
   safeBoot() {
     return new Promise((resolve) => {
-      if (!this.adapter.__proxyMeta.target.isConnected()) throw new DeviceOfflineError();
+      if (!this.connected.get()) throw new DeviceOfflineError();
 
       this.log.info("safe booting...");
       this.busy.set(true);
@@ -208,7 +226,7 @@ class Device {
    * If device has lost connection, set lostConnection=true and call this.changed() to save device state and refresh views
    */
   async refreshConnection() {
-    if (this.online && !this.adapter.__proxyMeta.target.isConnected()) {
+    if (this.online.get() && !this.adapter.__proxyMeta.target.isConnected()) {
       const shouldConnect = this.config.autoConnect === "always";
       const shouldResume = this.config.autoConnect === "lastState" && this.state.wasConnected.get();
       const shouldReconnect = this.config.autoConnect === "onLostConnection" && this.lostConnection;
@@ -249,10 +267,16 @@ class Device {
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
     const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "reset", "connectSerial"] });
-    adapter.__proxyMeta.beforeEachCall(() => this.busy.set(true));
+    adapter.__proxyMeta.beforeEachCall(({ item }) => {
+      this.busy.set(true);
+      this.action.set(item);
+    });
 
     // emit line break to trigger a `>>>`. This triggers the `busyStatusUpdater`
-    adapter.__proxyMeta.onIdle(() => this.adapter.sendData("\r\n"));
+    adapter.__proxyMeta.onIdle(() => {
+      this.adapter.sendData("\r\n");
+      this.action.set(null);
+    });
 
     let outputChannel;
 
@@ -275,7 +299,7 @@ class Device {
    */
   autoConnectOnCommand() {
     this.adapter.__proxyMeta.onAddedCall(async ({ proxy }) => {
-      if (!this.connecting && !this.connected) {
+      if (!this.connecting && !this.connected.get()) {
         this.temporaryConnection = true;
         await this.connect();
         await proxy.processQueue();
@@ -301,7 +325,7 @@ class Device {
   }
 
   async connect() {
-    if (!this.connecting && !this.connected) {
+    if (!this.connecting && !this.connected.get()) {
       this.adapter.__proxyMeta.isPaused = true;
       this.busy.set(true);
       /* connectingPromise is used by other classes to detect when a device is connected.
@@ -313,6 +337,7 @@ class Device {
         while (reconnectIntervals.length) {
           try {
             await this._connectSerial();
+            this.connected.set(true);
             resolve(this._onConnectedHandler());
             return this.__connectingPromise;
           } catch (_err) {
@@ -359,7 +384,7 @@ class Device {
       const timeoutHandle = setTimeout(resolve, 200);
 
       this.busy.subscribe(async (isBusy, unsub) => {
-        if (!isBusy && this.connected) {
+        if (!isBusy && this.connected.get()) {
           // start the proxy queue or all calls will be left hanging
           this.adapter.__proxyMeta.run();
           unsub();
@@ -398,10 +423,12 @@ class Device {
   }
 
   async disconnect() {
-    if (this.connected) {
+    if (this.adapter.__proxyMeta.target.isConnected()) {
       this.adapter.__proxyMeta.reset();
       this.adapter.__proxyMeta.isPaused = true;
-      await waitFor(this.adapter.__proxyMeta.target.disconnect(), 2000, "Timed out while disconnecting.");
+      const lostConnectionPromise = new Promise((resolve) => this.connected.next(resolve)); // make sure we lost connection
+      const disconnectPromise = this.adapter.__proxyMeta.target.disconnect(); // make sure disconnect script finished
+      await waitFor(Promise.all([lostConnectionPromise, disconnectPromise]), 2000, "Timed out while disconnecting.");
       this.state.wasConnected.set(false);
       this.lostConnection = false;
       this.busy.set(false);

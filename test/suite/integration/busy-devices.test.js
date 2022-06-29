@@ -6,10 +6,10 @@ test("busy devices", async () => {
   test("can disconnect a busy device", async () => {
     test("can connect the device", async () => {
       await device.connect();
-      assert(device.connected);
+      assert(device.connected.get());
       test("can safeboot device", async () => {
         await device.safeBoot();
-        assert(device.connected);
+        assert(device.connected.get());
       });
     });
     test("device is idle", async () => {
@@ -28,16 +28,16 @@ test("busy devices", async () => {
     test("can run a hanging script", async () => {
       await device.runScript("import time\r\nwhile True: time.sleep(1)", { resolveBeforeResult: true });
       await sleep(200);
-      assert(device.connected);
+      assert(device.connected.get());
       assert(device.busy.get());
     });
     test("can disconnect the device", async () => {
       await device.disconnect();
-      assert(!device.connected);
+      assert(!device.connected.get());
     });
     test("can connect to a device with a running script", async () => {
       await device.connect();
-      assert(device.connected);
+      assert(device.connected.get());
     });
     test("running script continues to run after connection", async () => {
       assert(device.busy.get());

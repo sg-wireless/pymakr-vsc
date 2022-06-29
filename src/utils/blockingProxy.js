@@ -208,7 +208,7 @@ class ProxyMeta {
   }
 }
 
-module.exports = { createBlockingProxy, friendlyProxyQueueItem };
+module.exports = { createBlockingProxy, friendlyProxyQueueItem, BlockingProxyQueueItem };
 
 /**
  * @template T

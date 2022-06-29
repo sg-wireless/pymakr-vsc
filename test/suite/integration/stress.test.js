@@ -7,9 +7,9 @@ test("stress test", async () => {
       const count = 5;
       for (let i = 0; i <= count; i++) {
         await device.connect();
-        assert(device.connected, 'should be connected');
+        assert(device.connected.get(), 'should be connected');
         await device.disconnect();
-        assert(!device.connected, 'should not be connected');
+        assert(!device.connected.get(), 'should not be connected');
       }
     } catch (err) {
       error = err;

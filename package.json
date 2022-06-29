@@ -489,6 +489,18 @@
         "category": "PyMakr"
       },
       {
+        "command": "pymakr.startDevMode",
+        "title": "Start development mode",
+        "icon": "$(eye)",
+        "category": "PyMakr"
+      },
+      {
+        "command": "pymakr.stopDevMode",
+        "title": "Stop development mode",
+        "icon": "$(eye-closed)",
+        "category": "PyMakr"
+      },
+      {
         "command": "pymakr.addDeviceToFileExplorer",
         "title": "Open device in file explorer",
         "icon": "$(folder)",
@@ -818,17 +830,27 @@
         {
           "command": "pymakr.stopAllInProject",
           "group": "inline",
-          "when": "viewItem =~ /(busy|mixed)#.+Children#project$/"
+          "when": "viewItem =~ /(busy|mixed)#.+Children#.+?#project$/"
         },
         {
           "command": "pymakr.connectAllInProject",
           "group": "inline",
-          "when": "viewItem =~ /(mixed|offline)Children#project$/"
+          "when": "viewItem =~ /(mixed|offline)Children#.+?#project$/"
         },
         {
           "command": "pymakr.disconnectAllInProject",
           "group": "inline",
-          "when": "viewItem =~ /onlineChildren#project$/"
+          "when": "viewItem =~ /onlineChildren#.+?#project$/"
+        },
+        {
+          "command": "pymakr.startDevMode",
+          "group": "inline",
+          "when": "viewItem =~ /Children#no-dev#project$/"
+        },
+        {
+          "command": "pymakr.stopDevMode",
+          "group": "inline",
+          "when": "viewItem =~ /onlineChildren#dev#project$/"
         },
         {
           "command": "pymakr.addDeviceToFileExplorer",
@@ -938,7 +960,7 @@
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.8",
     "hookar": "^0.0.7-0",
-    "micropython-ctl-cont": "^1.14.0",
+    "micropython-ctl-cont": "^1.14.1",
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
     "serialport": "^10.4.0"

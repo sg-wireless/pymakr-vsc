@@ -247,7 +247,7 @@ class Commands {
           ...getTemplates().map((t) => t.name),
           ...this.pymakr.devicesStore
             .get()
-            .filter((d) => !d.busy.get() && d.connected)
+            .filter((d) => !d.busy.get() && d.connected.get())
             .map((d) => `import from device: ${d.name}`),
         ],
         { title: "Please select a template for your project" }
@@ -602,7 +602,7 @@ class Commands {
      */
     upload: async ({ fsPath }, device, destination) => {
       const friendlySource = fsPath.replace(/.*[/\\]/g, "");
-      if (!device.connected) await device.connect();
+      if (!device.connected.get()) await device.connect();
       try {
         await vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
           progress.report({ message: `Uploading "${friendlySource}" to "${device.displayName}"...` });

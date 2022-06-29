@@ -11,7 +11,7 @@ test("Can find devices", async () => {
     await device.connect();
 
     test("can connect", () => {
-      assert(device.connected);
+      assert(device.connected.get());
     });
 
     test("can create REPL", async () => {
@@ -69,7 +69,7 @@ test("Can find devices", async () => {
 
       test("can disconnect", async () => {
         await device.disconnect();
-        assert(!device.connected);
+        assert(!device.connected.get());
       });
     });
   });

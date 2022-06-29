@@ -67,13 +67,13 @@ const createDevicesStore = (pymakr) => {
     upsert(deviceInputs);
 
     store.get().forEach((device) => {
-      const _lastOnlineState = device.online;
+      const _lastOnlineState = device.online.get();
 
       // update online status
-      device.online = inputIds.includes(device.id);
+      device.online.set(inputIds.includes(device.id));
 
       // if status has changed, update connection
-      if (device.online && !device.config.hidden && !_lastOnlineState) device.refreshConnection();
+      if (device.online.get() && !device.config.hidden && !_lastOnlineState) device.refreshConnection();
     });
   };
 
