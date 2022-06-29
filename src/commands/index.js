@@ -624,6 +624,60 @@ class Commands {
     },
 
     /**
+     * @param {{project: Project}} param0
+     */
+    startDevMode: async ({ project }) => {
+      project.devMode = true;
+      this.pymakr.projectsProvider.refresh();
+      let resetPromise;
+
+      const promises = [];
+
+      console.log("folder", project.folder);
+      const watchAll = vscode.workspace.createFileSystemWatcher(project.folder + "/**");
+
+      /**
+       *
+       * @param {'create'|'change'|'delete'} action
+       * @returns {(file: vscode.Uri)=>void}
+       */
+      const handleFileChange = (action) => async (file) => {
+        console.log("action", action, file.fsPath);
+        await resetPromise;
+        project.devices
+          .filter((device) => device.adapter.__proxyMeta.target.isConnected())
+          .forEach(async (device) => {
+            if (action === "delete") {
+              const target = require("path").relative(project.folder, file.fsPath).replace(/\\/g, "/");
+              promises.push(device.remove(target));
+            } else promises.push(this.commands.upload(file, device, ""));
+          });
+      };
+
+      watchAll.onDidChange(handleFileChange("change"));
+      watchAll.onDidCreate(handleFileChange("create"));
+      watchAll.onDidDelete(handleFileChange("delete"));
+
+      // watchAll.onDidChange((file) => {
+      //   project.devices
+      //     .filter((device) => device.adapter.__proxyMeta.target.isConnected())
+      //     .forEach(async (device) => {
+      //       await this.commands.upload(file, device, "");
+      //       await this.commands.resetDevice({ device });
+      //     });
+      //   console.log("listner", file);
+      // });
+    },
+
+    /**
+     * @param {{project: Project}} param0
+     */
+    stopDevMode: async ({ project }) => {
+      project.devMode = false;
+      this.pymakr.projectsProvider.refresh();
+    },
+
+    /**
      * Downloads content from a device to the parent project.
      * Command only accessible for devices in the projects view.
      * @param {Partial<ProjectDeviceTreeItem>} treeItem

@@ -54,7 +54,9 @@ class ProjectTreeItem extends vscode.TreeItem {
     const hasIdleChild = project.devices.find((device) => !device.busy.get());
     const busyStatus = hasBusyChild && hasIdleChild ? "mixed" : hasBusyChild ? "busy" : hasIdleChild ? "idle" : "no";
 
-    this.contextValue = `${busyStatus}#${onlineStatus}Children#project`;
+    const dev = project.devMode ? 'dev' : 'no-dev'
+
+    this.contextValue = `${busyStatus}#${onlineStatus}Children#${dev}#project`;
   }
 }
 
