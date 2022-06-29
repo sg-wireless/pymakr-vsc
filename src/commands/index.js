@@ -80,14 +80,17 @@ class Commands {
 
     /**
      * Reboot device
-     * @param {DeviceTreeItem} treeItem
+     * @param {{device: Device}} treeItem
      */
     resetDevice: async ({ device }) => {
-      // resetting the device should also reset the waiting calls
-      device.adapter.__proxyMeta.reset();
-      device.adapter.__proxyMeta.target.reset({ broadcastOutputAsTerminalData: true, softReset: false });
+      try {
+        await device.reset();
+      } catch (err) {
+        if (err === "Error: timeout in readUntil '>>>'")
+          device.log.debug("timed out waiting for >>>. Assume user script is running.");
+        else throw err;
+      }
     },
-
     /**
      * Soft reboot device
      * @param {DeviceTreeItem} treeItem
@@ -482,16 +485,7 @@ class Commands {
       if (device.busy.get()) {
         vscode.window.withProgress(
           { title: `Stopping script on "${device.displayName}"`, location: vscode.ProgressLocation.Notification },
-          () =>
-            new Promise((resolve) => {
-              device.busy.subscribe((isBusy, unsub) => {
-                if (!isBusy) {
-                  unsub();
-                  resolve();
-                }
-              });
-              device.adapter.sendData("\x03");
-            })
+          () => device.stopScript()
         );
       }
     },

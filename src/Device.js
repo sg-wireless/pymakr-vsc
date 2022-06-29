@@ -189,6 +189,12 @@ class Device {
     });
   }
 
+  reset() {
+    // resetting the device should also reset the waiting calls
+    this.adapter.__proxyMeta.reset();
+    return this.adapter.__proxyMeta.target.reset({ broadcastOutputAsTerminalData: true, softReset: false });
+  }
+
   /**
    * Server.js will reactively assign this callback to the currently active terminal
    * Therefore any wrapping or extending of this method will be lost whenever a terminal is used
@@ -401,6 +407,21 @@ class Device {
       this.busy.set(false);
       this.changed();
     }
+  }
+
+  stopScript() {
+    this.log.debug("stop script");
+    return new Promise((resolve, reject) => {
+      if (this.busy.get()) {
+        this.busy.subscribe((isBusy, unsub) => {
+          if (!isBusy) {
+            unsub();
+            resolve();
+          }
+        });
+        this.adapter.sendData("\x03");
+      } else resolve();
+    });
   }
 
   /**
