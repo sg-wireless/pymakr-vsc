@@ -5,7 +5,7 @@ import {
   cherryPick,
   createIsIncluded,
   createThrottledFunction,
-  dynamicPromiseAll,
+  onResolveAll,
   getDifference,
   getNearestParent,
   getNearestPymakrConfig,
@@ -186,7 +186,7 @@ test("waitFor", () => {
   });
 });
 
-test("dynamicPromiseAll", () => {
+test("onResolveAll", () => {
   let counter = 0;
   let callbackTriggerCount = 0; // how many times was the callback executed
   let result = null;
@@ -194,13 +194,13 @@ test("dynamicPromiseAll", () => {
     result = counter;
     callbackTriggerCount++;
   };
-  const dynamicPromises = dynamicPromiseAll(callback);
+  const dynamicPromises = onResolveAll(callback);
 
   const createPromise = (callback, time) =>
     new Promise((resolve) =>
       setTimeout(() => {
         callback();
-        resolve();
+        resolve(false);
       }, time)
     );
 

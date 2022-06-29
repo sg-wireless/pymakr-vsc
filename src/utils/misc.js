@@ -1,5 +1,6 @@
 const { existsSync, readFileSync, readdirSync, cpSync } = require("fs");
 const { relative, resolve, dirname, join } = require("path");
+const { inspect } = require("util");
 
 const TEMPLATES_PATH = resolve(__dirname, "../../templates");
 
@@ -292,10 +293,11 @@ const objToSerializedEntries = (obj) => Object.entries(obj).map((entr) => entr.j
 const serializedEntriesToObj = (serializedEntries) => Object.fromEntries(serializedEntries.map((n) => n.split("=")));
 
 /**
- * Takes a callback that will be called whenever all promises have been resolved
- * @param {Function} callback
+ * Creates an array of promises. The array only supports push.
+ * Every time all promises have been resolved the callback is called
+ * @param {Function} callback called every time promises are resolved
  */
-const dynamicPromiseAll = (callback) => {
+const onResolveAll = (callback) => {
   /** @type {Promise<any>} */
   let promisePyramid = null;
 
@@ -314,6 +316,15 @@ const dynamicPromiseAll = (callback) => {
 };
 
 /**
+ * @param {Promise<any>[]} promises
+ */
+ const dynamicPromiseAll = async (promises) => {
+  const result = await Promise.all(promises);
+  const hasPending = promises.map((promise) => inspect(promise).includes("pending")).filter(Boolean).length;
+  return hasPending ? dynamicPromiseAll(promises) : result;
+};
+
+/**
  * Returns a cloned project with cherry picked props
  * @param {Object} obj
  * @param  {...string} props
@@ -329,6 +340,7 @@ const omit = (obj, ...props) => props.reduce((result, prop) => delete result[pro
 
 module.exports = {
   dynamicPromiseAll,
+  onResolveAll,
   objToSerializedEntries,
   serializedEntriesToObj,
   once,
