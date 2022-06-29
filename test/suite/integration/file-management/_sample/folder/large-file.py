@@ -1,124 +1,124 @@
 number = 0
-incrementNumberByOne = 1
+increment = 1
 # 100
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 200
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 300
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 400
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 500
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 600
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 700
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 800
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 900
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # 1000
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
-number = number + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne + incrementNumberByOne
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
+number = number + increment + increment + increment + increment + increment + increment + increment + increment + increment + increment
 
 # print "number is\r\n1000"
 print('number is')
