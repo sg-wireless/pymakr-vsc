@@ -56,7 +56,7 @@ class Device {
     const { subscribe, set } = writable(this);
     this.busy = writable(false, { lazy: true });
 
-    /** @type {Writable<import('./utils/blockingProxy').BlockingProxyQueueItem>} */
+    /** @type {Writable<string|import('./utils/blockingProxy').BlockingProxyQueueItem>} */
     this.action = writable(null, { lazy: true });
     this.online = writable(false, { lazy: true });
     this.connected = writable(false, { lazy: true });
@@ -192,10 +192,12 @@ class Device {
       if (!this.connected.get()) throw new DeviceOfflineError();
 
       this.log.info("safe booting...");
+      this.action.set("safeboot");
       this.busy.set(true);
       this.busy.subscribe((isBusy, unsub) => {
         if (!isBusy) {
           unsub();
+          this.action.set(null);
           this.log.info("safe booting complete!", isBusy);
           resolve();
         }

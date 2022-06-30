@@ -1,3 +1,4 @@
+const path = require("path");
 const vscode = require("vscode");
 const { Project } = require("../Project.js");
 const { ProjectDeviceTreeItem, ProjectTreeItem } = require("../providers/ProjectsProvider.js");
@@ -133,6 +134,26 @@ const createVSCodeHelpers = (pymakr) => {
       // if info isn't available, show the error instead
       else if (typeof device.info === "string") mdString.appendMarkdown(device.info);
       return mdString;
+    },
+
+    /**
+     * @param {Device} device
+     */
+    deviceStateIcon: (device) => {
+      const icons = {
+        offline: new vscode.ThemeIcon("debug-disconnect", { id: "disabledForeground" }),
+        disconnected: {
+          dark: path.join(__dirname + "..", "..", "..", "media", "dark", "lightning-muted.svg"),
+          light: path.join(__dirname + "..", "..", "..", "media", "light", "lightning-muted.svg"),
+        },
+        idle: {
+          dark: path.join(__dirname + "..", "..", "..", "media", "dark", "lightning.svg"),
+          light: path.join(__dirname + "..", "..", "..", "media", "light", "lightning.svg"),
+        },
+        script: new vscode.ThemeIcon("github-action"), // or pulse
+        action: new vscode.ThemeIcon("sync~spin"),
+      };
+      return icons[device.state.main.get()];
     },
   };
   return helpers;

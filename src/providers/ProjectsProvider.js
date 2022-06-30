@@ -86,19 +86,9 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
     this.device = device;
     const state = device.connected.get() ? (device.busy.get() ? "busy" : "idle") : "offline";
     this.contextValue = `${state}#project#device`;
-    const filename = device.connected.get() ? "lightning.svg" : "lightning-muted.svg";
+    
     this.tooltip = device.pymakr.vscodeHelpers.deviceSummary(device);
-    this.iconPath = device.busy.get()
-      ? new vscode.ThemeIcon("sync~spin")
-      : {
-          dark: path.join(__dirname + "..", "..", "..", "media", "dark", filename),
-          light: path.join(__dirname + "..", "..", "..", "media", "light", filename),
-        };
-    device.busy.subscribe((isBusy) =>
-      setTimeout(() => {
-        if (device.busy.get() === isBusy) tree.refresh();
-      }, 100)
-    );
+    this.iconPath = device.pymakr.vscodeHelpers.deviceStateIcon(device);
   }
 }
 
