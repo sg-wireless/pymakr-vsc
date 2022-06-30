@@ -56,7 +56,7 @@ class Device {
     const { subscribe, set } = writable(this);
     this.busy = writable(false, { lazy: true });
 
-    /** @type {Writable<string|import('./utils/blockingProxy').BlockingProxyQueueItem>} */
+    /** @type {Writable<string>} */
     this.action = writable(null, { lazy: true });
     this.online = writable(false, { lazy: true });
     this.connected = writable(false, { lazy: true });
@@ -95,6 +95,7 @@ class Device {
       info: createStateObject(pymakr.context.globalState, `pymakr.devices.${this.id}.info`),
     };
 
+    this.busy.subscribe((isBusy) => !isBusy && !this.adapter.__proxyMeta.isBusy && this.action.set(null));
     
     this.state.main.subscribe(() => this.pymakr.refreshProvidersThrottled());
 
@@ -270,14 +271,14 @@ class Device {
     // run in sequence rather in in parallel. See JSDoc comment for more info.
     const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "reset", "connectSerial"] });
     adapter.__proxyMeta.beforeEachCall(({ item }) => {
+      this.action.set(item.field.toString());
       this.busy.set(true);
-      this.action.set(item);
     });
 
     // emit line break to trigger a `>>>`. This triggers the `busyStatusUpdater`
     adapter.__proxyMeta.onIdle(() => {
       this.adapter.sendData("\r\n");
-      this.action.set(null);
+      if (!this.busy.get()) this.action.set(null);
     });
 
     let outputChannel;
