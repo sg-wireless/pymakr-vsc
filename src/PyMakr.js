@@ -46,7 +46,7 @@ class PyMakr {
     this.vscodeHelpers = createVSCodeHelpers(this);
 
     /** Extendable logger. */
-    this.log = createLogger("PyMakr");
+    this.log = createLogger("[Pymakr]");
     this.log.info(`${manifest.name} v${manifest.version}`);
 
     // avoid port collisions between multiple vscode instances running on the same machine
