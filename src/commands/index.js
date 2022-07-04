@@ -482,12 +482,10 @@ class Commands {
      * @param {{device: Device}} device
      */
     stopScript: ({ device }) => {
-      if (device.busy.get()) {
-        vscode.window.withProgress(
-          { title: `Stopping script on "${device.displayName}"`, location: vscode.ProgressLocation.Notification },
-          () => device.stopScript()
-        );
-      }
+      vscode.window.withProgress(
+        { title: `Stopping script on "${device.displayName}"`, location: vscode.ProgressLocation.Notification },
+        () => device.stopScript()
+      );
     },
 
     /**

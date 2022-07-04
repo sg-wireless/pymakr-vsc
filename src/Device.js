@@ -439,14 +439,29 @@ class Device {
     }
   }
 
-  stopScript() {
+  /**
+   * @param {number} retries
+   */
+  stopScript(retries = 5, retryInterval = 1000) {
     this.log.debug("stop script");
     return new Promise((resolve, reject) => {
       if (this.busy.get()) {
+        let counter = 0;
+        const intervalHandle = setInterval(() => {
+          if (counter >= retries) {
+            clearInterval(intervalHandle);
+            reject(`timed out after ${retries} retries in ${(retries * retryInterval) / 1000}s`);
+          } else {
+            counter++;
+            this.adapter.sendData("\x03");
+            this.log.log(`retry stop script (${counter})`);
+          }
+        }, retryInterval);
         this.busy.subscribe((isBusy, unsub) => {
           if (!isBusy) {
             unsub();
             resolve();
+            clearInterval(intervalHandle);
           }
         });
         this.adapter.sendData("\x03");
