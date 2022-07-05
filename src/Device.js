@@ -96,7 +96,7 @@ class Device {
     };
 
     this.busy.subscribe((isBusy) => !isBusy && !this.adapter.__proxyMeta.isBusy && this.action.set(null));
-    
+
     this.state.main.subscribe(() => this.pymakr.refreshProvidersThrottled());
 
     this._config = createListedConfigObject("pymakr.devices", "configs", this.id, configDefaults);
@@ -248,7 +248,7 @@ class Device {
    */
   async runScript(script, options) {
     options = Object.assign({}, runScriptDefaults, options);
-    this.log.info(`runScript:\n\n${script}\n\n`);
+    this.log.debug(`runScript:\n\n${script}\n\n`);
     this.busy.set(true);
     const start = Date.now();
     const result = await this.adapter.runScript(script + "\n\r\n\r\n", options);
@@ -278,7 +278,7 @@ class Device {
     // emit line break to trigger a `>>>`. This triggers the `busyStatusUpdater`
     adapter.__proxyMeta.onIdle(() => {
       this.adapter.sendData("\r\n");
-      if (!this.busy.get()) this.action.set(null);
+      this.action.set(null);
     });
 
     let outputChannel;
