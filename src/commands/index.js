@@ -12,6 +12,7 @@ const {
 } = require("../utils/misc");
 const { relative } = require("path");
 const { Project } = require("../Project");
+const { DeviceManager } = require("../Watcher/DeviceManager");
 
 /**
  * Commands contains all commands that can be accessed through VSCode.
@@ -619,6 +620,24 @@ class Commands {
         vscode.window.showErrorMessage(errors.join(" "));
         this.log.error(errors);
       }
+    },
+
+    /**
+     * @param {{project: Project, device?: Device}} param0
+     */
+    startDevMode: async ({ project, device }) => {
+      const devices = device ? [device] : project.devices;
+      devices.forEach((device) => project.watcher.addDevice(device));
+      this.pymakr.projectsProvider.refresh();
+    },
+
+    /**
+     * @param {{project: Project, device?: Device}} param0
+     */
+    stopDevMode: async ({ project, device }) => {
+      const devices = device ? [device] : project.devices;
+      devices.forEach((device) => project.watcher.removeDevice(device));
+      this.pymakr.projectsProvider.refresh();
     },
 
     /**

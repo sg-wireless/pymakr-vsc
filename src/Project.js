@@ -2,6 +2,7 @@ const { readFileSync } = require("fs");
 const { dirname, basename } = require("path");
 const vscode = require("vscode");
 const { createStateObject } = require("./utils/storageObj");
+const { Watcher } = require("./Watcher/Watcher");
 
 class Project {
   /**
@@ -14,6 +15,7 @@ class Project {
     this.configFile = configFile;
     this.folder = dirname(configFile.fsPath);
     this.config = {};
+    this.watcher = new Watcher(this);
     try {
       this.config = JSON.parse(readFileSync(configFile.fsPath, "utf-8"));
     } catch (err) {

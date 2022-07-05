@@ -45,6 +45,8 @@ class ProjectTreeItem extends vscode.TreeItem {
 
     this.children = children.length ? children : [new ProjectEmptyTreeItem(project)];
 
+    if (project.watcher.active) this.iconPath = new vscode.ThemeIcon("eye");
+
     const hasOnlineChild = project.devices.find((device) => device.adapter.__proxyMeta.target.isConnected());
     const hasOfflineChild = project.devices.find((device) => !device.adapter.__proxyMeta.target.isConnected());
     const onlineStatus =
@@ -54,7 +56,9 @@ class ProjectTreeItem extends vscode.TreeItem {
     const hasIdleChild = project.devices.find((device) => !device.busy.get());
     const busyStatus = hasBusyChild && hasIdleChild ? "mixed" : hasBusyChild ? "busy" : hasIdleChild ? "idle" : "no";
 
-    this.contextValue = `${busyStatus}#${onlineStatus}Children#project`;
+    const dev = project.watcher.active ? "dev" : "no-dev";
+
+    this.contextValue = `${busyStatus}#${onlineStatus}Children#${dev}#project`;
   }
 }
 
@@ -65,8 +69,8 @@ class ProjectEmptyTreeItem extends vscode.TreeItem {
   constructor(project) {
     super("ADD DEVICES", vscode.TreeItemCollapsibleState.None);
     this.command = {
-      title: 'Select Devices',
-      tooltip: 'Add devices to your project',
+      title: "Select Devices",
+      tooltip: "Add devices to your project",
       command: "pymakr.selectDevicesForProjectPrompt",
       arguments: [project],
     };
@@ -84,9 +88,13 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
     super(device.displayName, vscode.TreeItemCollapsibleState.None);
     this.project = project;
     this.device = device;
+
+    const watched = project.watcher.deviceManagers.find((dm) => dm.device === device);
+    if (watched && device.adapter.__proxyMeta.target.isConnected()) this.label = "[DEV] " + device.displayName;
+
     const state = device.connected.get() ? (device.busy.get() ? "busy" : "idle") : "offline";
     this.contextValue = `${state}#project#device`;
-    
+
     this.tooltip = device.pymakr.vscodeHelpers.deviceSummary(device);
     this.iconPath = device.pymakr.vscodeHelpers.deviceStateIcon(device);
   }
