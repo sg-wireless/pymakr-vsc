@@ -427,9 +427,8 @@
       },
       {
         "command": "pymakr.stopScript",
-        "title": "Stop busy device",
-        "category": "PyMakr",
-        "enablement": "viewItem =~ /(busy)#.+#device/"
+        "title": "Stop script",
+        "category": "PyMakr"
       },
       {
         "command": "pymakr.eraseDevicePrompt",
