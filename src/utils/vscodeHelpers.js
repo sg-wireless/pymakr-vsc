@@ -109,7 +109,7 @@ const createVSCodeHelpers = (pymakr) => {
       const projectName = "" + device.state.pymakrConf.get().name || "unknown";
 
       const _action = device.action.get()
-      const getActionName = ()=> typeof _action === 'string' ? _action : _action.field.toString()
+      const getActionName = ()=> _action
 
 
       const mdString = new vscode.MarkdownString("", true);
