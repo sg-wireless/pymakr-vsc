@@ -99,7 +99,7 @@ class PyMakr {
 
   getTerminalProfile(protocol, address) {
     const hasNode = () => require("child_process").execSync("node -v").toString().startsWith("v");
-    
+
     const binariesPath = resolve(__dirname, "terminal/bin");
     const userSelection = this.config.get().get("terminalProfile");
     const profileName = userSelection === "auto" && hasNode() ? "node" : process.platform;
@@ -161,6 +161,9 @@ class PyMakr {
    */
   onUpdatedConfig(mode) {
     this.log.level = this.log.levels[this.config.get().debug.logLevel];
+    if (this.log.level >= 5)
+    process.env.debug = this.log.level === 5 ? 'true' : 'silly'
+
     this.log.filter = this.config.get().debug.logFilter !== "" ? new RegExp(this.config.get().debug.logFilter) : "";
     if (mode !== "silent") this.log.info("updated config:", this.config.get());
   }
