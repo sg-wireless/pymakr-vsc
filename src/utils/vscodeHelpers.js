@@ -108,8 +108,14 @@ const createVSCodeHelpers = (pymakr) => {
         : "";
       const projectName = "" + device.state.pymakrConf.get().name || "unknown";
 
+      const _action = device.action.get()
+      const getActionName = ()=> typeof _action === 'string' ? _action : _action.field.toString()
+
+
       const mdString = new vscode.MarkdownString("", true);
       mdString.supportHtml = true;
+      if(device.action.get())
+      mdString.appendMarkdown(`<span style='color:#0f0;'>Running action: ${getActionName()}</span>\n\n`)
       mdString.appendMarkdown("### Project");
       mdString.appendMarkdown("\n");
       mdString.appendMarkdown(staleNote);
