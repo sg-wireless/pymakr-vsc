@@ -489,7 +489,7 @@
       },
       {
         "command": "pymakr.startDevMode",
-        "title": "Start development mode",
+        "title": "Start development mode\r\nAutomatically uploads/deletes changed files and restarts the device.",
         "icon": {
           "dark": "./media/dark/dev-dark.svg",
           "light": "./media/light/dev-light.svg"
@@ -498,7 +498,7 @@
       },
       {
         "command": "pymakr.stopDevMode",
-        "title": "Stop development mode 123\r\ntest",
+        "title": "Stop development mode",
         "icon": {
           "dark": "./media/dark/dev-cross-dark.svg",
           "light": "./media/light/dev-cross-light.svg"
