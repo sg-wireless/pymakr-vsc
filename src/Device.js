@@ -83,9 +83,9 @@ class Device {
           ? "offline"
           : !$connected
           ? "disconnected"
-          : $busy && $action
+          : $busy && $action && $action !== "reset"
           ? "action"
-          : $busy && !$action
+          : $busy
           ? "script"
           : "idle"
       ),
@@ -213,7 +213,7 @@ class Device {
   reset() {
     // resetting the device should also reset the waiting calls
     this.adapter.__proxyMeta.reset();
-    return this.adapter.__proxyMeta.target.reset({ broadcastOutputAsTerminalData: true, softReset: false });
+    return this.adapter.reset({ broadcastOutputAsTerminalData: true, softReset: false });
   }
 
   /**
@@ -269,7 +269,7 @@ class Device {
 
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
-    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "reset", "connectSerial"] });
+    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "connectSerial"] });
     adapter.__proxyMeta.beforeEachCall(({ item }) => {
       this.action.set(item.field.toString());
       this.busy.set(true);
@@ -465,7 +465,10 @@ class Device {
           }
         });
         this.adapter.sendData("\x03");
-      } else resolve();
+      } else {
+        this.adapter.sendData("\x03");
+        resolve();
+      }
     });
   }
 
