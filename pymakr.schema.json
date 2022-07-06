@@ -61,6 +61,36 @@
       "type": "boolean",
       "deprecated": true,
       "deprecationMessage": "Deprecated. This may or may not be reimplemented."
+    },
+    "dev": {
+      "description": "Options related to development mode in Pymakr",
+      "type": "object",
+      "properties": {
+        "simulateDeepSleep": {
+          "description": "Replaces deepsleep with\r\ntime.sleep(x)\nmachine.reset()",
+          "type": "boolean",
+          "default": false
+        },
+        "onUpdate": {
+          "description": "Action to run after file changes have been propagates",
+          "type": "string",
+          "default": "restartScript",
+          "anyOf": [
+            {
+              "const": "restartScript",
+              "description": "Restarts boot.py (if changed) and main.py"
+            },
+            {
+              "const": "softRestartDevice",
+              "description": "Sends ctrl + d to device"
+            },
+            {
+              "const": "hardRestartDevice",
+              "description": "Runs machine.reset()"
+            }
+          ]
+        }
+      }
     }
   }
 }

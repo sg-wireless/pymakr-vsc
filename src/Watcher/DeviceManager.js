@@ -65,7 +65,9 @@ class DeviceManager {
       for (const instruction of instructions) modulesToDelete.push(await this.runInstruction(instruction));
     }
 
-    await this.restartScript(modulesToDelete);
+    /** @type {'restartScript'|'softRestartDevice'|'hardRestartDevice'} */
+    const onUpdate = this.watcher.project.config?.dev?.onUpdate || "restartScript";
+    await this[onUpdate](modulesToDelete);
 
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
