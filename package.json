@@ -490,13 +490,19 @@
       {
         "command": "pymakr.startDevMode",
         "title": "Start development mode",
-        "icon": "$(eye)",
+        "icon": {
+          "dark": "./media/dark/dev-dark.svg",
+          "light": "./media/light/dev-light.svg"
+        },
         "category": "PyMakr"
       },
       {
         "command": "pymakr.stopDevMode",
-        "title": "Stop development mode",
-        "icon": "$(eye-closed)",
+        "title": "Stop development mode 123\r\ntest",
+        "icon": {
+          "dark": "./media/dark/dev-cross-dark.svg",
+          "light": "./media/light/dev-cross-light.svg"
+        },
         "category": "PyMakr"
       },
       {
@@ -849,7 +855,7 @@
         {
           "command": "pymakr.stopDevMode",
           "group": "inline",
-          "when": "viewItem =~ /onlineChildren#dev#project$/"
+          "when": "viewItem =~ /Children#dev#project$/"
         },
         {
           "command": "pymakr.addDeviceToFileExplorer",
@@ -928,7 +934,7 @@
     "lint": "eslint .",
     "build": "npm run build:docs && npm run build:binary",
     "build:docs": "typedoc src/pymakr.js --media media",
-    "build:binary":"pkg src/terminal/bin/client.js --out-path src/terminal/bin --compress GZIP",
+    "build:binary": "pkg src/terminal/bin/client.js --out-path src/terminal/bin --compress GZIP",
     "pretest.bak": "npm run lint",
     "test": "npm run test:types && npm run test:unit && npm run test:integration",
     "test:types": "tsc --noEmit",

@@ -45,7 +45,10 @@ class ProjectTreeItem extends vscode.TreeItem {
 
     this.children = children.length ? children : [new ProjectEmptyTreeItem(project)];
 
-    if (project.watcher.active) this.iconPath = new vscode.ThemeIcon("eye");
+    if (project.watcher.active) this.iconPath = {
+      dark: path.join(__dirname + "..", "..", "..", "media", "dark", "dev-dark.svg"),
+      light: path.join(__dirname + "..", "..", "..", "media", "light", "dev-light.svg"),
+    }
 
     const hasOnlineChild = project.devices.find((device) => device.adapter.__proxyMeta.target.isConnected());
     const hasOfflineChild = project.devices.find((device) => !device.adapter.__proxyMeta.target.isConnected());

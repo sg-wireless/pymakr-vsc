@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <path d="M 6.974 7.706 L 3.972 11.982 L 6.974 16.252" stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" style="" bx:origin="2.998001 0.502457"/>
+  <path d="M 16.972 7.706 L 19.972 11.982 L 16.972 16.252" stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" style="" bx:origin="-2 0.502457"/>
+  <path d="M 13.471 7.001 L 10.474 16.96" stroke="white" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" style="" bx:origin="0.499833 0.501958"/>
+  <path d="M 4 4 L 20 20" stroke-linecap="round" stroke="white" stroke-width="1.5" />
+</svg>
