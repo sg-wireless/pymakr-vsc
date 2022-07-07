@@ -490,6 +490,7 @@
       {
         "command": "pymakr.startDevMode",
         "title": "Start development mode\r\nAutomatically uploads/deletes changed files and restarts the device.",
+        "shortTitle": "Start dev mode",
         "icon": {
           "dark": "./media/dark/dev-dark.svg",
           "light": "./media/light/dev-light.svg"
@@ -499,6 +500,7 @@
       {
         "command": "pymakr.stopDevMode",
         "title": "Stop development mode",
+        "shortTitle": "Stop dev mode",
         "icon": {
           "dark": "./media/dark/dev-cross-dark.svg",
           "light": "./media/light/dev-cross-light.svg"
@@ -839,22 +841,22 @@
         },
         {
           "command": "pymakr.connectAllInProject",
-          "group": "inline",
+          "group": "inline@9",
           "when": "viewItem =~ /(mixed|offline)Children#.+?#project$/"
         },
         {
           "command": "pymakr.disconnectAllInProject",
-          "group": "inline",
+          "group": "inline@9",
           "when": "viewItem =~ /onlineChildren#.+?#project$/"
         },
         {
           "command": "pymakr.startDevMode",
-          "group": "inline",
+          "group": "inline@10",
           "when": "viewItem =~ /Children#no-dev#project$/"
         },
         {
           "command": "pymakr.stopDevMode",
-          "group": "inline",
+          "group": "inline@10",
           "when": "viewItem =~ /Children#dev#project$/"
         },
         {
