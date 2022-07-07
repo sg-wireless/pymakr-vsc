@@ -31,6 +31,29 @@ Once the project is ready to run, it needs to be uploaded to a device.
 
 ---
 
+## Developer mode - Experimental
+
+To speed up development, you can put a project in `development mode`.
+
+In development mode, Pymakr automatically propagates file changes in and restarts the main script.
+
+Dev mode can be configured in `pymakr.json`
+```json
+{
+    "onUpdate": "restartScript" | "softRestartDevice" | "hardRestartDevice"
+}
+```
+
+**onUpdate:** Action to be called once file changes have been propagated.
+- **restartScript** Clears the `main.py` module as well as any changed modules. Then imports `boot.py` and `main.py`.
+- **softRestartDevice** Performs <kbd>ctrl + d</kbd>
+- **hardRestartDevice** Performs `machine.reset()`
+
+#### NOTE
+*`machine.sleep` and `machine.deepsleep` do not work in development since they stop the USB connection.*
+
+---
+
 ## Hint: Organizing your setup
 
 Having to switch between different tabs can be cumbersome. To solve this, you can drag your devices and projects to the file explorer view.
