@@ -27,7 +27,7 @@ class FileSystemProvider {
       return await device.adapter.remove(uri.path, isDir);
     } catch (err) {
       if (err.message.endsWith(" ENOENT")) throw vscode.FileSystemError.FileNotFound(`Could not find '${uri.path}'.`);
-      else vscode.window.showErrorMessage("Uncaught error: " + err.toString());
+      else this.pymakr.notifier.notifications.uncaughtError(err)
     }
   }
 

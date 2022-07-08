@@ -38,13 +38,7 @@ class Commands {
         try {
           await value.bind(this)(...params);
         } catch (err) {
-          vscode.window.showErrorMessage(
-            `[Pymakr] Failed to run command: ${key}. Reason: ${
-              err.message || err.name || err
-            }. Please see logs for info.`
-          );
-          this.log.error(`Failed to run command: ${key} with params:`, params);
-          this.log.error(err);
+          this.pymakr.notifier.notifications.failedToRunCommand(key, err);
         }
       })
     );
@@ -65,16 +59,12 @@ class Commands {
      */
     safeBootDevice: async ({ device }) => {
       if (!device.adapter.__proxyMeta.target.isConnected())
-        return vscode.window.showErrorMessage("Cannot safeboot offline device.");
+        return this.pymakr.notifier.notifications.cantSafebootOfflineDevice();
 
       const timeout = 10000;
       vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
         progress.report({ message: "Safe booting" });
-        const error = () => {
-          const msg = "Could not safeboot device. Please hard reset the device and verify that a shield is installed.";
-          device.log.warn(`Error for "${device.displayName}": ${msg}`);
-          vscode.window.showWarningMessage(msg);
-        };
+        const error = () => this.pymakr.notifier.notifications.couldNotSafeboot(device);
         await waitFor(device.safeBoot(), timeout, error);
       });
     },
@@ -137,7 +127,7 @@ class Commands {
             resolve();
           } catch (err) {
             this.log.error(err);
-            vscode.window.showErrorMessage("Could not erase device. Reason: " + err);
+            this.pymakr.notifier.notifications.couldNotEraseDevice(err);
             reject(err);
           }
         })
@@ -413,8 +403,7 @@ class Commands {
           const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 10000));
           return Promise.race([scriptPromise, timeoutPromise]);
         } catch (err) {
-          console.log("er,", err.message);
-          vscode.window.showErrorMessage("Could not run script. Reason: " + err);
+          this.pymakr.notifier.notifications.couldNotRunScript(err)
         }
       });
     },
@@ -440,12 +429,8 @@ class Commands {
      */
     handleBusyDevice: async (device) => {
       if (device.busy.get()) {
-        const options = { restart: "Restart in safe mode" };
-        const answer = await vscode.window.showInformationMessage(
-          `${device.displayName} seems to be busy. Do you wish restart it in safe mode?`,
-          options.restart
-        );
-        if (answer === options.restart) this.commands.safeBootDevice({ device });
+        const answer = await this.pymakr.notifier.notifications.restartInSafeMode(device);
+        if (answer === "restart") this.commands.safeBootDevice({ device });
       }
     },
 
@@ -499,19 +484,12 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     createTerminalPrompt: async ({ device }) => {
-      const sharedTerm = "Create new shared terminal";
-      const openExistingTerm = "Open existing terminal";
-
       const existingTerminal = this.pymakr.terminalsStore.get().find((t) => t.device === device);
       if (existingTerminal) {
-        const answer = await vscode.window.showInformationMessage(
-          `A terminal for ${device.displayName} already exists.`,
-          sharedTerm,
-          openExistingTerm
-        );
-        if (answer === sharedTerm) {
+        const answer = await this.pymakr.notifier.notifications.terminalAlreadyExists(device);
+        if (answer === "sharedTerm") {
           this.pymakr.terminalsStore.create(device);
-          this.pymakr.vscodeHelpers.showSharedTerminalInfo();
+          this.pymakr.notifier.notifications.showSharedTerminalInfo();
         } else existingTerminal.term.show();
       } else {
         this.pymakr.terminalsStore.create(device);
@@ -617,8 +595,7 @@ class Commands {
         });
       } catch (err) {
         const errors = ["failed to upload", fsPath, "to", destination, "\r\nReason:", err];
-        vscode.window.showErrorMessage(errors.join(" "));
-        this.log.error(errors);
+        this.pymakr.notifier.notifications.errors(errors)
       }
     },
 

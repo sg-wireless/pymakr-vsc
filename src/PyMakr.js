@@ -15,6 +15,7 @@ const manifest = require("../package.json");
 const { createVSCodeHelpers } = require("./utils/vscodeHelpers");
 const { TextDocumentProvider } = require("./providers/TextDocumentProvider");
 const { createStateObject } = require("./utils/storageObj");
+const { Notifier } = require("./utils/Notifier");
 
 /**
  * Pymakr is the root class and scope of the extension.
@@ -44,6 +45,9 @@ class PyMakr {
 
     /** VSCode specific helpers */
     this.vscodeHelpers = createVSCodeHelpers(this);
+
+    /** Handles all info, warn and error notifications */
+    this.notifier = new Notifier(this)
 
     /** Extendable logger. */
     this.log = createLogger("[Pymakr]");
