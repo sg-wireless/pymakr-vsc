@@ -264,12 +264,12 @@
         }
       },
       {
-        "title": "Notifications",
+        "title": "Misc",
         "properties": {
-          "pymakr.notifications.showSharedTerminalInfo": {
-            "type": "boolean",
-            "default": true,
-            "description": "Show notification when a shared terminal is created."
+          "pymakr.misc.notifications": {
+            "description": "Stored choices for Pymakr notifications. To undo a choice, simply delete the entry.",
+            "type": "object",
+            "additionalProperties": "/.+/"
           }
         }
       }
