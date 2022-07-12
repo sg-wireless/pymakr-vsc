@@ -175,8 +175,20 @@ class Notifier {
       this.createNotification(
         "warning",
         "Could not safeboot device. Please hard reset the device and verify that a shield is installed.",
-        { [this.DONT_SHOW_AGAIN]: [null, this.DONT_SHOW_AGAIN] }
+        { "": [null, this.DONT_SHOW_AGAIN] }
       ),
+
+    devMode: () =>
+      this.createNotification(
+        "info",
+        "In dev mode all file changes are instantly written to the device and the device is then rebooted.",
+        { "": [null, this.DONT_SHOW_AGAIN] }
+      ),
+      
+    uploadProject: () =>
+      this.createNotification("info", "After uploading a project, you can start it by restarting the device.", {
+        "": [null, this.DONT_SHOW_AGAIN],
+      }),
   };
 }
 

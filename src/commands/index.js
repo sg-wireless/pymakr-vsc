@@ -548,6 +548,7 @@ class Commands {
     uploadProject: async ({ device, project }) => {
       await device.adapter.remove(device.config.rootPath, true);
       this.commands.upload({ fsPath: project.folder }, device, "/");
+      this.pymakr.notifier.notifications.uploadProject()
     },
 
     /**
@@ -606,6 +607,7 @@ class Commands {
       const devices = device ? [device] : project.devices;
       devices.forEach((device) => project.watcher.addDevice(device));
       this.pymakr.projectsProvider.refresh();
+      this.pymakr.notifier.notifications.devMode()
     },
 
     /**
