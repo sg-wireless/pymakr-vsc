@@ -1,4 +1,5 @@
 const vscode = require("vscode");
+const { createQueue } = require("./misc");
 
 /** @typedef {Boolean} Changed */
 
@@ -9,6 +10,9 @@ const vscode = require("vscode");
  * @prop {function(T):(Changed|Promise<Changed>)} set
  */
 
+const updateConfigQueue = createQueue();
+const updateStateQueue = createQueue();
+
 /**
  * @template T
  * @param {vscode.Memento} stateStorage
@@ -18,9 +22,11 @@ const vscode = require("vscode");
  */
 const createStateObject = (stateStorage, key, defaults) => {
   const get = () => stateStorage.get(key) ?? defaults;
-  const set = (value) => {
+  const set = async (value) => {
+    const imDone = await updateStateQueue();
     const changed = JSON.stringify(get()) !== JSON.stringify(value);
     stateStorage.update(key, value);
+    imDone();
     return changed;
   };
   return { get, set };
@@ -36,9 +42,11 @@ const createStateObject = (stateStorage, key, defaults) => {
  */
 const createConfigObject = (section, key, defaults, configurationTarget = vscode.ConfigurationTarget.Global) => {
   const get = () => vscode.workspace.getConfiguration(section).get(key) || defaults;
-  const set = (value) => {
+  const set = async (value) => {
+    const imDone = await updateConfigQueue();
     const changed = JSON.stringify(get()) !== JSON.stringify(value);
-    vscode.workspace.getConfiguration(section).update(key, value, configurationTarget);
+    await vscode.workspace.getConfiguration(section).update(key, value, configurationTarget).then();
+    imDone();
     return changed;
   };
   return { get, set };
@@ -66,6 +74,7 @@ const createListedConfigObject = (
       .get(key)
       .find((cfg) => cfg.id === id) || { ...defaults };
   const set = async (value) => {
+    const imDone = await updateConfigQueue();
     /** @type {Array} */
     const all = vscode.workspace.getConfiguration(section).get(key);
     const index = all.findIndex((e) => e.id === id);
@@ -76,9 +85,32 @@ const createListedConfigObject = (
     if (index > -1) all[index] = value;
     else all.push(value);
     await vscode.workspace.getConfiguration(section).update(key, all, configurationTarget);
+    imDone();
     return changed;
   };
   return { get, set };
 };
 
-module.exports = { createStateObject, createConfigObject, createListedConfigObject };
+const createMappedConfigObject = (
+  section,
+  key,
+  id,
+  defaults,
+  configurationTarget = vscode.ConfigurationTarget.Global
+) => {
+  const get = () => vscode.workspace.getConfiguration(section)[key][id] || { ...defaults };
+  const set = async (value) => {
+    const imDone = await updateConfigQueue();
+    let config = vscode.workspace.getConfiguration(section)[key] || {};
+
+    if (JSON.stringify(config[id]) === JSON.stringify(value)) return;
+    config = { ...config, [id]: value };
+
+    await vscode.workspace.getConfiguration(section).update(key, config, configurationTarget);
+
+    imDone();
+  };
+  return { get, set };
+};
+
+module.exports = { createStateObject, createConfigObject, createListedConfigObject, createMappedConfigObject };

@@ -149,10 +149,11 @@
             "description": "Available variables: friendlyName, locationId, manufacturer, pnpId, productId, serialNumber, vendorId, protocol, displayName, projectName"
           },
           "pymakr.devices.configs": {
-            "type": "array",
+            "type": "object",
             "description": "Configuration of each individual device.",
-            "items": {
+            "additionalProperties": {
               "type": "object",
+              "readOnly": false,
               "properties": {
                 "autoConnect": {
                   "type": "string",
@@ -187,7 +188,10 @@
                   "description": "Hide device from showing in the devices view."
                 },
                 "rootPath": {
-                  "type": "string",
+                  "type": [
+                    "string",
+                    "null"
+                  ],
                   "description": "Commonly \"/flash\", \"/\" or \"/sd\"."
                 },
                 "id": {

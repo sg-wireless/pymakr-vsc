@@ -17,6 +17,7 @@ import {
   serializedEntriesToObj,
   serializeKeyValuePairs,
   waitFor,
+  createQueue,
 } from "../misc.js";
 
 const wait = (time) => new Promise((resolve) => setTimeout(resolve, time));
@@ -210,9 +211,9 @@ test("onResolveAll", () => {
     dynamicPromises.push(createPromise(() => counter++, 150));
     dynamicPromises.push(createPromise(() => counter++, 200));
 
-    await wait(150)
+    await wait(150);
     assert.equal(callbackTriggerCount, 0);
-    assert.equal(result, null)
+    assert.equal(result, null);
     await wait(50);
     assert.equal(callbackTriggerCount, 1);
     assert.equal(result, 4);
@@ -224,11 +225,40 @@ test("onResolveAll", () => {
     dynamicPromises.push(createPromise(() => counter++, 150));
     dynamicPromises.push(createPromise(() => counter++, 200));
 
-    await wait(150)
+    await wait(150);
     assert.equal(callbackTriggerCount, 1);
-    assert.equal(result, 4)
+    assert.equal(result, 4);
     await wait(50);
     assert.equal(callbackTriggerCount, 2);
     assert.equal(result, 8);
+  });
+
+  test("createQueue runs entries in order", async () => {
+    let number = 1;
+    const queue = createQueue();
+    const log = [];
+
+    const doStuff = async () => {
+      const myNumber = number++;
+      log.push(`awaiting ${myNumber}`);
+      const imDone = await queue();
+      log.push(`started ${myNumber}`);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      log.push(`finished ${myNumber}`);
+      imDone();
+    };
+
+    await Promise.all([doStuff(), doStuff(), doStuff()]);
+    assert.deepEqual(log, [
+      "awaiting 1",
+      "awaiting 2",
+      "awaiting 3",
+      "started 1",
+      "finished 1",
+      "started 2",
+      "finished 2",
+      "started 3",
+      "finished 3",
+    ]);
   });
 });

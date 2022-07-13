@@ -318,7 +318,7 @@ const onResolveAll = (callback) => {
 /**
  * @param {Promise<any>[]} promises
  */
- const dynamicPromiseAll = async (promises) => {
+const dynamicPromiseAll = async (promises) => {
   const result = await Promise.all(promises);
   const hasPending = promises.map((promise) => inspect(promise).includes("pending")).filter(Boolean).length;
   return hasPending ? dynamicPromiseAll(promises) : result;
@@ -337,6 +337,47 @@ const pick = (obj, ...props) => props.reduce((result, prop) => ({ ...result, [pr
  * @param  {...string} props
  */
 const omit = (obj, ...props) => props.reduce((result, prop) => delete result[prop] && result, { ...obj });
+
+/**
+ * Creates a queue
+ * Calling the queue will return a promise.
+ * The promise contains a function to be called once the next item in the queue can be run.
+ * @example
+ * const queue = createQueue()
+ * // ...
+ * const imDone = await queue()
+ * await anAsyncCall()
+ * imDone()
+ */
+const createQueue = () => {
+  /** @type {(function)[]} */
+  const queue = [];
+  let isRunning;
+  const runQueue = async () => {
+    if (!isRunning) {
+      isRunning = true;
+      while (queue.length) {
+        await new Promise((resolve) => {
+          const entry = queue.shift();
+          entry(resolve);
+        });
+      }
+      isRunning = false;
+    }
+  };
+
+  /** @returns {Promise<imDone>} */
+  return () =>
+    new Promise((resolve) => {
+      queue.push(resolve);
+      runQueue();
+    });
+};
+
+/**
+ * Call this function to start the next item in the queue
+ * @callback imDone
+ */
 
 module.exports = {
   dynamicPromiseAll,
@@ -365,4 +406,5 @@ module.exports = {
   copyTemplateByPath,
   pick,
   omit,
+  createQueue,
 };

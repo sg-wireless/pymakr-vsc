@@ -4,7 +4,7 @@ const { MicroPythonDevice } = require("micropython-ctl-cont");
 const { createBlockingProxy } = require("./utils/blockingProxy");
 const { waitFor, getNearestPymakrConfig, createIsIncluded, serializeKeyValuePairs } = require("./utils/misc");
 const { writable, derived } = require("./utils/store");
-const { createStateObject, createListedConfigObject } = require("./utils/storageObj");
+const { createStateObject, createMappedConfigObject } = require("./utils/storageObj");
 const picomatch = require("picomatch");
 const { createSequenceHooksCollection } = require("hookar");
 const { createReadUntil } = require("./utils/readUntil");
@@ -99,7 +99,7 @@ class Device {
 
     this.state.main.subscribe(() => this.pymakr.refreshProvidersThrottled());
 
-    this._config = createListedConfigObject("pymakr.devices", "configs", this.id, configDefaults);
+    this._config = createMappedConfigObject("pymakr.devices", 'configs', this.id, configDefaults);
 
     /** If true, device will disconnect at the end of execution queue */
     this.temporaryConnection = false;
