@@ -103,7 +103,10 @@ const createMappedConfigObject = (
     const imDone = await updateConfigQueue();
     let config = vscode.workspace.getConfiguration(section)[key] || {};
 
-    if (JSON.stringify(config[id]) === JSON.stringify(value)) return;
+    if (JSON.stringify(config[id]) === JSON.stringify(value)) {
+      imDone();
+      return;
+    }
     config = { ...config, [id]: value };
 
     await vscode.workspace.getConfiguration(section).update(key, config, configurationTarget);
