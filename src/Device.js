@@ -113,8 +113,6 @@ class Device {
     this.autoConnectOnCommand();
     this.terminalLogFile = this.createTerminalLogFile();
 
-    this.applyCustomDeviceConfig();
-
     subscribe(() => this.onChanged());
 
     this.busy.subscribe((val) => this.log.debugShort(val ? "busy..." : "idle."));
@@ -135,23 +133,6 @@ class Device {
 
   get info() {
     return this.state.info.get();
-  }
-
-  get configOverride() {
-    const customConfig = {};
-    /** @type {{field: string, match: string, value: string}[]} */
-    const cfgs = this.pymakr.config.get().get("devices.configOverride");
-    cfgs
-      .filter((cfg) => this.serialized.match(new RegExp(cfg.match, "gi")))
-      .forEach((cfg) => (customConfig[cfg.field] = cfg.value));
-    return customConfig;
-  }
-
-  applyCustomDeviceConfig() {
-    Object.keys(this.configOverride).forEach((key) => {
-      const target = Reflect.has(this, key) ? this : this.adapter;
-      target[key] = this.configOverride[key];
-    });
   }
 
   get serialized() {
@@ -476,7 +457,6 @@ class Device {
    * saves state and refreshes views
    */
   onChanged() {
-    this.applyCustomDeviceConfig();
     // throttle the UI refresh call. This makes sure that multiple devices doesn't trigger the same call.
     this.pymakr.refreshProvidersThrottled();
   }

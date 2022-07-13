@@ -217,49 +217,6 @@
               }
             }
           },
-          "pymakr.devices.configOverride": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "match": {
-                  "type": "string",
-                  "required": true
-                },
-                "field": {
-                  "type": "string",
-                  "enum": [
-                    "rootPath",
-                    "manufacturer",
-                    "serialNumber",
-                    "pnpId",
-                    "locationId",
-                    "friendlyName",
-                    "vendorId",
-                    "productId"
-                  ],
-                  "required": true
-                },
-                "value": {
-                  "type": "string",
-                  "required": true
-                }
-              }
-            },
-            "default": [
-              {
-                "match": "manufacturer=.*",
-                "field": "rootPath",
-                "value": "/flash"
-              },
-              {
-                "match": "serialNumber=Example1234",
-                "field": "rootPath",
-                "value": "/custom/path"
-              }
-            ],
-            "markdownDescription": "**!EXPERIMENTAL! This feature could be changed or removed without notice.**\n\nOverride device config. Each override consists of a match, a field and a value.\n\n**match:** key=value (eg. `manufacturer=\"Micr.*\"` will match all devices with a Manufacturer starting with \"Micr\")\n\n\n**field:** the property that should be updated.\n\n**value:** the new value."
-          },
           "pymakr.projects.runScriptPrompt": {
             "type": "boolean",
             "default": "true",
