@@ -9,6 +9,7 @@ const PROJECT_STORE_TIMEOUT = 3000;
  */
 const prepDevice = async (device) => {
   await device.connect();
+  await device.stopScript()
   await pymakr.commands.eraseDevice({ device });
   await device.disconnect();
 };
