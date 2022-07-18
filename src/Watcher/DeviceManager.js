@@ -107,6 +107,8 @@ class DeviceManager {
         "  print('[dev] Import main.py')",
         "  import main",
         "except KeyboardInterrupt: pass",
+        "except ImportError:",
+        "  print('[dev] No main.py found. Skipped.')",
         "except Exception as e: raise e;",
         "",
       ].join("\r\n"),
