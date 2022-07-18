@@ -50,7 +50,11 @@ const createBlockingProxy = (_target, _options) => {
           proxyMeta.queue.push(item);
           proxyMeta.onAddedCall.run({ item, proxy: proxyMeta });
           proxyMeta.processQueue();
-          return item.promise;
+          return new Promise(async (resolve, reject) => {
+            const result = await item.promise;
+            if (result?.err) reject(result.err);
+            else resolve(result);
+          });
         };
         return promise;
       } else return target[field];
@@ -90,7 +94,7 @@ class BlockingProxyQueueItem {
             this.finishedAt = new Date();
             resolve(this.result);
           } catch (err) {
-            resolve(err);
+            resolve({ err });
           }
         })();
         return this.promise;
