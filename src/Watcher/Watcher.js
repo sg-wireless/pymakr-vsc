@@ -30,6 +30,9 @@ class Watcher {
     if (!this.deviceManagers.length) this.stop();
   }
 
+  /**
+   * called whenever addDevice is called
+   */
   start() {
     if (this.active) return;
     this.active = true;
