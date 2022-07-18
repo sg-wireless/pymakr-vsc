@@ -467,13 +467,11 @@ class Commands {
     /**
      * @param {{device: Device}} device
      */
-    stopScript: ({ device }) => {
+    stopScript: ({ device }) =>
       vscode.window.withProgress(
         { title: `Stopping script on "${device.displayName}"`, location: vscode.ProgressLocation.Notification },
         () => device.stopScript()
-      );
-    },
-
+      ),
     /**
      * @param {ProjectTreeItem} ctx
      */
