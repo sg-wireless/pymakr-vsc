@@ -184,11 +184,23 @@ class Notifier {
         "In dev mode all file changes are instantly written to the device and the device is then rebooted.",
         { "": [null, this.DONT_SHOW_AGAIN] }
       ),
-      
+
     uploadProject: () =>
-      this.createNotification("info", "After uploading a project, you can start it by restarting the device.", {
-        "": [null, this.DONT_SHOW_AGAIN],
-      }),
+      this.createNotification(
+        "info",
+        "Uploading a project will delete all existing files on the device before uploading the project folder. After uploading a project, you can start it by restarting the device. For faster uploads without file deletion, please put the device in dev mode.",
+        {
+          "": [null, this.DONT_SHOW_AGAIN],
+        }
+      ),
+    uploadInDevMode: () =>
+      this.createNotification(
+        "info",
+        "When uploading in dev mode, only changed files will be uploaded. No files are deleted.",
+        {
+          "": [null, this.DONT_SHOW_AGAIN],
+        }
+      ),
   };
 }
 

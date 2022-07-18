@@ -403,7 +403,7 @@ class Commands {
           const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 10000));
           return Promise.race([scriptPromise, timeoutPromise]);
         } catch (err) {
-          this.pymakr.notifier.notifications.couldNotRunScript(err)
+          this.pymakr.notifier.notifications.couldNotRunScript(err);
         }
       });
     },
@@ -544,9 +544,15 @@ class Commands {
      * @param {ProjectDeviceTreeItem} treeItem
      */
     uploadProject: async ({ device, project }) => {
-      await device.adapter.remove(device.config.rootPath, true);
-      this.commands.upload({ fsPath: project.folder }, device, "/");
-      this.pymakr.notifier.notifications.uploadProject()
+      if (project.watcher.active) {
+        const deviceManager = project.watcher.deviceManagers.find((d) => d.device === device);
+        deviceManager.push({ action: "create", file: project.folder });
+        this.pymakr.notifier.notifications.uploadInDevMode();
+      } else {
+        await device.adapter.remove(device.config.rootPath, true);
+        this.commands.upload({ fsPath: project.folder }, device, "/");
+        this.pymakr.notifier.notifications.uploadProject();
+      }
     },
 
     /**
@@ -594,7 +600,7 @@ class Commands {
         });
       } catch (err) {
         const errors = ["failed to upload", fsPath, "to", destination, "\r\nReason:", err];
-        this.pymakr.notifier.notifications.errors(errors)
+        this.pymakr.notifier.notifications.errors(errors);
       }
     },
 
@@ -605,7 +611,7 @@ class Commands {
       const devices = device ? [device] : project.devices;
       devices.forEach((device) => project.watcher.addDevice(device));
       this.pymakr.projectsProvider.refresh();
-      this.pymakr.notifier.notifications.devMode()
+      this.pymakr.notifier.notifications.devMode();
     },
 
     /**
