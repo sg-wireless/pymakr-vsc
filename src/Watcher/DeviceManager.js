@@ -54,7 +54,7 @@ class DeviceManager {
     const modulesToDelete = ["main.py"];
 
     this.log.debug("stop script");
-    await this.device.stopScript();
+    await this.device.pymakr.commands.stopScript({ device: this.device });
 
     this.log.debug("run instructions");
     // Loop to make sure we get all instructions before we reset.
