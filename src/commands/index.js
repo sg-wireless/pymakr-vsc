@@ -544,15 +544,26 @@ class Commands {
      * @param {{ device: Device, project: Project }} treeItem
      */
     uploadProject: async ({ device, project }) => {
-      if (project.watcher.active) {
-        const deviceManager = project.watcher.deviceManagers.find((d) => d.device === device);
-        deviceManager.push({ action: "create", file: project.folder });
-        this.pymakr.notifier.notifications.uploadInDevMode();
-      } else {
+      if (project.watcher.active) return this.commands.uploadProjectDev({ device, project });
+      else {
+        this.log.debug("uploadProject", device, project);
         await device.adapter.remove(device.config.rootPath, true);
         this.commands.upload({ fsPath: project.folder }, device, "/");
         this.pymakr.notifier.notifications.uploadProject();
       }
+    },
+
+    /**
+     * Uploads parent project to the device. Can only be accessed from devices in the projects view.
+     * @param {{ device: Device, project: Project }} treeItem
+     */
+    uploadProjectDev: async ({ device, project }) => {
+      this.log.debug("uploadDevProject", device, project);
+      const deviceManager = project.watcher.deviceManagers.find((d) => d.device === device);
+      this.pymakr.notifier.notifications.uploadInDevMode();
+      const timestamp = project.updatedAt.get();
+      await deviceManager.push({ action: "create", file: project.folder });
+      deviceManager.device.state.devUploadedAt.set(timestamp);
     },
 
     /**

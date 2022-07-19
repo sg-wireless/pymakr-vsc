@@ -91,6 +91,8 @@ class Device {
       ),
       wasConnected: createStateObject(pymakr.context.workspaceState, `pymakr.devices.${this.id}.wasConnected`, true),
       pymakrConf: createStateObject(pymakr.context.globalState, `pymakr.devices.${this.id}.pymakrConf`, pymakrConfType),
+      /** Last time this project was updated by dev upload. If value doesn't match project, device is considered stale */
+      devUploadedAt: createStateObject(pymakr.context.globalState, `project.${this.id}.devUploadedAt`),
       /** @type {import("./utils/storageObj").GetterSetter<import("micropython-ctl-cont").BoardInfo>} */
       info: createStateObject(pymakr.context.globalState, `pymakr.devices.${this.id}.info`),
     };

@@ -200,6 +200,36 @@ class Notifier {
           "": [null, this.DONT_SHOW_AGAIN],
         }
       ),
+
+    /**
+     *
+     * @param {import('../Watcher/DeviceManager').DeviceManager} deviceManager
+     * @returns
+     */
+    deviceIsOutOfSync: (deviceManager) => {
+      if (deviceManager.outOfSync && deviceManager.shouldUploadOnDev)
+        this.createNotification(
+          "info",
+          `[DEV] Uploaded project to "${deviceManager.device.name}", since device appeared to be out of sync.`,
+          { "": [null, this.DONT_SHOW_AGAIN] }
+        );
+      else if (deviceManager.shouldUploadOnDev)
+        this.createNotification(
+          "info",
+          `[DEV] Uploaded project to "${deviceManager.device.name}" since "uploadOnDevStart" is set to "always".`,
+          { "": [null, this.DONT_SHOW_AGAIN] }
+        );
+      else if (deviceManager.outOfSync)
+        return this.createNotification(
+          "warning",
+          "[DEV] Device is out of sync. Consider changing 'dev.uploadOnDevStart' in 'pymakr.conf'.",
+          { "": [null, this.DONT_SHOW_AGAIN], upload: `Upload project to ${deviceManager.device.name}` }
+        );
+      else
+        this.createNotification("info", `[DEV] Device "${deviceManager.device.name}" is up to date.`, {
+          "": [null, this.DONT_SHOW_AGAIN],
+        });
+    },
   };
 }
 

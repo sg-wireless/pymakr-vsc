@@ -3,12 +3,35 @@ const { Project } = require("../Project");
 const { writable } = require("../utils/store");
 
 /**
- * @param {PyMakr} pymakr
+ * @param {import('../PyMakr').PyMakr} pymakr
+ * @returns {(configFile: import('vscode').Uri)=>Project}
  */
-const getProjects = async (pymakr) => {
-  const configFiles = await workspace.findFiles("**/pymakr.conf");
-  return configFiles.map((configFile) => new Project(configFile, pymakr));
-};
+const convertToProject = (pymakr) => (configFile) => new Project(configFile, pymakr);
+
+/** @param {Project[]} projects */
+const isNotIn = (projects) => (configFile) => !projects.find((p) => p.configFile.path === configFile.path);
+
+/**
+ * @param {Project} p1
+ * @param {Project} p2
+ */
+const byName = (p1, p2) => (p1.name < p2.name ? 1 : p1.name > p2.name ? -1 : 0);
+
+/**
+ * @param {import('vscode').Uri[]} configFiles
+ * @returns {(project:Project) => Boolean}
+ */
+const hasConfigFile = (configFiles) => (project) => configFiles.map((cf) => cf.path).includes(project.configFile.path);
+
+/**
+ * @param {import('vscode').Uri[]} configFiles
+ * @returns {(project:Project) => Boolean}
+ */
+const hasNoConfigFile = (configFiles) => (project) =>
+  !configFiles.map((cfg) => cfg.path).includes(project.configFile.path);
+
+/** @param {Project} project */
+const destroy = (project) => project.destroy();
 
 /**
  * @param {PyMakr} pymakr
@@ -19,7 +42,15 @@ const createProjectsStore = (pymakr) => {
   /** Rescan for projects in workspace. */
   const refresh = async () => {
     pymakr.log.debug("Refreshing projects store...");
-    store.set(await getProjects(pymakr));
+    const configFiles = await workspace.findFiles("**/pymakr.conf");
+    store.get().filter(hasNoConfigFile(configFiles)).forEach(destroy);
+    store.update((oldProjects) =>
+      [
+        ...oldProjects.filter(hasConfigFile(configFiles)),
+        ...configFiles.filter(isNotIn(oldProjects)).map(convertToProject(pymakr)),
+      ].sort(byName)
+    );
+    store.get().forEach((p) => p.refresh());
     pymakr.log.debug("Refreshing projects store. Complete!");
   };
 

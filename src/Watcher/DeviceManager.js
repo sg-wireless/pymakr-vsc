@@ -24,13 +24,31 @@ class DeviceManager {
     this.isRunning = false;
   }
 
+  get outOfSync() {
+    return this.device.state.devUploadedAt.get() !== this.watcher.project.updatedAt.get();
+  }
+
+  get shouldUploadOnDev() {
+    const uploadWhen = this.watcher.project.config.dev?.uploadOnDevStart || "outOfSync";
+    return uploadWhen === "always" || (uploadWhen === "outOfSync" && this.outOfSync);
+  }
+
+  async uploadProjectIfNeeded() {
+    if (!this.device.adapter.__proxyMeta.target.isConnected()) return;
+
+    const answer = await this.device.pymakr.notifier.notifications.deviceIsOutOfSync(this);
+
+    if (this.shouldUploadOnDev || answer === "upload")
+      await this.device.pymakr.commands.uploadProject({ device: this.device, project: this.watcher.project });
+  }
+
   /**
    * Send a change/create/delete file instruction to the device
    * @param {FileInstruction} fileInstruction
    */
   push(fileInstruction) {
     this.fileInstructions.push(fileInstruction);
-    this.handleNewInstructions();
+    return this.handleNewInstructions();
   }
 
   async handleNewInstructions() {
@@ -44,7 +62,7 @@ class DeviceManager {
     this.log.debug("device/script restart completed");
 
     // If new instructions were added while we restarted the device/script, let's rerun.
-    if (this.fileInstructions.length) this.handleNewInstructions();
+    if (this.fileInstructions.length) await this.handleNewInstructions();
   }
 
   /**

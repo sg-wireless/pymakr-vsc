@@ -1,6 +1,5 @@
 const { readFileSync } = require("fs");
 const { dirname, basename } = require("path");
-const vscode = require("vscode");
 const { createStateObject } = require("./utils/storageObj");
 const { Watcher } = require("./Watcher/Watcher");
 
@@ -16,9 +15,19 @@ class Project {
     this.folder = dirname(configFile.fsPath);
     this.watcher = new Watcher(this);
 
-    this.deviceIds = createStateObject(pymakr.context.globalState, `project.${this.folder}`, []);
-    this.name = this.config.name || basename(this.folder);
+    this.deviceIds = createStateObject(pymakr.context.globalState, `project.${this.folder}.deviceIds`, []);
+    this.updatedAt = createStateObject(pymakr.context.globalState, `project.${this.folder}.updatedAt`);
+
     this.log = pymakr.log.createChild("project: " + this.name);
+    this.refresh();
+  }
+
+  refresh() {
+    this.name = this.config.name || basename(this.folder);
+  }
+
+  destroy() {
+    this.watcher.destroy();
   }
 
   get config() {
