@@ -45,10 +45,11 @@ class ProjectTreeItem extends vscode.TreeItem {
 
     this.children = children.length ? children : [new ProjectEmptyTreeItem(project)];
 
-    if (project.watcher.active) this.iconPath = {
-      dark: path.join(__dirname + "..", "..", "..", "media", "dark", "dev-dark.svg"),
-      light: path.join(__dirname + "..", "..", "..", "media", "light", "dev-light.svg"),
-    }
+    if (project.watcher.active)
+      this.iconPath = {
+        dark: path.join(__dirname + "..", "..", "..", "media", "dark", "dev-dark.svg"),
+        light: path.join(__dirname + "..", "..", "..", "media", "light", "dev-light.svg"),
+      };
 
     const hasOnlineChild = project.devices.find((device) => device.adapter.__proxyMeta.target.isConnected());
     const hasOfflineChild = project.devices.find((device) => !device.adapter.__proxyMeta.target.isConnected());
@@ -93,10 +94,13 @@ class ProjectDeviceTreeItem extends vscode.TreeItem {
     this.device = device;
 
     const watched = project.watcher.deviceManagers.find((dm) => dm.device === device);
-    if (watched && device.adapter.__proxyMeta.target.isConnected()) this.label = "[DEV] " + device.displayName;
+    const isDev = watched && device.adapter.__proxyMeta.target.isConnected();
+    const devState = isDev ? "dev" : "no-dev";
+
+    if (isDev) this.label = "[DEV] " + device.displayName;
 
     const state = device.connected.get() ? (device.busy.get() ? "busy" : "idle") : "offline";
-    this.contextValue = `${state}#project#device`;
+    this.contextValue = `${devState}#${state}#project#device`;
 
     this.tooltip = device.pymakr.vscodeHelpers.deviceSummary(device);
     this.iconPath = device.pymakr.vscodeHelpers.deviceStateIcon(device);

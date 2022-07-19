@@ -518,7 +518,7 @@
         "title": "Sync project to device",
         "icon": "$(cloud-upload)",
         "category": "PyMakr",
-        "enablement": "viewItem =~ /idle#project#device/"
+        "enablement": "viewItem =~ /(^dev#.+|idle)#project#device/"
       },
       {
         "command": "pymakr.selectDevicesForProjectPrompt",
