@@ -121,7 +121,11 @@ class Commands {
               await this.commands.upload({ fsPath: templatePath }, device, "/");
             } else {
               progress.report({ message: "Erasing device... Creating root dir" });
-              await device.adapter.mkdir(device.config.rootPath);
+              try {
+                await device.adapter.mkdir(device.config.rootPath);
+              } catch (err) {
+                if (!err.message.match(/OSError: \[Errno 17\] EEXIST/)) throw err;
+              }
             }
 
             resolve();
