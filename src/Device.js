@@ -423,7 +423,7 @@ class Device {
   /**
    * @param {number} retries
    */
-  stopScript(retries = 5, retryInterval = 1000) {
+  stopScript(retries = 10, retryInterval = 500) {
     this.log.debug("stop script");
     return new Promise((resolve, reject) => {
       if (this.busy.get()) {
