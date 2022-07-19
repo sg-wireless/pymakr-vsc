@@ -27,7 +27,7 @@ class Project {
     } catch (err) {
       this.err = `Could not parse config: ${this.configFile.fsPath}`;
       this.pymakr.log.error("could not parse config:", this.configFile.fsPath);
-      this.pymakr.notifier.notifications.couldNotParsePymakrConfig(this)
+      this.pymakr.notifier.notifications.couldNotParsePymakrConfig(this);
     }
   }
 

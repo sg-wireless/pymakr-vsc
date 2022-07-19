@@ -99,7 +99,7 @@ class Device {
 
     this.state.main.subscribe(() => this.pymakr.refreshProvidersThrottled());
 
-    this._config = createMappedConfigObject("pymakr.devices", 'configs', this.id, configDefaults);
+    this._config = createMappedConfigObject("pymakr.devices", "configs", this.id, configDefaults);
 
     /** If true, device will disconnect at the end of execution queue */
     this.temporaryConnection = false;

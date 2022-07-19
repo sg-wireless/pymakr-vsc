@@ -541,7 +541,7 @@ class Commands {
 
     /**
      * Uploads parent project to the device. Can only be accessed from devices in the projects view.
-     * @param {ProjectDeviceTreeItem} treeItem
+     * @param {{ device: Device, project: Project }} treeItem
      */
     uploadProject: async ({ device, project }) => {
       if (project.watcher.active) {

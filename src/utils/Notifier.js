@@ -85,7 +85,6 @@ class Notifier {
     const shouldStoreChoice = persistables.includes(choice) || (rememberable && (await this.askToStore(choice)));
     if (shouldStoreChoice === this.DONT_ASK_AGAIN) choice = this.DONT_ASK_AGAIN;
     if (shouldStoreChoice) {
-      console.log("setting", `misc.notifications.${id}`, choice);
       const config = this.pymakr.config.get().get("misc.notifications");
       this.pymakr.config.get().update(`misc.notifications`, { ...config, [id]: choice });
     }
