@@ -71,6 +71,25 @@
           "type": "boolean",
           "default": false
         },
+        "uploadOnDevStart": {
+          "description": "Uploads project to device when dev mode is started.",
+          "type": "string",
+          "default": "outOfSync",
+          "anyOf": [
+            {
+              "const": "always",
+              "description": "Will upload the project to all connected devices."
+            },
+            {
+              "const": "never",
+              "description": "Will not upload project to any devices."
+            },
+            {
+              "const": "outOfSync",
+              "description": "Will upload the project to any connected device that is detected to be out of sync."
+            }
+          ]
+        },
         "onUpdate": {
           "description": "Action to run after file changes have been propagates",
           "type": "string",
