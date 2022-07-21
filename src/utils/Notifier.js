@@ -44,7 +44,7 @@ class Notifier {
    * @param {string=} id // if not set, the notification message will be used
    * @returns {Promise<keyof Buttons>}
    */
-  async createNotification(type, message, options, rememberable, id) {
+  async createNotification(type, message, options = /** @type {Buttons} */ ({}), rememberable, id) {
     // Stale devices have question marks after stale values. We don't want these to cause duplicates
     id = id || message.replace(/\?/g, "");
     const storedValue = this.pymakr.config.get().get(`misc.notifications`)[id];
