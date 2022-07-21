@@ -359,6 +359,11 @@
     ],
     "commands": [
       {
+        "command": "pymakr.openOnDevice",
+        "title": "Open file on device.",
+        "category": "PyMakr"
+      },
+      {
         "command": "pymakr.logState",
         "title": "[DEBUG] Logs current state to the terminal",
         "category": "PyMakr"
@@ -776,6 +781,11 @@
         {
           "command": "pymakr.uploadPrompt",
           "group": "pymakr"
+        },
+        {
+          "command": "pymakr.openOnDevice",
+          "group": "pymakr",
+          "when": "resourceScheme == file"
         }
       ],
       "pymakr.explorerContextMenu": [
@@ -792,6 +802,11 @@
         {
           "command": "pymakr.uploadPrompt",
           "group": "pymakr"
+        },
+        {
+          "command": "pymakr.openOnDevice",
+          "group": "pymakr",
+          "when": "resourceScheme == file"
         }
       ],
       "view/item/context": [

@@ -1,15 +1,7 @@
 const { mkdirSync, readFileSync, writeFileSync } = require("fs");
-const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
-const {
-  mapEnumsToQuickPick,
-  getTemplates,
-  copyTemplateByName,
-  serializedEntriesToObj,
-  objToSerializedEntries,
-  waitFor,
-} = require("../utils/misc");
+const { mapEnumsToQuickPick, getTemplates, copyTemplateByName, waitFor } = require("../utils/misc");
 const { relative } = require("path");
 const { Project } = require("../Project");
 const { DeviceManager } = require("../Watcher/DeviceManager");
@@ -46,6 +38,40 @@ class Commands {
   }
 
   commands = {
+    /**
+     *
+     * @param {vscode.Uri} file
+     */
+    openOnDevice: async (file) => {
+      this.pymakr.notifier.notifications.openOnDeviceFile();
+
+      const project = this.pymakr.vscodeHelpers.coerceProject(file);
+
+      if (!project) return this.pymakr.notifier.notifications.openOnDeviceHasNoProject(file);
+
+      const devices = project.devices
+        .filter((device) => device.adapter.__proxyMeta.target.isConnected())
+        .filter((device) => !device.busy.get());
+
+      devices.forEach(async (device) => {
+        const path = relative(project.folder, file.fsPath).replace(/\\/g, "/");
+        const uri = vscode.Uri.parse(`${device.protocol}://${device.address}${device.config.rootPath}/${path}`);
+        try {
+          await vscode.window.showTextDocument(uri);
+        } catch (err) {
+          if (err.message.match(/Unable to resolve nonexistent file/)) {
+            const result = await this.pymakr.notifier.notifications.openOnDeviceFileDoesntExist(path, device);
+            if (result === "create") {
+              await this.commands.upload(file, device, path);
+              await vscode.window.showTextDocument(uri);
+            }
+          }
+        }
+      });
+
+      if (!devices.length) this.pymakr.notifier.notifications.openOnDeviceNoAvailableDevice(project);
+    },
+
     // todo link to this command from configuration's "Devices: Include" section
     listDevices: async () => {
       let uri = vscode.Uri.parse("pymakrDocument:" + "Pymakr: available devices");

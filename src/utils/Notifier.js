@@ -201,6 +201,27 @@ class Notifier {
         }
       ),
 
+    openOnDeviceFile: () =>
+      this.createNotification(
+        "info",
+        '"Open file on device." opens the corresponding file on all idle devices that are connected to the file\'s project.',
+        {
+          "": [null, this.DONT_SHOW_AGAIN],
+        }
+      ),
+
+    openOnDeviceFileDoesntExist: (file, device) =>
+      this.createNotification("info", `"${file}" does not exist on "${device.name}"`, { create: "Upload it" }),
+
+    openOnDeviceHasNoProject: (file) =>
+      this.createNotification("info", `"${file.path.split("/").pop()}" does not belong to any project.`),
+
+    openOnDeviceNoAvailableDevice: (project) =>
+      this.createNotification(
+        "info",
+        `No available devices found for "${project.name}". Please make sure that at least one idle device is connected to the project.`
+      ),
+
     /**
      *
      * @param {import('../Watcher/DeviceManager').DeviceManager} deviceManager
