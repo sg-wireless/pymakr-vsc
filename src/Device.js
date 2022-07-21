@@ -479,6 +479,7 @@ class Device {
    */
   async upload(source, destination, options) {
     destination = posix.join(this.config.rootPath, `/${destination}`.replace(/\/+/g, "/"));
+    await this.adapter.mkdirs(destination.replace(/\/.+?$/, ""));
     const root = source;
     const ignores = [...this.pymakr.config.get().get("ignore")];
     const pymakrConfig = getNearestPymakrConfig(source);
