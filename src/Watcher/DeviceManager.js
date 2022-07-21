@@ -16,6 +16,8 @@ class DeviceManager {
   constructor(watcher, device) {
     this.watcher = watcher;
     this.device = device;
+    this.project = this.watcher.project;
+    this.pymakr = this.project.pymakr;
     this.log = watcher.log.createChild(device.name);
 
     /** @type {FileInstruction[]} */
@@ -25,11 +27,11 @@ class DeviceManager {
   }
 
   get outOfSync() {
-    return this.device.state.devUploadedAt.get() !== this.watcher.project.updatedAt.get();
+    return this.device.state.devUploadedAt.get() !== this.project.updatedAt.get();
   }
 
   get shouldUploadOnDev() {
-    const uploadWhen = this.watcher.project.config.dev?.uploadOnDevStart || "outOfSync";
+    const uploadWhen = this.project.config.dev?.uploadOnDevStart || "outOfSync";
     return uploadWhen === "always" || (uploadWhen === "outOfSync" && this.outOfSync);
   }
 
@@ -39,7 +41,7 @@ class DeviceManager {
     const answer = await this.device.pymakr.notifier.notifications.deviceIsOutOfSync(this);
 
     if (this.shouldUploadOnDev || answer === "upload")
-      await this.device.pymakr.commands.uploadProject({ device: this.device, project: this.watcher.project });
+      await this.device.pymakr.commands.uploadProject({ device: this.device, project: this.project });
   }
 
   /**
@@ -82,9 +84,11 @@ class DeviceManager {
       this.fileInstructions.length = 0;
       for (const instruction of instructions) modulesToDelete.push(await this.runInstruction(instruction));
     }
+    console.log("copying", __dirname + "/fakemachine.py");
+    await this.pymakr.commands.upload({ fsPath: __dirname + "/fakemachine.py" }, this.device, "fakemachine.py");
 
     /** @type {'restartScript'|'softRestartDevice'|'hardRestartDevice'} */
-    const onUpdate = this.watcher.project.config?.dev?.onUpdate || "restartScript";
+    const onUpdate = this.project.config?.dev?.onUpdate || "restartScript";
     await this[onUpdate](modulesToDelete);
 
     await new Promise((resolve) => setTimeout(resolve, 500));
@@ -146,7 +150,7 @@ class DeviceManager {
     if (action === "delete") {
       await this.device.remove(target);
     } else {
-      await this.watcher.project.pymakr.commands.upload({ fsPath: file }, this.device, target);
+      await this.pymakr.commands.upload({ fsPath: file }, this.device, target);
     }
     return target;
   }
