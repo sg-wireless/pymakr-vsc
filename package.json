@@ -360,7 +360,7 @@
     "commands": [
       {
         "command": "pymakr.openOnDevice",
-        "title": "Open file on device.",
+        "title": "Open file on device",
         "category": "PyMakr"
       },
       {
