@@ -475,6 +475,7 @@ class Device {
    * @param {{
    *   onScanComplete: (files: string[]) => void,
    *   onUpload: (file: string) => void,
+   *   transform: (id: string, body: string) => string
    * }} options
    */
   async upload(source, destination, options) {
@@ -492,7 +493,11 @@ class Device {
 
     const _uploadFile = async (file, destination) => {
       this.log.traceShort("uploadFile", file, "to", destination);
-      const data = Buffer.from(readFileSync(file));
+
+      const data = options.transform
+        ? Buffer.from(options.transform(file, readFileSync(file, "utf-8")))
+        : Buffer.from(readFileSync(file));
+
       return this.adapter.putFile(destination, data, { checkIfSimilarBeforeUpload: true });
     };
 

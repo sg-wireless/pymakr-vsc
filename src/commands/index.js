@@ -622,8 +622,9 @@ class Commands {
      * @param {{fsPath: string}} uri the file/folder to upload
      * @param {import('../Device.js').Device} device
      * @param {string} destination not including the device.rootPath ( /flash or / )
+     * @param {(id: string, body: string) => string=} transform transforms content of file during upload
      */
-    upload: async ({ fsPath }, device, destination) => {
+    upload: async ({ fsPath }, device, destination, transform) => {
       const friendlySource = fsPath.replace(/.*[/\\]/g, "");
       if (!device.connected.get()) await device.connect();
       try {
@@ -637,6 +638,7 @@ class Commands {
                 message: `Uploading "${file}" to "${device.displayName}"...`,
                 increment: 100 / filesAmount,
               }),
+            transform,
           });
         });
       } catch (err) {
