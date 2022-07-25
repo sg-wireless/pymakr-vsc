@@ -359,6 +359,11 @@
     ],
     "commands": [
       {
+        "command": "pymakr.showDebugMenu",
+        "title": "Shows debugging menu",
+        "category": "PyMakr"
+      },
+      {
         "command": "pymakr.openOnDevice",
         "title": "Open file on device",
         "category": "PyMakr"
