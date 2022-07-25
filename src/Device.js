@@ -245,6 +245,17 @@ class Device {
   }
 
   /**
+   * Run a Python user script on this device
+   * Running user scripts sets device.action to null. This ensures that they're shown correctly in the GUI.
+   * @param {string} script
+   * @param {import("micropython-ctl-cont").RunScriptOptions=} options
+   */
+  async runUserScript(script, options) {
+    script = "# user script\n" + script;
+    this.runScript(script, options);
+  }
+
+  /**
    * Creates a MicroPythonDevice
    */
   createAdapter() {
@@ -256,6 +267,7 @@ class Device {
     adapter.__proxyMeta.beforeEachCall(({ item }) => {
       this.action.set(item.field.toString());
       this.busy.set(true);
+      if (item.field.toString() === "runScript" && item.args[0].startsWith("# user script\n")) this.action.set(null);
     });
 
     // emit line break to trigger a `>>>`. This triggers the `busyStatusUpdater`
