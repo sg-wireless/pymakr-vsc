@@ -624,7 +624,7 @@ class Commands {
 
       const destination = await vscode.window.showInputBox({
         title: "destination",
-        value: relativePathFromProject,
+        value: relativePathFromProject.replace(/\\+/, "/"),
       });
 
       return Promise.all(devices.map((device) => this.commands.upload(uri, device, destination)));
