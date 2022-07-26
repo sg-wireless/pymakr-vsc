@@ -615,7 +615,7 @@ class Commands {
      */
     uploadPrompt: async (uri) => {
       const project = this.pymakr.vscodeHelpers.coerceProject(uri);
-      const devices = await this.pymakr.vscodeHelpers.devicePicker(project?.devices);
+      const devices = await this.pymakr.vscodeHelpers.devicePicker(project?.devices.filter((d) => d.connected.get()));
 
       const getRelativeFromProject = () => relative(project.folder, uri.fsPath).replace(/\\+/, "/");
       const getBasename = () => `/${uri.fsPath.replace(/.*[/\\]/g, "")}`;
