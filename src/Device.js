@@ -403,8 +403,8 @@ class Device {
           if (!this.config.rootPath) this.config = { ...this.config, rootPath: await this.getRootPath() };
           await this.updatePymakrConf();
           this.state.stale = false;
-          this.busy.set(false);
-          resolve();
+          // busy could be truish as vscode could be trying to access a file
+          this.busy.when(false).then(resolve);
         }
       });
 
