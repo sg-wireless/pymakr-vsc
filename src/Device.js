@@ -118,6 +118,15 @@ class Device {
     subscribe(() => this.onChanged());
 
     this.busy.subscribe((val) => this.log.debugShort(val ? "busy..." : "idle."));
+    this.busy.subscribe(
+      (isBusy) =>
+        !isBusy &&
+        this.adapter.__proxyMeta.isBusy &&
+        this.log.error(
+          "Device is not busy, but the adapter queue is active. Current task:",
+          [...this.adapter.__proxyMeta.history].pop()
+        )
+    );
 
     this.readUntil = createReadUntil();
     this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
@@ -231,7 +240,7 @@ class Device {
    */
   async runScript(script, options) {
     options = Object.assign({}, runScriptDefaults, options);
-    this.log.debug(`runScript:\n\n${script}\n\n`);
+    this.log.debug(`queued runScript:\n\n${script}\n\n`);
     this.busy.set(true);
     const start = Date.now();
     const result = await this.adapter.runScript(script + "\n\r\n\r\n", options);
@@ -497,6 +506,7 @@ class Device {
    * }} options
    */
   async upload(source, destination, options) {
+    this.log.debug("upload", source, "to", destination);
     destination = posix.join(this.config.rootPath, destination.replace(/[\/\\]+/g, "/"));
     await this.adapter.mkdirs(dirname(destination));
 

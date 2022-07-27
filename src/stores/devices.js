@@ -10,7 +10,7 @@ const { SerialPort } = require("serialport");
  */
 const rawSerialToDeviceInput = (raw) => ({
   address: raw.path,
-  name: raw.friendlyName || raw.path.replace(/^\/dev\//, ''),
+  name: raw.friendlyName || raw.path.replace(/^\/dev\//, ""),
   protocol: "serial",
   id: raw.serialNumber,
   raw,
@@ -60,7 +60,7 @@ const createDevicesStore = (pymakr) => {
       );
 
   const registerUSBDevices = async () => {
-    pymakr.log.traceShort("register USB devices");
+    pymakr.log.trace("register USB devices");
     const rawSerials = await SerialPort.list();
     const deviceInputs = rawSerials.map(rawSerialToDeviceInput);
     const inputIds = deviceInputs.map((deviceInput) => deviceInput.id);
