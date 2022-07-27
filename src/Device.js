@@ -435,20 +435,26 @@ class Device {
   }
 
   /**
-   * @param {number} retries
+   *
+   * @param {number} safeBootAfterNumRetries attempt to safe boot on each retry after n failed ctrl + c attempts
+   * @param {number} retries how many times to attempt to send ctrl + c and ctrl + f
+   * @param {number} retryInterval how long to wait between each retry
+   * @returns
    */
-  stopScript(retries = 10, retryInterval = 500) {
-    this.log.debug("stop script");
+  stopScript(safeBootAfterNumRetries = 2, retries = 10, retryInterval = 500) {
+    this.log.debug("stop script", { safeBootAfterNumRetries, retries, retryInterval });
     return new Promise((resolve, reject) => {
       if (this.busy.get()) {
         let counter = 0;
         const intervalHandle = setInterval(() => {
           if (counter >= retries) {
             clearInterval(intervalHandle);
+            this.log.debug("ctrl + c failed. Attempting soft reboot (ctrl + f)");
             reject(`timed out after ${retries} retries in ${(retries * retryInterval) / 1000}s`);
           } else {
             counter++;
-            this.adapter.sendData("\x03");
+            const cmd = counter > safeBootAfterNumRetries ? "\x06\x03" : "\x03";
+            this.adapter.sendData(cmd);
             this.log.log(`retry stop script (${counter})`);
           }
         }, retryInterval);
@@ -459,9 +465,9 @@ class Device {
             clearInterval(intervalHandle);
           }
         });
-        this.adapter.sendData("\x03");
+        const cmd = safeBootAfterNumRetries == 0 ? "\x06\x03" : "\x03";
+        this.adapter.sendData(cmd);
       } else {
-        this.adapter.sendData("\x03");
         resolve();
       }
     });

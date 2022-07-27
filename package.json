@@ -948,7 +948,7 @@
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.8",
     "hookar": "^0.0.7-0",
-    "micropython-ctl-cont": "^1.15.1",
+    "micropython-ctl-cont": "^1.15.3",
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
     "serialport": "^10.4.0"
