@@ -272,7 +272,7 @@ class Device {
 
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
-    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "connectSerial"] });
+    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "connectSerial", "getState"] });
     adapter.__proxyMeta.beforeEachCall(({ item }) => {
       this.action.set(item.field.toString());
       this.busy.set(true);
