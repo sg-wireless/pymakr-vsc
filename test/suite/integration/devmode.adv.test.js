@@ -41,11 +41,11 @@ test("can fake deepsleep in devmode", async () => {
     await readUntil("uploading Pymakr devtools");
     await readUntil("patching boot.dev");
     await readUntil("changed. Restarting...");
-    await readUntil(">>>");
-    await readUntil(">>>");
     console.log("after reset");
-
+    // todo test only works when run alone
     test("sys.path includes _pymakr_dev", async () => {
+      await readUntil(">>>");
+      await readUntil(">>>");
       console.log("before sys check");
       const result = await device.runScript("import sys\nprint(sys.path)");
       assert(result.match(/\/_pymakr_dev/), "did not find _pymakr_dev. Found: " + result.toString());

@@ -8,8 +8,9 @@ const PROJECT_STORE_TIMEOUT = 10000;
  * @param {Device} device
  */
 const prepDevice = async (device) => {
+  device.adapter.__proxyMeta.clearQueue();
+  await device.adapter.__proxyMeta.idle;
   await device.connect();
-
   await pymakr.commands.safeBootDevice({ device });
   // TODO timeout here should not be required. High priority!
   await new Promise((resolve) => setTimeout(resolve, 500));
