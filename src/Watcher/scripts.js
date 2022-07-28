@@ -1,17 +1,15 @@
 const rmDoubleSlash = (str) => str.replace(/\/+/, "/");
 
 const scripts = {
-  addPymakrToPath: (rootPath) =>
+  importFakeMachine: () =>
     [
+      'print("[dev] Importing fake_machine")',
       "import sys",
-      "try:",
-      `  sys.path.index('${rmDoubleSlash(rootPath + "/_pymakr_dev")}')`,
-      "except Exception as e:",
-      "  if(e.args[0] == 'object not in sequence'):",
-      `    sys.path.append('${rmDoubleSlash(rootPath + "/_pymakr_dev")}')`,
-      "  else:",
-      "    raise",
+      'sys.path.append("/flash/_pymakr_dev")',
+      "import fake_machine",
     ].join("\r\n"),
+  checkForSysPath: (rootPath) =>
+    ["import sys", `  sys.path.index('${rmDoubleSlash(rootPath + "/_pymakr_dev")}')`].join("\r\n"),
   restart: (modulesToDelete) =>
     [
       "print('')",

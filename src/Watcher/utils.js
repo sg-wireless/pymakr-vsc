@@ -4,7 +4,7 @@
  */
 const removeOverlappingInstructions = (fileInstructions) => {
   let pool = [...fileInstructions];
-  const newInstructions = []
+  const newInstructions = [];
 
   while (pool.length) {
     const lastInstruction = pool.pop();
@@ -13,7 +13,15 @@ const removeOverlappingInstructions = (fileInstructions) => {
     pool = pool.filter(({ file }) => !file.startsWith(lastInstruction.file));
     if (!shouldRemoveSelf) newInstructions.unshift(lastInstruction);
   }
-  return newInstructions
+  return newInstructions;
 };
 
-module.exports = { removeOverlappingInstructions };
+const fakeDeepSleep = (id, str) =>
+  str
+    .replace(/machine\.sleep/gm, "fake_machine.sleep")
+    .replace(/machine\.deepSleep/gm, "fake_machine.sleep")
+    .replace(/import machine/gm, "import fake_machine")
+    .replace(/from machine import sleep/gm, "from fake_machine import sleep")
+    .replace(/from machine import deepSleep/gm, "from fake_machine import deepSleep");
+
+module.exports = { removeOverlappingInstructions, fakeDeepSleep };
