@@ -2,7 +2,7 @@ const vscode = require("vscode");
 const { resetFixture } = require("../../utils");
 
 const workspaceDir = process.env.fixturePath;
-const PROJECT_STORE_TIMEOUT = 3000;
+const PROJECT_STORE_TIMEOUT = 10000;
 
 /**
  * @param {Device} device
