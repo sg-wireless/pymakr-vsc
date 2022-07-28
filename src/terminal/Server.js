@@ -35,7 +35,7 @@ class Server {
 
         // listen to keystrokes from client
         socket.on("data", (data) => {
-          this.log.debug("received", data.toString());
+          this.log.debug("received", data.toString(), data[0]);
           device.adapter.sendData(data);
           // make sure device data is sent to the last active terminal
           device.__onTerminalDataExclusive = (data) => socket.write(data);

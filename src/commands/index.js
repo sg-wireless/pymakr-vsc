@@ -1,15 +1,7 @@
 const { mkdirSync, readFileSync, writeFileSync } = require("fs");
-const { writeFile } = require("fs").promises;
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
-const {
-  mapEnumsToQuickPick,
-  getTemplates,
-  copyTemplateByName,
-  serializedEntriesToObj,
-  objToSerializedEntries,
-  waitFor,
-} = require("../utils/misc");
+const { mapEnumsToQuickPick, getTemplates, copyTemplateByName, waitFor } = require("../utils/misc");
 const { relative } = require("path");
 const { Project } = require("../Project");
 const { DeviceManager } = require("../Watcher/DeviceManager");
@@ -46,6 +38,53 @@ class Commands {
   }
 
   commands = {
+    // debugPrintAdapterQueue: () => {
+    //   this.pymakr.devicesStore.get().forEach((device) => console.log(device.name, device.adapter.__proxyMeta));
+    // },
+    showDebugMenu: async () => {
+      const options = {
+        "log adapter queue": "log adapter queue",
+      };
+      const result = await vscode.window.showQuickPick(Object.keys(options));
+
+      if (result === options["log adapter queue"])
+        this.pymakr.devicesStore.get().forEach((device) => console.log(device.name, device.adapter.__proxyMeta));
+    },
+
+    /**
+     *
+     * @param {vscode.Uri} file
+     */
+    openOnDevice: async (file) => {
+      this.pymakr.notifier.notifications.openOnDeviceFile();
+
+      const project = this.pymakr.vscodeHelpers.coerceProject(file);
+
+      if (!project) return this.pymakr.notifier.notifications.openOnDeviceHasNoProject(file);
+
+      const devices = project.devices
+        .filter((device) => device.adapter.__proxyMeta.target.isConnected())
+        .filter((device) => !device.busy.get());
+
+      devices.forEach(async (device) => {
+        const path = relative(project.folder, file.fsPath).replace(/\\/g, "/");
+        const uri = vscode.Uri.parse(`${device.protocol}://${device.address}${device.config.rootPath}/${path}`);
+        try {
+          await vscode.window.showTextDocument(uri);
+        } catch (err) {
+          if (err.message.match(/Unable to resolve nonexistent file/)) {
+            const result = await this.pymakr.notifier.notifications.openOnDeviceFileDoesntExist(path, device);
+            if (result === "create") {
+              await this.commands.upload(file, device, path);
+              await vscode.window.showTextDocument(uri);
+            }
+          }
+        }
+      });
+
+      if (!devices.length) this.pymakr.notifier.notifications.openOnDeviceNoAvailableDevice(project);
+    },
+
     // todo link to this command from configuration's "Devices: Include" section
     listDevices: async () => {
       let uri = vscode.Uri.parse("pymakrDocument:" + "Pymakr: available devices");
@@ -467,14 +506,21 @@ class Commands {
           .map((device) => this.commands.disconnect({ device }))
       );
     },
-
+    /**
+   *
+   
+   * @returns
+   */
     /**
      * @param {{device: Device}} device
+     * @param {number=} safeBootAfterNumRetries attempt to safe boot on each retry after n failed ctrl + c attempts
+     * @param {number=} retries how many times to attempt to send ctrl + c and ctrl + f
+     * @param {number=} retryInterval how long to wait between each retry
      */
-    stopScript: ({ device }) =>
+    stopScript: ({ device }, safeBootAfterNumRetries, retries, retryInterval) =>
       vscode.window.withProgress(
         { title: `Stopping script on "${device.displayName}"`, location: vscode.ProgressLocation.Notification },
-        () => device.stopScript()
+        () => device.stopScript(safeBootAfterNumRetries, retries, retryInterval).then((r) => console.log("done", r))
       ),
     /**
      * @param {ProjectTreeItem} ctx
@@ -576,7 +622,7 @@ class Commands {
      */
     uploadPrompt: async (uri) => {
       const project = this.pymakr.vscodeHelpers.coerceProject(uri);
-      const devices = await this.pymakr.vscodeHelpers.devicePicker(project?.devices);
+      const devices = await this.pymakr.vscodeHelpers.devicePicker(project?.devices.filter((d) => d.connected.get()));
 
       const getRelativeFromProject = () => relative(project.folder, uri.fsPath).replace(/\\+/, "/");
       const getBasename = () => `/${uri.fsPath.replace(/.*[/\\]/g, "")}`;
@@ -585,7 +631,7 @@ class Commands {
 
       const destination = await vscode.window.showInputBox({
         title: "destination",
-        value: relativePathFromProject,
+        value: relativePathFromProject.replace(/\\+/, "/"),
       });
 
       return Promise.all(devices.map((device) => this.commands.upload(uri, device, destination)));
@@ -596,8 +642,9 @@ class Commands {
      * @param {{fsPath: string}} uri the file/folder to upload
      * @param {import('../Device.js').Device} device
      * @param {string} destination not including the device.rootPath ( /flash or / )
+     * @param {(id: string, body: string) => string=} transform transforms content of file during upload
      */
-    upload: async ({ fsPath }, device, destination) => {
+    upload: async ({ fsPath }, device, destination, transform) => {
       const friendlySource = fsPath.replace(/.*[/\\]/g, "");
       if (!device.connected.get()) await device.connect();
       try {
@@ -611,6 +658,7 @@ class Commands {
                 message: `Uploading "${file}" to "${device.displayName}"...`,
                 increment: 100 / filesAmount,
               }),
+            transform,
           });
         });
       } catch (err) {

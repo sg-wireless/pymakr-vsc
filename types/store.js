@@ -11,6 +11,7 @@
  * @prop {function(function(T):T):void} update Update the store value
  * @prop {function((payload: T, unsub: Unsubscribe)=>void):Unsubscribe} subscribe Subscribe to the store value
  * @prop {function(function(T):void):void} next Subscribe to the store value for a single update
+ * @prop {(expected: T, strict?: boolean)=>Promise<T>} when Returns a promise which resolves when the store value matches the expected value
  */
 
 /**

@@ -1,4 +1,5 @@
-const { removeOverlappingInstructions } = require("./utils");
+const { scripts } = require("./scripts");
+const { removeOverlappingInstructions, fakeDeepSleep } = require("./utils");
 
 /**
  * @typedef {'change'|'create'|'delete'} FileAction
@@ -16,7 +17,10 @@ class DeviceManager {
   constructor(watcher, device) {
     this.watcher = watcher;
     this.device = device;
+    this.project = this.watcher.project;
+    this.pymakr = this.project.pymakr;
     this.log = watcher.log.createChild(device.name);
+    this.bootPyIsOutdated = true;
 
     /** @type {FileInstruction[]} */
     this.fileInstructions = [];
@@ -25,12 +29,37 @@ class DeviceManager {
   }
 
   get outOfSync() {
-    return this.device.state.devUploadedAt.get() !== this.watcher.project.updatedAt.get();
+    return this.device.state.devUploadedAt.get() !== this.project.updatedAt.get();
   }
 
   get shouldUploadOnDev() {
-    const uploadWhen = this.watcher.project.config.dev?.uploadOnDevStart || "outOfSync";
+    const uploadWhen = this.project.config.dev?.uploadOnDevStart || "outOfSync";
     return uploadWhen === "always" || (uploadWhen === "outOfSync" && this.outOfSync);
+  }
+
+  async ensureBootPy() {
+    const prependStr = [
+      "# EDIT BY PYMAKR DEV",
+      "# The below script is used by Pymakr in dev mode",
+      "# To remove it, disable dev mode and reupload the project.",
+      "",
+      scripts.importFakeMachine(),
+      "",
+      "# END OF EDIT BY PYMAKR DEV",
+      "",
+    ].join("\n");
+
+    // todo pseudo code
+    const files = await this.device.adapter.listFiles();
+    if (!files.map((file) => file.filename).includes("boot.py"))
+      await this.device.adapter.putFile("boot.py", Buffer.from(prependStr));
+    else {
+      const content = (await this.device.adapter.getFile("boot.py")).toString();
+
+      if (!content.match(prependStr)) {
+        this.device.adapter.putFile("boot.py", Buffer.from(prependStr + content));
+      }
+    }
   }
 
   async uploadProjectIfNeeded() {
@@ -39,7 +68,12 @@ class DeviceManager {
     const answer = await this.device.pymakr.notifier.notifications.deviceIsOutOfSync(this);
 
     if (this.shouldUploadOnDev || answer === "upload")
-      await this.device.pymakr.commands.uploadProject({ device: this.device, project: this.watcher.project });
+      await this.device.pymakr.commands.uploadProject({ device: this.device, project: this.project });
+  }
+
+  async uploadPymakrDev() {
+    console.log("uploading pymakr dev");
+    return this.pymakr.commands.upload({ fsPath: __dirname + "/_pymakr_dev" }, this.device, "_pymakr_dev");
   }
 
   /**
@@ -65,6 +99,18 @@ class DeviceManager {
     if (this.fileInstructions.length) await this.handleNewInstructions();
   }
 
+  async installDevTools() {
+    await this.device.runScript('print("[dev] uploading Pymakr devtools")');
+    await this.uploadPymakrDev();
+    await this.device.runScript('print("[dev] patching boot.dev")');
+    await this.ensureBootPy();
+    this.bootPyIsOutdated = false;
+  }
+
+  shouldInstallDevTools() {
+    return this.project.config.dev?.simulateDeepSleep && this.bootPyIsOutdated;
+  }
+
   /**
    * Stops the current running script, performs file changes and restarts the device or main script
    */
@@ -72,7 +118,7 @@ class DeviceManager {
     const modulesToDelete = ["main.py"];
 
     this.log.debug("stop script");
-    await this.device.pymakr.commands.stopScript({ device: this.device });
+    await this.device.pymakr.commands.stopScript({ device: this.device }, 0);
 
     this.log.debug("run instructions");
     // Loop to make sure we get all instructions before we reset.
@@ -83,9 +129,13 @@ class DeviceManager {
       for (const instruction of instructions) modulesToDelete.push(await this.runInstruction(instruction));
     }
 
-    /** @type {'restartScript'|'softRestartDevice'|'hardRestartDevice'} */
-    const onUpdate = this.watcher.project.config?.dev?.onUpdate || "restartScript";
-    await this[onUpdate](modulesToDelete);
+    const installDevTools = this.shouldInstallDevTools();
+
+    /** @type {'restartScript'|'softRestartDevice'|'hardRestartDevice'|'installDevToolsAndRestart'} */
+    const restartScript = installDevTools ? "hardRestartDevice" : this.project.config.dev?.onUpdate || "restartScript";
+
+    if (installDevTools) await this.installDevTools();
+    await this[restartScript](modulesToDelete);
 
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
@@ -104,34 +154,7 @@ class DeviceManager {
 
   restartScript(modulesToDelete) {
     this.log.log("restart script");
-    this.device.runScript(
-      [
-        "print('')",
-        `print("[dev] \'${modulesToDelete[1]}\' changed. Restarting... ")`,
-        "for name in sys.modules:",
-        '  if(hasattr(sys.modules[name], "__file__")):',
-        `    if sys.modules[name].__file__ in ${JSON.stringify(modulesToDelete)}:`,
-        '      print("[dev] Clear module: " + sys.modules[name].__file__)',
-        "      del sys.modules[name]",
-        "try:",
-        "  print('[dev] Import boot.py')",
-        "  import boot",
-        "except ImportError:",
-        "  print('[dev] No boot.py found. Skipped.')",
-        "except Exception:",
-        "  print('[dev] Exception in boot.py')",
-        "  raise",
-        "try:",
-        "  print('[dev] Import main.py')",
-        "  import main",
-        "except KeyboardInterrupt: pass",
-        "except ImportError:",
-        "  print('[dev] No main.py found. Skipped.')",
-        "except Exception as e: raise e;",
-        "",
-      ].join("\r\n"),
-      { resolveBeforeResult: true }
-    );
+    this.device.runUserScript(scripts.restart(modulesToDelete), { resolveBeforeResult: false });
   }
 
   /**
@@ -139,15 +162,14 @@ class DeviceManager {
    */
   async runInstruction({ file, action }) {
     this.log.debug("run instruction", { file, action });
-    const target = require("path").relative(this.watcher.project.folder, file).replace(/\\/g, "/");
-
-    // // todo remove promise
-    // await new Promise((resolve) => setTimeout(resolve, 100));
-    if (action === "delete") {
-      await this.device.remove(target);
-    } else {
-      await this.watcher.project.pymakr.commands.upload({ fsPath: file }, this.device, target);
+    const target = require("path").relative(this.project.folder, file).replace(/\\/g, "/");
+    if (target === "boot.py") {
+      this.bootPyIsOutdated = true;
     }
+
+    if (action === "delete") await this.device.remove(target);
+    else await this.pymakr.commands.upload({ fsPath: file }, this.device, target, fakeDeepSleep);
+
     return target;
   }
 }

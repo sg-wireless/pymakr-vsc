@@ -359,6 +359,16 @@
     ],
     "commands": [
       {
+        "command": "pymakr.showDebugMenu",
+        "title": "Shows debugging menu",
+        "category": "PyMakr"
+      },
+      {
+        "command": "pymakr.openOnDevice",
+        "title": "Open file on device",
+        "category": "PyMakr"
+      },
+      {
         "command": "pymakr.logState",
         "title": "[DEBUG] Logs current state to the terminal",
         "category": "PyMakr"
@@ -776,6 +786,11 @@
         {
           "command": "pymakr.uploadPrompt",
           "group": "pymakr"
+        },
+        {
+          "command": "pymakr.openOnDevice",
+          "group": "pymakr",
+          "when": "resourceScheme == file"
         }
       ],
       "pymakr.explorerContextMenu": [
@@ -792,6 +807,11 @@
         {
           "command": "pymakr.uploadPrompt",
           "group": "pymakr"
+        },
+        {
+          "command": "pymakr.openOnDevice",
+          "group": "pymakr",
+          "when": "resourceScheme == file"
         }
       ],
       "view/item/context": [
@@ -928,7 +948,7 @@
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.8",
     "hookar": "^0.0.7-0",
-    "micropython-ctl-cont": "^1.14.3",
+    "micropython-ctl-cont": "^1.15.3",
     "picomatch": "^2.3.1",
     "prompts": "^2.4.2",
     "serialport": "^10.4.0"

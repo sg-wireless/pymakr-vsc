@@ -46,9 +46,11 @@ test("file system provider", async () => {
   });
 
   test("can delete contentful folder", async () => {
+    const _files = await pymakr.fileSystemProvider.readDirectory(uri("/foo"));
+    assert.equal(_files.length, 0, "should have no files. File: " + _files);
     pymakr.fileSystemProvider.writeFile(uri("/foo/file.txt"), Buffer.from("hello world"));
     const files = await pymakr.fileSystemProvider.readDirectory(uri("/foo"));
-    assert.equal(files.length, 1);
+    assert.equal(files.length, 1, "should only have one file. Files: " + files.toString());
     const rootFilesBefore = await pymakr.fileSystemProvider.readDirectory(uri("/"));
     assert.deepEqual(rootFilesBefore, [["foo", 2]]);
     await pymakr.fileSystemProvider.delete(uri("/foo"));

@@ -118,6 +118,15 @@ class Device {
     subscribe(() => this.onChanged());
 
     this.busy.subscribe((val) => this.log.debugShort(val ? "busy..." : "idle."));
+    this.busy.subscribe(
+      (isBusy) =>
+        !isBusy &&
+        this.adapter.__proxyMeta.isBusy &&
+        this.log.error(
+          "Device is not busy, but the adapter queue is active. Current task:",
+          [...this.adapter.__proxyMeta.history].pop()
+        )
+    );
 
     this.readUntil = createReadUntil();
     this.readUntil(/\n>>> [^\n]*$/, (matches) => this.busy.set(!matches), { callOnFalse: true });
@@ -187,7 +196,7 @@ class Device {
         }
       });
       // resetting the device should also reset the waiting calls
-      this.adapter.__proxyMeta.reset();
+      [...this.adapter.__proxyMeta.history].pop().promise.finally(() => this.adapter.__proxyMeta.reset());
       this.log.info("send \\x06 (safeboot)");
       this.adapter.sendData("\x06"); // safeboot
     });
@@ -231,7 +240,7 @@ class Device {
    */
   async runScript(script, options) {
     options = Object.assign({}, runScriptDefaults, options);
-    this.log.debug(`runScript:\n\n${script}\n\n`);
+    this.log.debug(`queued runScript:\n\n${script}\n\n`);
     this.busy.set(true);
     const start = Date.now();
     const result = await this.adapter.runScript(script + "\n\r\n\r\n", options);
@@ -245,6 +254,17 @@ class Device {
   }
 
   /**
+   * Run a Python user script on this device
+   * Running user scripts sets device.action to null. This ensures that they're shown correctly in the GUI.
+   * @param {string} script
+   * @param {import("micropython-ctl-cont").RunScriptOptions=} options
+   */
+  async runUserScript(script, options) {
+    script = "# user script\n" + script;
+    this.runScript(script, options);
+  }
+
+  /**
    * Creates a MicroPythonDevice
    */
   createAdapter() {
@@ -252,10 +272,11 @@ class Device {
 
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
-    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "connectSerial"] });
+    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "connectSerial", "getState"] });
     adapter.__proxyMeta.beforeEachCall(({ item }) => {
       this.action.set(item.field.toString());
       this.busy.set(true);
+      if (item.field.toString() === "runScript" && item.args[0].startsWith("# user script\n")) this.action.set(null);
     });
 
     // emit line break to trigger a `>>>`. This triggers the `busyStatusUpdater`
@@ -382,8 +403,8 @@ class Device {
           if (!this.config.rootPath) this.config = { ...this.config, rootPath: await this.getRootPath() };
           await this.updatePymakrConf();
           this.state.stale = false;
-          this.busy.set(false);
-          resolve();
+          // busy could be truish as vscode could be trying to access a file
+          this.busy.when(false).then(resolve);
         }
       });
 
@@ -423,20 +444,26 @@ class Device {
   }
 
   /**
-   * @param {number} retries
+   *
+   * @param {number} safeBootAfterNumRetries attempt to safe boot on each retry after n failed ctrl + c attempts
+   * @param {number} retries how many times to attempt to send ctrl + c and ctrl + f
+   * @param {number} retryInterval how long to wait between each retry
+   * @returns
    */
-  stopScript(retries = 10, retryInterval = 500) {
-    this.log.debug("stop script");
+  stopScript(safeBootAfterNumRetries = 2, retries = 10, retryInterval = 500) {
+    this.log.debug("stop script", { safeBootAfterNumRetries, retries, retryInterval });
     return new Promise((resolve, reject) => {
       if (this.busy.get()) {
         let counter = 0;
         const intervalHandle = setInterval(() => {
           if (counter >= retries) {
             clearInterval(intervalHandle);
+            this.log.debug("ctrl + c failed. Attempting soft reboot (ctrl + f)");
             reject(`timed out after ${retries} retries in ${(retries * retryInterval) / 1000}s`);
           } else {
             counter++;
-            this.adapter.sendData("\x03");
+            const cmd = counter > safeBootAfterNumRetries ? "\x06\x03" : "\x03";
+            this.adapter.sendData(cmd);
             this.log.log(`retry stop script (${counter})`);
           }
         }, retryInterval);
@@ -447,9 +474,9 @@ class Device {
             clearInterval(intervalHandle);
           }
         });
-        this.adapter.sendData("\x03");
+        const cmd = safeBootAfterNumRetries == 0 ? "\x06\x03" : "\x03";
+        this.adapter.sendData(cmd);
       } else {
-        this.adapter.sendData("\x03");
         resolve();
       }
     });
@@ -475,10 +502,14 @@ class Device {
    * @param {{
    *   onScanComplete: (files: string[]) => void,
    *   onUpload: (file: string) => void,
+   *   transform: (id: string, body: string) => string
    * }} options
    */
   async upload(source, destination, options) {
-    destination = posix.join(this.config.rootPath, `/${destination}`.replace(/\/+/g, "/"));
+    this.log.debug("upload", source, "to", destination);
+    destination = posix.join(this.config.rootPath, destination.replace(/[\/\\]+/g, "/"));
+    await this.adapter.mkdirs(dirname(destination));
+
     const root = source;
     const ignores = [...this.pymakr.config.get().get("ignore")];
     const pymakrConfig = getNearestPymakrConfig(source);
@@ -491,7 +522,11 @@ class Device {
 
     const _uploadFile = async (file, destination) => {
       this.log.traceShort("uploadFile", file, "to", destination);
-      const data = Buffer.from(readFileSync(file));
+
+      const data = options.transform
+        ? Buffer.from(options.transform(file, readFileSync(file, "utf-8")))
+        : Buffer.from(readFileSync(file));
+
       return this.adapter.putFile(destination, data, { checkIfSimilarBeforeUpload: true });
     };
 

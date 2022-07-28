@@ -27,13 +27,13 @@ class FileSystemProvider {
       return await device.adapter.remove(uri.path, isDir);
     } catch (err) {
       if (err.message.endsWith(" ENOENT")) throw vscode.FileSystemError.FileNotFound(`Could not find '${uri.path}'.`);
-      else this.pymakr.notifier.notifications.uncaughtError(err)
+      else this.pymakr.notifier.notifications.uncaughtError(err);
     }
   }
 
   watch(uri, options) {
     // todo?
-    return new vscode.Disposable(() => { });
+    return new vscode.Disposable(() => {});
   }
 
   async rename(oldUri, newUri) {
@@ -50,7 +50,7 @@ class FileSystemProvider {
    * @param {vscode.Uri} uri
    */
   async readFile(uri) {
-    this.log.debug('read file', uri)
+    this.log.debug("read file", uri);
     const device = this._getDevice(uri);
     return device.adapter.getFile(uri.path);
   }
