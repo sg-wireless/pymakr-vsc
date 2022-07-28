@@ -54,4 +54,9 @@ test("can use devmode", async () => {
     writeFileSync(projectPath1 + "/main.py", 'print("hello world again")');
     await new Promise((resolve) => device.readUntil("hello world again", resolve));
   });
+  test("can stop devMode", async () => {
+    await pymakr.commands.stopDevMode({ project });
+    assert(!project.watcher.active);
+    assert.equal(project.watcher.deviceManagers.length, 0);
+  });
 });
