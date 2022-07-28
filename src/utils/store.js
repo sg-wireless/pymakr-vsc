@@ -34,25 +34,26 @@ const storeOptions = {
  * @returns {Writable<T>}
  */
 const writable = (initialValue, options) => {
-  let _value = initialValue;
+  let _storeValue = initialValue;
   const listeners = [];
   const _options = { ...storeOptions, ...options };
 
   const store = {
-    get: () => _value,
+    _listeners: listeners,
+    get: () => _storeValue,
     /** @param {T} value */
     set: (value) => {
-      if (!_options.lazy || value !== _value) {
-        _value = value;
+      if (!_options.lazy || value !== _storeValue) {
+        _storeValue = value;
 
         for (const listener of [...listeners]) {
           const index = listeners.indexOf(listener);
           const unsub = () => listeners.splice(index, 1);
-          listener(_value, unsub);
+          listener(_storeValue, unsub);
         }
       }
     },
-    update: (callback) => store.set(callback(_value)),
+    update: (callback) => store.set(callback(_storeValue)),
     subscribe: (listener) => {
       if (!listeners.length) _options.onFirstSub(store);
       _options.onSub(store);
@@ -72,6 +73,21 @@ const writable = (initialValue, options) => {
         listener(value);
       });
     },
+    when: (expected, strict) =>
+      new Promise((resolve) => {
+        const matchesExpected = (value) => value === expected || (!strict && value == expected);
+        if (matchesExpected(_storeValue)) {
+          console.log("resolved");
+          resolve(_storeValue);
+        } else {
+          const unsub = store.subscribe((newValue) => {
+            if (matchesExpected(newValue)) {
+              unsub();
+              resolve(newValue);
+            }
+          });
+        }
+      }),
   };
   return store;
 };

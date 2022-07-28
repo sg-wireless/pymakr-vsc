@@ -147,10 +147,28 @@ test("can unsub self", () => {
   let received = null;
   const myStore = writable("initial");
   myStore.subscribe((val, unsub) => {
-    received = val
-    unsub()
-  })
+    received = val;
+    unsub();
+  });
   myStore.set("foo");
   myStore.set("bar");
-  assert.equal(received, 'foo');
+  assert.equal(received, "foo");
+});
+
+test("when", async () => {
+  let events = [];
+  const myStore = writable("initial");
+
+  const promise = myStore.when("resolve-me").then((r) => events.push(r));
+  assert.equal(myStore["_listeners"].length, 1);
+  assert.deepEqual(events, []);
+
+  myStore.set("foobar");
+  assert.deepEqual(events, []);
+  assert.equal(myStore["_listeners"].length, 1);
+
+  myStore.set("resolve-me");
+  await promise;
+  assert.deepEqual(events, ["resolve-me"]);
+  assert.equal(myStore["_listeners"].length, 0);
 });

@@ -38,6 +38,19 @@ class Commands {
   }
 
   commands = {
+    // debugPrintAdapterQueue: () => {
+    //   this.pymakr.devicesStore.get().forEach((device) => console.log(device.name, device.adapter.__proxyMeta));
+    // },
+    showDebugMenu: async () => {
+      const options = {
+        "log adapter queue": "log adapter queue",
+      };
+      const result = await vscode.window.showQuickPick(Object.keys(options));
+
+      if (result === options["log adapter queue"])
+        this.pymakr.devicesStore.get().forEach((device) => console.log(device.name, device.adapter.__proxyMeta));
+    },
+
     /**
      *
      * @param {vscode.Uri} file
@@ -493,14 +506,21 @@ class Commands {
           .map((device) => this.commands.disconnect({ device }))
       );
     },
-
+    /**
+   *
+   
+   * @returns
+   */
     /**
      * @param {{device: Device}} device
+     * @param {number=} safeBootAfterNumRetries attempt to safe boot on each retry after n failed ctrl + c attempts
+     * @param {number=} retries how many times to attempt to send ctrl + c and ctrl + f
+     * @param {number=} retryInterval how long to wait between each retry
      */
-    stopScript: ({ device }) =>
+    stopScript: ({ device }, safeBootAfterNumRetries, retries, retryInterval) =>
       vscode.window.withProgress(
         { title: `Stopping script on "${device.displayName}"`, location: vscode.ProgressLocation.Notification },
-        () => device.stopScript()
+        () => device.stopScript(safeBootAfterNumRetries, retries, retryInterval).then((r) => console.log("done", r))
       ),
     /**
      * @param {ProjectTreeItem} ctx
@@ -602,7 +622,7 @@ class Commands {
      */
     uploadPrompt: async (uri) => {
       const project = this.pymakr.vscodeHelpers.coerceProject(uri);
-      const devices = await this.pymakr.vscodeHelpers.devicePicker(project?.devices);
+      const devices = await this.pymakr.vscodeHelpers.devicePicker(project?.devices.filter((d) => d.connected.get()));
 
       const getRelativeFromProject = () => relative(project.folder, uri.fsPath).replace(/\\+/, "/");
       const getBasename = () => `/${uri.fsPath.replace(/.*[/\\]/g, "")}`;
@@ -611,7 +631,7 @@ class Commands {
 
       const destination = await vscode.window.showInputBox({
         title: "destination",
-        value: relativePathFromProject,
+        value: relativePathFromProject.replace(/\\+/, "/"),
       });
 
       return Promise.all(devices.map((device) => this.commands.upload(uri, device, destination)));
