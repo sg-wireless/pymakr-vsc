@@ -143,7 +143,7 @@ class DeviceManager {
   async hardRestartDevice(modulesToDelete) {
     this.log.log("hard restart device");
     await this.device.runScript(`\rprint("[dev] \'${modulesToDelete[0]}\' changed. Restarting... ")\r`);
-    this.device.reset();
+    await this.device.reset();
   }
 
   async softRestartDevice(modulesToDelete) {
