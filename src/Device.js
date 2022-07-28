@@ -196,7 +196,7 @@ class Device {
         }
       });
       // resetting the device should also reset the waiting calls
-      this.adapter.__proxyMeta.reset();
+      [...this.adapter.__proxyMeta.history].pop().promise.finally(() => this.adapter.__proxyMeta.reset());
       this.log.info("send \\x06 (safeboot)");
       this.adapter.sendData("\x06"); // safeboot
     });
