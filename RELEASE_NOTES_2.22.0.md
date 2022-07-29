@@ -1,6 +1,6 @@
 # Release notes for Pymakr v2.22.0
 
-It's been a long time coming but we're delighted to finally announce the next release of our Pymakr 2. We've packed this release with tons of new features and bugfixes to make Pymakr 2 even faster, easier and more reliable than ever.
+It's been a long time coming and we're delighted to finally announce the next release of our Pymakr 2. We've packed this release with tons of new features and bugfixes to make Pymakr 2 even faster, easier and more reliable than ever.
 
 We aim to make your experience with Pymakr as pleasant as possible Should you have any problems with our new release, please [open an issue](https://github.com/pycom/pymakr-vsc/issues/new/choose) on Github so that we can help.
 
@@ -24,9 +24,12 @@ We aim to make your experience with Pymakr as pleasant as possible Should you ha
 
 ## Get Started Guide
 
-Clicking `ctrl/cmd + shift + p`, typing `walkthrough` and selecting `Get Started: Open Walkthrough...` will show a list of walkthroughs.
+We've added a small walkthrough. To open it:
 
-Here's you can click `Pymakr 2 - Getting Started` for a brief rundown.
+1. Click `ctrl/cmd + shift + p`
+2. Type `walkthrough`
+3. Select `Get Started: Open Walkthrough...` will show a list of walkthroughs.
+4. Click `Pymakr 2 - Getting Started`.
 
 # <br>
 
@@ -36,7 +39,7 @@ Dev mode keeps your connected devices running and synchronized to your project f
 
 In dev mode, whenever a file in a project is saved, the changes are synced to the project's devices and the devices then restarted.
 
-Clicking the upload button while in dev mode will stop the current running script and upload files that are different from those on the device. Kinda like patching. _This is different from the regular upload functionality, which erases all content on the device before uploading the entire project._
+Clicking the upload button while in dev mode will stop the current running script and upload files that are different from those on the device. Kinda like patching. This is different from the regular upload functionality, which erases all content on the device before uploading the entire project.
 
 _Note: Dev mode is limited to to the capabilities of the connected devices. Eg. it's not possible for Pymakr to communicate with a device in `machine.deepsleep` since the device's USB is disabled in this state. (A workaround for this may be possible - see `dev.simulateDeepSleep` in `pymakr.conf`)_
 
