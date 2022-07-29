@@ -1,4 +1,5 @@
 const vscode = require("vscode");
+const { createStateObject } = require("./storageObj");
 
 /**
  * @typedef {string} btnText selecting this option will not hide the notification in the future
@@ -20,6 +21,9 @@ class Notifier {
       info: vscode.window.showInformationMessage,
       warning: vscode.window.showWarningMessage,
       error: vscode.window.showErrorMessage,
+    };
+    this.state = {
+      lastReadReleaseNotes: createStateObject(this.pymakr.context.globalState, "lastReadReleaseNotes"),
     };
   }
 
@@ -250,6 +254,13 @@ class Notifier {
         this.createNotification("info", `[DEV] Device "${deviceManager.device.name}" is up to date.`, {
           "": [null, this.DONT_SHOW_AGAIN],
         });
+    },
+    showReleaseNotes: async () => {
+      const uri = vscode.Uri.file(`${__dirname}/../../RELEASE_NOTES_2.22.0.md`);
+      if (this.state.lastReadReleaseNotes.get() !== uri.fsPath) {
+        this.state.lastReadReleaseNotes.set(uri.fsPath);
+        vscode.commands.executeCommand("markdown.showPreview", uri);
+      }
     },
   };
 }

@@ -30,6 +30,8 @@ class PyMakr {
    * @param {vscode.ExtensionContext} context
    */
   constructor(context) {
+    this.context = context;
+
     /**
      * Actions to be run at the launch of the plugin
      * @example
@@ -47,7 +49,7 @@ class PyMakr {
     this.vscodeHelpers = createVSCodeHelpers(this);
 
     /** Handles all info, warn and error notifications */
-    this.notifier = new Notifier(this)
+    this.notifier = new Notifier(this);
 
     /** Extendable logger. */
     this.log = createLogger("[Pymakr]");
@@ -57,7 +59,6 @@ class PyMakr {
     this.terminalPort = 5364 + ((Math.random() * 10240) | 0);
 
     this.onUpdatedConfig("silent");
-    this.context = context;
 
     /** The package.json manifest */
     this.manifest = manifest;
@@ -88,6 +89,8 @@ class PyMakr {
     this.registerWithIde();
     this.setup();
     this.handlePendingActions();
+
+    this.notifier.notifications.showReleaseNotes();
   }
 
   handlePendingActions() {
@@ -165,8 +168,7 @@ class PyMakr {
    */
   onUpdatedConfig(mode) {
     this.log.level = this.log.levels[this.config.get().debug.logLevel];
-    if (this.log.level >= 5)
-    process.env.debug = this.log.level === 5 ? 'true' : 'silly'
+    if (this.log.level >= 5) process.env.debug = this.log.level === 5 ? "true" : "silly";
 
     this.log.filter = this.config.get().debug.logFilter !== "" ? new RegExp(this.config.get().debug.logFilter) : "";
     if (mode !== "silent") this.log.info("updated config:", this.config.get());
