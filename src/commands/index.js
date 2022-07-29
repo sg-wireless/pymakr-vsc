@@ -101,7 +101,7 @@ class Commands {
         return this.pymakr.notifier.notifications.cantSafebootOfflineDevice();
 
       const timeout = 10000;
-      vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
+      return vscode.window.withProgress({ location: vscode.ProgressLocation.Notification }, async (progress) => {
         progress.report({ message: "Safe booting" });
         const error = () => this.pymakr.notifier.notifications.couldNotSafeboot(device);
         await waitFor(device.safeBoot(), timeout, error);

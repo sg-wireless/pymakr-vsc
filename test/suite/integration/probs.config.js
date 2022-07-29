@@ -9,13 +9,20 @@ const PROJECT_STORE_TIMEOUT = 10000;
  */
 const prepDevice = async (device) => {
   device.adapter.__proxyMeta.clearQueue();
+  console.log("[PREP] Waiting for idle...");
   await device.adapter.__proxyMeta.idle;
   await device.connect();
+  console.log("[PREP] Safebooting...");
   await pymakr.commands.safeBootDevice({ device });
   // TODO timeout here should not be required. High priority!
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  console.log("[PREP] Safebooting complete!");
+  // await new Promise((resolve) => setTimeout(resolve, 1500));
+  console.log("[PREP] Erasing...");
   await pymakr.commands.eraseDevice({ device });
+  console.log("[PREP] Erasing complete!");
+  console.log("[PREP] Disconnecting...");
   await device.disconnect();
+  console.log("[PREP] Disconnecting complete!");
 };
 
 module.exports = {
