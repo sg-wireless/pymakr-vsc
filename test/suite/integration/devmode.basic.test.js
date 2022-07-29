@@ -54,6 +54,10 @@ test("can use devmode", async () => {
     writeFileSync(projectPath1 + "/main.py", 'print("hello world again")');
     await new Promise((resolve) => device.readUntil("hello world again", resolve));
   });
+  test("devices with looping scripts will be stopped and restarted on file changes repeatedly", async () => {
+    writeFileSync(projectPath1 + "/main.py", 'print("hello world again again")');
+    await new Promise((resolve) => device.readUntil("hello world again again", resolve));
+  });
   test("can stop devMode", async () => {
     await pymakr.commands.stopDevMode({ project });
     assert(!project.watcher.active);
