@@ -57,8 +57,37 @@ test("can fake deepsleep in devmode", async () => {
     });
 
     test("can import fake_machine in devmode", async () => {
-      const result = await device.runScript("import fake_machine\nfake_machine.sleep(1)");
-      console.log("result", result);
+      device.runScript("import fake_machine\nfake_machine.sleep(1)");
+      await readUntil("fake_machine.sleep end");
     });
+
+    test("machine.sleep gets transformed to fake_machine.sleep", async () => {
+      writeFileSync(
+        projectPath1 + "/main.py",
+        ["import machine", "# machine.sleep(100)", "# machine.deepSleep(100)", 'print("booted")'].join("\n")
+      );
+      await readUntil("booted");
+      const result = await device.adapter.getFile("main.py");
+      assert.equal(
+        result.toString(),
+        ["import fake_machine", "# fake_machine.sleep(100)", "# fake_machine.sleep(100)", 'print("booted")'].join("\n")
+      );
+    });
+
+    // todo can't interrupt loop. needs fix
+    // solution could be to have fake_machine.sleep print an event indicating a 100ms window for sending ctrl+f
+
+    // test("main.py with deepsleep keeps looping", async () => {
+    //   let madeItPastSleep = false; // should stay false
+    //   writeFileSync(
+    //     projectPath1 + "/main.py",
+    //     ["import machine", "", 'print("before sleep")', "machine.sleep(100)", 'print("after sleep")'].join("\n")
+    //   );
+    //   readUntil("after sleep").then(() => (madeItPastSleep = true));
+    //   await readUntil("before sleep");
+    //   await readUntil("before sleep");
+    //   await readUntil("before sleep");
+    //   assert(!madeItPastSleep);
+    // });
   });
 });
