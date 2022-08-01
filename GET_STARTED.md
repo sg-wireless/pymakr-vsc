@@ -9,6 +9,8 @@
 
 3. That's it! You've installed the Pymakr Extension for VSCode
 
+## <br>
+
 ## Creating a project
 
 Pymakr revolves around projects that can be uploaded to your devices. To create your first project click the `+` icon and select a folder for your project:
@@ -17,11 +19,15 @@ Pymakr revolves around projects that can be uploaded to your devices. To create 
 
 _Note: If a project is created outside the current workspace(s), its folder will be mounted as a new workspace._
 
+## <br>
+
 ## Creating a script
 
 Below we add a `main.py`. Once uploaded to a device, this file will run whenever the device is reset.
 
 ![](./media/readme/saving-a-file.gif)
+
+## <br>
 
 ## Upload the project to a device
 
@@ -29,9 +35,11 @@ Once the project is ready to run, it needs to be uploaded to a device.
 
 ![](./media/readme/connect-device-and-sync-up.gif)
 
----
+## <br>
 
 ## Developer mode - Experimental
+
+![](./media/readme/dev-mode.gif)
 
 To speed up development, you can put a project in `development mode`.
 
@@ -55,7 +63,7 @@ Dev mode can be configured in `pymakr.json`
 
 _`machine.sleep` and `machine.deepsleep` do not work in development since they stop the USB connection._
 
----
+## <br>
 
 ## Hint: Organizing your setup
 
