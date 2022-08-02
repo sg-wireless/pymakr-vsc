@@ -90,7 +90,9 @@ class Notifier {
     if (shouldStoreChoice === this.DONT_ASK_AGAIN) choice = this.DONT_ASK_AGAIN;
     if (shouldStoreChoice) {
       const config = this.pymakr.config.get().get("misc.notifications");
-      this.pymakr.config.get().update(`misc.notifications`, { ...config, [id]: choice });
+      this.pymakr.config
+        .get()
+        .update(`misc.notifications`, { ...config, [id]: choice }, vscode.ConfigurationTarget.Global);
     }
   }
 

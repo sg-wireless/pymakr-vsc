@@ -62,16 +62,29 @@ test("can fake deepsleep in devmode", async () => {
     });
 
     test("machine.sleep gets transformed to fake_machine.sleep", async () => {
-      writeFileSync(
-        projectPath1 + "/main.py",
-        ["import machine", "# machine.sleep(100)", "# machine.deepSleep(100)", 'print("booted")'].join("\n")
-      );
-      await readUntil("booted");
-      const result = await device.adapter.getFile("main.py");
-      assert.equal(
-        result.toString(),
-        ["import fake_machine", "# fake_machine.sleep(100)", "# fake_machine.sleep(100)", 'print("booted")'].join("\n")
-      );
+      test("can write main.py", async () => {
+        writeFileSync(
+          projectPath1 + "/main.py",
+          ["import machine", "# machine.sleep(100)", "# machine.deepSleep(100)", 'print("booted")'].join("\n")
+        );
+        await readUntil("booted");
+      });
+      test("can read main.py", async () => {
+        const result = await device.adapter.getFile("main.py");
+        assert.equal(
+          result.toString(),
+          ["import fake_machine", "# fake_machine.sleep(100)", "# fake_machine.sleep(100)", 'print("booted")'].join(
+            "\n"
+          )
+        );
+      });
+    });
+
+    test("can stop devMode", async () => {
+      await pymakr.commands.stopDevMode({ project });
+      assert(!project.watcher.active);
+      assert.equal(project.watcher.deviceManagers.length, 0);
+      await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     // todo can't interrupt loop. needs fix
