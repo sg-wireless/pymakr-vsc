@@ -9,6 +9,7 @@ const PROJECT_STORE_TIMEOUT = 10000;
  */
 const prepDevice = async (device) => {
   device.adapter.__proxyMeta.clearQueue();
+  device.adapter.__proxyMeta.skipCurrent();
   console.log("[PREP] Waiting for idle...");
   await device.adapter.__proxyMeta.idle;
   await device.connect();
