@@ -27,7 +27,8 @@ const prepDevice = async (device) => {
 };
 
 module.exports = {
-  async setupFile() {
+  async setupFile(file) {
+    console.log("[PREP]", file);
     resetFixture(workspaceDir);
     /** @type {PyMakr} */
     let pymakr;
