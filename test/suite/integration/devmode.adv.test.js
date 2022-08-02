@@ -72,6 +72,12 @@ test("can fake deepsleep in devmode", async () => {
         result.toString(),
         ["import fake_machine", "# fake_machine.sleep(100)", "# fake_machine.sleep(100)", 'print("booted")'].join("\n")
       );
+
+    test("can stop devMode", async () => {
+      await pymakr.commands.stopDevMode({ project });
+      assert(!project.watcher.active);
+      assert.equal(project.watcher.deviceManagers.length, 0);
+      await new Promise((resolve) => setTimeout(resolve, 100));
     });
 
     // todo can't interrupt loop. needs fix
