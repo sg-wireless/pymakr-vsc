@@ -58,6 +58,10 @@ test("can use devmode", async () => {
     writeFileSync(projectPath1 + "/main.py", 'print("hello world again again")');
     await new Promise((resolve) => device.readUntil("hello world again again", resolve));
   });
+  test('bad code in main.py is printed correctly"', async () => {
+    writeFileSync(projectPath1 + "/main.py", "bad code");
+    await new Promise((resolve) => device.readUntil("SyntaxError: invalid syntax", resolve));
+  });
   test("can stop devMode", async () => {
     await pymakr.commands.stopDevMode({ project });
     assert(!project.watcher.active);
