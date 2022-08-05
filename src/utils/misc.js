@@ -21,6 +21,14 @@ const once = (fn, context) => {
 };
 
 /**
+ * Checks if a dir has existing files.
+ * @param {string} path
+ * @param {string[]} ignore
+ * @returns {Boolean}
+ */
+const hasExistingFiles = (path, ignore = []) => !!readdirSync(path).filter((file) => !ignore.includes(file)).length;
+
+/**
  * if the input isn't an array, an array will be returned containing the input
  * if the input is an array, the input will be returned
  * @template T
@@ -277,8 +285,10 @@ const createThrottledFunction = (fn, time) => {
 };
 
 const getTemplates = () => readdirSync(TEMPLATES_PATH).map((name) => ({ name, path: resolve(TEMPLATES_PATH, name) }));
-const copyTemplateByName = (name, destination) => copyTemplateByPath(resolve(TEMPLATES_PATH, name), destination);
-const copyTemplateByPath = (path, destination) => cpSync(path, destination, { recursive: true });
+const copyTemplateByName = (name, destination, overwrite) =>
+  copyTemplateByPath(resolve(TEMPLATES_PATH, name), destination, overwrite);
+const copyTemplateByPath = (path, destination, overwrite) =>
+  cpSync(path, destination, { recursive: true, force: overwrite });
 
 /**
  * converts {foo:FOO, bar:BAR} to ['foo=FOO', 'bar=BAR']
@@ -380,6 +390,7 @@ const createQueue = () => {
  */
 
 module.exports = {
+  hasExistingFiles,
   dynamicPromiseAll,
   onResolveAll,
   objToSerializedEntries,
