@@ -22,6 +22,10 @@ There are a few ways to recover an unresponsive device.
 - Use the physical reset button on the device
 - If all else fails, you can reset/erase your Pycom device with `Pycom Firmware Update`.
 
+### Do I need Node?
+
+Node shouldn't be required, but there have been reports of issues being solved after installing Node.
+
 ### I have an issue that's not described here
 
 Please open an issue on our [Github repo](https://github.com/pycom/pymakr-vsc). We usually respond within 24 hours.
