@@ -38,9 +38,14 @@ class Commands {
   }
 
   commands = {
-    // debugPrintAdapterQueue: () => {
-    //   this.pymakr.devicesStore.get().forEach((device) => console.log(device.name, device.adapter.__proxyMeta));
-    // },
+    /**
+     * @param {{device: Device}} param0
+     */
+    "debug.showDeviceSummary": async ({ device }) => {
+      let uri = vscode.Uri.parse("pymakrDocument:" + "Pymakr: device summary - " + device.raw.path);
+      this.pymakr.textDocumentProvider.onDidChangeEmitter.fire(uri);
+      vscode.commands.executeCommand("markdown.showPreview", uri);
+    },
     showDebugMenu: async () => {
       const options = {
         "log adapter queue": "log adapter queue",

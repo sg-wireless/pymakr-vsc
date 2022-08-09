@@ -359,6 +359,11 @@
     ],
     "commands": [
       {
+        "command": "pymakr.debug.showDeviceSummary",
+        "title": "Show device summary",
+        "category": "PyMakr"
+      },
+      {
         "command": "pymakr.showDebugMenu",
         "title": "Shows debugging menu",
         "category": "PyMakr"
@@ -599,6 +604,10 @@
         "label": "device"
       },
       {
+        "id": "pymakr.deviceMenuDebug",
+        "label": "Debug"
+      },
+      {
         "id": "pymakr.projectMenu",
         "icon": "$(ellipsis)",
         "label": "project"
@@ -774,8 +783,16 @@
           "group": "4-config"
         },
         {
-          "command": "pymakr.showTerminalHistory",
+          "submenu": "pymakr.deviceMenuDebug",
           "group": "5-debug"
+        }
+      ],
+      "pymakr.deviceMenuDebug": [
+        {
+          "command": "pymakr.debug.showDeviceSummary"
+        },
+        {
+          "command": "pymakr.showTerminalHistory"
         }
       ],
       "pymakr.editorContextMenu": [
