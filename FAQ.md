@@ -20,7 +20,7 @@ There are a few ways to recover an unresponsive device.
 - <kbd>Ctrl + f</kbd> in terminal. Hard resets device and enters safe boot.
 - `Stop script` or `Safe boot device` from the device context menu
 - Use the physical reset button on the device
-- If all else fails, you can reset/erase your Pycom device with `Pycom Firmware Update`.
+- If all else fails, you can reset/erase your Pycom device with `Pycom Firmware Update`. If you have a faulty `boot.py` or `main.py` script, you can solve this by checking the box `Erase during update`.
 
 ### Do I need Node?
 
