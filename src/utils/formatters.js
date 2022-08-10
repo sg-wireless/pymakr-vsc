@@ -80,7 +80,6 @@ const unBuffer = (str) =>
  */
 const adapterHistoryTable = (device) => {
   const fields = ["function", "args", "time", "result", "queued at", "finished at", "failed"];
-  console.log("proxymeta", device.adapter.__proxyMeta);
   const rows = device.adapter.__proxyMeta.history.map((entry) => [
     entry.field.toString(),
     entry.args.length ? `<details> <pre>${unBuffer(entry.args)}</pre> </details>` : " ",
