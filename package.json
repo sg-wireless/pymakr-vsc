@@ -269,16 +269,24 @@
     "views": {
       "pymakr": [
         {
-          "id": "pymakr-projects-tree",
-          "name": "Projects",
-          "icon": "media/pycom.svg",
-          "contextualTitle": "Pymakr"
+          "id": "pymakr-home-view",
+          "name": "Pymakr Home",
+          "type": "webview"
         },
         {
           "id": "pymakr-devices-tree",
           "name": "Devices",
           "icon": "media/pycom.svg",
-          "contextualTitle": "Pymakr"
+          "contextualTitle": "Pymakr",
+          "type": "tree"
+        }
+      ],
+      "explorer": [
+        {
+          "id": "pymakr-projects-tree",
+          "name": "Pymakr: Projects",
+          "icon": "media/pycom.svg",
+          "type": "tree"
         }
       ]
     },
@@ -358,6 +366,16 @@
       }
     ],
     "commands": [
+      {
+        "command": "pymakr.openWalkthrough",
+        "title": "Open the Pymakr walkthrough",
+        "category": "PyMakr"
+      },
+      {
+        "command": "pymakr.showMarkdownDocument",
+        "title": "Show a markdown document",
+        "category": "PyMakr"
+      },
       {
         "command": "pymakr.debug.showDeviceSummary",
         "title": "Show device summary",
@@ -623,6 +641,10 @@
     ],
     "menus": {
       "commandPalette": [
+        {
+          "command": "pymakr.showMarkdownDocument",
+          "when": "false"
+        },
         {
           "command": "pymakr.listDevices"
         },
@@ -962,6 +984,7 @@
   },
   "dependencies": {
     "@serialport/bindings-cpp": "^10.7.0",
+    "@vscode/webview-ui-toolkit": "^1.0.0",
     "cheap-watch": "^1.0.4",
     "consolite": "^0.3.8",
     "hookar": "^0.0.7-0",

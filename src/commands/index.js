@@ -38,6 +38,13 @@ class Commands {
   }
 
   commands = {
+    openWalkthrough: () => {
+      vscode.commands.executeCommand(`workbench.action.openWalkthrough`, `Pycom.pymakr#pymakr-get-started`, false);
+    },
+    showMarkdownDocument: (path) => {
+      const uri = vscode.Uri.joinPath(this.pymakr.context.extensionUri, path);
+      vscode.commands.executeCommand("markdown.showPreview", uri);
+    },
     /**
      * @param {{device: Device}} param0
      */

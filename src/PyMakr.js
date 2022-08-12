@@ -16,6 +16,7 @@ const { createVSCodeHelpers } = require("./utils/vscodeHelpers");
 const { TextDocumentProvider } = require("./providers/TextDocumentProvider");
 const { createStateObject } = require("./utils/storageObj");
 const { Notifier } = require("./utils/Notifier");
+const { HomeProvider } = require("./providers/HomeProvider");
 
 /**
  * Pymakr is the root class and scope of the extension.
@@ -81,6 +82,8 @@ class PyMakr {
     this.devicesProvider = new DevicesProvider(this);
     /** Provides device access for the file explorer */
     this.fileSystemProvider = new FileSystemProvider(this);
+    /** Provides the home screen in the Pycom tab */
+    this.homeProvider = new HomeProvider(this);
 
     this.textDocumentProvider = new TextDocumentProvider(this);
 
@@ -157,6 +160,7 @@ class PyMakr {
       vscode.window.registerTerminalProfileProvider("pymakr.terminal-profile", {
         provideTerminalProfile: () => this.getTerminalProfile(),
       }),
+      vscode.window.registerWebviewViewProvider("pymakr-home-view", this.homeProvider),
     ];
 
     this.context.subscriptions.push(...disposables);
