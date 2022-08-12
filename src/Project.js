@@ -1,7 +1,9 @@
 const { readFileSync } = require("fs");
-const { dirname, basename } = require("path");
+const { dirname, basename, resolve } = require("path");
 const { createStateObject } = require("./utils/storageObj");
 const { Watcher } = require("./Watcher/Watcher");
+
+const cfgDefaults = { dist_dir: "." };
 
 class Project {
   /**
@@ -30,14 +32,19 @@ class Project {
     this.watcher.destroy();
   }
 
+  get absoluteDistDir() {
+    return resolve(this.folder, this.config.dist_dir);
+  }
+
+  /** @type {Partial<PymakrConfFile>} */
   get config() {
     try {
-      return JSON.parse(readFileSync(this.configFile.fsPath, "utf-8"));
+      return { ...cfgDefaults, ...JSON.parse(readFileSync(this.configFile.fsPath, "utf-8")) };
     } catch (err) {
       this.err = `Could not parse config: ${this.configFile.fsPath}`;
       this.pymakr.log.error("could not parse config:", this.configFile.fsPath);
       this.pymakr.notifier.notifications.couldNotParsePymakrConfig(this);
-      return {};
+      return { ...cfgDefaults };
     }
   }
 

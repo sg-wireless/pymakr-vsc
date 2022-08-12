@@ -34,7 +34,7 @@ class Watcher {
 
   registerFileWatchers() {
     // this.deviceManagers = this.devices.map((device) => new DeviceManager(this, device));
-    this.watcher = vscode.workspace.createFileSystemWatcher(this.project.folder + "/**");
+    this.watcher = vscode.workspace.createFileSystemWatcher(this.project.absoluteDistDir + "/**");
     this.disposables = [
       this.watcher,
       this.watcher.onDidChange(this.handleFileChange("change")),

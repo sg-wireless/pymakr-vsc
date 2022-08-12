@@ -42,7 +42,16 @@
  * @typedef {object} PymakrConfFile
  * @prop {string[]} py_ignore
  * @prop {string} name
+ * @prop {string} dist_dir
  * @prop {boolean} ctrl_c_on_connect
  * @prop {boolean} reboot_after_upload
  * @prop {boolean} safe_boot_on_upload
+ * @prop {PymakrConfFile_Dev} dev
+ */
+
+/**
+ * @typedef {object} PymakrConfFile_Dev
+ * @prop {'always'|'never'|'outOfSync'} uploadOnDevStart Uploads project to device when dev mode is started
+ * @prop {'restartScript'|'softRestartDevice'|'hardRestartDevice'} onUpdate Action to run after file changes have been propagates
+ * @prop {boolean} simulateDeepSleep Replaces deepsleep with\r\ntime.sleep(x)\nmachine.reset()
  */

@@ -3,6 +3,11 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "dist_dir": {
+      "description": "Folder to synchronize do device. Defaults to \".\"",
+      "type": "string",
+      "default": "."
+    },
     "name": {
       "description": "Name of the project. If empty, the project will be named by it's folder name.",
       "type": "string",

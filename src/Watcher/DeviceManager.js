@@ -162,7 +162,7 @@ class DeviceManager {
    */
   async runInstruction({ file, action }) {
     this.log.debug("run instruction", { file, action });
-    const target = require("path").relative(this.project.folder, file).replace(/\\/g, "/");
+    const target = require("path").relative(this.project.absoluteDistDir, file).replace(/\\/g, "/");
     if (target === "boot.py") {
       this.bootPyIsOutdated = true;
     }

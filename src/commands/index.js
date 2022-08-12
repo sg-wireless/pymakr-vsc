@@ -79,7 +79,7 @@ class Commands {
         .filter((device) => !device.busy.get());
 
       devices.forEach(async (device) => {
-        const path = relative(project.folder, file.fsPath).replace(/\\/g, "/");
+        const path = relative(project.absoluteDistDir, file.fsPath).replace(/\\/g, "/");
         const uri = vscode.Uri.parse(`${device.protocol}://${device.address}${device.config.rootPath}/${path}`);
         try {
           await vscode.window.showTextDocument(uri);
@@ -619,8 +619,8 @@ class Commands {
       else {
         this.log.debug("uploadProject", device, project);
         await device.adapter.remove(device.config.rootPath, true);
-        this.commands.upload({ fsPath: project.folder }, device, "/");
         this.pymakr.notifier.notifications.uploadProject();
+        await this.commands.upload({ fsPath: project.absoluteDistDir }, device, "/");
       }
     },
 
@@ -633,7 +633,7 @@ class Commands {
       const deviceManager = project.watcher.deviceManagers.find((d) => d.device === device);
       this.pymakr.notifier.notifications.uploadInDevMode();
       const timestamp = project.updatedAt.get();
-      await deviceManager.push({ action: "create", file: project.folder });
+      await deviceManager.push({ action: "create", file: project.absoluteDistDir });
       deviceManager.device.state.devUploadedAt.set(timestamp);
     },
 
@@ -645,7 +645,7 @@ class Commands {
       const project = this.pymakr.vscodeHelpers.coerceProject(uri);
       const devices = await this.pymakr.vscodeHelpers.devicePicker(project?.devices.filter((d) => d.connected.get()));
 
-      const getRelativeFromProject = () => relative(project.folder, uri.fsPath).replace(/\\+/, "/");
+      const getRelativeFromProject = () => relative(project.absoluteDistDir, uri.fsPath).replace(/\\+/, "/");
       const getBasename = () => `/${uri.fsPath.replace(/.*[/\\]/g, "")}`;
 
       const relativePathFromProject = project ? getRelativeFromProject() : getBasename();
@@ -719,7 +719,7 @@ class Commands {
         const SourceFilesAndDirs = await treeItem.device.adapter.listFiles("", { recursive: true });
         const filesAndDirs = SourceFilesAndDirs.map((fad) => ({
           ...fad,
-          destination: treeItem.project.folder + fad.filename.replace(regex, "/"),
+          destination: treeItem.project.absoluteDistDir + fad.filename.replace(regex, "/"),
         }));
         const files = filesAndDirs.filter((f) => !f.isDir);
         const dirs = filesAndDirs.filter((f) => f.isDir);
