@@ -29,3 +29,5 @@ Node shouldn't be required, but there have been reports of issues being solved a
 ### I have an issue that's not described here
 
 Please open an issue on our [Github repo](https://github.com/pycom/pymakr-vsc). We usually respond within 24 hours.
+
+To get support for a specific device, please open the context menu (...) of the device. Then click `Debug` -> `Show device summary` -> `Create an issue on Github`.
