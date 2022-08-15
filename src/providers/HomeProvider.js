@@ -20,7 +20,7 @@ class HomeProvider {
    */
   resolveWebviewView(webviewView, context, _token) {
     const toolkitUri = this.toolkitUri(webviewView);
-    const releaseNotes = ["RELEASE_NOTES_2.22.0.md"].map((path) => ({
+    const releaseNotes = ["RELEASE_NOTES_2.22.x.md", "RELEASE_NOTES_2.24.x.md"].map((path) => ({
       name: path,
       url: "command:pymakr.showMarkdownDocument?" + encodeURIComponent(JSON.stringify([path])),
     }));
