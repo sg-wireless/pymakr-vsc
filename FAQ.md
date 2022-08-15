@@ -26,6 +26,14 @@ There are a few ways to recover an unresponsive device.
 
 Node shouldn't be required, but there have been reports of issues being solved after installing Node.
 
+### What is Pymakr - Preview
+
+Pymakr Preview is the prerelease branch of Pymakr. Features and bugfixes that pass integration tests, but could require further feedback, are released to Pymakr Preview first. If there are no issues or proposals, Pymakr Preview will then be merged into Pymakr.
+
+### Can I change my version of Pymakr
+
+Yes, to install a specific version, go to the extensions tab, click the cogwheel next to `Pymakr` and select `Install Another Version`.
+
 ### I have an issue that's not described here
 
 Please open an issue on our [Github repo](https://github.com/pycom/pymakr-vsc). We usually respond within 24 hours.
