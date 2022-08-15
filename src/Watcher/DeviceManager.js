@@ -37,6 +37,10 @@ class DeviceManager {
     return uploadWhen === "always" || (uploadWhen === "outOfSync" && this.outOfSync);
   }
 
+  get transform() {
+    return this.project.config.dev?.simulateDeepSleep && fakeDeepSleep;
+  }
+
   async ensureBootPy() {
     const prependStr = [
       "# EDIT BY PYMAKR DEV",
@@ -168,7 +172,7 @@ class DeviceManager {
     }
 
     if (action === "delete") await this.device.remove(target);
-    else await this.pymakr.commands.upload({ fsPath: file }, this.device, target, fakeDeepSleep);
+    else await this.pymakr.commands.upload({ fsPath: file }, this.device, target, this.transform);
 
     return target;
   }
