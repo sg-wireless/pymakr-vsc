@@ -103,7 +103,7 @@ class HomeProvider {
 
         <h2>Release Notes</h2>
         <p>
-            ${releaseNotes.map((link) => `<vscode-link href="${link.url}">${link.name}</vscode-link>`)}
+            ${releaseNotes.map((link) => `<vscode-link href="${link.url}">${link.name}</vscode-link>`).join("<br>")}
         </p>
     
     </body>
