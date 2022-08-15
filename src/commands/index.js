@@ -1,7 +1,7 @@
-const { mkdirSync, readFileSync, writeFileSync } = require("fs");
+const { mkdirSync, readFileSync, writeFileSync, readdirSync } = require("fs");
 const vscode = require("vscode");
 const { msgs } = require("../utils/msgs");
-const { mapEnumsToQuickPick, getTemplates, copyTemplateByName, waitFor } = require("../utils/misc");
+const { mapEnumsToQuickPick, getTemplates, copyTemplateByName, waitFor, hasExistingFiles } = require("../utils/misc");
 const { relative } = require("path");
 const { Project } = require("../Project");
 const { DeviceManager } = require("../Watcher/DeviceManager");
@@ -38,9 +38,21 @@ class Commands {
   }
 
   commands = {
-    // debugPrintAdapterQueue: () => {
-    //   this.pymakr.devicesStore.get().forEach((device) => console.log(device.name, device.adapter.__proxyMeta));
-    // },
+    openWalkthrough: () => {
+      vscode.commands.executeCommand(`workbench.action.openWalkthrough`, `Pycom.pymakr#pymakr-get-started`, false);
+    },
+    showMarkdownDocument: (path) => {
+      const uri = vscode.Uri.joinPath(this.pymakr.context.extensionUri, path);
+      vscode.commands.executeCommand("markdown.showPreview", uri);
+    },
+    /**
+     * @param {{device: Device}} param0
+     */
+    "debug.showDeviceSummary": async ({ device }) => {
+      let uri = vscode.Uri.parse("pymakrDocument:" + "Pymakr: device summary - " + device.raw.path);
+      this.pymakr.textDocumentProvider.onDidChangeEmitter.fire(uri);
+      vscode.commands.executeCommand("markdown.showPreview", uri);
+    },
     showDebugMenu: async () => {
       const options = {
         "log adapter queue": "log adapter queue",
@@ -292,7 +304,16 @@ class Commands {
         const device = this.pymakr.devicesStore.get().find((d) => d.name === match[1]);
         const project = /** @type {Project} */ ({ folder: projectUri.fsPath });
         this.commands.downloadProject({ device, project });
-      } else copyTemplateByName(templateName, projectUri.fsPath);
+      } else {
+        const hasFiles = hasExistingFiles(projectUri.fsPath, ["pymakr.conf"]);
+        const choice =
+          hasFiles &&
+          (await vscode.window.showQuickPick(["Keep", "Overwrite"], {
+            title: "Folder has existing files. How do you wish to proceed?",
+          }));
+        const overwrite = choice === "Overwrite";
+        copyTemplateByName(templateName, projectUri.fsPath, overwrite);
+      }
     },
 
     /**

@@ -82,4 +82,4 @@ const createLogger = (name) => {
   return log;
 };
 
-module.exports = { createLogger };
+module.exports = { createLogger, timestamp };
