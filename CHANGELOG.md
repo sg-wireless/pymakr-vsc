@@ -1,3 +1,10 @@
+## [2.22.5](https://github.com/pycom/pymakr-vsc/compare/v2.22.4...v2.22.5) (2022-08-15)
+
+
+### Bug Fixes
+
+* importing machine in dev mode could cause issues ([e8790f6](https://github.com/pycom/pymakr-vsc/commit/e8790f6a6f6ad7b25e6074aa3f0d39cc7057051c)), closes [#275](https://github.com/pycom/pymakr-vsc/issues/275)
+
 ## [2.22.4](https://github.com/pycom/pymakr-vsc/compare/v2.22.3...v2.22.4) (2022-08-02)
 
 
