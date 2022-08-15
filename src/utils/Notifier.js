@@ -258,7 +258,8 @@ class Notifier {
         });
     },
     showReleaseNotes: async () => {
-      const uri = vscode.Uri.file(`${__dirname}/../../RELEASE_NOTES_2.22.0.md`);
+      const uri = vscode.Uri.file(`${__dirname}/../../RELEASE_NOTES_2.24.x.md`);
+
       if (this.state.lastReadReleaseNotes.get() !== uri.fsPath) {
         this.state.lastReadReleaseNotes.set(uri.fsPath);
         vscode.commands.executeCommand("markdown.showPreview", uri);
