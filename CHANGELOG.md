@@ -1,3 +1,10 @@
+## [2.22.4](https://github.com/pycom/pymakr-vsc/compare/v2.22.3...v2.22.4) (2022-08-02)
+
+
+### Bug Fixes
+
+* trigger release ([7ddc985](https://github.com/pycom/pymakr-vsc/commit/7ddc985bc9795a5460ca3d386be73dd0aefb480b))
+
 ## [2.22.2](https://github.com/pycom/pymakr-vsc/compare/v2.22.1...v2.22.2) (2022-08-01)
 
 

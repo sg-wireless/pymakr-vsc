@@ -3,6 +3,7 @@ const vscode = require("vscode");
 const { timestamp } = require("../utils/createLogger");
 const { arraysToMarkdownTable, adapterHistoryTable } = require("../utils/formatters");
 const { serializeKeyValuePairs } = require("../utils/misc");
+const os = require("os");
 
 /**
  * @typedef {Object} subProvider
@@ -55,12 +56,22 @@ class TextDocumentProvider {
         const configTable = arraysToMarkdownTable([["Config", ""], ...Object.entries(config || {})]);
         const deviceTable = arraysToMarkdownTable([["Device", ""], ...Object.entries(device.raw || {})]);
         const systemTable = arraysToMarkdownTable([["System", ""], ...Object.entries(device.info || {})]);
+        const hostTable = arraysToMarkdownTable([
+          ["Host", ""],
+          ...Object.entries({
+            OS: process.platform + " - " + os.arch(),
+            Pymakr: vscode.extensions.getExtension("Pycom.pymakr")?.packageJSON.version,
+            "Pymakr-Preview": vscode.extensions.getExtension("Pycom.pymakr-preview")?.packageJSON.version,
+            VSCode: vscode.version,
+          }),
+        ]);
 
         const historyTable = arraysToMarkdownTable(adapterHistoryTable(device));
         const body = [
           configTable,
           deviceTable,
           systemTable,
+          hostTable,
           `## Device History at ${timestamp(new Date())}`,
           historyTable,
         ].join("\r\n\r\n");

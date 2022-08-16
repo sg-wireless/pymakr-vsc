@@ -1,4 +1,4 @@
-# Release notes for Pymakr v2.22.0
+# Release notes for Pymakr v2.22.x
 
 It's been a long time coming and we're delighted to finally announce the next release of our Pymakr 2. We've packed this release with tons of new features and bugfixes to make Pymakr 2 even faster, easier and more reliable than ever.
 

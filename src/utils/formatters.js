@@ -10,7 +10,7 @@
 const { timestamp } = require("./createLogger");
 
 const sanitize = (str) =>
-  (typeof str === "string" ? str : JSON.stringify(str, null, 2))
+  (typeof str === "string" ? str : typeof str === "undefined" ? "undefined" : JSON.stringify(str, null, 2))
     .replace(/\|/gm, "&#124;")
     .replace(/\r?\n/gm, "<br />")
     .replace(/"username": ".+?"/, '"username": "&#42;&#42;&#42;"')
