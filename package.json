@@ -1,13 +1,13 @@
 {
-  "name": "pymakr",
-  "displayName": "Pymakr",
+  "name": "pymakr-preview",
+  "displayName": "Pymakr - Preview",
   "publisher": "Pycom",
   "description": "Official Pymakr plugin for Pycom devices.",
   "version": "2.22.4",
   "repository": {
     "url": "https://github.com/pycom/pymakr-vsc"
   },
-  "preview": false,
+  "preview": true,
   "engines": {
     "vscode": "^1.67.0",
     "node": "^16.13.0"
