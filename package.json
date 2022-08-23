@@ -560,12 +560,6 @@
         "category": "PyMakr"
       },
       {
-        "command": "pymakr.removeDeviceFromProject",
-        "title": "Remove device from project",
-        "shortTitle": "Remove device",
-        "category": "PyMakr"
-      },
-      {
         "command": "pymakr.uploadPrompt",
         "title": "Upload to device",
         "category": "PyMakr"
@@ -731,10 +725,6 @@
           "when": "false"
         },
         {
-          "command": "pymakr.removeDeviceFromProject",
-          "when": "false"
-        },
-        {
           "command": "pymakr.uploadPrompt",
           "when": "false"
         },
@@ -790,11 +780,6 @@
         {
           "command": "pymakr.disconnect",
           "group": "1-primary"
-        },
-        {
-          "command": "pymakr.removeDeviceFromProject",
-          "when": "viewItem =~ /.+#project#device/",
-          "group": "4-config"
         },
         {
           "command": "pymakr.eraseDevicePrompt",
