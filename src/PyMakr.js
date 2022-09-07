@@ -108,7 +108,13 @@ class PyMakr {
   }
 
   getTerminalProfile(protocol, address) {
-    const hasNode = () => require("child_process").execSync("node -v").toString().startsWith("v");
+    const hasNode = () => {
+      try {
+        return require("child_process").execSync("node -v", {}).toString().startsWith("v");
+      } catch (err) {
+        this.log.info("Node not found. Using prebuild binaries");
+      }
+    };
 
     const binariesPath = resolve(__dirname, "terminal/bin");
     const userSelection = this.config.get().get("terminalProfile");
