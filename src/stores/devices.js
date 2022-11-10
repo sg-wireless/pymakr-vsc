@@ -17,6 +17,21 @@ const rawSerialToDeviceInput = (raw) => ({
 });
 
 /**
+ * converts configuration's websocket DeviceInput into a DeviceInput 
+ * @param {String} id
+ * @param {DeviceInput} diConf
+ * @returns {DeviceInput}
+ */
+const wsConfigToDeviceInput = (id, diConf) => {
+  const address = id.substring('ws://'.length);
+  const protocol = "ws";
+  const name = diConf.name == undefined || diConf.name === '' ? id : diConf.name;
+  const password = diConf.password;
+  return { address, protocol, name, password, id };
+};
+
+
+/**
  * @param {DeviceInput} device
  * @returns {string}
  */
@@ -77,6 +92,15 @@ const createDevicesStore = (pymakr) => {
     });
   };
 
+  const registerWSDevices = async () => {
+    pymakr.log.trace("register WS devices");
+    const deviceConfigs = pymakr.config.get().get("devices").configs;
+    const deviceInputs = Object.keys(deviceConfigs)
+      .filter(k => k.startsWith('ws://')) // register only ws protocol
+      .map(k => wsConfigToDeviceInput(k, deviceConfigs[k]));
+    upsert(deviceInputs);
+  };
+
   /** @type {NodeJS.Timer} */
   let watchIntervalHandle;
   const watchUSBDevices = () => {
@@ -96,6 +120,7 @@ const createDevicesStore = (pymakr) => {
     getAllById,
     upsert,
     remove,
+    registerWSDevices,
     registerUSBDevices,
     watchUSBDevices,
     stopWatchingUSBDevices: () => clearInterval(watchIntervalHandle),

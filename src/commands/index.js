@@ -49,7 +49,13 @@ class Commands {
      * @param {{device: Device}} param0
      */
     "debug.showDeviceSummary": async ({ device }) => {
-      let uri = vscode.Uri.parse("pymakrDocument:" + "Pymakr: device summary - " + device.raw.path);
+      let path;
+      if (device.protocol === "serial") {
+        path = device.raw.path;
+      } else {
+        path = device.id;
+      }
+      let uri = vscode.Uri.parse("pymakrDocument:" + "Pymakr: device summary - " + path);
       this.pymakr.textDocumentProvider.onDidChangeEmitter.fire(uri);
       vscode.commands.executeCommand("markdown.showPreview", uri);
     },
@@ -589,6 +595,27 @@ class Commands {
       });
       const protocol = "telnet";
       this.pymakr.devicesStore.upsert({ address, protocol, name, username, password });
+    },
+
+    /**
+     * Not currently in supported
+     */
+    newDeviceWS: async () => {
+      const address = await vscode.window.showInputBox({
+        placeHolder: "192.168.0.x",
+        prompt: "Hostname or IP of your device",
+      });
+      const password = await vscode.window.showInputBox({
+        password: true,
+        prompt: "Password for your device [default: python]",
+        value: "python",
+      });
+      const name = await vscode.window.showInputBox({
+        value: `ws://${address}`,
+        prompt: "Name of your device",
+      });
+      const protocol = "ws";
+      this.pymakr.devicesStore.upsert({ address, protocol, name, password });
     },
 
     /**

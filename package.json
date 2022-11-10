@@ -519,6 +519,11 @@
         "category": "PyMakr"
       },
       {
+        "command": "pymakr.newDeviceWS",
+        "title": "WebSocket",
+        "category": "PyMakr"
+      },
+      {
         "command": "pymakr.setVisibleDevices",
         "title": "Set visible devices",
         "category": "PyMakr"
@@ -557,12 +562,6 @@
         "command": "pymakr.selectDevicesForProjectPrompt",
         "shortTitle": "$(plus)device",
         "title": "Select devices",
-        "category": "PyMakr"
-      },
-      {
-        "command": "pymakr.removeDeviceFromProject",
-        "title": "Remove device from project",
-        "shortTitle": "Remove device",
         "category": "PyMakr"
       },
       {
@@ -711,6 +710,10 @@
           "when": "false"
         },
         {
+          "command": "pymakr.newDeviceWS",
+          "when": "false"
+        },
+        {
           "command": "pymakr.setVisibleDevices",
           "when": "false"
         },
@@ -728,10 +731,6 @@
         },
         {
           "command": "pymakr.selectDevicesForProjectPrompt",
-          "when": "false"
-        },
-        {
-          "command": "pymakr.removeDeviceFromProject",
           "when": "false"
         },
         {
@@ -757,6 +756,9 @@
         },
         {
           "command": "pymakr.newDeviceTelnet"
+        },
+        {
+          "command": "pymakr.newDeviceWS"
         }
       ],
       "pymakr.projectMenu": [
@@ -790,11 +792,6 @@
         {
           "command": "pymakr.disconnect",
           "group": "1-primary"
-        },
-        {
-          "command": "pymakr.removeDeviceFromProject",
-          "when": "viewItem =~ /.+#project#device/",
-          "group": "4-config"
         },
         {
           "command": "pymakr.eraseDevicePrompt",

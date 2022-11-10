@@ -147,7 +147,8 @@ class Device {
   }
 
   get serialized() {
-    return serializeKeyValuePairs(this.raw);
+    // raw is set only for Serial connected devices
+    return (this.raw === undefined) ? '' : serializeKeyValuePairs(this.raw);
   }
 
   /** the full device name using the naming template */
@@ -272,7 +273,7 @@ class Device {
 
     // We need to wrap the rawAdapter in a blocking proxy to make sure commands
     // run in sequence rather in in parallel. See JSDoc comment for more info.
-    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "connectSerial", "getState"] });
+    const adapter = createBlockingProxy(rawAdapter, { exceptions: ["sendData", "connectSerial", "connectNetwork", "getState"] });
     adapter.__proxyMeta.beforeEachCall(({ item }) => {
       this.action.set(item.field.toString());
       this.busy.set(true);
@@ -343,7 +344,7 @@ class Device {
         const reconnectIntervals = [0, 5, 500, 1000];
         while (reconnectIntervals.length) {
           try {
-            await this._connectSerial();
+            await this._connect();
             this.connected.set(true);
             resolve(this._onConnectedHandler());
             return this.__connectingPromise;
@@ -424,9 +425,18 @@ class Device {
   }
 
   /** @private */
-  async _connectSerial() {
-    const connectPromise = this.adapter.connectSerial(this.address, this.config.adapterOptions);
-    await waitFor(connectPromise, 2000, "Timed out while connecting.");
+  async _connect() {
+    if (this.protocol == "serial") {
+      const connectPromise = this.adapter.connectSerial(this.address, this.config.adapterOptions);
+      await waitFor(connectPromise, 2000, "Timed out while connecting.");
+    } else if (this.protocol == "ws") {
+      const connectPromise = this.adapter.connectNetwork(this.address, this.password);
+      await waitFor(connectPromise, 10000, "Timed out while connecting.");
+    } else if (this.protocol == "telnet") {
+      // TODO:  not handled 
+    } else {
+      // unknown protocol
+    }
   }
 
   async disconnect() {

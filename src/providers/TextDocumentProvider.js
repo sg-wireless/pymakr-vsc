@@ -51,10 +51,15 @@ class TextDocumentProvider {
       match: /device summary - (.+)/,
       body: (_all, path) => {
         const GithubMaxLengthUri = 8170; //8182 to be exact
-        const device = this.pymakr.devicesStore.get().find((device) => device.raw.path === path);
+        const device = this.pymakr.devicesStore.get().find((device) => device.raw?.path === path || device.id === path);
         const config = { ...device.config, password: "***", username: "***" };
         const configTable = arraysToMarkdownTable([["Config", ""], ...Object.entries(config || {})]);
-        const deviceTable = arraysToMarkdownTable([["Device", ""], ...Object.entries(device.raw || {})]);
+        let deviceTable;
+        if (device.protocol === "serial") {
+          deviceTable = arraysToMarkdownTable([["Device", ""], ...Object.entries(device.raw || {})]);
+        } else {
+          deviceTable = arraysToMarkdownTable([["Device", ""], ["protocol", device.protocol]]);
+        }
         const systemTable = arraysToMarkdownTable([["System", ""], ...Object.entries(device.info || {})]);
         const hostTable = arraysToMarkdownTable([
           ["Host", ""],

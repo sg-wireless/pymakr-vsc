@@ -108,7 +108,13 @@ class PyMakr {
   }
 
   getTerminalProfile(protocol, address) {
-    const hasNode = () => require("child_process").execSync("node -v").toString().startsWith("v");
+    const hasNode = () => {
+      try {
+        return require("child_process").execSync("node -v", {}).toString().startsWith("v");
+      } catch (err) {
+        this.log.info("Node not found. Using prebuild binaries");
+      }
+    };
 
     const binariesPath = resolve(__dirname, "terminal/bin");
     const userSelection = this.config.get().get("terminalProfile");
@@ -153,6 +159,7 @@ class PyMakr {
       }),
       vscode.workspace.registerFileSystemProvider("serial", this.fileSystemProvider, { isCaseSensitive: true }),
       // vscode.workspace.registerFileSystemProvider("telnet", this.fileSystemProvider, { isCaseSensitive: true }),
+      vscode.workspace.registerFileSystemProvider("ws", this.fileSystemProvider, { isCaseSensitive: true }),
       vscode.window.registerTreeDataProvider("pymakr-projects-tree", this.projectsProvider),
       vscode.window.registerTreeDataProvider("pymakr-devices-tree", this.devicesProvider),
       vscode.workspace.registerTextDocumentContentProvider("pymakrDocument", this.textDocumentProvider),
@@ -182,7 +189,7 @@ class PyMakr {
    * Registers usb devices and scans for projects in workspace
    */
   async setup() {
-    await Promise.all([this.devicesStore.registerUSBDevices(), this.registerProjects()]);
+    await Promise.all([this.devicesStore.registerUSBDevices(), this.devicesStore.registerWSDevices(), this.registerProjects()]);
     this.projectsProvider.refresh(); // tell the provider that projects were updated
     this.context.subscriptions.push(coerceDisposable(this.devicesStore.watchUSBDevices()));
   }
