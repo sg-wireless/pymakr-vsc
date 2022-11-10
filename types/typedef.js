@@ -16,7 +16,7 @@
 /**
  * @typedef {Object} DeviceInput
  * @prop {string} name
- * @prop {'serial'|'telnet'} protocol
+ * @prop {'serial'|'telnet'|'ws'} protocol
  * @prop {string} address
  * @prop {string=} username
  * @prop {string=} password

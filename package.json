@@ -519,6 +519,11 @@
         "category": "PyMakr"
       },
       {
+        "command": "pymakr.newDeviceWS",
+        "title": "WebSocket",
+        "category": "PyMakr"
+      },
+      {
         "command": "pymakr.setVisibleDevices",
         "title": "Set visible devices",
         "category": "PyMakr"
@@ -705,6 +710,10 @@
           "when": "false"
         },
         {
+          "command": "pymakr.newDeviceWS",
+          "when": "false"
+        },
+        {
           "command": "pymakr.setVisibleDevices",
           "when": "false"
         },
@@ -747,6 +756,9 @@
         },
         {
           "command": "pymakr.newDeviceTelnet"
+        },
+        {
+          "command": "pymakr.newDeviceWS"
         }
       ],
       "pymakr.projectMenu": [
